@@ -173,7 +173,7 @@ void MainLoop(GLFWwindow* window, Shader lightingShader, Shader lampShader, GLui
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GL_FLOAT), (GLvoid*)0);
 	glBindVertexArray(0);
 
-	vector<const GLchar*> faces;
+	std::vector<const GLchar*> faces;
 	faces.push_back("res/images/skybox/right.tga");
 	faces.push_back("res/images/skybox/left.tga");
 	faces.push_back("res/images/skybox/top.tga");

@@ -13,7 +13,7 @@ void Model::Draw(Shader shader)
     }
 }
 
-void Model::LoadModel(string path)
+void Model::LoadModel(std::string path)
 {
     // Read file via ASSIMP
     Assimp::Importer importer;
@@ -22,7 +22,7 @@ void Model::LoadModel(string path)
     // Check for errors
     if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
     {
-        cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << endl;
+        std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
         return;
     }
     // Retrieve the directory path of the filepath
@@ -54,9 +54,9 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene)
 Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 {
     // Data to fill
-    vector<Vertex> vertices;
-    vector<GLuint> indices;
-    vector<Texture> textures;
+    std::vector<Vertex> vertices;
+    std::vector<GLuint> indices;
+    std::vector<Texture> textures;
 
     // Walk through each of the mesh's vertices
     for (GLuint i = 0; i < mesh->mNumVertices; i++)
@@ -117,11 +117,11 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
         // Normal: texture_normalN
 
         // 1. Diffuse maps
-        vector<Texture> diffuseMaps = this->LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+        std::vector<Texture> diffuseMaps = this->LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
         textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
         // 2. Specular maps
-        vector<Texture> specularMaps = this->LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+        std::vector<Texture> specularMaps = this->LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
     }
 
@@ -129,9 +129,9 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
     return Mesh(vertices, indices, textures);
 }
 
-vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName)
+std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
 {
-    vector<Texture> textures;
+    std::vector<Texture> textures;
 
     for (GLuint i = 0; i < mat->GetTextureCount(type); i++)
     {
@@ -167,10 +167,10 @@ vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type,
     return textures;
 }
 
-GLint TextureFromFile(const char* path, string directory)
+GLint TextureFromFile(const char* path, std::string directory)
 {
     //Generate texture ID and load texture data
-    string filename = string(path);
+    std::string filename = std::string(path);
     filename = directory + '/' + filename;
     GLuint textureID;
     glGenTextures(1, &textureID);

@@ -27,7 +27,7 @@ GLuint TextureLoader::LoadTexture(GLchar* path)
     return textureID;
 }
 
-GLuint TextureLoader::LoadCubemap(vector<const GLchar*> faces)
+GLuint TextureLoader::LoadCubemap(std::vector<const GLchar*> faces)
 {
     GLuint textureID;
     glGenTextures(1, &textureID);

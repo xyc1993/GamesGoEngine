@@ -6,11 +6,9 @@
 
 #include <vector>
 
-using namespace std;
-
 class TextureLoader
 {
 public:
     static GLuint LoadTexture(GLchar* path);
-    static GLuint LoadCubemap(vector<const GLchar*> faces);
+    static GLuint LoadCubemap(std::vector<const GLchar*> faces);
 };

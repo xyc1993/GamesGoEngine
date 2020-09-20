@@ -1,6 +1,6 @@
 #include "Mesh.h"
 
-Mesh::Mesh(vector<Vertex> vertices, vector<GLuint> indices, vector<Texture> textures)
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture> textures)
 {
     this->vertices = vertices;
     this->indices = indices;
@@ -18,9 +18,9 @@ void Mesh::Draw(Shader shader)
     {
         glActiveTexture(GL_TEXTURE0 + i); // Active proper texture unit before binding
         // Retrieve texture number (the N in diffuse_textureN)
-        stringstream ss;
-        string number;
-        string name = this->textures[i].type;
+        std::stringstream ss;
+        std::string number;
+        std::string name = this->textures[i].type;
 
         if (name == "texture_diffuse")
         {
