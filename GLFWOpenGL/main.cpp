@@ -16,7 +16,9 @@
 #include "Model.h"
 #include "TextureLoader.h"
 
+#include "DirectionalLight.h"
 #include "PointLight.h"
+#include "SpotLight.h"
 
 const GLint WIDTH = 800, HEIGHT = 600;
 int SCREEN_WIDTH, SCREEN_HEIGHT;
@@ -221,10 +223,15 @@ void MainLoop(GLFWwindow* window, Shader lightingShader, Shader lampShader, GLui
 		glm::vec3(0.0f,  0.0f,  -3.0f)
 	};
 
+	DirectionalLight dir = DirectionalLight(lightingShader.Program, glm::vec3(0.05f), glm::vec3(0.4f), glm::vec3(0.5f), glm::vec3(-0.2f, -1.0f, -0.3f));
+
 	PointLight p1 = PointLight(lightingShader.Program, glm::vec3(0.05f), glm::vec3(0.8f), glm::vec3(1.0f), 0, pointLightPositions[0], 1.0f, 0.09f, 0.032f);
 	PointLight p2 = PointLight(lightingShader.Program, glm::vec3(0.05f), glm::vec3(0.8f), glm::vec3(1.0f), 1, pointLightPositions[1], 1.0f, 0.09f, 0.032f);
 	PointLight p3 = PointLight(lightingShader.Program, glm::vec3(0.05f), glm::vec3(0.8f), glm::vec3(1.0f), 2, pointLightPositions[2], 1.0f, 0.09f, 0.032f);
 	PointLight p4 = PointLight(lightingShader.Program, glm::vec3(0.05f), glm::vec3(0.8f), glm::vec3(1.0f), 3, pointLightPositions[3], 1.0f, 0.09f, 0.032f);
+
+	SpotLight spot = SpotLight(lightingShader.Program, glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(1.0f), camera.GetPosition(), camera.GetFront(), 
+								1.0f, 0.09f, 0.032f, glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(15.0f)));
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -236,7 +243,7 @@ void MainLoop(GLFWwindow* window, Shader lightingShader, Shader lampShader, GLui
 		for (int i = 0; i < 4; i++)
 		{
 			GLfloat index = (GLfloat)i;
-			pointLightPositions[i].y = startPointLightPositions[i].y;// +sin(0.4f * (index + 1.0f) * currentFrame);
+			pointLightPositions[i].y = startPointLightPositions[i].y + sin(0.4f * (index + 1.0f) * currentFrame);
 		}
 
 		glfwPollEvents();
@@ -283,28 +290,23 @@ void MainLoop(GLFWwindow* window, Shader lightingShader, Shader lampShader, GLui
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 32.0f);
 
 		// Directional light
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.direction"), -0.2f, -1.0f, -0.3f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.ambient"), 0.05f, 0.05f, 0.05f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.diffuse"), 0.4f, 0.4f, 0.4f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.specular"), 0.5f, 0.5f, 0.5f);
+		dir.SetLightInShader();
 
 		//point lights
+		p1.SetPosition(pointLightPositions[0]);
+		p2.SetPosition(pointLightPositions[1]);
+		p3.SetPosition(pointLightPositions[2]);
+		p4.SetPosition(pointLightPositions[3]);
+
 		p1.SetLightInShader();
 		p2.SetLightInShader();
 		p3.SetLightInShader();
 		p4.SetLightInShader();
 
 		// SpotLight
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.position"), camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.direction"), camera.GetFront().x, camera.GetFront().y, camera.GetFront().z);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.ambient"), 0.0f, 0.0f, 0.0f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.diffuse"), 1.0f, 1.0f, 1.0f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.specular"), 1.0f, 1.0f, 1.0f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.constant"), 1.0f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.linear"), 0.09f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.quadratic"), 0.032f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.cutOff"), glm::cos(glm::radians(12.5f)));
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.outerCutOff"), glm::cos(glm::radians(15.0f)));
+		spot.SetPosition(camera.GetPosition());
+		spot.SetDirection(camera.GetFront());
+		spot.SetLightInShader();
 
 		view = camera.GetViewMatrix();
 
