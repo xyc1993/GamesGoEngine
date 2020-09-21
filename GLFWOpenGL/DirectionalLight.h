@@ -5,6 +5,7 @@
 class DirectionalLight : Light
 {
 public:
+	DirectionalLight();
 	DirectionalLight(GLuint shaderProgram, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, glm::vec3 direction);
 	void SetLightInShader() override;
 

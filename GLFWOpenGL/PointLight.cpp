@@ -1,5 +1,10 @@
 #include "PointLight.h"
 
+PointLight::PointLight()
+{
+
+}
+
 PointLight::PointLight(GLuint shaderProgram, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular,
 						int lightNumber, glm::vec3 position, float constant, float linear, float quadratic)
 {
@@ -14,7 +19,6 @@ PointLight::PointLight(GLuint shaderProgram, glm::vec3 ambient, glm::vec3 diffus
 	this->linear = linear;
 	this->quadratic = quadratic;
 
-	if (lightNumber >= MAX_NUMBER_OF_POINT_LIGHTS) lightNumber = MAX_NUMBER_OF_POINT_LIGHTS - 1;
 	this->lightNumber = lightNumber;
 }
 

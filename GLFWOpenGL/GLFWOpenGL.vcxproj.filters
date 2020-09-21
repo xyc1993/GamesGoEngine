@@ -45,6 +45,9 @@
     <ClCompile Include="SpotLight.cpp">
       <Filter>Light</Filter>
     </ClCompile>
+    <ClCompile Include="LightsManager.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -75,6 +78,9 @@
       <Filter>Light</Filter>
     </ClInclude>
     <ClInclude Include="SpotLight.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="LightsManager.h">
       <Filter>Light</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,5 +1,10 @@
 #include "SpotLight.h"
 
+SpotLight::SpotLight()
+{
+
+}
+
 SpotLight::SpotLight(GLuint shaderProgram, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular,
 	glm::vec3 position, glm::vec3 direction, float constant, float linear, float quadratic,
 	float cutOff, float outerCutOff)
