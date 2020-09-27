@@ -1,54 +1,64 @@
 #include "LightsManager.h"
 
-LightsManager::LightsManager()
+LightsManager::LightsManager(GLuint shaderProgram)
 {
+	this->shaderProgram = shaderProgram;
+
 	this->directionalLightsNumber = 0;
 	this->pointLightsNumber = 0;
 	this->spotLightsNumber = 0;
 }
 
-void LightsManager::AddDirectionalLight(GLuint shaderProgram, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, glm::vec3 direction)
+void LightsManager::AddDirectionalLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, glm::vec3 direction)
 {
-	if (directionalLightsNumber >= 1) return;	
-	directionalLight = DirectionalLight(shaderProgram, ambient, diffuse, specular, direction);
+	if (directionalLightsNumber >= MAX_NUMBER_OF_DIR_LIGHTS) return;
+	directionalLight[directionalLightsNumber] = DirectionalLight(shaderProgram, directionalLightsNumber, ambient, diffuse, specular, direction);
 	directionalLightsNumber++;
 }
 
-void LightsManager::AddPointLight(GLuint shaderProgram, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular,
+void LightsManager::AddPointLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular,
 									glm::vec3 position, float constant, float linear, float quadratic)
 {
 	if (pointLightsNumber >= MAX_NUMBER_OF_POINT_LIGHTS) return;
-	pointLights[pointLightsNumber] = PointLight(shaderProgram, ambient, diffuse, specular, pointLightsNumber, position, constant, linear, quadratic);
+	pointLights[pointLightsNumber] = PointLight(shaderProgram, pointLightsNumber, ambient, diffuse, specular, position, constant, linear, quadratic);
 	pointLightsNumber++;
 }
 
-void LightsManager::AddSpotLight(GLuint shaderProgram, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular,
+void LightsManager::AddSpotLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular,
 									glm::vec3 position, glm::vec3 direction, float constant, float linear, float quadratic,
 									float cutOff, float outerCutOff)
 {
-	if (spotLightsNumber >= 1) return;	
-	spotLight = SpotLight(shaderProgram, ambient, diffuse, specular, position, direction, constant, linear, quadratic, cutOff, outerCutOff);
+	if (spotLightsNumber >= MAX_NUMBER_OF_SPOT_LIGHTS) return;
+	spotLight[spotLightsNumber] = SpotLight(shaderProgram, spotLightsNumber, ambient, diffuse, specular, position, direction, constant, linear, quadratic, cutOff, outerCutOff);
 	spotLightsNumber++;
 }
 
 void LightsManager::SetLightsInShader()
 {
-	//TO DO: after handling less than maximum number of lights in shader, adjust this method!
+	glUniform1i(glGetUniformLocation(shaderProgram, "dirLightsNumber"), directionalLightsNumber);
+	for (int i = 0; i < directionalLightsNumber; i++)
+	{
+		directionalLight[i].SetLightInShader();
+	}	
 
-	directionalLight.SetLightInShader();
-
-	for (int i = 0; i < MAX_NUMBER_OF_POINT_LIGHTS; i++)
+	glUniform1i(glGetUniformLocation(shaderProgram, "pointLightsNumber"), pointLightsNumber);
+	for (int i = 0; i < pointLightsNumber; i++)
 	{
 		pointLights[i].SetLightInShader();
 	}
 
-	spotLight.SetLightInShader();
+	glUniform1i(glGetUniformLocation(shaderProgram, "spotLightsNumber"), spotLightsNumber);
+	for (int i = 0; i < spotLightsNumber; i++)
+	{
+		spotLight[i].SetLightInShader();
+	}
 }
 
-DirectionalLight* LightsManager::GetDirectionalLight()
+DirectionalLight* LightsManager::GetDirectionalLight(int index)
 {
 	if (directionalLightsNumber == 0) return nullptr;
-	return &directionalLight;
+	if (index >= MAX_NUMBER_OF_DIR_LIGHTS) return nullptr;
+	return &directionalLight[index];
 }
 
 PointLight* LightsManager::GetPointLight(int index)
@@ -58,8 +68,9 @@ PointLight* LightsManager::GetPointLight(int index)
 	return &pointLights[index];
 }
 
-SpotLight* LightsManager::GetSpotLight()
+SpotLight* LightsManager::GetSpotLight(int index)
 {
 	if (spotLightsNumber == 0) return nullptr;
-	return &spotLight;
+	if (index >= MAX_NUMBER_OF_SPOT_LIGHTS) return nullptr;
+	return &spotLight[index];
 }

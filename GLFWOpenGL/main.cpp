@@ -222,13 +222,13 @@ void MainLoop(GLFWwindow* window, Shader lightingShader, Shader lampShader, GLui
 	};
 
 	//LIGHTS BEGIN
-	LightsManager lightsManager;
-	lightsManager.AddDirectionalLight(lightingShader.Program, glm::vec3(0.05f), glm::vec3(0.4f), glm::vec3(0.5f), glm::vec3(-0.2f, -1.0f, -0.3f));
+	LightsManager lightsManager = LightsManager(lightingShader.Program);
+	lightsManager.AddDirectionalLight(glm::vec3(0.05f), glm::vec3(0.4f), glm::vec3(0.5f), glm::vec3(-0.2f, -1.0f, -0.3f));
 	for (int i = 0; i < lightsManager.MAX_NUMBER_OF_POINT_LIGHTS; i++)
 	{
-		lightsManager.AddPointLight(lightingShader.Program, glm::vec3(0.05f), glm::vec3(0.8f), glm::vec3(1.0f), pointLightPositions[i], 1.0f, 0.09f, 0.032f);
+		lightsManager.AddPointLight(glm::vec3(0.05f), glm::vec3(0.8f), glm::vec3(1.0f), pointLightPositions[i], 1.0f, 0.09f, 0.032f);
 	}
-	lightsManager.AddSpotLight(lightingShader.Program, glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(1.0f), camera.GetPosition(), camera.GetFront(),
+	lightsManager.AddSpotLight(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(1.0f), camera.GetPosition(), camera.GetFront(),
 								1.0f, 0.09f, 0.032f, glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(15.0f)));
 	//LIGHTS END
 
@@ -293,8 +293,8 @@ void MainLoop(GLFWwindow* window, Shader lightingShader, Shader lampShader, GLui
 		{
 			lightsManager.GetPointLight(i)->SetPosition(pointLightPositions[i]);
 		}
-		lightsManager.GetSpotLight()->SetPosition(camera.GetPosition());
-		lightsManager.GetSpotLight()->SetDirection(camera.GetFront());
+		lightsManager.GetSpotLight(0)->SetPosition(camera.GetPosition());
+		lightsManager.GetSpotLight(0)->SetDirection(camera.GetFront());
 		lightsManager.SetLightsInShader();
 		//LIGHTS END
 

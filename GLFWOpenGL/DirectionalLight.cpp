@@ -5,9 +5,11 @@ DirectionalLight::DirectionalLight()
 
 }
 
-DirectionalLight::DirectionalLight(GLuint shaderProgram, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, glm::vec3 direction)
+DirectionalLight::DirectionalLight(GLuint shaderProgram, GLuint lightNumber, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, glm::vec3 direction)
 {
 	this->shaderProgram = shaderProgram;
+	this->lightNumber = lightNumber;
+
 	this->ambient = ambient;
 	this->diffuse = diffuse;
 	this->specular = specular;
@@ -17,9 +19,15 @@ DirectionalLight::DirectionalLight(GLuint shaderProgram, glm::vec3 ambient, glm:
 
 void DirectionalLight::SetLightInShader()
 {
-	glUniform3f(glGetUniformLocation(shaderProgram, "dirLight.ambient"), ambient.x, ambient.y, ambient.z);
-	glUniform3f(glGetUniformLocation(shaderProgram, "dirLight.diffuse"), diffuse.x, diffuse.y, diffuse.z);
-	glUniform3f(glGetUniformLocation(shaderProgram, "dirLight.specular"), specular.x, specular.y, specular.z);
+	glUniform3f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty() + ".ambient").c_str()), ambient.x, ambient.y, ambient.z);
+	glUniform3f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty() + ".diffuse").c_str()), diffuse.x, diffuse.y, diffuse.z);
+	glUniform3f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty() + ".specular").c_str()), specular.x, specular.y, specular.z);
 
-	glUniform3f(glGetUniformLocation(shaderProgram, "dirLight.direction"), direction.x, direction.y, direction.z);
+	glUniform3f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty() + ".direction").c_str()), direction.x, direction.y, direction.z);
+}
+
+std::string DirectionalLight::GetNumberedShaderProperty()
+{
+	std::string number = std::to_string(lightNumber);
+	return ("dirLight[" + number + "]").c_str();
 }

@@ -5,10 +5,12 @@ PointLight::PointLight()
 
 }
 
-PointLight::PointLight(GLuint shaderProgram, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular,
-						int lightNumber, glm::vec3 position, float constant, float linear, float quadratic)
+PointLight::PointLight(GLuint shaderProgram, GLuint lightNumber, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular,
+						glm::vec3 position, float constant, float linear, float quadratic)
 {
 	this->shaderProgram = shaderProgram;
+	this->lightNumber = lightNumber;
+
 	this->ambient = ambient;
 	this->diffuse = diffuse;
 	this->specular = specular;
@@ -18,8 +20,6 @@ PointLight::PointLight(GLuint shaderProgram, glm::vec3 ambient, glm::vec3 diffus
 	this->constant = constant;
 	this->linear = linear;
 	this->quadratic = quadratic;
-
-	this->lightNumber = lightNumber;
 }
 
 void PointLight::SetLightInShader()

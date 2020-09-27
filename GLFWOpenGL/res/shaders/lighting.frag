@@ -1,7 +1,7 @@
 #version 330 core
-//in vec2 TexCoord;
-
+#define NUMBER_OF_DIR_LIGHTS 4
 #define NUMBER_OF_POINT_LIGHTS 4
+#define NUMBER_OF_SPOT_LIGHTS 4
 
 struct Material
 {
@@ -56,9 +56,13 @@ in vec2 TexCoord;
 
 uniform vec3 viewPos;
 
+uniform int dirLightsNumber;
+uniform int pointLightsNumber;
+uniform int spotLightsNumber;
+
 uniform Material material;
-uniform DirLight dirLight;
-uniform SpotLight spotLight;
+uniform DirLight dirLight[NUMBER_OF_DIR_LIGHTS];
+uniform SpotLight spotLight[NUMBER_OF_SPOT_LIGHTS];
 uniform PointLight pointLights[NUMBER_OF_POINT_LIGHTS];
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
@@ -70,15 +74,25 @@ void main()
 	vec3 norm = normalize(Normal);
 	vec3 viewDir = normalize(viewPos - FragPos);
 
+	vec3 result = vec3(0.0, 0.0 ,0.0);
+
 	//calculate directional light
-	vec3 result = CalcDirLight(dirLight, norm, viewDir);
+	for (int i = 0; i < dirLightsNumber; i++)
+	{
+		result += CalcDirLight(dirLight[i], norm, viewDir);
+	}
+	
 	//calculate point lights
-	for (int i = 0; i < NUMBER_OF_POINT_LIGHTS; i++)
+	for (int i = 0; i < pointLightsNumber; i++)
 	{
 		result += CalcPointLight(pointLights[i], norm, FragPos, viewDir);
 	}
+	
 	//calculate spotlight
-	result += CalcSpotLight(spotLight, norm, FragPos, viewDir);
+	for (int i = 0; i < spotLightsNumber; i++)
+	{
+		result += CalcSpotLight(spotLight[i], norm, FragPos, viewDir);
+	}	
 
 	color = vec4(result, 1.0);
 }
