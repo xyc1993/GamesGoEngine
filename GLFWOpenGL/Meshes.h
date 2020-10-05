@@ -3,7 +3,7 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
 
-GLfloat cubeVertices[] = {
+static GLfloat cubeVertices[] = {
         // Positions            // Normals              // Texture Coords
         -0.5f, -0.5f, -0.5f,    0.0f,  0.0f, -1.0f,     0.0f,  0.0f,
         0.5f, -0.5f, -0.5f,     0.0f,  0.0f, -1.0f,     1.0f,  0.0f,
@@ -48,7 +48,7 @@ GLfloat cubeVertices[] = {
         -0.5f,  0.5f, -0.5f,    0.0f,  1.0f,  0.0f,     0.0f,  1.0f
 };
 
-GLfloat skyboxVertices[] = {
+static GLfloat skyboxVertices[] = {
     // Positions
     -1.0f,  1.0f, -1.0f,
     -1.0f, -1.0f, -1.0f,

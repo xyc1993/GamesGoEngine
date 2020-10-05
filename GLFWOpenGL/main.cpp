@@ -10,6 +10,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Cube.h"
 #include "Meshes.h"
 #include "Shader.h"
 #include "Camera.h"
@@ -34,9 +35,6 @@ bool firstMouse = true;
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
-
-glm::vec3 startLightPos(1.2f, 1.0f, 2.0f);
-glm::vec3 lightPos(startLightPos.x, startLightPos.y, startLightPos.z);
 
 GLFWwindow* InitWindow()
 {
@@ -86,83 +84,46 @@ int SetWindow(GLFWwindow* window)
 	return EXIT_SUCCESS;
 }
 
-void LoadTexture(GLuint& map, const char* filename)
+void MainLoop(GLFWwindow* window, Shader lightingShader, Shader lampShader)
 {
-	glGenTextures(1, &map);
-	int textureWidth, textureHeight;
-	unsigned char* image;
-		
-	//diffuse map
-	image = SOIL_load_image(filename, &textureWidth, &textureHeight, 0, SOIL_LOAD_RGB);
-	glBindTexture(GL_TEXTURE_2D, map);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureWidth, textureHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-	glGenerateMipmap(GL_TEXTURE_2D);
-	SOIL_free_image_data(image);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-}
+	glm::vec3 startPointLightPositions[] = {
+		glm::vec3(0.07,   0.2f,   1.0f),
+		glm::vec3(2.3f,   -3.3f,   -4.0f),
+		glm::vec3(-4.0f,  -2.0f,  -11.0f),
+		glm::vec3(0.0f,  0.0f,  -3.0f)
+	};
 
-void GenerateBuffersAndVertexArray(GLuint& VBO, GLuint& VAO, GLuint& lightVAO, GLuint& texture)
-{
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
+	glm::vec3 pointLightPositions[] = {
+		glm::vec3(0.07,   0.2f,   2.0f),
+		glm::vec3(2.3f,   -3.3f,   -4.0f),
+		glm::vec3(-4.0f,  -2.0f,  -11.0f),
+		glm::vec3(0.0f,  0.0f,  -3.0f)
+	};
 
-	glBindVertexArray(VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW);
-
-	//position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(0);
-
-	//normal attribute
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(1);
-
-	//texture attribute
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(2);
-
-	glBindVertexArray(0); //unbind VAO
-
-	//light
-	glGenVertexArrays(1, &lightVAO);
-	glGenBuffers(1, &VBO);
-
-	glBindVertexArray(lightVAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW);
-		
-	//position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(0);
-
-	glBindVertexArray(0); //unbind VAO
-}
-
-void ApplyTextures(GLuint& diffuseMap, GLuint& specularMap, Shader lightingShader)
-{
-	LoadTexture(diffuseMap, "res/images/container2.png");
-	LoadTexture(specularMap, "res/images/container2_specular.png");
-	glBindTexture(GL_TEXTURE_2D, 0); //unbind textures
-
-	lightingShader.Use();
-	glUniform1i(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 0);
-	glUniform1i(glGetUniformLocation(lightingShader.Program, "material.specular"), 1);
-}
-
-void MainLoop(GLFWwindow* window, Shader lightingShader, Shader lampShader, GLuint& VAO, GLuint& lightVAO, GLuint& texture)
-{
 	Shader modelShader("res/shaders/modelLoading.vert", "res/shaders/modelLoading.frag");
-	Model loadedModel((GLchar*)"res/models/nanosuit.obj");
-
-
+	Model loadedModel((GLchar*)"res/nanosuit/nanosuit.obj");
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //use this for wireframe
+
+	Cube cubes[] = {
+		Cube((GLchar*)"res/box/container2_diffuse.png", (GLchar*)"res/box/container2_specular.png", lightingShader, glm::vec3(3.0f, 0.0f, 0.0f), 0.0f, 1.0f),
+		Cube((GLchar*)"res/box/container2_diffuse.png", (GLchar*)"res/box/container2_specular.png", lightingShader, glm::vec3(2.0f, 5.0f, -15.0f), 20.0f, 1.0f),
+		Cube((GLchar*)"res/box/container2_diffuse.png", (GLchar*)"res/box/container2_specular.png", lightingShader, glm::vec3(-1.5f, -2.2f, -2.5f), 40.0f, 1.0f),
+		Cube((GLchar*)"res/box/container2_diffuse.png", (GLchar*)"res/box/container2_specular.png", lightingShader, glm::vec3(-3.8f, -2.0f, -12.3f), 80.0f, 1.0f),
+		Cube((GLchar*)"res/box/container2_diffuse.png", (GLchar*)"res/box/container2_specular.png", lightingShader, glm::vec3(2.4f, -0.4f, -3.5f), 100.0f, 1.0f),
+		Cube((GLchar*)"res/box/container2_diffuse.png", (GLchar*)"res/box/container2_specular.png", lightingShader, glm::vec3(-1.7f, 3.0f, -7.5f), 120.0f, 1.0f),
+		Cube((GLchar*)"res/box/container2_diffuse.png", (GLchar*)"res/box/container2_specular.png", lightingShader, glm::vec3(1.3f, -2.0f, -2.5f), 140.0f, 1.0f),
+		Cube((GLchar*)"res/box/container2_diffuse.png", (GLchar*)"res/box/container2_specular.png", lightingShader, glm::vec3(1.5f, 2.0f, -2.5f), 160.0f, 1.0f),
+		Cube((GLchar*)"res/box/container2_diffuse.png", (GLchar*)"res/box/container2_specular.png", lightingShader, glm::vec3(1.5f, 0.2f, -1.5f), 180.0f, 1.0f),
+		Cube((GLchar*)"res/box/container2_diffuse.png", (GLchar*)"res/box/container2_specular.png", lightingShader, glm::vec3(-1.3f, 1.0f, -1.5f), 200.0f, 1.0f)
+	};
+
+	Cube lampCubes[] = {
+		Cube(lampShader, pointLightPositions[0], 0.0f, 0.2f),
+		Cube(lampShader, pointLightPositions[1], 0.0f, 0.2f),
+		Cube(lampShader, pointLightPositions[2], 0.0f, 0.2f),
+		Cube(lampShader, pointLightPositions[3], 0.0f, 0.2f)
+	};
 
 	//SKYBOX
 	Shader skyboxShader("res/shaders/skybox.vert", "res/shaders/skybox.frag");
@@ -189,37 +150,7 @@ void MainLoop(GLFWwindow* window, Shader lightingShader, Shader lampShader, GLui
 	//SKYBOX END
 
 	glm::mat4 projection(1.0f);
-	projection = glm::perspective(45.0f, (GLfloat)SCREEN_WIDTH / (GLfloat)SCREEN_HEIGHT, 0.1f, 1000.0f);
-
-	GLuint diffuseMap, specularMap;
-	ApplyTextures(diffuseMap, specularMap, lightingShader);
-
-	glm::vec3 cubePositions[] = {
-		glm::vec3(0.0f,   0.0f,   0.0f),
-		glm::vec3(2.0f,   5.0f,   -15.0f),
-		glm::vec3(-1.5f,  -2.2f,  -2.5f),
-		glm::vec3(-3.8f,  -2.0f,  -12.3f),
-		glm::vec3(2.4f,   -0.4f,  -3.5f),
-		glm::vec3(-1.7f,  3.0f,   -7.5f),
-		glm::vec3(1.3f,   -2.0f,  -2.5f),
-		glm::vec3(1.5f,   2.0f,   -2.5f),
-		glm::vec3(1.5f,   0.2f,   -1.5f),
-		glm::vec3(-1.3f,  1.0f,   -1.5f)
-	};
-
-	glm::vec3 startPointLightPositions[] = {
-		glm::vec3(0.07,   0.2f,   1.0f),
-		glm::vec3(2.3f,   -3.3f,   -4.0f),
-		glm::vec3(-4.0f,  -2.0f,  -11.0f),
-		glm::vec3(0.0f,  0.0f,  -3.0f)
-	};
-
-	glm::vec3 pointLightPositions[] = {
-		glm::vec3(0.07,   0.2f,   2.0f),
-		glm::vec3(2.3f,   -3.3f,   -4.0f),
-		glm::vec3(-4.0f,  -2.0f,  -11.0f),
-		glm::vec3(0.0f,  0.0f,  -3.0f)
-	};
+	projection = glm::perspective(45.0f, (GLfloat)SCREEN_WIDTH / (GLfloat)SCREEN_HEIGHT, 0.1f, 1000.0f);	
 
 	//LIGHTS BEGIN
 	LightsManager lightsManager = LightsManager(lightingShader.Program);
@@ -306,26 +237,11 @@ void MainLoop(GLFWwindow* window, Shader lightingShader, Shader lampShader, GLui
 
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-		
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, diffuseMap);
 
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, specularMap);
-
-		glBindVertexArray(VAO);
 		for (GLuint i = 0; i < 10; i++)
 		{
-			glm::mat4 model(1.0f);
-			model = glm::translate(model, cubePositions[i]);
-
-			GLfloat angle = 20.0f * i;
-			model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
-
-			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-			glDrawArrays(GL_TRIANGLES, 0, 36);			
+			cubes[i].Draw(lightingShader);
 		}
-		glBindVertexArray(0);
 
 		lampShader.Use();
 
@@ -336,29 +252,16 @@ void MainLoop(GLFWwindow* window, Shader lightingShader, Shader lampShader, GLui
 		view = camera.GetViewMatrix();
 		
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));		
+		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
 		for (GLuint i = 0; i < 4; i++)
 		{
-			glm::mat4 model(1.0f);
-			model = glm::translate(model, pointLightPositions[i]);
-			model = glm::scale(model, glm::vec3(0.2f));
-			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-			glBindVertexArray(lightVAO);
-			glDrawArrays(GL_TRIANGLES, 0, 36);
+			lampCubes[i].SetPosition(pointLightPositions[i]);
+			lampCubes[i].Draw(lampShader);
 		}
-		glBindVertexArray(0);
 
 		glfwSwapBuffers(window);
 	}
-}
-
-void CleanUp(GLuint& VBO, GLuint &VAO, GLuint& lightVAO)
-{
-	glDeleteBuffers(1, &VBO);
-	glDeleteVertexArrays(1, &VAO);	
-	glDeleteVertexArrays(1, &lightVAO);
-	glfwTerminate();
 }
 
 int main()
@@ -367,8 +270,6 @@ int main()
 	
 	int success = SetWindow(window);
 	if (success != 0) return EXIT_FAILURE;
-	
-	GLuint VBO, boxVAO, lightVAO, texture;
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -377,12 +278,10 @@ int main()
 	
 	Shader lightingShader("res/shaders/lighting.vert", "res/shaders/lighting.frag");
 	Shader lampShader("res/shaders/lamp.vert", "res/shaders/lamp.frag");
-
-	GenerateBuffersAndVertexArray(VBO, boxVAO, lightVAO, texture);
 	
-	MainLoop(window, lightingShader, lampShader, boxVAO, lightVAO, texture);
+	MainLoop(window, lightingShader, lampShader);
 
-	CleanUp(VBO, boxVAO, lightVAO);
+	glfwTerminate();
 	
 	return EXIT_SUCCESS;
 }

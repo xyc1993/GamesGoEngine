@@ -48,6 +48,9 @@
     <ClCompile Include="LightsManager.cpp">
       <Filter>Light</Filter>
     </ClCompile>
+    <ClCompile Include="Cube.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -82,6 +85,9 @@
     </ClInclude>
     <ClInclude Include="LightsManager.h">
       <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Cube.h">
+      <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
