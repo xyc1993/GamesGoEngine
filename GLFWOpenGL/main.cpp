@@ -16,6 +16,7 @@
 #include "Camera.h"
 #include "Model.h"
 #include "TextureLoader.h"
+#include "Skybox.h"
 
 #include "LightsManager.h"
 
@@ -84,8 +85,11 @@ int SetWindow(GLFWwindow* window)
 	return EXIT_SUCCESS;
 }
 
-void MainLoop(GLFWwindow* window, Shader lightingShader, Shader lampShader)
+void MainLoop(GLFWwindow* window)
 {
+	Shader lightingShader("res/shaders/lighting.vert", "res/shaders/lighting.frag");
+	Shader lampShader("res/shaders/lamp.vert", "res/shaders/lamp.frag");
+
 	glm::vec3 startPointLightPositions[] = {
 		glm::vec3(0.07,   0.2f,   1.0f),
 		glm::vec3(2.3f,   -3.3f,   -4.0f),
@@ -126,28 +130,7 @@ void MainLoop(GLFWwindow* window, Shader lightingShader, Shader lampShader)
 	};
 
 	//SKYBOX
-	Shader skyboxShader("res/shaders/skybox.vert", "res/shaders/skybox.frag");
-
-	GLuint skyboxVAO, skyyboxVBO;
-	glGenVertexArrays(1, &skyboxVAO);
-	glGenBuffers(1, &skyyboxVBO);
-	glBindVertexArray(skyboxVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, skyyboxVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GL_FLOAT), (GLvoid*)0);
-	glBindVertexArray(0);
-
-	std::vector<const GLchar*> faces;
-	faces.push_back("res/images/skybox/right.tga");
-	faces.push_back("res/images/skybox/left.tga");
-	faces.push_back("res/images/skybox/top.tga");
-	faces.push_back("res/images/skybox/bottom.tga");
-	faces.push_back("res/images/skybox/back.tga");
-	faces.push_back("res/images/skybox/front.tga");	
-
-	GLuint cubemapTexture = TextureLoader::LoadCubemap(faces);
-	//SKYBOX END
+	Skybox skybox = Skybox();
 
 	glm::mat4 projection(1.0f);
 	projection = glm::perspective(45.0f, (GLfloat)SCREEN_WIDTH / (GLfloat)SCREEN_HEIGHT, 0.1f, 1000.0f);	
@@ -196,21 +179,7 @@ void MainLoop(GLFWwindow* window, Shader lightingShader, Shader lampShader)
 		loadedModel.Draw(modelShader);
 
 		//SKYBOX
-		glDepthFunc(GL_LEQUAL);
-
-		skyboxShader.Use();
-		view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
-
-		glUniformMatrix4fv(glGetUniformLocation(skyboxShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(glGetUniformLocation(skyboxShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-
-		glBindVertexArray(skyboxVAO);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		glBindVertexArray(0);
-
-		glDepthFunc(GL_LESS);
-		//SKYBOX END
+		skybox.Draw(glm::mat4(glm::mat3(camera.GetViewMatrix())), projection);
 
 		lightingShader.Use();
 		GLint viewPosLoc = glGetUniformLocation(lightingShader.Program, "viewPos");
@@ -276,10 +245,7 @@ int main()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
-	Shader lightingShader("res/shaders/lighting.vert", "res/shaders/lighting.frag");
-	Shader lampShader("res/shaders/lamp.vert", "res/shaders/lamp.frag");
-	
-	MainLoop(window, lightingShader, lampShader);
+	MainLoop(window);
 
 	glfwTerminate();
 	

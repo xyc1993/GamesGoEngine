@@ -1,5 +1,10 @@
 #include "Shader.h"
 
+Shader::Shader()
+{
+    std::cout << "ERROR::SHADER::DEFAULT_CONSTRUCTOR_CALLED_NO_IMPLEMENTATION" << std::endl;
+}
+
 Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
 {
     // 1. Retrieve the vertex/fragment source code from filePath
