@@ -120,13 +120,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\External Libraries\assimp\include;$(SolutionDir)\External Libraries\SOIL2\include;$(SolutionDir)\External Libraries\glm;$(SolutionDir)\External Libraries\glfw\glfw-3.3.2.bin.WIN64\include;$(SolutionDir)\External Libraries\glew\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\External Libraries\assimp\include;$(SolutionDir)\External Libraries\glew\glew-2.1.0\include;$(SolutionDir)\External Libraries\glfw\glfw-3.3.2.bin.WIN64\include;$(SolutionDir)\External Libraries\glm;$(SolutionDir)\External Libraries\imgui;$(SolutionDir)\External Libraries\SOIL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;glew32s.lib;glfw3.lib;soil2-debug.lib;assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)\External Libraries\assimp\lib;$(SolutionDir)\External Libraries\SOIL2\lib;$(SolutionDir)\External Libraries\glfw\glfw-3.3.2.bin.WIN64\lib-vc2019;$(SolutionDir)\External Libraries\glew\glew-2.1.0\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\External Libraries\assimp\lib;$(SolutionDir)\External Libraries\glew\glew-2.1.0\lib;$(SolutionDir)\External Libraries\glfw\glfw-3.3.2.bin.WIN64\lib-vc2019;$(SolutionDir)\External Libraries\SOIL2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -146,6 +146,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\External Libraries\imgui\imgui.cpp" />
+    <ClCompile Include="..\External Libraries\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\External Libraries\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\External Libraries\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="..\External Libraries\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="..\External Libraries\imgui\imgui_tables.cpp" />
+    <ClCompile Include="..\External Libraries\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
@@ -160,6 +167,14 @@
     <ClCompile Include="TextureLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\External Libraries\imgui\imconfig.h" />
+    <ClInclude Include="..\External Libraries\imgui\imgui.h" />
+    <ClInclude Include="..\External Libraries\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="..\External Libraries\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="..\External Libraries\imgui\imgui_internal.h" />
+    <ClInclude Include="..\External Libraries\imgui\imstb_rectpack.h" />
+    <ClInclude Include="..\External Libraries\imgui\imstb_textedit.h" />
+    <ClInclude Include="..\External Libraries\imgui\imstb_truetype.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="DirectionalLight.h" />

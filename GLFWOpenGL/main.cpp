@@ -1,5 +1,9 @@
 #include <iostream>
 
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+
 #define GLEW_STATIC
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -70,7 +74,7 @@ int SetWindow(GLFWwindow* window)
 	glfwSetKeyCallback(window, KeyCallback);
 	glfwSetCursorPosCallback(window, MouseCallback);
 	glfwSetScrollCallback(window, ScrollCallback);
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	glewExperimental = GL_TRUE; //GLEW will use modern approach, it's not 'experimental' per se
 
@@ -87,6 +91,16 @@ int SetWindow(GLFWwindow* window)
 
 void MainLoop(GLFWwindow* window)
 {
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGui::StyleColorsDark();
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init("#version 330");
+
+	GLfloat timeMultiplier = 1.0f;
+	GLfloat currentTime = 0.0f;
+
 	Shader lightingShader("res/shaders/lighting.vert", "res/shaders/lighting.frag");
 	Shader lampShader("res/shaders/lamp.vert", "res/shaders/lamp.frag");
 
@@ -149,14 +163,15 @@ void MainLoop(GLFWwindow* window)
 	while (!glfwWindowShouldClose(window))
 	{
 		GLfloat currentFrame = glfwGetTime();
-		deltaTime = currentFrame - lastFrame;
+		deltaTime = timeMultiplier * (currentFrame - lastFrame);
 		lastFrame = currentFrame;
+		currentTime += deltaTime;
 
 		//just for some cool dynamic light effect
 		for (int i = 0; i < 4; i++)
 		{
 			GLfloat index = (GLfloat)i;
-			pointLightPositions[i].y = startPointLightPositions[i].y + sin(0.4f * (index + 1.0f) * currentFrame);
+			pointLightPositions[i].y = startPointLightPositions[i].y + sin(0.4f * (index + 1.0f) * currentTime);
 		}
 
 		glfwPollEvents();
@@ -164,6 +179,10 @@ void MainLoop(GLFWwindow* window)
 
 		glClearColor(0.1f, 0.15f, 0.15f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
 
 		modelShader.Use();
 		glm::mat4 view = camera.GetViewMatrix();
@@ -229,8 +248,20 @@ void MainLoop(GLFWwindow* window)
 			lampCubes[i].Draw(lampShader);
 		}
 
+		ImGui::Begin("Test ImGUI window");
+		ImGui::Text("ImGUI Text");
+		ImGui::SliderFloat("Time Scale", &timeMultiplier, 0.0f, 5.0f);
+		ImGui::End();
+
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 		glfwSwapBuffers(window);
 	}
+
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 }
 
 int main()
