@@ -27,7 +27,8 @@
 const GLint WIDTH = 800, HEIGHT = 600;
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 
-void DoMovement();
+void ProcessMovementInput();
+void ProcessDebugInput(GLFWwindow* window);
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void MouseCallback(GLFWwindow* window, double xPos, double yPos);
 void ScrollCallback(GLFWwindow* window, double xOffset, double yOffset);
@@ -36,10 +37,24 @@ Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 GLfloat lastX = WIDTH / 2.0f;
 GLfloat lastY = WIDTH / 2.0f;
 bool keys[1024];
+bool keysReleased[1024];
 bool firstMouse = true;
+bool cursorEnabled = false;
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
+
+void SetCursor(GLFWwindow* window)
+{
+	if (cursorEnabled)
+	{
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	}
+	else
+	{
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	}
+}
 
 GLFWwindow* InitWindow()
 {
@@ -74,7 +89,7 @@ int SetWindow(GLFWwindow* window)
 	glfwSetKeyCallback(window, KeyCallback);
 	glfwSetCursorPosCallback(window, MouseCallback);
 	glfwSetScrollCallback(window, ScrollCallback);
-	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	SetCursor(window);	
 
 	glewExperimental = GL_TRUE; //GLEW will use modern approach, it's not 'experimental' per se
 
@@ -175,7 +190,8 @@ void MainLoop(GLFWwindow* window)
 		}
 
 		glfwPollEvents();
-		DoMovement();
+		ProcessMovementInput();
+		ProcessDebugInput(window);
 
 		glClearColor(0.1f, 0.15f, 0.15f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -257,6 +273,12 @@ void MainLoop(GLFWwindow* window)
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		glfwSwapBuffers(window);
+
+		//reset released keys statuses
+		for (int i = 0; i < 1024; i++)
+		{
+			keysReleased[i] = false;
+		}
 	}
 
 	ImGui_ImplOpenGL3_Shutdown();
@@ -283,7 +305,7 @@ int main()
 	return EXIT_SUCCESS;
 }
 
-void DoMovement()
+void ProcessMovementInput()
 {
 	if (keys[GLFW_KEY_W] || keys[GLFW_KEY_UP])
 	{
@@ -316,6 +338,15 @@ void DoMovement()
 	}
 }
 
+void ProcessDebugInput(GLFWwindow* window)
+{
+	if (keysReleased[GLFW_KEY_H])
+	{
+		cursorEnabled = !cursorEnabled;
+		SetCursor(window);
+	}
+}
+
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
 	if (key == GLFW_KEY_ESCAPE && GLFW_PRESS == action)
@@ -332,6 +363,7 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 		else if (GLFW_RELEASE == action)
 		{
 			keys[key] = false;
+			keysReleased[key] = true;
 		}
 	}
 }
@@ -345,13 +377,16 @@ void MouseCallback(GLFWwindow* window, double xPos, double yPos)
 		firstMouse = false;
 	}
 
-	GLfloat xOffset = xPos - lastX;
-	GLfloat yOffset = lastY - yPos; //reversed because goes the other way around
+	if (!cursorEnabled)
+	{
+		GLfloat xOffset = xPos - lastX;
+		GLfloat yOffset = lastY - yPos; //reversed because goes the other way around
 
+		camera.ProcessMouseMovement(xOffset, yOffset);
+	}
+	
 	lastX = xPos;
 	lastY = yPos;
-
-	camera.ProcessMouseMovement(xOffset, yOffset);
 }
 
 void ScrollCallback(GLFWwindow* window, double xOffset, double yOffset)
