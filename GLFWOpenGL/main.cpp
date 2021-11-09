@@ -44,6 +44,10 @@ bool cursorEnabled = false;
 GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
 
+// not a good way to handle this (especially without encapsulation), but 'projection' and 'view' should be accessible to all renderers so for now it's fine
+glm::mat4 view_global;
+glm::mat4 projection_global;
+
 void SetCursor(GLFWwindow* window)
 {
 	if (cursorEnabled)
@@ -161,8 +165,8 @@ void MainLoop(GLFWwindow* window)
 	//SKYBOX
 	Skybox skybox = Skybox();
 
-	glm::mat4 projection(1.0f);
-	projection = glm::perspective(45.0f, (GLfloat)SCREEN_WIDTH / (GLfloat)SCREEN_HEIGHT, 0.1f, 1000.0f);	
+	projection_global = glm::mat4(1.0f);
+	projection_global = glm::perspective(45.0f, (GLfloat)SCREEN_WIDTH / (GLfloat)SCREEN_HEIGHT, 0.1f, 1000.0f);
 
 	//LIGHTS BEGIN
 	LightsManager lightsManager = LightsManager(lightingShader.Program);
@@ -201,9 +205,9 @@ void MainLoop(GLFWwindow* window)
 		ImGui::NewFrame();
 
 		modelShader.Use();
-		glm::mat4 view = camera.GetViewMatrix();
-		glUniformMatrix4fv(glGetUniformLocation(modelShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-		glUniformMatrix4fv(glGetUniformLocation(modelShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+		view_global = camera.GetViewMatrix();
+		glUniformMatrix4fv(glGetUniformLocation(modelShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection_global));
+		glUniformMatrix4fv(glGetUniformLocation(modelShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view_global));
 
 		glm::mat4 model(1.0f);
 		model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f));
@@ -214,7 +218,7 @@ void MainLoop(GLFWwindow* window)
 		loadedModel.Draw(modelShader);
 
 		//SKYBOX
-		skybox.Draw(glm::mat4(glm::mat3(camera.GetViewMatrix())), projection);
+		skybox.Draw(glm::mat4(glm::mat3(camera.GetViewMatrix())), projection_global);
 
 		lightingShader.Use();
 		GLint viewPosLoc = glGetUniformLocation(lightingShader.Program, "viewPos");
@@ -232,15 +236,12 @@ void MainLoop(GLFWwindow* window)
 		lightsManager.GetSpotLight(0)->SetDirection(camera.GetFront());
 		lightsManager.SetLightsInShader();
 		//LIGHTS END
-
-		view = camera.GetViewMatrix();
-
-		GLint modelLoc = glGetUniformLocation(lightingShader.Program, "model");
+		
 		GLint viewLoc = glGetUniformLocation(lightingShader.Program, "view");
 		GLint projLoc = glGetUniformLocation(lightingShader.Program, "projection");
 
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view_global));
+		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection_global));
 
 		for (GLuint i = 0; i < 10; i++)
 		{
@@ -248,15 +249,12 @@ void MainLoop(GLFWwindow* window)
 		}
 
 		lampShader.Use();
-
-		modelLoc = glGetUniformLocation(lampShader.Program, "model");
+		
 		viewLoc = glGetUniformLocation(lampShader.Program, "view");
 		projLoc = glGetUniformLocation(lampShader.Program, "projection");
 
-		view = camera.GetViewMatrix();
-		
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view_global));
+		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection_global));
 
 		for (GLuint i = 0; i < 4; i++)
 		{

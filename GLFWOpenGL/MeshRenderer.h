@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Component.h"
+#include "Material.h"
 
 /*
  * 'MeshRenderer' must have an owner, otherwise it won't work as it's not intended to be used as an independent object
@@ -9,7 +10,13 @@
 class MeshRenderer : public Component
 {
 public:
-	//~MeshRenderer() override;
+	MeshRenderer();
+	~MeshRenderer() override;
+
 	void Init(GameObject* owner) override;
 	void Update() override;
+	void SetMaterial(Material* material);
+
+private:
+	Material* material;
 };
