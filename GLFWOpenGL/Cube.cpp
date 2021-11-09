@@ -28,10 +28,12 @@ Cube::Cube(GLchar* diffusePath, GLchar* specularPath, Shader shader, glm::vec3 p
     this->applyTextures = true;
 }
 
+//not generic enough, details inside the method
 void Cube::Draw(Shader shader)
 {
     shader.Use();
 
+    //this should be handled by dedicated 'Material' class!    
     if (applyTextures)
     {
         glActiveTexture(GL_TEXTURE0);
@@ -40,9 +42,10 @@ void Cube::Draw(Shader shader)
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, specularMap);
     }
-    
-    glBindVertexArray(VAO);
 
+    //this could be handled by 'Renderer' class but think about what could be handled by dedicated 'Mesh'/'Model' class
+    glBindVertexArray(VAO);
+    
     glm::mat4 model(1.0f);
     model = glm::translate(model, position);
     model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f)); //random rotation axis for now
@@ -53,11 +56,13 @@ void Cube::Draw(Shader shader)
     glBindVertexArray(0);
 }
 
+//won't be relevant in the future, correct mesh renderer will read its owner data
 void Cube::SetPosition(glm::vec3 position)
 {
     this->position = position;
 }
 
+//could be more generic by passing the vertices with flags
 void Cube::SetupCube()
 {
     glGenVertexArrays(1, &this->VAO);
@@ -81,6 +86,7 @@ void Cube::SetupCube()
     glBindVertexArray(0);
 }
 
+//could be more generic by taking (path, texture slot name, index and applying it to the shader)
 void Cube::ApplyTextures(GLchar* diffusePath, GLchar* specularPath, Shader shader)
 {
     diffuseMap = TextureLoader::LoadTexture(diffusePath);

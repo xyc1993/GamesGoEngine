@@ -9,6 +9,6 @@ public:
 	virtual void Init(GameObject* owner);
 	virtual void Update() = 0;
 
-private:
+protected:
 	GameObject* owner;
 };
