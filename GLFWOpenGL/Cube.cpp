@@ -91,10 +91,4 @@ void Cube::ApplyTextures(GLchar* diffusePath, GLchar* specularPath, Shader shade
 {
     diffuseMap = TextureLoader::LoadTexture(diffusePath);
     specularMap = TextureLoader::LoadTexture(specularPath);
-
-    glBindTexture(GL_TEXTURE_2D, 0); //unbind textures
-
-    shader.Use();
-    glUniform1i(glGetUniformLocation(shader.Program, "material.diffuse"), 0);
-    glUniform1i(glGetUniformLocation(shader.Program, "material.specular"), 1);
 }

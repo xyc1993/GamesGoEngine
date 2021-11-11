@@ -2,19 +2,34 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+#include "TextureLoader.h"
+
 Material::Material()
 {
 	shader = nullptr;
+	texturesIDs.clear();
 }
 
 Material::Material(const GLchar* vertexPath, const GLchar* fragmentPath)
 {
 	shader = new Shader(vertexPath, fragmentPath);
+	texturesIDs.clear();
 }
 
 void Material::Draw(glm::mat4 model, glm::mat4 view, glm::mat4 projection)
 {
 	shader->Use();
+
+	for (int i = 0; i < texturesIDs.size(); i++)
+	{
+		glActiveTexture(GL_TEXTURE0 + (GLuint)i);
+		glBindTexture(GL_TEXTURE_2D, texturesIDs[i]);
+	}
+
+	for (int i = 0; i < floatIDs.size(); i++)
+	{
+		glUniform1f(floatIDs[i], floatValues[i]);
+	}
 
 	const GLint modelLoc = glGetUniformLocation(shader->Program, "model");
 	const GLint viewLoc = glGetUniformLocation(shader->Program, "view");
@@ -32,4 +47,22 @@ void Material::SetShader(const GLchar* vertexPath, const GLchar* fragmentPath)
 		shader->~Shader();
 	}
 	shader = new Shader(vertexPath, fragmentPath);	
+}
+
+void Material::AddTexture(GLchar* path, GLchar* textureName)
+{
+	if (shader != nullptr)
+	{
+		GLuint texture = TextureLoader::LoadTexture(path);
+		texturesIDs.push_back(texture);
+	}
+}
+
+void Material::AddFloat(float value, GLchar* floatName)
+{
+	if (shader != nullptr)
+	{
+		floatIDs.push_back(glGetUniformLocation(shader->Program, floatName));
+		floatValues.push_back(value);
+	}
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vector>
 #include <glm/fwd.hpp>
 
 #include "Shader.h"
@@ -19,6 +20,15 @@ public:
 	void Draw(glm::mat4 model, glm::mat4 view, glm::mat4 projection);
 	void SetShader(const GLchar* vertexPath, const GLchar* fragmentPath);
 
+	//TO DO: should have some safety measure against adding texture that was already added
+	void AddTexture(GLchar* path, GLchar* textureName);
+	//TO DO: should have some safety measure against adding float that was already added
+	void AddFloat(float value, GLchar* floatName);
+
 private:
 	Shader* shader;
+
+	std::vector<GLuint> texturesIDs;
+	std::vector<GLuint> floatIDs;
+	std::vector<float> floatValues;
 };

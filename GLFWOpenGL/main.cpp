@@ -143,6 +143,19 @@ void MainLoop(GLFWwindow* window)
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //use this for wireframe
 
+	glm::vec3 litBoxesPositions[] = {
+		glm::vec3(3.0f, 0.0f, 0.0f),
+		glm::vec3(2.0f, 5.0f, -15.0f),
+		glm::vec3(-1.5f, -2.2f, -2.5f),
+		glm::vec3(-3.8f, -2.0f, -12.3f),
+		glm::vec3(2.4f, -0.4f, -3.5f),
+		glm::vec3(-1.7f, 3.0f, -7.5f),
+		glm::vec3(1.3f, -2.0f, -2.5f),
+		glm::vec3(1.5f, 2.0f, -2.5f),
+		glm::vec3(1.5f, 0.2f, -1.5f),
+		glm::vec3(-1.3f, 1.0f, -1.5f)
+	};
+
 	Cube cubes[] = {
 		Cube((GLchar*)"res/box/container2_diffuse.png", (GLchar*)"res/box/container2_specular.png", lightingShader, glm::vec3(3.0f, 0.0f, 0.0f), 0.0f, 1.0f),
 		Cube((GLchar*)"res/box/container2_diffuse.png", (GLchar*)"res/box/container2_specular.png", lightingShader, glm::vec3(2.0f, 5.0f, -15.0f), 20.0f, 1.0f),
@@ -175,6 +188,7 @@ void MainLoop(GLFWwindow* window)
 
 	// NEW CODE DATA STRUCTURE REWORK (remember to add delete after while()!)
 	CubePrimitive* cubeMesh = new CubePrimitive();
+
 	Material* lampMaterial = new Material("res/shaders/lamp.vert", "res/shaders/lamp.frag");
 	
 	const int LAMPS_NUMBER = 4;
@@ -185,7 +199,7 @@ void MainLoop(GLFWwindow* window)
 		GameObject()
 	};
 
-	MeshRenderer* lampMeshRenerers[] = {
+	MeshRenderer* lampMeshRenderers[] = {
 		new MeshRenderer(),
 		new MeshRenderer(),
 		new MeshRenderer(),
@@ -194,14 +208,43 @@ void MainLoop(GLFWwindow* window)
 
 	for (int i = 0; i < LAMPS_NUMBER; i++)
 	{
-		lampMeshRenerers[i]->SetMaterial(lampMaterial);
-		lampMeshRenerers[i]->SetMesh(cubeMesh);
-		lampObjects[i].AddComponent(lampMeshRenerers[i]);
+		lampMeshRenderers[i]->SetMaterial(lampMaterial);
+		lampMeshRenderers[i]->SetMesh(cubeMesh);
+		lampObjects[i].AddComponent(lampMeshRenderers[i]);
 		lampObjects[i].SetPosition(pointLightPositions[i]);
 		lampObjects[i].SetScale(glm::vec3(0.2f));
 	}
-	// NEW CODER END
 
+	Material* cubeLitMaterial = new Material("res/shaders/lighting.vert", "res/shaders/lighting.frag");
+	cubeLitMaterial->AddTexture((GLchar*)"res/box/container2_diffuse.png", (GLchar*)"material.diffuse");
+	cubeLitMaterial->AddTexture((GLchar*)"res/box/container2_specular.png", (GLchar*)"material.specular");
+	cubeLitMaterial->AddFloat(32.0f, (GLchar*)"material.shininess");
+
+	const int LIT_BOXES_NUMBER = 10;
+	GameObject litBoxesObjects[] = {
+		GameObject(), GameObject(), GameObject(),
+		GameObject(), GameObject(), GameObject(),
+		GameObject(), GameObject(), GameObject(),
+		GameObject()
+	};
+
+	MeshRenderer* litBoxesMeshRenderers[] = {
+		new MeshRenderer(), new MeshRenderer(), new MeshRenderer(),
+		new MeshRenderer(), new MeshRenderer(), new MeshRenderer(),
+		new MeshRenderer(), new MeshRenderer(), new MeshRenderer(),
+		new MeshRenderer()
+	};
+
+	for (int i = 0; i < LIT_BOXES_NUMBER; i++)
+	{
+		litBoxesMeshRenderers[i]->SetMaterial(cubeLitMaterial);
+		litBoxesMeshRenderers[i]->SetMesh(cubeMesh);
+		litBoxesObjects[i].AddComponent(litBoxesMeshRenderers[i]);
+		litBoxesObjects[i].SetPosition(litBoxesPositions[i]);
+	}
+	
+	// NEW CODE END
+	
 	while (!glfwWindowShouldClose(window))
 	{
 		GLfloat currentFrame = glfwGetTime();
@@ -248,7 +291,8 @@ void MainLoop(GLFWwindow* window)
 		glUniform3f(viewPosLoc, camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
 
 		//set material settings
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 32.0f);
+		GLuint shininess = glGetUniformLocation(lightingShader.Program, "material.shininess");
+		glUniform1f(shininess, 32.0f);
 
 		//LIGHTS BEGIN
 		for (int i = 0; i < lightsManager.MAX_NUMBER_OF_POINT_LIGHTS; i++)
@@ -273,6 +317,12 @@ void MainLoop(GLFWwindow* window)
 
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view_global));
 		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection_global));
+
+		for (int i = 0; i < LIT_BOXES_NUMBER; i++)
+		{
+			//won't work now, needs lighting support (preferably generic one)
+			//litBoxesObjects[i].Update();
+		}
 				
 		for (int i = 0; i < LAMPS_NUMBER; i++)
 		{
