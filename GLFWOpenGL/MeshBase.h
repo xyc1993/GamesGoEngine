@@ -5,8 +5,7 @@
 class MeshBase
 {
 public:
-	const GLuint& GetVAO() const;
-	const GLuint& GetVBO() const;
+	virtual void Draw() = 0;
 
 protected:
 	GLuint VAO, VBO;
