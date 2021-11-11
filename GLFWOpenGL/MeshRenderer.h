@@ -2,6 +2,7 @@
 
 #include "Component.h"
 #include "Material.h"
+#include "MeshBase.h"
 
 /*
  * 'MeshRenderer' must have an owner, otherwise it won't work as it's not intended to be used as an independent object
@@ -16,7 +17,9 @@ public:
 	void Init(GameObject* owner) override;
 	void Update() override;
 	void SetMaterial(Material* material);
+	void SetMesh(MeshBase* mesh);
 
 private:
 	Material* material;
+	MeshBase* mesh;
 };

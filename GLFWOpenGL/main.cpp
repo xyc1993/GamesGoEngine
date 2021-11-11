@@ -15,14 +15,16 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Cube.h"
-#include "Meshes.h"
 #include "Shader.h"
 #include "Camera.h"
+#include "CubePrimitive.h"
+#include "GameObject.h"
 #include "Model.h"
-#include "TextureLoader.h"
 #include "Skybox.h"
 
 #include "LightsManager.h"
+#include "Material.h"
+#include "MeshRenderer.h"
 
 const GLint WIDTH = 800, HEIGHT = 600;
 int SCREEN_WIDTH, SCREEN_HEIGHT;
@@ -121,7 +123,6 @@ void MainLoop(GLFWwindow* window)
 	GLfloat currentTime = 0.0f;
 
 	Shader lightingShader("res/shaders/lighting.vert", "res/shaders/lighting.frag");
-	Shader lampShader("res/shaders/lamp.vert", "res/shaders/lamp.frag");
 
 	glm::vec3 startPointLightPositions[] = {
 		glm::vec3(0.07,   0.2f,   1.0f),
@@ -155,20 +156,13 @@ void MainLoop(GLFWwindow* window)
 		Cube((GLchar*)"res/box/container2_diffuse.png", (GLchar*)"res/box/container2_specular.png", lightingShader, glm::vec3(-1.3f, 1.0f, -1.5f), 200.0f, 1.0f)
 	};
 
-	Cube lampCubes[] = {
-		Cube(lampShader, pointLightPositions[0], 0.0f, 0.2f),
-		Cube(lampShader, pointLightPositions[1], 0.0f, 0.2f),
-		Cube(lampShader, pointLightPositions[2], 0.0f, 0.2f),
-		Cube(lampShader, pointLightPositions[3], 0.0f, 0.2f)
-	};
-
-	//SKYBOX
+	// SKYBOX
 	Skybox skybox = Skybox();
 
 	projection_global = glm::mat4(1.0f);
 	projection_global = glm::perspective(45.0f, (GLfloat)SCREEN_WIDTH / (GLfloat)SCREEN_HEIGHT, 0.1f, 1000.0f);
 
-	//LIGHTS BEGIN
+	// LIGHTS BEGIN
 	LightsManager lightsManager = LightsManager(lightingShader.Program);
 	lightsManager.AddDirectionalLight(glm::vec3(0.05f), glm::vec3(0.4f), glm::vec3(0.5f), glm::vec3(-0.2f, -1.0f, -0.3f));
 	for (int i = 0; i < lightsManager.MAX_NUMBER_OF_POINT_LIGHTS; i++)
@@ -177,7 +171,36 @@ void MainLoop(GLFWwindow* window)
 	}
 	lightsManager.AddSpotLight(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(1.0f), camera.GetPosition(), camera.GetFront(),
 								1.0f, 0.09f, 0.032f, glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(15.0f)));
-	//LIGHTS END
+	// LIGHTS END
+
+	// NEW CODE DATA STRUCTURE REWORK (remember to add delete after while()!)
+	CubePrimitive* cubeMesh = new CubePrimitive();
+	Material* lampMaterial = new Material("res/shaders/lamp.vert", "res/shaders/lamp.frag");
+	
+	const int LAMPS_NUMBER = 4;
+	GameObject lampObjects[] = {
+		GameObject(),
+		GameObject(),
+		GameObject(),
+		GameObject()
+	};
+
+	MeshRenderer* lampMeshRenerers[] = {
+		new MeshRenderer(),
+		new MeshRenderer(),
+		new MeshRenderer(),
+		new MeshRenderer()
+	};
+
+	for (int i = 0; i < LAMPS_NUMBER; i++)
+	{
+		lampMeshRenerers[i]->SetMaterial(lampMaterial);
+		lampMeshRenerers[i]->SetMesh(cubeMesh);
+		lampObjects[i].AddComponent(lampMeshRenerers[i]);
+		lampObjects[i].SetPosition(pointLightPositions[i]);
+		lampObjects[i].SetScale(glm::vec3(0.2f));
+	}
+	// NEW CODER END
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -248,20 +271,15 @@ void MainLoop(GLFWwindow* window)
 			cubes[i].Draw(lightingShader);
 		}
 
-		lampShader.Use();
-		
-		viewLoc = glGetUniformLocation(lampShader.Program, "view");
-		projLoc = glGetUniformLocation(lampShader.Program, "projection");
-
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view_global));
 		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection_global));
-
-		for (GLuint i = 0; i < 4; i++)
+				
+		for (int i = 0; i < LAMPS_NUMBER; i++)
 		{
-			lampCubes[i].SetPosition(pointLightPositions[i]);
-			lampCubes[i].Draw(lampShader);
+			lampObjects[i].SetPosition(pointLightPositions[i]);
+			lampObjects[i].Update();
 		}
-
+		
 		ImGui::Begin("Test ImGUI window");
 		ImGui::Text("ImGUI Text");
 		ImGui::SliderFloat("Time Scale", &timeMultiplier, 0.0f, 5.0f);
@@ -278,6 +296,13 @@ void MainLoop(GLFWwindow* window)
 			keysReleased[i] = false;
 		}
 	}
+
+	// NEW CODE CLEANUP
+	/*
+	delete cubeMesh;
+	delete lampMaterial;
+	delete lampMeshRenderer;
+	*/
 
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();

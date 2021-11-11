@@ -1,6 +1,6 @@
 #include "Cube.h"
 
-#include "Meshes.h"
+#include "Primitives.h"
 #include "TextureLoader.h"
 #include <glm/gtc/type_ptr.hpp>
 

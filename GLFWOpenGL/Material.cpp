@@ -14,6 +14,8 @@ Material::Material(const GLchar* vertexPath, const GLchar* fragmentPath)
 
 void Material::Draw(glm::mat4 model, glm::mat4 view, glm::mat4 projection)
 {
+	shader->Use();
+
 	const GLint modelLoc = glGetUniformLocation(shader->Program, "model");
 	const GLint viewLoc = glGetUniformLocation(shader->Program, "view");
 	const GLint projLoc = glGetUniformLocation(shader->Program, "projection");

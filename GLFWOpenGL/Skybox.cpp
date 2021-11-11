@@ -1,5 +1,5 @@
 #include "Skybox.h"
-#include "Meshes.h"
+#include "Primitives.h"
 #include "TextureLoader.h"
 #include <glm/gtc/type_ptr.hpp>
 
@@ -33,7 +33,7 @@ void Skybox::InitSkybox(const std::vector<const GLchar*>& faces, const GLchar* v
 	glGenBuffers(1, &skyyboxVBO);
 	glBindVertexArray(skyboxVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, skyyboxVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVerticesCube), &skyboxVerticesCube, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GL_FLOAT), (GLvoid*)0);
 	glBindVertexArray(0);

@@ -3,6 +3,11 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
 
+/*
+ * Header containing hardcoded meshes
+ * Primitives data
+ */
+
 static GLfloat cubeVertices[] = {
         // Positions            // Normals              // Texture Coords
         -0.5f, -0.5f, -0.5f,    0.0f,  0.0f, -1.0f,     0.0f,  0.0f,
@@ -48,7 +53,7 @@ static GLfloat cubeVertices[] = {
         -0.5f,  0.5f, -0.5f,    0.0f,  1.0f,  0.0f,     0.0f,  1.0f
 };
 
-static GLfloat skyboxVertices[] = {
+static GLfloat skyboxVerticesCube[] = {
     // Positions
     -1.0f,  1.0f, -1.0f,
     -1.0f, -1.0f, -1.0f,
