@@ -218,6 +218,7 @@ void MainLoop(GLFWwindow* window)
 	cubeLitMaterial->AddTexture((GLchar*)"res/box/container2_diffuse.png", (GLchar*)"material.diffuse");
 	cubeLitMaterial->AddTexture((GLchar*)"res/box/container2_specular.png", (GLchar*)"material.specular");
 	cubeLitMaterial->AddFloat(32.0f, (GLchar*)"material.shininess");
+	cubeLitMaterial->SetLightModel(LightModelType::LitForward);
 
 	const int LIT_BOXES_NUMBER = 10;
 	GameObject litBoxesObjects[] = {
@@ -319,8 +320,7 @@ void MainLoop(GLFWwindow* window)
 
 		for (int i = 0; i < LIT_BOXES_NUMBER; i++)
 		{
-			//won't work now, needs lighting support (preferably generic one)
-			//litBoxesObjects[i].Update();
+			litBoxesObjects[i].Update();
 		}
 				
 		for (int i = 0; i < LAMPS_NUMBER; i++)
