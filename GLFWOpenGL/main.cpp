@@ -14,7 +14,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Cube.h"
 #include "Shader.h"
 #include "Camera.h"
 #include "CubePrimitive.h"
@@ -122,8 +121,6 @@ void MainLoop(GLFWwindow* window)
 	GLfloat timeMultiplier = 1.0f;
 	GLfloat currentTime = 0.0f;
 
-	Shader lightingShader("res/shaders/lighting.vert", "res/shaders/lighting.frag");
-
 	glm::vec3 startPointLightPositions[] = {
 		glm::vec3(0.07,   0.2f,   1.0f),
 		glm::vec3(2.3f,   -3.3f,   -4.0f),
@@ -156,17 +153,17 @@ void MainLoop(GLFWwindow* window)
 		glm::vec3(-1.3f, 1.0f, -1.5f)
 	};
 
-	Cube cubes[] = {
-		Cube((GLchar*)"res/box/container2_diffuse.png", (GLchar*)"res/box/container2_specular.png", lightingShader, glm::vec3(3.0f, 0.0f, 0.0f), 0.0f, 1.0f),
-		Cube((GLchar*)"res/box/container2_diffuse.png", (GLchar*)"res/box/container2_specular.png", lightingShader, glm::vec3(2.0f, 5.0f, -15.0f), 20.0f, 1.0f),
-		Cube((GLchar*)"res/box/container2_diffuse.png", (GLchar*)"res/box/container2_specular.png", lightingShader, glm::vec3(-1.5f, -2.2f, -2.5f), 40.0f, 1.0f),
-		Cube((GLchar*)"res/box/container2_diffuse.png", (GLchar*)"res/box/container2_specular.png", lightingShader, glm::vec3(-3.8f, -2.0f, -12.3f), 80.0f, 1.0f),
-		Cube((GLchar*)"res/box/container2_diffuse.png", (GLchar*)"res/box/container2_specular.png", lightingShader, glm::vec3(2.4f, -0.4f, -3.5f), 100.0f, 1.0f),
-		Cube((GLchar*)"res/box/container2_diffuse.png", (GLchar*)"res/box/container2_specular.png", lightingShader, glm::vec3(-1.7f, 3.0f, -7.5f), 120.0f, 1.0f),
-		Cube((GLchar*)"res/box/container2_diffuse.png", (GLchar*)"res/box/container2_specular.png", lightingShader, glm::vec3(1.3f, -2.0f, -2.5f), 140.0f, 1.0f),
-		Cube((GLchar*)"res/box/container2_diffuse.png", (GLchar*)"res/box/container2_specular.png", lightingShader, glm::vec3(1.5f, 2.0f, -2.5f), 160.0f, 1.0f),
-		Cube((GLchar*)"res/box/container2_diffuse.png", (GLchar*)"res/box/container2_specular.png", lightingShader, glm::vec3(1.5f, 0.2f, -1.5f), 180.0f, 1.0f),
-		Cube((GLchar*)"res/box/container2_diffuse.png", (GLchar*)"res/box/container2_specular.png", lightingShader, glm::vec3(-1.3f, 1.0f, -1.5f), 200.0f, 1.0f)
+	glm::vec3 litBoxesRotations[] = {
+		glm::vec3(0.0f, 0.0f, 0.0f),
+		glm::vec3(30.0f, 15.0f, 0.0f),
+		glm::vec3(60.0f, 30.0f, 0.0f),
+		glm::vec3(90.0f, 45.0f, 0.0f),
+		glm::vec3(120.0f, 60.0f, 0.0f),
+		glm::vec3(150.0f, 75.0f, 0.0f),
+		glm::vec3(180.0f, 90.0f, 0.0f),
+		glm::vec3(210.0f, 105.0f, 0.0f),
+		glm::vec3(240.0f, 120.0f, 0.0f),
+		glm::vec3(270.0f, 135.0f, 0.0f)
 	};
 
 	// SKYBOX
@@ -241,6 +238,7 @@ void MainLoop(GLFWwindow* window)
 		litBoxesMeshRenderers[i]->SetMesh(cubeMesh);
 		litBoxesObjects[i].AddComponent(litBoxesMeshRenderers[i]);
 		litBoxesObjects[i].SetPosition(litBoxesPositions[i]);
+		litBoxesObjects[i].SetRotation(litBoxesRotations[i]);
 	}
 	
 	// NEW CODE END
@@ -286,14 +284,6 @@ void MainLoop(GLFWwindow* window)
 		//SKYBOX
 		skybox.Draw(glm::mat4(glm::mat3(camera.GetViewMatrix())), projection_global);
 
-		lightingShader.Use();
-		GLint viewPosLoc = glGetUniformLocation(lightingShader.Program, "viewPos");
-		glUniform3f(viewPosLoc, camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
-
-		//set material settings
-		GLuint shininess = glGetUniformLocation(lightingShader.Program, "material.shininess");
-		glUniform1f(shininess, 32.0f);
-
 		//LIGHTS BEGIN
 		for (int i = 0; i < LightsManager::MAX_NUMBER_OF_POINT_LIGHTS; i++)
 		{
@@ -301,23 +291,8 @@ void MainLoop(GLFWwindow* window)
 		}
 		LightsManager::GetSpotLight(0)->SetPosition(camera.GetPosition());
 		LightsManager::GetSpotLight(0)->SetDirection(camera.GetFront());
-		LightsManager::SetLightsInShader(lightingShader.Program);
 		//LIGHTS END
 		
-		GLint viewLoc = glGetUniformLocation(lightingShader.Program, "view");
-		GLint projLoc = glGetUniformLocation(lightingShader.Program, "projection");
-
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view_global));
-		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection_global));
-
-		for (GLuint i = 0; i < 10; i++)
-		{
-			cubes[i].Draw(lightingShader);
-		}
-
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view_global));
-		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection_global));
-
 		for (int i = 0; i < LIT_BOXES_NUMBER; i++)
 		{
 			litBoxesObjects[i].Update();

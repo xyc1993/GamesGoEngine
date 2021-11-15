@@ -155,7 +155,6 @@
     <ClCompile Include="..\External Libraries\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Component.cpp" />
-    <ClCompile Include="Cube.cpp" />
     <ClCompile Include="CubePrimitive.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -183,7 +182,6 @@
     <ClInclude Include="..\External Libraries\imgui\imstb_truetype.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Component.h" />
-    <ClInclude Include="Cube.h" />
     <ClInclude Include="CubePrimitive.h" />
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="GameObject.h" />
