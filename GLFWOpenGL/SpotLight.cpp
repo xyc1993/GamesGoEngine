@@ -5,11 +5,10 @@ SpotLight::SpotLight()
 
 }
 
-SpotLight::SpotLight(GLuint shaderProgram, GLuint lightNumber, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular,
+SpotLight::SpotLight(GLuint lightNumber, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular,
 	glm::vec3 position, glm::vec3 direction, float constant, float linear, float quadratic,
 	float cutOff, float outerCutOff)
 {
-	this->shaderProgram = shaderProgram;
 	this->lightNumber = lightNumber;
 
 	this->ambient = ambient;
@@ -27,7 +26,7 @@ SpotLight::SpotLight(GLuint shaderProgram, GLuint lightNumber, glm::vec3 ambient
 	this->outerCutOff = outerCutOff;
 }
 
-void SpotLight::SetLightInShader()
+void SpotLight::SetLightInShader(const GLuint& shaderProgram)
 {
 	glUniform3f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty() + ".ambient").c_str()), ambient.x, ambient.y, ambient.z);
 	glUniform3f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty() + ".diffuse").c_str()), diffuse.x, diffuse.y, diffuse.z);

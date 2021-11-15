@@ -6,8 +6,8 @@ class DirectionalLight : Light
 {
 public:
 	DirectionalLight();
-	DirectionalLight(GLuint shaderProgram, GLuint lightNumber, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, glm::vec3 direction);
-	void SetLightInShader() override;
+	DirectionalLight(GLuint lightNumber, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, glm::vec3 direction);
+	void SetLightInShader(const GLuint& shaderProgram) override;
 
 protected:
 	std::string GetNumberedShaderProperty() override;

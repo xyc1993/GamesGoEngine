@@ -176,13 +176,12 @@ void MainLoop(GLFWwindow* window)
 	projection_global = glm::perspective(45.0f, (GLfloat)SCREEN_WIDTH / (GLfloat)SCREEN_HEIGHT, 0.1f, 1000.0f);
 
 	// LIGHTS BEGIN
-	LightsManager lightsManager = LightsManager(lightingShader.Program);
-	lightsManager.AddDirectionalLight(glm::vec3(0.05f), glm::vec3(0.4f), glm::vec3(0.5f), glm::vec3(-0.2f, -1.0f, -0.3f));
-	for (int i = 0; i < lightsManager.MAX_NUMBER_OF_POINT_LIGHTS; i++)
+	LightsManager::AddDirectionalLight(glm::vec3(0.05f), glm::vec3(0.4f), glm::vec3(0.5f), glm::vec3(-0.2f, -1.0f, -0.3f));
+	for (int i = 0; i < LightsManager::MAX_NUMBER_OF_POINT_LIGHTS; i++)
 	{
-		lightsManager.AddPointLight(glm::vec3(0.05f), glm::vec3(0.8f), glm::vec3(1.0f), pointLightPositions[i], 1.0f, 0.09f, 0.032f);
+		LightsManager::AddPointLight(glm::vec3(0.05f), glm::vec3(0.8f), glm::vec3(1.0f), pointLightPositions[i], 1.0f, 0.09f, 0.032f);
 	}
-	lightsManager.AddSpotLight(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(1.0f), camera.GetPosition(), camera.GetFront(),
+	LightsManager::AddSpotLight(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(1.0f), camera.GetPosition(), camera.GetFront(),
 								1.0f, 0.09f, 0.032f, glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(15.0f)));
 	// LIGHTS END
 
@@ -295,13 +294,13 @@ void MainLoop(GLFWwindow* window)
 		glUniform1f(shininess, 32.0f);
 
 		//LIGHTS BEGIN
-		for (int i = 0; i < lightsManager.MAX_NUMBER_OF_POINT_LIGHTS; i++)
+		for (int i = 0; i < LightsManager::MAX_NUMBER_OF_POINT_LIGHTS; i++)
 		{
-			lightsManager.GetPointLight(i)->SetPosition(pointLightPositions[i]);
+			LightsManager::GetPointLight(i)->SetPosition(pointLightPositions[i]);
 		}
-		lightsManager.GetSpotLight(0)->SetPosition(camera.GetPosition());
-		lightsManager.GetSpotLight(0)->SetDirection(camera.GetFront());
-		lightsManager.SetLightsInShader();
+		LightsManager::GetSpotLight(0)->SetPosition(camera.GetPosition());
+		LightsManager::GetSpotLight(0)->SetDirection(camera.GetFront());
+		LightsManager::SetLightsInShader(lightingShader.Program);
 		//LIGHTS END
 		
 		GLint viewLoc = glGetUniformLocation(lightingShader.Program, "view");

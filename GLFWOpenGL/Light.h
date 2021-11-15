@@ -8,13 +8,13 @@
 class Light
 {
 public:
-	//works with correct shader supporting light, forward rendering
-	virtual void SetLightInShader() = 0;
+	// works with correct shader supporting light, forward rendering
+	virtual void SetLightInShader(const GLuint& shaderProgram) = 0;
 
 protected:
 	virtual std::string GetNumberedShaderProperty() = 0;
 
-	GLuint shaderProgram;
+	// light number (index) in shader array
 	GLuint lightNumber;
 
 	glm::vec3 ambient;
