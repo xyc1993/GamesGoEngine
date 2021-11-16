@@ -14,9 +14,15 @@ public:
 	glm::vec3 GetPosition() const;
 	glm::vec3 GetRotation() const;
 	glm::vec3 GetScale() const;
+	glm::vec3 GetForward() const;
+	glm::vec3 GetRight() const;
+	glm::vec3 GetUp() const;
 
 private:
 	glm::vec3 position;
 	glm::vec3 rotation; //rotation expressed in Euler Angles
 	glm::vec3 scale;
+	glm::vec3 forward;
+	glm::vec3 right;
+	glm::vec3 up;
 };
