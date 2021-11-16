@@ -33,10 +33,10 @@ void MeshRenderer::Update()
 	{
 		// calculate model matrix for the mesh
 		glm::mat4 model(1.0f);
-		model = glm::translate(model, owner->GetTransform().position);
-		const glm::quat rotationQuaternion = glm::quat(owner->GetTransform().rotation);
+		model = glm::translate(model, owner->GetTransform()->GetPosition());
+		const glm::quat rotationQuaternion = glm::quat(owner->GetTransform()->GetRotation());
 		model = glm::rotate(model, angle(rotationQuaternion), axis(rotationQuaternion));
-		model = glm::scale(model, owner->GetTransform().scale);
+		model = glm::scale(model, owner->GetTransform()->GetScale());
 		
 		material->Draw(model, view_global, projection_global);		
 		mesh->Draw();

@@ -207,8 +207,8 @@ void MainLoop(GLFWwindow* window)
 		lampMeshRenderers[i]->SetMaterial(lampMaterial);
 		lampMeshRenderers[i]->SetMesh(cubeMesh);
 		lampObjects[i].AddComponent(lampMeshRenderers[i]);
-		lampObjects[i].SetPosition(pointLightPositions[i]);
-		lampObjects[i].SetScale(glm::vec3(0.2f));
+		lampObjects[i].GetTransform()->SetPosition(pointLightPositions[i]);
+		lampObjects[i].GetTransform()->SetScale(glm::vec3(0.2f));
 	}
 
 	Material* cubeLitMaterial = new Material("res/shaders/lighting.vert", "res/shaders/lighting.frag");
@@ -237,8 +237,8 @@ void MainLoop(GLFWwindow* window)
 		litBoxesMeshRenderers[i]->SetMaterial(cubeLitMaterial);
 		litBoxesMeshRenderers[i]->SetMesh(cubeMesh);
 		litBoxesObjects[i].AddComponent(litBoxesMeshRenderers[i]);
-		litBoxesObjects[i].SetPosition(litBoxesPositions[i]);
-		litBoxesObjects[i].SetRotation(litBoxesRotations[i]);
+		litBoxesObjects[i].GetTransform()->SetPosition(litBoxesPositions[i]);
+		litBoxesObjects[i].GetTransform()->SetRotation(litBoxesRotations[i]);
 	}
 	
 	// NEW CODE END
@@ -300,7 +300,7 @@ void MainLoop(GLFWwindow* window)
 				
 		for (int i = 0; i < LAMPS_NUMBER; i++)
 		{
-			lampObjects[i].SetPosition(pointLightPositions[i]);
+			lampObjects[i].GetTransform()->SetPosition(pointLightPositions[i]);
 			lampObjects[i].Update();
 		}
 		

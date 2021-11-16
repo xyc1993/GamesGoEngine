@@ -2,7 +2,7 @@
 
 GameObject::GameObject()
 {
-	transform = Transform();
+	transform = new Transform();
 	components.clear();
 }
 
@@ -15,6 +15,7 @@ GameObject::~GameObject()
 			component->~Component();
 		}
 	}
+	delete transform;
 }
 
 void GameObject::Update()
@@ -37,22 +38,7 @@ void GameObject::AddComponent(Component* component)
 	}
 }
 
-const Transform& GameObject::GetTransform() const
+Transform* GameObject::GetTransform() const
 {
 	return transform;
-}
-
-void GameObject::SetPosition(glm::vec3 position)
-{
-	transform.position = position;
-}
-
-void GameObject::SetRotation(glm::vec3 eulerAngles)
-{
-	transform.rotation = eulerAngles;
-}
-
-void GameObject::SetScale(glm::vec3 scale)
-{
-	transform.scale = scale;
 }
