@@ -18,6 +18,7 @@
 #include "Camera.h"
 #include "CubePrimitive.h"
 #include "GameObject.h"
+#include "InputManager.h"
 #include "Model.h"
 #include "Skybox.h"
 
@@ -30,15 +31,12 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 void ProcessMovementInput();
 void ProcessDebugInput(GLFWwindow* window);
-void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void MouseCallback(GLFWwindow* window, double xPos, double yPos);
 void ScrollCallback(GLFWwindow* window, double xOffset, double yOffset);
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 GLfloat lastX = WIDTH / 2.0f;
 GLfloat lastY = WIDTH / 2.0f;
-bool keys[1024];
-bool keysReleased[1024];
 bool firstMouse = true;
 bool cursorEnabled = false;
 
@@ -91,7 +89,7 @@ int SetWindow(GLFWwindow* window)
 
 	glfwMakeContextCurrent(window);
 
-	glfwSetKeyCallback(window, KeyCallback);
+	InputManager::Init(window);
 	glfwSetCursorPosCallback(window, MouseCallback);
 	glfwSetScrollCallback(window, ScrollCallback);
 	SetCursor(window);	
@@ -314,11 +312,8 @@ void MainLoop(GLFWwindow* window)
 
 		glfwSwapBuffers(window);
 
-		//reset released keys statuses
-		for (int i = 0; i < 1024; i++)
-		{
-			keysReleased[i] = false;
-		}
+		//reset pressed & released keys statuses
+		InputManager::LateUpdate();
 	}
 
 	// NEW CODE CLEANUP
@@ -353,33 +348,33 @@ int main()
 }
 
 void ProcessMovementInput()
-{
-	if (keys[GLFW_KEY_W] || keys[GLFW_KEY_UP])
+{	
+	if (InputManager::GetKey(GLFW_KEY_W) || InputManager::GetKey(GLFW_KEY_UP))
 	{
 		camera.ProcessKeyboard(Camera_Movement::FORWARD, deltaTime);
 	}
 
-	if (keys[GLFW_KEY_S] || keys[GLFW_KEY_DOWN])
+	if (InputManager::GetKey(GLFW_KEY_S) || InputManager::GetKey(GLFW_KEY_DOWN))	
 	{
 		camera.ProcessKeyboard(Camera_Movement::BACKWARD, deltaTime);
 	}
-
-	if (keys[GLFW_KEY_A] || keys[GLFW_KEY_LEFT])
+	
+	if (InputManager::GetKey(GLFW_KEY_A) || InputManager::GetKey(GLFW_KEY_LEFT))
 	{
 		camera.ProcessKeyboard(Camera_Movement::LEFT, deltaTime);
 	}
-
-	if (keys[GLFW_KEY_D] || keys[GLFW_KEY_RIGHT])
+	
+	if (InputManager::GetKey(GLFW_KEY_D) || InputManager::GetKey(GLFW_KEY_RIGHT))
 	{
 		camera.ProcessKeyboard(Camera_Movement::RIGHT, deltaTime);
 	}
-
-	if (keys[GLFW_KEY_E])
+	
+	if (InputManager::GetKey(GLFW_KEY_E))
 	{
 		camera.ProcessKeyboard(Camera_Movement::UPWARD, deltaTime);
 	}
-
-	if (keys[GLFW_KEY_Q])
+	
+	if (InputManager::GetKey(GLFW_KEY_Q))
 	{
 		camera.ProcessKeyboard(Camera_Movement::DOWNWARD, deltaTime);
 	}
@@ -387,31 +382,10 @@ void ProcessMovementInput()
 
 void ProcessDebugInput(GLFWwindow* window)
 {
-	if (keysReleased[GLFW_KEY_H])
+	if (InputManager::GetKeyReleased(GLFW_KEY_H))
 	{
 		cursorEnabled = !cursorEnabled;
 		SetCursor(window);
-	}
-}
-
-void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
-{
-	if (key == GLFW_KEY_ESCAPE && GLFW_PRESS == action)
-	{
-		glfwSetWindowShouldClose(window, GL_TRUE);
-	}
-
-	if (key >= 0 && key < 1024)
-	{
-		if (GLFW_PRESS == action)
-		{
-			keys[key] = true;
-		}
-		else if (GLFW_RELEASE == action)
-		{
-			keys[key] = false;
-			keysReleased[key] = true;
-		}
 	}
 }
 
