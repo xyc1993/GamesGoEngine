@@ -31,10 +31,6 @@
 const GLint WIDTH = 800, HEIGHT = 600;
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 
-void ProcessMovementInput();
-
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
-
 GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
 
@@ -149,17 +145,7 @@ void MainLoop(GLFWwindow* window)
 
 	projection_global = glm::mat4(1.0f);
 	projection_global = glm::perspective(45.0f, (GLfloat)SCREEN_WIDTH / (GLfloat)SCREEN_HEIGHT, 0.1f, 1000.0f);
-
-	// LIGHTS BEGIN
-	LightsManager::AddDirectionalLight(glm::vec3(0.05f), glm::vec3(0.4f), glm::vec3(0.5f), glm::vec3(-0.2f, -1.0f, -0.3f));
-	for (int i = 0; i < LightsManager::MAX_NUMBER_OF_POINT_LIGHTS; i++)
-	{
-		LightsManager::AddPointLight(glm::vec3(0.05f), glm::vec3(0.8f), glm::vec3(1.0f), pointLightPositions[i], 1.0f, 0.09f, 0.032f);
-	}
-	LightsManager::AddSpotLight(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(1.0f), camera.GetPosition(), camera.GetFront(),
-								1.0f, 0.09f, 0.032f, glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(15.0f)));
-	// LIGHTS END
-
+	
 	// NEW CODE DATA STRUCTURE REWORK (remember to add delete after while()!)
 	CubePrimitive* cubeMesh = new CubePrimitive();
 
@@ -221,17 +207,23 @@ void MainLoop(GLFWwindow* window)
 
 	GameObject editorSpectatorObject = GameObject();
 	editorSpectatorObject.GetTransform()->SetRotation(glm::vec3(0.0f, 3.14f, 0.0f));
-	editorSpectatorObject.GetTransform()->SetPosition(glm::vec3(0.0f, 0.0, -5.0f));
-	editorSpectatorObject.GetTransform()->SetScale(glm::vec3(0.5f));
-
-	MeshRenderer* editorSpectatorMeshRenderer = new MeshRenderer();
-	editorSpectatorMeshRenderer->SetMaterial(cubeLitMaterial);
-	editorSpectatorMeshRenderer->SetMesh(cubeMesh);
+	editorSpectatorObject.GetTransform()->SetPosition(glm::vec3(0.0f, 0.0, 3.0f));
 	EditorMovement* editorMovementComponent = new EditorMovement();
-	editorSpectatorObject.AddComponent(editorSpectatorMeshRenderer);
+	Camera* cameraComponent = new Camera();
 	editorSpectatorObject.AddComponent(editorMovementComponent);
+	editorSpectatorObject.AddComponent(cameraComponent);
 	
 	// NEW CODE END
+
+	// LIGHTS BEGIN
+	LightsManager::AddDirectionalLight(glm::vec3(0.05f), glm::vec3(0.4f), glm::vec3(0.5f), glm::vec3(-0.2f, -1.0f, -0.3f));
+	for (int i = 0; i < LightsManager::MAX_NUMBER_OF_POINT_LIGHTS; i++)
+	{
+		LightsManager::AddPointLight(glm::vec3(0.05f), glm::vec3(0.8f), glm::vec3(1.0f), pointLightPositions[i], 1.0f, 0.09f, 0.032f);
+	}
+	LightsManager::AddSpotLight(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(1.0f), editorSpectatorObject.GetTransform()->GetPosition(), editorSpectatorObject.GetTransform()->GetForward(),
+		1.0f, 0.09f, 0.032f, glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(15.0f)));
+	// LIGHTS END
 	
 	while (!glfwWindowShouldClose(window))
 	{
@@ -248,7 +240,6 @@ void MainLoop(GLFWwindow* window)
 		}
 
 		glfwPollEvents();
-		ProcessMovementInput();
 		InputEditorShortcuts::ProcessShortcuts(window);
 
 		glClearColor(0.1f, 0.15f, 0.15f, 1.0f);
@@ -258,8 +249,9 @@ void MainLoop(GLFWwindow* window)
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
+		editorSpectatorObject.Update();
+
 		modelShader.Use();
-		view_global = camera.GetViewMatrix();
 		glUniformMatrix4fv(glGetUniformLocation(modelShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection_global));
 		glUniformMatrix4fv(glGetUniformLocation(modelShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view_global));
 
@@ -272,15 +264,15 @@ void MainLoop(GLFWwindow* window)
 		loadedModel.Draw(modelShader);
 
 		//SKYBOX
-		skybox.Draw(glm::mat4(glm::mat3(camera.GetViewMatrix())), projection_global);
+		skybox.Draw(glm::mat4(glm::mat3(view_global)), projection_global);
 
 		//LIGHTS BEGIN
 		for (int i = 0; i < LightsManager::MAX_NUMBER_OF_POINT_LIGHTS; i++)
 		{
 			LightsManager::GetPointLight(i)->SetPosition(pointLightPositions[i]);
 		}
-		LightsManager::GetSpotLight(0)->SetPosition(camera.GetPosition());
-		LightsManager::GetSpotLight(0)->SetDirection(camera.GetFront());
+		LightsManager::GetSpotLight(0)->SetPosition(editorSpectatorObject.GetTransform()->GetPosition());
+		LightsManager::GetSpotLight(0)->SetDirection(editorSpectatorObject.GetTransform()->GetForward());
 		//LIGHTS END
 		
 		for (int i = 0; i < LIT_BOXES_NUMBER; i++)
@@ -293,8 +285,6 @@ void MainLoop(GLFWwindow* window)
 			lampObjects[i].GetTransform()->SetPosition(pointLightPositions[i]);
 			lampObjects[i].Update();
 		}
-
-		editorSpectatorObject.Update();
 		
 		ImGui::Begin("Test ImGUI window");
 		ImGui::Text("ImGUI Text");
@@ -339,39 +329,4 @@ int main()
 	glfwTerminate();
 	
 	return EXIT_SUCCESS;
-}
-
-void ProcessMovementInput()
-{	
-	if (InputManager::GetKey(GLFW_KEY_W) || InputManager::GetKey(GLFW_KEY_UP))
-	{
-		camera.ProcessKeyboard(Camera_Movement::FORWARD, deltaTime);
-	}
-
-	if (InputManager::GetKey(GLFW_KEY_S) || InputManager::GetKey(GLFW_KEY_DOWN))	
-	{
-		camera.ProcessKeyboard(Camera_Movement::BACKWARD, deltaTime);
-	}
-	
-	if (InputManager::GetKey(GLFW_KEY_A) || InputManager::GetKey(GLFW_KEY_LEFT))
-	{
-		camera.ProcessKeyboard(Camera_Movement::LEFT, deltaTime);
-	}
-	
-	if (InputManager::GetKey(GLFW_KEY_D) || InputManager::GetKey(GLFW_KEY_RIGHT))
-	{
-		camera.ProcessKeyboard(Camera_Movement::RIGHT, deltaTime);
-	}
-	
-	if (InputManager::GetKey(GLFW_KEY_E))
-	{
-		camera.ProcessKeyboard(Camera_Movement::UPWARD, deltaTime);
-	}
-	
-	if (InputManager::GetKey(GLFW_KEY_Q))
-	{
-		camera.ProcessKeyboard(Camera_Movement::DOWNWARD, deltaTime);
-	}
-
-	camera.ProcessMouseMovement(InputManager::GetMouseXInput(), InputManager::GetMouseYInput());
 }
