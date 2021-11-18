@@ -158,6 +158,7 @@
     <ClCompile Include="CubePrimitive.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="InputEditorShortcuts.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="LightsManager.cpp" />
     <ClCompile Include="main.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="CubePrimitive.h" />
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="InputEditorShortcuts.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LightsManager.h" />

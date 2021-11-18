@@ -1,6 +1,6 @@
 #include "InputManager.h"
 
-bool InputManager::cursorEnabled = false;
+GLFWwindow* InputManager::window;
 
 bool InputManager::keys[KEYS_NUMBER];
 bool InputManager::keysPressed[KEYS_NUMBER];
@@ -12,9 +12,12 @@ GLfloat InputManager::lastMouseX;
 GLfloat InputManager::lastMouseY;
 GLfloat InputManager::mouseScrollInput;
 bool InputManager::firstMouse = true;
+bool InputManager::cursorEnabled = false;
 
 void InputManager::Init(GLFWwindow* window)
 {
+	InputManager::window = window;
+
 	for (int i = 0; i < KEYS_NUMBER; i++)
 	{
 		keys[i] = false;
@@ -26,6 +29,8 @@ void InputManager::Init(GLFWwindow* window)
 	glfwGetWindowSize(window, &width, &height);
 	lastMouseX = (float)width / 2.0f;
 	lastMouseY = (float)height / 2.0f;
+
+	SetCursorEnabled(cursorEnabled);
 
 	glfwSetKeyCallback(window, KeyCallback);
 	glfwSetCursorPosCallback(window, MouseCallback);
@@ -88,14 +93,30 @@ GLfloat InputManager::GetMouseScrollInput()
 	return mouseScrollInput;
 }
 
+bool InputManager::GetCursorEnabled()
+{
+	return cursorEnabled;
+}
+
+void InputManager::SetCursorEnabled(bool enabled)
+{
+	cursorEnabled = enabled;
+
+	if (window != nullptr)
+	{
+		if (cursorEnabled)
+		{
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		}
+		else
+		{
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		}
+	}
+}
+
 void InputManager::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
-	// this shouldn't be here but for now let's do this for quick implementation
-	if (key == GLFW_KEY_ESCAPE && GLFW_PRESS == action)
-	{
-		glfwSetWindowShouldClose(window, GL_TRUE);
-	}
-
 	if (key >= 0 && key < 1024)
 	{
 		if (GLFW_PRESS == action)

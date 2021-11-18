@@ -24,12 +24,15 @@ public:
 	static GLfloat GetMouseScrollInput();
 
 	// status of cursor, if enabled will be visible, otherwise not
-	static bool cursorEnabled;
+	static bool GetCursorEnabled();
+	static void SetCursorEnabled(bool enabled);
 
 private:
 	static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
 	static void MouseCallback(GLFWwindow* window, double xPos, double yPos);
 	static void ScrollCallback(GLFWwindow* window, double xOffset, double yOffset);
+
+	static GLFWwindow* window;
 
 	static const int KEYS_NUMBER = 1024;
 
@@ -43,4 +46,5 @@ private:
 	static GLfloat lastMouseX;
 	static GLfloat lastMouseY;
 	static bool firstMouse;
+	static bool cursorEnabled;
 };

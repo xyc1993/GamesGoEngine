@@ -18,6 +18,7 @@
 #include "Camera.h"
 #include "CubePrimitive.h"
 #include "GameObject.h"
+#include "InputEditorShortcuts.h"
 #include "InputManager.h"
 #include "Model.h"
 #include "Skybox.h"
@@ -30,7 +31,6 @@ const GLint WIDTH = 800, HEIGHT = 600;
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 void ProcessMovementInput();
-void ProcessDebugInput(GLFWwindow* window);
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
@@ -40,18 +40,6 @@ GLfloat lastFrame = 0.0f;
 // not a good way to handle this (especially without encapsulation), but 'projection' and 'view' should be accessible to all renderers so for now it's fine
 glm::mat4 view_global;
 glm::mat4 projection_global;
-
-void SetCursor(GLFWwindow* window)
-{
-	if (InputManager::cursorEnabled)
-	{
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-	}
-	else
-	{
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	}
-}
 
 GLFWwindow* InitWindow()
 {
@@ -83,8 +71,7 @@ int SetWindow(GLFWwindow* window)
 
 	glfwMakeContextCurrent(window);
 
-	InputManager::Init(window);	
-	SetCursor(window);	
+	InputManager::Init(window);
 
 	glewExperimental = GL_TRUE; //GLEW will use modern approach, it's not 'experimental' per se
 
@@ -249,7 +236,7 @@ void MainLoop(GLFWwindow* window)
 
 		glfwPollEvents();
 		ProcessMovementInput();
-		ProcessDebugInput(window);
+		InputEditorShortcuts::ProcessShortcuts(window);
 
 		glClearColor(0.1f, 0.15f, 0.15f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -372,13 +359,4 @@ void ProcessMovementInput()
 	}
 
 	camera.ProcessMouseMovement(InputManager::GetMouseXInput(), InputManager::GetMouseYInput());
-}
-
-void ProcessDebugInput(GLFWwindow* window)
-{
-	if (InputManager::GetKeyReleased(GLFW_KEY_H))
-	{
-		InputManager::cursorEnabled = !InputManager::cursorEnabled;
-		SetCursor(window);
-	}
 }
