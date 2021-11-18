@@ -1,8 +1,17 @@
 #include "InputManager.h"
 
+bool InputManager::cursorEnabled = false;
+
 bool InputManager::keys[KEYS_NUMBER];
 bool InputManager::keysPressed[KEYS_NUMBER];
 bool InputManager::keysReleased[KEYS_NUMBER];
+
+GLfloat InputManager::mouseXInput = 0.0f;
+GLfloat InputManager::mouseYInput = 0.0f;
+GLfloat InputManager::lastMouseX;
+GLfloat InputManager::lastMouseY;
+GLfloat InputManager::mouseScrollInput;
+bool InputManager::firstMouse = true;
 
 void InputManager::Init(GLFWwindow* window)
 {
@@ -13,7 +22,14 @@ void InputManager::Init(GLFWwindow* window)
 		keysReleased[i] = false;
 	}
 
+	int width = 0, height = 0;
+	glfwGetWindowSize(window, &width, &height);
+	lastMouseX = (float)width / 2.0f;
+	lastMouseY = (float)height / 2.0f;
+
 	glfwSetKeyCallback(window, KeyCallback);
+	glfwSetCursorPosCallback(window, MouseCallback);
+	glfwSetScrollCallback(window, ScrollCallback);
 }
 
 void InputManager::LateUpdate()
@@ -23,6 +39,10 @@ void InputManager::LateUpdate()
 		// reset the state of the 'pressed' & 'released' keys since their status lasts only 1 frame
 		keysPressed[i] = false;
 		keysReleased[i] = false;
+
+		// after mouse input was used, reset it to avoid situation where there's no mouse callback but there's mouse input data
+		mouseXInput = 0.0f;
+		mouseYInput = 0.0f;
 	}
 }
 
@@ -53,6 +73,21 @@ bool InputManager::GetKeyReleased(int key)
 	return false;
 }
 
+GLfloat InputManager::GetMouseXInput()
+{
+	return mouseXInput;
+}
+
+GLfloat InputManager::GetMouseYInput()
+{
+	return mouseYInput;
+}
+
+GLfloat InputManager::GetMouseScrollInput()
+{
+	return mouseScrollInput;
+}
+
 void InputManager::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
 	// this shouldn't be here but for now let's do this for quick implementation
@@ -78,4 +113,28 @@ void InputManager::KeyCallback(GLFWwindow* window, int key, int scancode, int ac
 			keysReleased[key] = true;
 		}
 	}
+}
+
+void InputManager::MouseCallback(GLFWwindow* window, double xPos, double yPos)
+{
+	if (firstMouse)
+	{
+		lastMouseX = xPos;
+		lastMouseY = yPos;
+		firstMouse = false;
+	}
+
+	if (!cursorEnabled)
+	{
+		mouseXInput = xPos - lastMouseX;
+		mouseYInput = lastMouseY - yPos; //reversed because goes the other way around
+	}
+	
+	lastMouseX = xPos;
+	lastMouseY = yPos;
+}
+
+void InputManager::ScrollCallback(GLFWwindow* window, double xOffset, double yOffset)
+{
+	mouseScrollInput = yOffset;
 }

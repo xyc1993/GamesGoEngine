@@ -31,14 +31,8 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 void ProcessMovementInput();
 void ProcessDebugInput(GLFWwindow* window);
-void MouseCallback(GLFWwindow* window, double xPos, double yPos);
-void ScrollCallback(GLFWwindow* window, double xOffset, double yOffset);
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
-GLfloat lastX = WIDTH / 2.0f;
-GLfloat lastY = WIDTH / 2.0f;
-bool firstMouse = true;
-bool cursorEnabled = false;
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
@@ -49,7 +43,7 @@ glm::mat4 projection_global;
 
 void SetCursor(GLFWwindow* window)
 {
-	if (cursorEnabled)
+	if (InputManager::cursorEnabled)
 	{
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
@@ -89,9 +83,7 @@ int SetWindow(GLFWwindow* window)
 
 	glfwMakeContextCurrent(window);
 
-	InputManager::Init(window);
-	glfwSetCursorPosCallback(window, MouseCallback);
-	glfwSetScrollCallback(window, ScrollCallback);
+	InputManager::Init(window);	
 	SetCursor(window);	
 
 	glewExperimental = GL_TRUE; //GLEW will use modern approach, it's not 'experimental' per se
@@ -378,39 +370,15 @@ void ProcessMovementInput()
 	{
 		camera.ProcessKeyboard(Camera_Movement::DOWNWARD, deltaTime);
 	}
+
+	camera.ProcessMouseMovement(InputManager::GetMouseXInput(), InputManager::GetMouseYInput());
 }
 
 void ProcessDebugInput(GLFWwindow* window)
 {
 	if (InputManager::GetKeyReleased(GLFW_KEY_H))
 	{
-		cursorEnabled = !cursorEnabled;
+		InputManager::cursorEnabled = !InputManager::cursorEnabled;
 		SetCursor(window);
 	}
-}
-
-void MouseCallback(GLFWwindow* window, double xPos, double yPos)
-{
-	if (firstMouse)
-	{
-		lastX = xPos;
-		lastY = yPos;
-		firstMouse = false;
-	}
-
-	if (!cursorEnabled)
-	{
-		GLfloat xOffset = xPos - lastX;
-		GLfloat yOffset = lastY - yPos; //reversed because goes the other way around
-
-		camera.ProcessMouseMovement(xOffset, yOffset);
-	}
-	
-	lastX = xPos;
-	lastY = yPos;
-}
-
-void ScrollCallback(GLFWwindow* window, double xOffset, double yOffset)
-{
-	camera.ProcessMouseScroll(yOffset * deltaTime);
 }
