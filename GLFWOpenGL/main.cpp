@@ -17,6 +17,7 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "CubePrimitive.h"
+#include "EditorMovement.h"
 #include "GameObject.h"
 #include "InputEditorShortcuts.h"
 #include "InputManager.h"
@@ -217,6 +218,18 @@ void MainLoop(GLFWwindow* window)
 		litBoxesObjects[i].GetTransform()->SetPosition(litBoxesPositions[i]);
 		litBoxesObjects[i].GetTransform()->SetRotation(litBoxesRotations[i]);
 	}
+
+	GameObject editorSpectatorObject = GameObject();
+	editorSpectatorObject.GetTransform()->SetRotation(glm::vec3(0.0f, 3.14f, 0.0f));
+	editorSpectatorObject.GetTransform()->SetPosition(glm::vec3(0.0f, 0.0, -5.0f));
+	editorSpectatorObject.GetTransform()->SetScale(glm::vec3(0.5f));
+
+	MeshRenderer* editorSpectatorMeshRenderer = new MeshRenderer();
+	editorSpectatorMeshRenderer->SetMaterial(cubeLitMaterial);
+	editorSpectatorMeshRenderer->SetMesh(cubeMesh);
+	EditorMovement* editorMovementComponent = new EditorMovement();
+	editorSpectatorObject.AddComponent(editorSpectatorMeshRenderer);
+	editorSpectatorObject.AddComponent(editorMovementComponent);
 	
 	// NEW CODE END
 	
@@ -280,6 +293,8 @@ void MainLoop(GLFWwindow* window)
 			lampObjects[i].GetTransform()->SetPosition(pointLightPositions[i]);
 			lampObjects[i].Update();
 		}
+
+		editorSpectatorObject.Update();
 		
 		ImGui::Begin("Test ImGUI window");
 		ImGui::Text("ImGUI Text");

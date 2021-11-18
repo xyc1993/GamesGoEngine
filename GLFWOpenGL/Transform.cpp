@@ -25,7 +25,7 @@ void Transform::SetRotation(glm::vec3 eulerAngles)
 	//update direction vectors based on the new rotation
 	const glm::quat rotationQuaternion = glm::quat(this->rotation);
 	forward = rotationQuaternion * glm::vec3(0.0f, 0.0f, 1.0f);
-	right = rotationQuaternion * glm::vec3(1.0f, 0.0f, 0.0f);
+	right = rotationQuaternion * glm::vec3(-1.0f, 0.0f, 0.0f);
 	up = rotationQuaternion * glm::vec3(0.0f, 1.0f, 0.0f);
 }
 

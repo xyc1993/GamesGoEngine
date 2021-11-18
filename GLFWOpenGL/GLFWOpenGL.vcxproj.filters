@@ -117,6 +117,9 @@
     <ClCompile Include="InputEditorShortcuts.cpp">
       <Filter>Source Files\Input</Filter>
     </ClCompile>
+    <ClCompile Include="EditorMovement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -205,6 +208,9 @@
     </ClInclude>
     <ClInclude Include="InputEditorShortcuts.h">
       <Filter>Header Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorMovement.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
