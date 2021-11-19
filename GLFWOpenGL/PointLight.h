@@ -2,15 +2,14 @@
 
 #include "Light.h"
 
-class PointLight : Light
+class PointLight : public Light
 {
 public:
 	PointLight();
-	PointLight(GLuint lightNumber, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular,
-				glm::vec3 position, float constant, float linear, float quadratic);
+	PointLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float constant, float linear, float quadratic);
+
+	void Update() override;
 	void SetLightInShader(const GLuint& shaderProgram) override;
-	void SetPosition(glm::vec3 position);
-	void SetPosition(float x, float y, float z);
 
 protected:
 	std::string GetNumberedShaderProperty() override;

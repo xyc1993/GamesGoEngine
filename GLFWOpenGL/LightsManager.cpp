@@ -18,28 +18,34 @@ LightsManager* LightsManager::GetInstance()
 	return instance;
 }
 
-void LightsManager::AddDirectionalLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, glm::vec3 direction)
+GLuint LightsManager::AddDirectionalLight(DirectionalLight* directionalLight)
 {
-	if (GetInstance()->directionalLightsNumber >= MAX_NUMBER_OF_DIR_LIGHTS) return;
-	GetInstance()->directionalLight[GetInstance()->directionalLightsNumber] = DirectionalLight(GetInstance()->directionalLightsNumber, ambient, diffuse, specular, direction);
+	if (GetInstance()->directionalLightsNumber >= MAX_NUMBER_OF_DIR_LIGHTS) return Light::INITIALIZATION_ERROR;
+	GetInstance()->directionalLight[GetInstance()->directionalLightsNumber] = directionalLight;
+
+	const int lightIndex = GetInstance()->directionalLightsNumber;
 	GetInstance()->directionalLightsNumber++;
+	return lightIndex;
 }
 
-void LightsManager::AddPointLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular,
-									glm::vec3 position, float constant, float linear, float quadratic)
+GLuint LightsManager::AddPointLight(PointLight* pointLight)
 {
-	if (GetInstance()->pointLightsNumber >= MAX_NUMBER_OF_POINT_LIGHTS) return;
-	GetInstance()->pointLights[GetInstance()->pointLightsNumber] = PointLight(GetInstance()->pointLightsNumber, ambient, diffuse, specular, position, constant, linear, quadratic);
+	if (GetInstance()->pointLightsNumber >= MAX_NUMBER_OF_POINT_LIGHTS) return Light::INITIALIZATION_ERROR;
+	GetInstance()->pointLights[GetInstance()->pointLightsNumber] = pointLight;
+
+	const int lightIndex = GetInstance()->pointLightsNumber;
 	GetInstance()->pointLightsNumber++;
+	return lightIndex;
 }
 
-void LightsManager::AddSpotLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular,
-									glm::vec3 position, glm::vec3 direction, float constant, float linear, float quadratic,
-									float cutOff, float outerCutOff)
+GLuint LightsManager::AddSpotLight(SpotLight* spotLight)
 {
-	if (GetInstance()->spotLightsNumber >= MAX_NUMBER_OF_SPOT_LIGHTS) return;
-	GetInstance()->spotLight[GetInstance()->spotLightsNumber] = SpotLight(GetInstance()->spotLightsNumber, ambient, diffuse, specular, position, direction, constant, linear, quadratic, cutOff, outerCutOff);
+	if (GetInstance()->spotLightsNumber >= MAX_NUMBER_OF_SPOT_LIGHTS) return Light::INITIALIZATION_ERROR;
+	GetInstance()->spotLight[GetInstance()->spotLightsNumber] = spotLight;
+
+	const int lightIndex = GetInstance()->spotLightsNumber;
 	GetInstance()->spotLightsNumber++;
+	return lightIndex;
 }
 
 void LightsManager::SetLightsInShader(const GLuint& shaderProgram)
@@ -47,39 +53,18 @@ void LightsManager::SetLightsInShader(const GLuint& shaderProgram)
 	glUniform1i(glGetUniformLocation(shaderProgram, "dirLightsNumber"), GetInstance()->directionalLightsNumber);
 	for (int i = 0; i < GetInstance()->directionalLightsNumber; i++)
 	{
-		GetInstance()->directionalLight[i].SetLightInShader(shaderProgram);
+		GetInstance()->directionalLight[i]->SetLightInShader(shaderProgram);
 	}	
 
 	glUniform1i(glGetUniformLocation(shaderProgram, "pointLightsNumber"), GetInstance()->pointLightsNumber);
 	for (int i = 0; i < GetInstance()->pointLightsNumber; i++)
 	{
-		GetInstance()->pointLights[i].SetLightInShader(shaderProgram);
+		GetInstance()->pointLights[i]->SetLightInShader(shaderProgram);
 	}
 
 	glUniform1i(glGetUniformLocation(shaderProgram, "spotLightsNumber"), GetInstance()->spotLightsNumber);
 	for (int i = 0; i < GetInstance()->spotLightsNumber; i++)
 	{
-		GetInstance()->spotLight[i].SetLightInShader(shaderProgram);
+		GetInstance()->spotLight[i]->SetLightInShader(shaderProgram);
 	}
-}
-
-DirectionalLight* LightsManager::GetDirectionalLight(int index)
-{
-	if (GetInstance()->directionalLightsNumber == 0) return nullptr;
-	if (index >= MAX_NUMBER_OF_DIR_LIGHTS) return nullptr;
-	return &GetInstance()->directionalLight[index];
-}
-
-PointLight* LightsManager::GetPointLight(int index)
-{
-	if (GetInstance()->pointLightsNumber == 0) return nullptr;
-	if (index >= MAX_NUMBER_OF_POINT_LIGHTS) return nullptr;
-	return &GetInstance()->pointLights[index];
-}
-
-SpotLight* LightsManager::GetSpotLight(int index)
-{
-	if (GetInstance()->spotLightsNumber == 0) return nullptr;
-	if (index >= MAX_NUMBER_OF_SPOT_LIGHTS) return nullptr;
-	return &GetInstance()->spotLight[index];
 }

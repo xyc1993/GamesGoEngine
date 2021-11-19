@@ -128,16 +128,16 @@ void MainLoop(GLFWwindow* window)
 	};
 
 	glm::vec3 litBoxesRotations[] = {
-		glm::vec3(0.0f, 0.0f, 0.0f),
-		glm::vec3(30.0f, 15.0f, 0.0f),
-		glm::vec3(60.0f, 30.0f, 0.0f),
-		glm::vec3(90.0f, 45.0f, 0.0f),
-		glm::vec3(120.0f, 60.0f, 0.0f),
-		glm::vec3(150.0f, 75.0f, 0.0f),
-		glm::vec3(180.0f, 90.0f, 0.0f),
-		glm::vec3(210.0f, 105.0f, 0.0f),
-		glm::vec3(240.0f, 120.0f, 0.0f),
-		glm::vec3(270.0f, 135.0f, 0.0f)
+		glm::vec3(glm::radians(0.0f), 0.0f, 0.0f),
+		glm::vec3(glm::radians(30.0f), glm::radians(15.0f), 0.0f),
+		glm::vec3(glm::radians(60.0f), glm::radians(30.0f), 0.0f),
+		glm::vec3(glm::radians(90.0f), glm::radians(45.0f), 0.0f),
+		glm::vec3(glm::radians(120.0f), glm::radians(60.0f), 0.0f),
+		glm::vec3(glm::radians(150.0f), glm::radians(75.0f), 0.0f),
+		glm::vec3(glm::radians(180.0f), glm::radians(90.0f), 0.0f),
+		glm::vec3(glm::radians(210.0f), glm::radians(105.0f), 0.0f),
+		glm::vec3(glm::radians(240.0f), glm::radians(120.0f), 0.0f),
+		glm::vec3(glm::radians(270.0f), glm::radians(135.0f), 0.0f)
 	};
 
 	// SKYBOX
@@ -173,6 +173,9 @@ void MainLoop(GLFWwindow* window)
 		lampObjects[i].AddComponent(lampMeshRenderers[i]);
 		lampObjects[i].GetTransform()->SetPosition(pointLightPositions[i]);
 		lampObjects[i].GetTransform()->SetScale(glm::vec3(0.2f));
+
+		PointLight* pointLight = new PointLight(glm::vec3(0.05f), glm::vec3(0.8f), glm::vec3(1.0f), 1.0f, 0.09f, 0.032f);
+		lampObjects[i].AddComponent(pointLight);
 	}
 
 	Material* cubeLitMaterial = new Material("res/shaders/lighting.vert", "res/shaders/lighting.frag");
@@ -206,24 +209,23 @@ void MainLoop(GLFWwindow* window)
 	}
 
 	GameObject editorSpectatorObject = GameObject();
-	editorSpectatorObject.GetTransform()->SetRotation(glm::vec3(0.0f, 3.14f, 0.0f));
+	editorSpectatorObject.GetTransform()->SetRotation(glm::vec3(0.0f, glm::radians(180.0f), 0.0f));
 	editorSpectatorObject.GetTransform()->SetPosition(glm::vec3(0.0f, 0.0, 3.0f));
+
 	EditorMovement* editorMovementComponent = new EditorMovement();
 	Camera* cameraComponent = new Camera();
+	SpotLight* spotLight = new SpotLight(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(1.0f), 
+		1.0f, 0.09f, 0.032f, glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(15.0f)));
+
 	editorSpectatorObject.AddComponent(editorMovementComponent);
 	editorSpectatorObject.AddComponent(cameraComponent);
-	
-	// NEW CODE END
+	editorSpectatorObject.AddComponent(spotLight);
 
-	// LIGHTS BEGIN
-	LightsManager::AddDirectionalLight(glm::vec3(0.05f), glm::vec3(0.4f), glm::vec3(0.5f), glm::vec3(-0.2f, -1.0f, -0.3f));
-	for (int i = 0; i < LightsManager::MAX_NUMBER_OF_POINT_LIGHTS; i++)
-	{
-		LightsManager::AddPointLight(glm::vec3(0.05f), glm::vec3(0.8f), glm::vec3(1.0f), pointLightPositions[i], 1.0f, 0.09f, 0.032f);
-	}
-	LightsManager::AddSpotLight(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(1.0f), editorSpectatorObject.GetTransform()->GetPosition(), editorSpectatorObject.GetTransform()->GetForward(),
-		1.0f, 0.09f, 0.032f, glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(15.0f)));
-	// LIGHTS END
+	GameObject directionalLightObject = GameObject();
+	directionalLightObject.GetTransform()->SetRotation(glm::vec3(glm::radians(90.0f), glm::radians(-45.0f), 0.0f));
+	DirectionalLight* directionalLight = new DirectionalLight(glm::vec3(0.05f), glm::vec3(0.4f), glm::vec3(0.5f));
+	directionalLightObject.AddComponent(directionalLight);
+	// NEW CODE END
 	
 	while (!glfwWindowShouldClose(window))
 	{
@@ -250,6 +252,7 @@ void MainLoop(GLFWwindow* window)
 		ImGui::NewFrame();
 
 		editorSpectatorObject.Update();
+		directionalLightObject.Update();
 
 		modelShader.Use();
 		glUniformMatrix4fv(glGetUniformLocation(modelShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection_global));
@@ -265,16 +268,7 @@ void MainLoop(GLFWwindow* window)
 
 		//SKYBOX
 		skybox.Draw(glm::mat4(glm::mat3(view_global)), projection_global);
-
-		//LIGHTS BEGIN
-		for (int i = 0; i < LightsManager::MAX_NUMBER_OF_POINT_LIGHTS; i++)
-		{
-			LightsManager::GetPointLight(i)->SetPosition(pointLightPositions[i]);
-		}
-		LightsManager::GetSpotLight(0)->SetPosition(editorSpectatorObject.GetTransform()->GetPosition());
-		LightsManager::GetSpotLight(0)->SetDirection(editorSpectatorObject.GetTransform()->GetForward());
-		//LIGHTS END
-		
+				
 		for (int i = 0; i < LIT_BOXES_NUMBER; i++)
 		{
 			litBoxesObjects[i].Update();

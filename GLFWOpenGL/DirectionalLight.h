@@ -2,11 +2,13 @@
 
 #include "Light.h"
 
-class DirectionalLight : Light
+class DirectionalLight : public Light
 {
 public:
 	DirectionalLight();
-	DirectionalLight(GLuint lightNumber, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, glm::vec3 direction);
+	DirectionalLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular);
+
+	void Update() override;
 	void SetLightInShader(const GLuint& shaderProgram) override;
 
 protected:

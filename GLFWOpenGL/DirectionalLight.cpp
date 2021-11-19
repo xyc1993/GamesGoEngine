@@ -1,19 +1,36 @@
 #include "DirectionalLight.h"
 
+#include "GameObject.h"
+#include "LightsManager.h"
+
 DirectionalLight::DirectionalLight()
 {
+	this->direction = glm::vec3(1.0f, -0.5f, 0.0f);
 
+	this->lightNumber = LightsManager::AddDirectionalLight(this);
+	if (this->lightNumber == INITIALIZATION_ERROR) delete this;
 }
 
-DirectionalLight::DirectionalLight(GLuint lightNumber, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, glm::vec3 direction)
+DirectionalLight::DirectionalLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular)
 {
-	this->lightNumber = lightNumber;
-
 	this->ambient = ambient;
 	this->diffuse = diffuse;
 	this->specular = specular;
 
-	this->direction = direction;
+	this->direction = glm::vec3(1.0f, -0.5f, 0.0f);
+
+	this->lightNumber = LightsManager::AddDirectionalLight(this);
+	if (this->lightNumber == INITIALIZATION_ERROR) delete this;
+}
+
+void DirectionalLight::Update()
+{
+	Light::Update();
+
+	if (owner != nullptr)
+	{
+		direction = owner->GetTransform()->GetForward();
+	}
 }
 
 void DirectionalLight::SetLightInShader(const GLuint& shaderProgram)

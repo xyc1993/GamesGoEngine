@@ -1,16 +1,16 @@
 #include "SpotLight.h"
 
+#include "GameObject.h"
+#include "LightsManager.h"
+
 SpotLight::SpotLight()
 {
-
+	this->lightNumber = LightsManager::AddSpotLight(this);
+	if (this->lightNumber == INITIALIZATION_ERROR) delete this;
 }
 
-SpotLight::SpotLight(GLuint lightNumber, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular,
-	glm::vec3 position, glm::vec3 direction, float constant, float linear, float quadratic,
-	float cutOff, float outerCutOff)
+SpotLight::SpotLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float constant, float linear, float quadratic, float cutOff, float outerCutOff)
 {
-	this->lightNumber = lightNumber;
-
 	this->ambient = ambient;
 	this->diffuse = diffuse;
 	this->specular = specular;
@@ -24,6 +24,20 @@ SpotLight::SpotLight(GLuint lightNumber, glm::vec3 ambient, glm::vec3 diffuse, g
 
 	this->cutOff = cutOff;
 	this->outerCutOff = outerCutOff;
+
+	this->lightNumber = LightsManager::AddSpotLight(this);
+	if (this->lightNumber == INITIALIZATION_ERROR) delete this;
+}
+
+void SpotLight::Update()
+{
+	Light::Update();
+
+	if (owner != nullptr)
+	{
+		direction = owner->GetTransform()->GetForward();
+		position = owner->GetTransform()->GetPosition();
+	}
 }
 
 void SpotLight::SetLightInShader(const GLuint& shaderProgram)
@@ -41,30 +55,6 @@ void SpotLight::SetLightInShader(const GLuint& shaderProgram)
 
 	glUniform1f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty() + ".cutOff").c_str()), cutOff);
 	glUniform1f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty() + ".outerCutOff").c_str()), outerCutOff);
-}
-
-void SpotLight::SetPosition(glm::vec3 position)
-{
-	this->position = position;
-}
-
-void SpotLight::SetPosition(float x, float y, float z)
-{
-	this->position.x = x;
-	this->position.y = y;
-	this->position.z = z;
-}
-
-void SpotLight::SetDirection(glm::vec3 direction)
-{
-	this->direction = direction;
-}
-
-void SpotLight::SetDirection(float x, float y, float z)
-{
-	this->direction.x = x;
-	this->direction.y = y;
-	this->direction.z = z;
 }
 
 std::string SpotLight::GetNumberedShaderProperty()

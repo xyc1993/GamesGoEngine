@@ -5,11 +5,16 @@
 #include <glm/glm.hpp>
 #include <string>
 
-class Light
+#include "Component.h"
+
+class Light : public Component
 {
 public:
 	// works with correct shader supporting light, forward rendering
 	virtual void SetLightInShader(const GLuint& shaderProgram) = 0;
+	virtual void Update() override {}
+
+	static const GLuint INITIALIZATION_ERROR = -1;
 
 protected:
 	virtual std::string GetNumberedShaderProperty() = 0;

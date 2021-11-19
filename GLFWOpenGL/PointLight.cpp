@@ -1,15 +1,16 @@
 #include "PointLight.h"
 
+#include "GameObject.h"
+#include "LightsManager.h"
+
 PointLight::PointLight()
 {
-
+	this->lightNumber = LightsManager::AddPointLight(this);
+	if (this->lightNumber == INITIALIZATION_ERROR) delete this;
 }
 
-PointLight::PointLight(GLuint lightNumber, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular,
-						glm::vec3 position, float constant, float linear, float quadratic)
+PointLight::PointLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float constant, float linear, float quadratic)
 {
-	this->lightNumber = lightNumber;
-
 	this->ambient = ambient;
 	this->diffuse = diffuse;
 	this->specular = specular;
@@ -19,6 +20,19 @@ PointLight::PointLight(GLuint lightNumber, glm::vec3 ambient, glm::vec3 diffuse,
 	this->constant = constant;
 	this->linear = linear;
 	this->quadratic = quadratic;
+
+	this->lightNumber = LightsManager::AddPointLight(this);
+	if (this->lightNumber == INITIALIZATION_ERROR) delete this;
+}
+
+void PointLight::Update()
+{
+	Light::Update();
+
+	if (owner != nullptr)
+	{
+		position = owner->GetTransform()->GetPosition();
+	}
 }
 
 void PointLight::SetLightInShader(const GLuint& shaderProgram)
@@ -31,18 +45,6 @@ void PointLight::SetLightInShader(const GLuint& shaderProgram)
 	glUniform1f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty() + ".constant").c_str()), constant);
 	glUniform1f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty() + ".linear").c_str()), linear);
 	glUniform1f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty() + ".quadratic").c_str()), quadratic);
-}
-
-void PointLight::SetPosition(glm::vec3 position)
-{
-	this->position = position;
-}
-
-void PointLight::SetPosition(float x, float y, float z)
-{
-	this->position.x = x;
-	this->position.y = y;
-	this->position.z = z;
 }
 
 std::string PointLight::GetNumberedShaderProperty()
