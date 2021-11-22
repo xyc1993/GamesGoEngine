@@ -31,15 +31,7 @@ void MeshRenderer::Update()
 {
 	if (owner != nullptr && material != nullptr && mesh != nullptr)
 	{
-		//TO DO: calculate model matrix only when necessary -> when set position/rotation/scale is called on game object
-		// calculate model matrix for the mesh
-		glm::mat4 model(1.0f);
-		model = glm::translate(model, owner->GetTransform()->GetPosition());
-		const glm::quat rotationQuaternion = glm::quat(owner->GetTransform()->GetRotation());
-		model = glm::rotate(model, angle(rotationQuaternion), axis(rotationQuaternion));
-		model = glm::scale(model, owner->GetTransform()->GetScale());
-		
-		material->Draw(model, view_global, projection_global);		
+		material->Draw(owner->GetTransform()->GetModelMatrix(), view_global, projection_global);		
 		mesh->Draw();
 	}
 }
