@@ -128,16 +128,16 @@ void MainLoop(GLFWwindow* window)
 	};
 
 	glm::vec3 litBoxesRotations[] = {
-		glm::vec3(glm::radians(0.0f), 0.0f, 0.0f),
-		glm::vec3(glm::radians(30.0f), glm::radians(15.0f), 0.0f),
-		glm::vec3(glm::radians(60.0f), glm::radians(30.0f), 0.0f),
-		glm::vec3(glm::radians(90.0f), glm::radians(45.0f), 0.0f),
-		glm::vec3(glm::radians(120.0f), glm::radians(60.0f), 0.0f),
-		glm::vec3(glm::radians(150.0f), glm::radians(75.0f), 0.0f),
-		glm::vec3(glm::radians(180.0f), glm::radians(90.0f), 0.0f),
-		glm::vec3(glm::radians(210.0f), glm::radians(105.0f), 0.0f),
-		glm::vec3(glm::radians(240.0f), glm::radians(120.0f), 0.0f),
-		glm::vec3(glm::radians(270.0f), glm::radians(135.0f), 0.0f)
+		glm::vec3(0.0f, 0.0f, 0.0f),
+		glm::vec3(30.0f, 15.0f, 0.0f),
+		glm::vec3(60.0f, 30.0f, 0.0f),
+		glm::vec3(90.0f, 45.0f, 0.0f),
+		glm::vec3(120.0f,60.0f, 0.0f),
+		glm::vec3(150.0f,75.0f, 0.0f),
+		glm::vec3(180.0f,90.0f, 0.0f),
+		glm::vec3(210.0f,105.0f, 0.0f),
+		glm::vec3(240.0f,120.0f, 0.0f),
+		glm::vec3(270.0f,135.0f, 0.0f)
 	};
 
 	// SKYBOX
@@ -180,7 +180,7 @@ void MainLoop(GLFWwindow* window)
 
 	Material* cubeLitMaterial = new Material("res/shaders/lighting.vert", "res/shaders/lighting.frag");
 	cubeLitMaterial->SetTexture((GLchar*)"material.diffuse", (GLchar*)"res/box/container2_diffuse.png");
-	//cubeLitMaterial->SetTexture((GLchar*)"material.specular", (GLchar*)"res/box/container2_specular.png");
+	cubeLitMaterial->SetTexture((GLchar*)"material.specular", (GLchar*)"res/box/container2_specular.png");
 	cubeLitMaterial->SetFloat((GLchar*)"material.shininess", 32.0f);
 	cubeLitMaterial->SetLightModel(LightModelType::LitForward);
 
@@ -205,11 +205,11 @@ void MainLoop(GLFWwindow* window)
 		litBoxesMeshRenderers[i]->SetMesh(cubeMesh);
 		litBoxesObjects[i].AddComponent(litBoxesMeshRenderers[i]);
 		litBoxesObjects[i].GetTransform()->SetPosition(litBoxesPositions[i]);
-		litBoxesObjects[i].GetTransform()->SetRotation(litBoxesRotations[i]);
+		litBoxesObjects[i].GetTransform()->SetRotationEulerDegrees(litBoxesRotations[i]);
 	}
 
 	GameObject editorSpectatorObject = GameObject();
-	editorSpectatorObject.GetTransform()->SetRotation(glm::vec3(0.0f, glm::radians(180.0f), 0.0f));
+	editorSpectatorObject.GetTransform()->SetRotationEulerDegrees(glm::vec3(0.0f, 180.0f, 0.0f));
 	editorSpectatorObject.GetTransform()->SetPosition(glm::vec3(0.0f, 0.0, 3.0f));
 
 	EditorMovement* editorMovementComponent = new EditorMovement();
@@ -222,7 +222,7 @@ void MainLoop(GLFWwindow* window)
 	editorSpectatorObject.AddComponent(spotLight);
 
 	GameObject directionalLightObject = GameObject();
-	directionalLightObject.GetTransform()->SetRotation(glm::vec3(glm::radians(90.0f), glm::radians(-45.0f), 0.0f));
+	directionalLightObject.GetTransform()->SetRotationEulerDegrees(glm::vec3(90.0f, -45.0f, 0.0f));
 	DirectionalLight* directionalLight = new DirectionalLight(glm::vec3(0.05f), glm::vec3(0.4f), glm::vec3(0.5f));
 	directionalLightObject.AddComponent(directionalLight);
 	// NEW CODE END

@@ -3,7 +3,7 @@
 Transform::Transform()
 {
 	position = glm::vec3(0.0f);
-	rotation = glm::vec3(0.0f);
+	rotation = glm::quat(glm::vec3(0.0f));
 	scale = glm::vec3(1.0f);
 	UpdateModelMatrix();
 	UpdateTransformDirections();
@@ -15,11 +15,22 @@ void Transform::SetPosition(glm::vec3 position)
 	UpdateModelMatrix();
 }
 
-void Transform::SetRotation(glm::vec3 eulerAngles)
+void Transform::SetRotation(glm::quat rotation)
 {
-	this->rotation = eulerAngles;
+	this->rotation = rotation;
 	UpdateModelMatrix();
 	UpdateTransformDirections();
+}
+
+void Transform::SetRotationEulerRadians(glm::vec3 eulerAngles)
+{
+	SetRotation(glm::quat(eulerAngles));
+}
+
+void Transform::SetRotationEulerDegrees(glm::vec3 eulerAngles)
+{
+	const glm::vec3 eulerAnglesRadians = glm::radians(eulerAngles);
+	SetRotationEulerRadians(eulerAnglesRadians);
 }
 
 void Transform::SetScale(glm::vec3 scale)
@@ -33,9 +44,21 @@ glm::vec3 Transform::GetPosition() const
 	return position;
 }
 
-glm::vec3 Transform::GetRotation() const
+glm::quat Transform::GetRotation() const
 {
 	return rotation;
+}
+
+glm::vec3 Transform::GetRotationEulerRadians() const
+{
+	return eulerAngles(GetRotation());
+}
+
+glm::vec3 Transform::GetRotationEulerDegrees() const
+{
+	const glm::vec3 radians = GetRotationEulerRadians();
+	const glm::vec3 degrees = glm::degrees(radians);
+	return degrees;
 }
 
 glm::vec3 Transform::GetScale() const
@@ -65,17 +88,15 @@ glm::mat4 Transform::GetModelMatrix() const
 
 void Transform::UpdateTransformDirections()
 {
-	const glm::quat rotationQuaternion = glm::quat(this->rotation);
-	forward = rotationQuaternion * glm::vec3(0.0f, 0.0f, 1.0f);
-	right = rotationQuaternion * glm::vec3(-1.0f, 0.0f, 0.0f);
-	up = rotationQuaternion * glm::vec3(0.0f, 1.0f, 0.0f);
+	forward = GetRotation() * glm::vec3(0.0f, 0.0f, 1.0f);
+	right = GetRotation() * glm::vec3(-1.0f, 0.0f, 0.0f);
+	up = GetRotation() * glm::vec3(0.0f, 1.0f, 0.0f);
 }
 
 void Transform::UpdateModelMatrix()
 {
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, GetPosition());
-	const glm::quat rotationQuaternion = glm::quat(GetRotation());
-	model = glm::rotate(model, angle(rotationQuaternion), axis(rotationQuaternion));
+	model = glm::rotate(model, angle(GetRotation()), axis(GetRotation()));
 	model = glm::scale(model, GetScale());
 }

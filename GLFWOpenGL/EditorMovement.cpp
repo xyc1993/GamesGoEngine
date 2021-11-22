@@ -1,5 +1,7 @@
 #include "EditorMovement.h"
 
+#include <iostream>
+
 #include "GameObject.h"
 #include "InputManager.h"
 
@@ -8,8 +10,34 @@ extern GLfloat deltaTime;
 EditorMovement::EditorMovement()
 {
 	movementSpeed = 6.0f;
-	rotationSpeed = 0.25f;
+	rotationSpeed = 30.0f;
 	constrainPitch = true;
+}
+
+void EditorMovement::Init(GameObject* owner)
+{
+	Component::Init(owner);
+
+	if (owner != nullptr)
+	{
+		currentRotation = owner->GetTransform()->GetRotationEulerDegrees();
+
+		// we assume that roll is not supported for basic editor movement
+		// because of that we need to recalculate euler angles if roll is 180 or -180 degrees (can happen)
+		if (currentRotation.z > 90.0f)
+		{
+			currentRotation.x -= 180.0f;
+			currentRotation.y -= 180.0f;
+			currentRotation.z = 0.0f;
+		}
+
+		if (currentRotation.z < -90.0f)
+		{
+			currentRotation.x += 180.0f;
+			currentRotation.y += 180.0f;
+			currentRotation.z = 0.0f;
+		}
+	}
 }
 
 void EditorMovement::Update()
@@ -60,27 +88,26 @@ void EditorMovement::UpdatePosition() const
 	}
 }
 
-void EditorMovement::UpdateRotation() const
+void EditorMovement::UpdateRotation()
 {
 	const GLfloat pitch = InputManager::GetMouseYInput() * rotationSpeed * deltaTime;
 	const GLfloat yaw = InputManager::GetMouseXInput() * rotationSpeed * deltaTime;
-
-	glm::vec3 newRotation = owner->GetTransform()->GetRotation();
-	newRotation.x -= pitch;
-	newRotation.y -= yaw;
-
+	
+	currentRotation.x -= pitch;
+	currentRotation.y -= yaw;
+	
 	if (constrainPitch)
 	{
-		if (newRotation.x > 89.0f)
+		if (currentRotation.x > 89.0f)
 		{
-			newRotation.x = 89.0f;
+			currentRotation.x = 89.0f;
 		}
 
-		if (newRotation.x < -89.0f)
+		if (currentRotation.x < -89.0f)
 		{
-			newRotation.x = -89.0f;
+			currentRotation.x = -89.0f;
 		}
 	}
 
-	owner->GetTransform()->SetRotation(newRotation);
+	owner->GetTransform()->SetRotationEulerDegrees(currentRotation);
 }
