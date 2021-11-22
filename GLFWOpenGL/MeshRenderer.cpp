@@ -31,6 +31,7 @@ void MeshRenderer::Update()
 {
 	if (owner != nullptr && material != nullptr && mesh != nullptr)
 	{
+		//TO DO: calculate model matrix only when necessary -> when set position/rotation/scale is called on game object
 		// calculate model matrix for the mesh
 		glm::mat4 model(1.0f);
 		model = glm::translate(model, owner->GetTransform()->GetPosition());

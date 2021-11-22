@@ -27,18 +27,13 @@ void Material::Draw(glm::mat4 model, glm::mat4 view, glm::mat4 projection)
 	}
 
 	shader->Use();
-
+	
 	for (int i = 0; i < texturesIDs.size(); i++)
 	{
 		glActiveTexture(GL_TEXTURE0 + (GLuint)i);
 		glBindTexture(GL_TEXTURE_2D, texturesIDs[i]);
 	}
-
-	for (int i = 0; i < floatIDs.size(); i++)
-	{
-		glUniform1f(floatIDs[i], floatValues[i]);
-	}
-
+	
 	const GLint modelLoc = glGetUniformLocation(shader->Program, "model");
 	const GLint viewLoc = glGetUniformLocation(shader->Program, "view");
 	const GLint projLoc = glGetUniformLocation(shader->Program, "projection");
@@ -59,14 +54,11 @@ void Material::Draw(glm::mat4 model, glm::mat4 view, glm::mat4 projection)
 
 void Material::SetShader(const GLchar* vertexPath, const GLchar* fragmentPath)
 {
-	if (shader != nullptr)
-	{
-		shader->~Shader();
-	}
+	delete shader;
 	shader = new Shader(vertexPath, fragmentPath);	
 }
 
-void Material::AddTexture(GLchar* path, GLchar* textureName)
+void Material::SetTexture(GLchar* textureName, GLchar* path)
 {
 	if (shader != nullptr)
 	{
@@ -75,12 +67,18 @@ void Material::AddTexture(GLchar* path, GLchar* textureName)
 	}
 }
 
-void Material::AddFloat(float value, GLchar* floatName)
+void Material::SetFloat(const GLchar* floatName, float value) const
+{
+	const GLint floatID = glGetUniformLocation(shader->Program, floatName);
+	SetFloat(floatID, value);
+}
+
+void Material::SetFloat(const GLint floatID, float value) const
 {
 	if (shader != nullptr)
 	{
-		floatIDs.push_back(glGetUniformLocation(shader->Program, floatName));
-		floatValues.push_back(value);
+		shader->Use();
+		glUniform1f(floatID, value);
 	}
 }
 

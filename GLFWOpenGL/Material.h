@@ -26,9 +26,10 @@ public:
 	void SetShader(const GLchar* vertexPath, const GLchar* fragmentPath);
 
 	//TO DO: should have some safety measure against adding texture that was already added
-	void AddTexture(GLchar* path, GLchar* textureName);
-	//TO DO: should have some safety measure against adding float that was already added
-	void AddFloat(float value, GLchar* floatName);
+	void SetTexture(GLchar* textureName, GLchar* path);
+	
+	void SetFloat(const GLchar* floatName, float value) const;
+	void SetFloat(const GLint floatID, float value) const;
 
 	void SetLightModel(LightModelType type);
 
@@ -36,7 +37,5 @@ private:
 	Shader* shader;
 
 	std::vector<GLuint> texturesIDs;
-	std::vector<GLuint> floatIDs;
-	std::vector<float> floatValues;
 	LightModelType lightModelType;
 };

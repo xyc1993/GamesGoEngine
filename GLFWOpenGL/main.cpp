@@ -179,9 +179,9 @@ void MainLoop(GLFWwindow* window)
 	}
 
 	Material* cubeLitMaterial = new Material("res/shaders/lighting.vert", "res/shaders/lighting.frag");
-	cubeLitMaterial->AddTexture((GLchar*)"res/box/container2_diffuse.png", (GLchar*)"material.diffuse");
-	cubeLitMaterial->AddTexture((GLchar*)"res/box/container2_specular.png", (GLchar*)"material.specular");
-	cubeLitMaterial->AddFloat(32.0f, (GLchar*)"material.shininess");
+	cubeLitMaterial->SetTexture((GLchar*)"material.diffuse", (GLchar*)"res/box/container2_diffuse.png");
+	//cubeLitMaterial->SetTexture((GLchar*)"material.specular", (GLchar*)"res/box/container2_specular.png");
+	cubeLitMaterial->SetFloat((GLchar*)"material.shininess", 32.0f);
 	cubeLitMaterial->SetLightModel(LightModelType::LitForward);
 
 	const int LIT_BOXES_NUMBER = 10;
