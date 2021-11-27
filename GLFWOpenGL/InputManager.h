@@ -7,6 +7,13 @@
  */
 class InputManager
 {
+private:
+	InputManager();
+	~InputManager() = default;
+
+	static InputManager* instance;
+	static InputManager* GetInstance();
+
 public:
 	static void Init(GLFWwindow* window);
 	// should be called at the end of the main loop
@@ -32,19 +39,19 @@ private:
 	static void MouseCallback(GLFWwindow* window, double xPos, double yPos);
 	static void ScrollCallback(GLFWwindow* window, double xOffset, double yOffset);
 
-	static GLFWwindow* window;
+	GLFWwindow* window;
 
-	static const int KEYS_NUMBER = 1024;
+	static constexpr int KEYS_NUMBER = 1024;
 
-	static bool keys[KEYS_NUMBER];
-	static bool keysPressed[KEYS_NUMBER];
-	static bool keysReleased[KEYS_NUMBER];
+	bool keys[KEYS_NUMBER];
+	bool keysPressed[KEYS_NUMBER];
+	bool keysReleased[KEYS_NUMBER];
 
-	static GLfloat mouseXInput;
-	static GLfloat mouseYInput;
-	static GLfloat mouseScrollInput;
-	static GLfloat lastMouseX;
-	static GLfloat lastMouseY;
-	static bool firstMouse;
-	static bool cursorEnabled;
+	GLfloat mouseXInput;
+	GLfloat mouseYInput;
+	GLfloat mouseScrollInput;
+	GLfloat lastMouseX;
+	GLfloat lastMouseY;
+	bool firstMouse;
+	bool cursorEnabled;
 };

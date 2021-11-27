@@ -1,23 +1,9 @@
 #include "InputManager.h"
 
-GLFWwindow* InputManager::window;
+InputManager* InputManager::instance = new InputManager();
 
-bool InputManager::keys[KEYS_NUMBER];
-bool InputManager::keysPressed[KEYS_NUMBER];
-bool InputManager::keysReleased[KEYS_NUMBER];
-
-GLfloat InputManager::mouseXInput = 0.0f;
-GLfloat InputManager::mouseYInput = 0.0f;
-GLfloat InputManager::lastMouseX;
-GLfloat InputManager::lastMouseY;
-GLfloat InputManager::mouseScrollInput;
-bool InputManager::firstMouse = true;
-bool InputManager::cursorEnabled = false;
-
-void InputManager::Init(GLFWwindow* window)
+InputManager::InputManager()
 {
-	InputManager::window = window;
-
 	for (int i = 0; i < KEYS_NUMBER; i++)
 	{
 		keys[i] = false;
@@ -25,12 +11,30 @@ void InputManager::Init(GLFWwindow* window)
 		keysReleased[i] = false;
 	}
 
+	firstMouse = true;
+	mouseXInput = 0.0f;
+	mouseYInput = 0.0f;
+}
+
+InputManager* InputManager::GetInstance()
+{
+	if (instance == nullptr)
+	{
+		instance = new InputManager();
+	}
+	return instance;
+}
+
+void InputManager::Init(GLFWwindow* window)
+{
+	GetInstance()->window = window;
+	
 	int width = 0, height = 0;
 	glfwGetWindowSize(window, &width, &height);
-	lastMouseX = (float)width / 2.0f;
-	lastMouseY = (float)height / 2.0f;
+	GetInstance()->lastMouseX = (float)width / 2.0f;
+	GetInstance()->lastMouseY = (float)height / 2.0f;
 
-	SetCursorEnabled(cursorEnabled);
+	SetCursorEnabled(GetInstance()->cursorEnabled);
 
 	glfwSetKeyCallback(window, KeyCallback);
 	glfwSetCursorPosCallback(window, MouseCallback);
@@ -42,12 +46,12 @@ void InputManager::LateUpdate()
 	for (int i = 0; i < KEYS_NUMBER; i++)
 	{
 		// reset the state of the 'pressed' & 'released' keys since their status lasts only 1 frame
-		keysPressed[i] = false;
-		keysReleased[i] = false;
+		GetInstance()->keysPressed[i] = false;
+		GetInstance()->keysReleased[i] = false;
 
 		// after mouse input was used, reset it to avoid situation where there's no mouse callback but there's mouse input data
-		mouseXInput = 0.0f;
-		mouseYInput = 0.0f;
+		GetInstance()->mouseXInput = 0.0f;
+		GetInstance()->mouseYInput = 0.0f;
 	}
 }
 
@@ -55,7 +59,7 @@ bool InputManager::GetKey(int key)
 {
 	if (key >= 0 && key < 1024)
 	{
-		return keys[key];
+		return GetInstance()->keys[key];
 	}
 	return false;
 }
@@ -64,7 +68,7 @@ bool InputManager::GetKeyPressed(int key)
 {
 	if (key >= 0 && key < 1024)
 	{
-		return keysPressed[key];
+		return GetInstance()->keysPressed[key];
 	}
 	return false;
 }
@@ -73,44 +77,44 @@ bool InputManager::GetKeyReleased(int key)
 {
 	if (key >= 0 && key < 1024)
 	{
-		return keysReleased[key];
+		return GetInstance()->keysReleased[key];
 	}
 	return false;
 }
 
 GLfloat InputManager::GetMouseXInput()
 {
-	return mouseXInput;
+	return GetInstance()->mouseXInput;
 }
 
 GLfloat InputManager::GetMouseYInput()
 {
-	return mouseYInput;
+	return GetInstance()->mouseYInput;
 }
 
 GLfloat InputManager::GetMouseScrollInput()
 {
-	return mouseScrollInput;
+	return GetInstance()->mouseScrollInput;
 }
 
 bool InputManager::GetCursorEnabled()
 {
-	return cursorEnabled;
+	return GetInstance()->cursorEnabled;
 }
 
 void InputManager::SetCursorEnabled(bool enabled)
 {
-	cursorEnabled = enabled;
+	GetInstance()->cursorEnabled = enabled;
 
-	if (window != nullptr)
+	if (GetInstance()->window != nullptr)
 	{
-		if (cursorEnabled)
+		if (GetInstance()->cursorEnabled)
 		{
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			glfwSetInputMode(GetInstance()->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 		}
 		else
 		{
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+			glfwSetInputMode(GetInstance()->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		}
 	}
 }
@@ -122,40 +126,40 @@ void InputManager::KeyCallback(GLFWwindow* window, int key, int scancode, int ac
 		if (GLFW_PRESS == action)
 		{
 			// if the key wasn't held in the last frame then it is pressed now
-			keysPressed[key] = !keys[key];
+			GetInstance()->keysPressed[key] = !GetInstance()->keys[key];
 
-			keysReleased[key] = false;
-			keys[key] = true;
+			GetInstance()->keysReleased[key] = false;
+			GetInstance()->keys[key] = true;
 		}
 		else if (GLFW_RELEASE == action)
 		{
-			keys[key] = false;
-			keysPressed[key] = false;
-			keysReleased[key] = true;
+			GetInstance()->keys[key] = false;
+			GetInstance()->keysPressed[key] = false;
+			GetInstance()->keysReleased[key] = true;
 		}
 	}
 }
 
 void InputManager::MouseCallback(GLFWwindow* window, double xPos, double yPos)
 {
-	if (firstMouse)
+	if (GetInstance()->firstMouse)
 	{
-		lastMouseX = xPos;
-		lastMouseY = yPos;
-		firstMouse = false;
+		GetInstance()->lastMouseX = xPos;
+		GetInstance()->lastMouseY = yPos;
+		GetInstance()->firstMouse = false;
 	}
 
-	if (!cursorEnabled)
+	if (!GetInstance()->cursorEnabled)
 	{
-		mouseXInput = xPos - lastMouseX;
-		mouseYInput = lastMouseY - yPos; //reversed because goes the other way around
+		GetInstance()->mouseXInput = xPos - GetInstance()->lastMouseX;
+		GetInstance()->mouseYInput = GetInstance()->lastMouseY - yPos; //reversed because goes the other way around
 	}
 	
-	lastMouseX = xPos;
-	lastMouseY = yPos;
+	GetInstance()->lastMouseX = xPos;
+	GetInstance()->lastMouseY = yPos;
 }
 
 void InputManager::ScrollCallback(GLFWwindow* window, double xOffset, double yOffset)
 {
-	mouseScrollInput = yOffset;
+	GetInstance()->mouseScrollInput = yOffset;
 }
