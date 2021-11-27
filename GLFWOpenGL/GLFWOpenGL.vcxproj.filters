@@ -120,6 +120,9 @@
     <ClCompile Include="EditorMovement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SharedAsset.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -210,6 +213,9 @@
       <Filter>Header Files\Input</Filter>
     </ClInclude>
     <ClInclude Include="EditorMovement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SharedAsset.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

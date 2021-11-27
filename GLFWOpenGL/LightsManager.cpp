@@ -9,6 +9,22 @@ LightsManager::LightsManager()
 	this->spotLightsNumber = 0;
 }
 
+LightsManager::~LightsManager()
+{
+	for (int i = 0; i < MAX_NUMBER_OF_DIR_LIGHTS; i++)
+	{
+		delete directionalLight[i];
+	}
+	for (int i = 0; i < MAX_NUMBER_OF_POINT_LIGHTS; i++)
+	{
+		delete pointLights[i];
+	}
+	for (int i = 0; i < MAX_NUMBER_OF_SPOT_LIGHTS; i++)
+	{
+		delete spotLight[i];
+	}
+}
+
 LightsManager* LightsManager::GetInstance()
 {
 	if (instance == nullptr)

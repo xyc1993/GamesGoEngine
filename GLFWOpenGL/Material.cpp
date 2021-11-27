@@ -19,6 +19,11 @@ Material::Material(const GLchar* vertexPath, const GLchar* fragmentPath)
 	lightModelType = LightModelType::Unlit;
 }
 
+Material::~Material()
+{
+	delete shader;
+}
+
 void Material::Draw(glm::mat4 model, glm::mat4 view, glm::mat4 projection)
 {
 	if (shader == nullptr)
@@ -34,9 +39,9 @@ void Material::Draw(glm::mat4 model, glm::mat4 view, glm::mat4 projection)
 		glBindTexture(GL_TEXTURE_2D, texturesIDs[i]);
 	}
 	
-	const GLint modelLoc = glGetUniformLocation(shader->Program, "model");
-	const GLint viewLoc = glGetUniformLocation(shader->Program, "view");
-	const GLint projLoc = glGetUniformLocation(shader->Program, "projection");
+	const GLint modelLoc = glGetUniformLocation(shader->GetProgram(), "model");
+	const GLint viewLoc = glGetUniformLocation(shader->GetProgram(), "view");
+	const GLint projLoc = glGetUniformLocation(shader->GetProgram(), "projection");
 
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
@@ -47,7 +52,7 @@ void Material::Draw(glm::mat4 model, glm::mat4 view, glm::mat4 projection)
 	case LightModelType::Unlit:
 		break;
 	case LightModelType::LitForward:
-		LightsManager::SetLightsInShader(shader->Program);
+		LightsManager::SetLightsInShader(shader->GetProgram());
 		break;
 	}
 }
@@ -69,7 +74,7 @@ void Material::SetTexture(GLchar* textureName, GLchar* path)
 
 void Material::SetFloat(const GLchar* floatName, float value) const
 {
-	const GLint floatID = glGetUniformLocation(shader->Program, floatName);
+	const GLint floatID = glGetUniformLocation(shader->GetProgram(), floatName);
 	SetFloat(floatID, value);
 }
 

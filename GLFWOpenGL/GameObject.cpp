@@ -10,11 +10,10 @@ GameObject::~GameObject()
 {
 	for (Component* component : components)
 	{
-		if (component != nullptr)
-		{
-			component->~Component();
-		}
+		delete component;
 	}
+	components.clear();
+
 	delete transform;
 }
 

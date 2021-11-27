@@ -15,10 +15,8 @@ MeshRenderer::MeshRenderer()
 
 MeshRenderer::~MeshRenderer()
 {
-	if (material != nullptr)
-	{
-		material->~Material();		
-	}
+	material->DeleteSafely();
+	mesh->DeleteSafely();
 }
 
 void MeshRenderer::Init(GameObject* owner)
@@ -38,10 +36,26 @@ void MeshRenderer::Update()
 
 void MeshRenderer::SetMaterial(Material* material)
 {
+	// firstly, if there's some material assigned, decrement its users number
+	if (this->material != nullptr)
+	{
+		this->material->DecrementNumberOfUsers();
+	}
+
+	// secondly assign new material & increment the number of users for the new material
 	this->material = material;
+	this->material->IncrementNumberOfUsers();
 }
 
 void MeshRenderer::SetMesh(MeshBase* mesh)
 {
+	// firstly, if there's some mesh assigned, decrement its users number
+	if (this->mesh != nullptr)
+	{
+		this->mesh->DecrementNumberOfUsers();
+	}
+
+	// secondly assign new mesh & increment the number of users for the new mesh
 	this->mesh = mesh;
+	this->mesh->IncrementNumberOfUsers();
 }

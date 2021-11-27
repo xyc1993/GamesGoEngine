@@ -14,7 +14,7 @@ public:
 	virtual void SetLightInShader(const GLuint& shaderProgram) = 0;
 	virtual void Update() override {}
 
-	static const GLuint INITIALIZATION_ERROR = -1;
+	static constexpr GLuint INITIALIZATION_ERROR = -1;
 
 protected:
 	virtual std::string GetNumberedShaderProperty() = 0;

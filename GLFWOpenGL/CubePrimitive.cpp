@@ -10,7 +10,7 @@ CubePrimitive::CubePrimitive()
     glBindVertexArray(this->VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Primitives::cubeVertices), Primitives::cubeVertices, GL_STATIC_DRAW);
 
     // Vertex Positions
     glEnableVertexAttribArray(0);

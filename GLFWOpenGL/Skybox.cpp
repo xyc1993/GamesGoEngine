@@ -33,7 +33,7 @@ void Skybox::InitSkybox(const std::vector<const GLchar*>& faces, const GLchar* v
 	glGenBuffers(1, &skyyboxVBO);
 	glBindVertexArray(skyboxVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, skyyboxVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVerticesCube), &skyboxVerticesCube, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Primitives::skyboxVerticesCube), &Primitives::skyboxVerticesCube, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GL_FLOAT), (GLvoid*)0);
 	glBindVertexArray(0);
@@ -47,8 +47,8 @@ void Skybox::Draw(glm::mat4 view, glm::mat4 projection)
 
 	skyboxShader.Use();
 
-	glUniformMatrix4fv(glGetUniformLocation(skyboxShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
-	glUniformMatrix4fv(glGetUniformLocation(skyboxShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+	glUniformMatrix4fv(glGetUniformLocation(skyboxShader.GetProgram(), "view"), 1, GL_FALSE, glm::value_ptr(view));
+	glUniformMatrix4fv(glGetUniformLocation(skyboxShader.GetProgram(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
 	glBindVertexArray(skyboxVAO);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);

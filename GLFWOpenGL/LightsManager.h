@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "DirectionalLight.h"
 #include "PointLight.h"
 #include "SpotLight.h"
@@ -12,14 +14,15 @@ class LightsManager
 {
 private:
 	LightsManager();
+	~LightsManager();
 
 	static LightsManager* instance;
 	static LightsManager* GetInstance();
 	
 public:	
-	static const int MAX_NUMBER_OF_DIR_LIGHTS = 4;
-	static const int MAX_NUMBER_OF_POINT_LIGHTS = 4;
-	static const int MAX_NUMBER_OF_SPOT_LIGHTS = 4;
+	static constexpr int MAX_NUMBER_OF_DIR_LIGHTS = 4;
+	static constexpr int MAX_NUMBER_OF_POINT_LIGHTS = 4;
+	static constexpr int MAX_NUMBER_OF_SPOT_LIGHTS = 4;
 	
 	static GLuint AddDirectionalLight(DirectionalLight* directionalLight);
 	static GLuint AddPointLight(PointLight* pointLight);

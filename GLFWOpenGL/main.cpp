@@ -255,14 +255,14 @@ void MainLoop(GLFWwindow* window)
 		directionalLightObject.Update();
 
 		modelShader.Use();
-		glUniformMatrix4fv(glGetUniformLocation(modelShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection_global));
-		glUniformMatrix4fv(glGetUniformLocation(modelShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view_global));
+		glUniformMatrix4fv(glGetUniformLocation(modelShader.GetProgram(), "projection"), 1, GL_FALSE, glm::value_ptr(projection_global));
+		glUniformMatrix4fv(glGetUniformLocation(modelShader.GetProgram(), "view"), 1, GL_FALSE, glm::value_ptr(view_global));
 
 		glm::mat4 model(1.0f);
 		model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.2f));
 
-		glUniformMatrix4fv(glGetUniformLocation(modelShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		glUniformMatrix4fv(glGetUniformLocation(modelShader.GetProgram(), "model"), 1, GL_FALSE, glm::value_ptr(model));
 
 		loadedModel.Draw(modelShader);
 
