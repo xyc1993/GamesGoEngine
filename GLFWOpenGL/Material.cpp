@@ -8,14 +8,14 @@
 Material::Material()
 {
 	shader = nullptr;
-	texturesIDs.clear();
+	texturesMap.clear();
 	lightModelType = LightModelType::Unlit;
 }
 
 Material::Material(const GLchar* vertexPath, const GLchar* fragmentPath)
 {
 	shader = new Shader(vertexPath, fragmentPath);
-	texturesIDs.clear();
+	texturesMap.clear();
 	lightModelType = LightModelType::Unlit;
 }
 
@@ -33,10 +33,10 @@ void Material::Draw(glm::mat4 model, glm::mat4 view, glm::mat4 projection)
 
 	shader->Use();
 	
-	for (int i = 0; i < texturesIDs.size(); i++)
+	for (auto it = texturesMap.begin(); it != texturesMap.end(); ++it)
 	{
-		glActiveTexture(GL_TEXTURE0 + (GLuint)i);
-		glBindTexture(GL_TEXTURE_2D, texturesIDs[i]);
+		glActiveTexture(GL_TEXTURE0 + std::get<0>(it->second));
+		glBindTexture(GL_TEXTURE_2D, std::get<1>(it->second));
 	}
 	
 	const GLint modelLoc = glGetUniformLocation(shader->GetProgram(), "model");
@@ -63,12 +63,13 @@ void Material::SetShader(const GLchar* vertexPath, const GLchar* fragmentPath)
 	shader = new Shader(vertexPath, fragmentPath);	
 }
 
-void Material::SetTexture(GLchar* textureName, GLchar* path)
+void Material::SetTexture(GLchar* textureName, GLuint textureIndex, GLchar* path)
 {
 	if (shader != nullptr)
 	{
+		const GLint textureID = glGetUniformLocation(shader->GetProgram(), textureName);
 		GLuint texture = TextureLoader::LoadTexture(path);
-		texturesIDs.push_back(texture);
+		texturesMap[textureID] = std::tuple<GLuint, GLuint>(textureIndex, texture);
 	}
 }
 

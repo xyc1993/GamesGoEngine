@@ -1,6 +1,7 @@
 #pragma once
 
-#include <vector>
+#include <map>
+#include <tuple>
 #include <glm/fwd.hpp>
 
 #include "Shader.h"
@@ -28,7 +29,7 @@ public:
 	void SetShader(const GLchar* vertexPath, const GLchar* fragmentPath);
 
 	// TO DO: should have some safety measure against adding texture that was already added
-	void SetTexture(GLchar* textureName, GLchar* path);
+	void SetTexture(GLchar* textureName, GLuint textureIndex, GLchar* path);
 	
 	void SetFloat(const GLchar* floatName, float value) const;
 	void SetFloat(const GLint floatID, float value) const;
@@ -38,6 +39,7 @@ public:
 private:
 	Shader* shader;
 
-	std::vector<GLuint> texturesIDs;
+	std::map<GLint, std::tuple<GLuint, GLuint>> texturesMap;
+	
 	LightModelType lightModelType;	
 };
