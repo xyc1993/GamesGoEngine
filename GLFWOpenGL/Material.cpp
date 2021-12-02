@@ -63,7 +63,7 @@ void Material::SetShader(const GLchar* vertexPath, const GLchar* fragmentPath)
 	shader = new Shader(vertexPath, fragmentPath);	
 }
 
-void Material::SetTexture(GLchar* textureName, GLuint textureIndex, GLchar* path)
+void Material::SetTexture(const GLchar* textureName, GLuint textureIndex, GLchar* path)
 {
 	if (shader != nullptr)
 	{

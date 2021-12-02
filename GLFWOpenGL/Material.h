@@ -29,7 +29,7 @@ public:
 	void SetShader(const GLchar* vertexPath, const GLchar* fragmentPath);
 
 	// TO DO: should have some safety measure against adding texture that was already added
-	void SetTexture(GLchar* textureName, GLuint textureIndex, GLchar* path);
+	void SetTexture(const GLchar* textureName, GLuint textureIndex, GLchar* path);
 	
 	void SetFloat(const GLchar* floatName, float value) const;
 	void SetFloat(const GLint floatID, float value) const;
