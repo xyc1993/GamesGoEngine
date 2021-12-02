@@ -164,10 +164,10 @@
     <ClCompile Include="LightsManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
-    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MeshOld.cpp" />
     <ClCompile Include="MeshBase.cpp" />
     <ClCompile Include="MeshRenderer.cpp" />
-    <ClCompile Include="Model.cpp" />
+    <ClCompile Include="ModelOld.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SharedAsset.cpp" />
@@ -196,11 +196,11 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="LightsManager.h" />
     <ClInclude Include="Material.h" />
-    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MeshOld.h" />
     <ClInclude Include="MeshBase.h" />
     <ClInclude Include="Primitives.h" />
     <ClInclude Include="MeshRenderer.h" />
-    <ClInclude Include="Model.h" />
+    <ClInclude Include="ModelOld.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SharedAsset.h" />

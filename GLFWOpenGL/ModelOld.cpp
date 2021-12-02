@@ -1,11 +1,11 @@
-#include "Model.h"
+#include "ModelOld.h"
 
-Model::Model(GLchar* path)
+ModelOld::ModelOld(GLchar* path)
 {
     this->LoadModel(path);
 }
 
-void Model::Draw(Shader shader)
+void ModelOld::Draw(Shader shader)
 {
     for (GLuint i = 0; i < this->meshes.size(); i++)
     {
@@ -13,7 +13,7 @@ void Model::Draw(Shader shader)
     }
 }
 
-void Model::LoadModel(std::string path)
+void ModelOld::LoadModel(std::string path)
 {
     // Read file via ASSIMP
     Assimp::Importer importer;
@@ -32,7 +32,7 @@ void Model::LoadModel(std::string path)
     this->ProcessNode(scene->mRootNode, scene);
 }
 
-void Model::ProcessNode(aiNode* node, const aiScene* scene)
+void ModelOld::ProcessNode(aiNode* node, const aiScene* scene)
 {
     // Process each mesh located at the current node
     for (GLuint i = 0; i < node->mNumMeshes; i++)
@@ -51,7 +51,7 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene)
     }
 }
 
-Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
+MeshOld ModelOld::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 {
     // Data to fill
     std::vector<Vertex> vertices;
@@ -126,10 +126,10 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
     }
 
     // Return a mesh object created from the extracted mesh data
-    return Mesh(vertices, indices, textures);
+    return MeshOld(vertices, indices, textures);
 }
 
-std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
+std::vector<Texture> ModelOld::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
 {
     std::vector<Texture> textures;
 

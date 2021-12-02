@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Mesh.h"
+#include "MeshOld.h"
 #include "SharedAsset.h"
 
 class MeshBase : public SharedAsset

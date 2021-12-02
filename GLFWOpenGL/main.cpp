@@ -21,7 +21,7 @@
 #include "GameObject.h"
 #include "InputEditorShortcuts.h"
 #include "InputManager.h"
-#include "Model.h"
+#include "ModelOld.h"
 #include "Skybox.h"
 
 #include "LightsManager.h"
@@ -110,7 +110,7 @@ void MainLoop(GLFWwindow* window)
 	};
 
 	Shader modelShader("res/shaders/modelLoading.vert", "res/shaders/modelLoading.frag");
-	Model loadedModel((GLchar*)"res/nanosuit/nanosuit.obj");
+	ModelOld loadedModel((GLchar*)"res/nanosuit/nanosuit.obj");
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //use this for wireframe
 

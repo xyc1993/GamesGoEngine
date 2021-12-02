@@ -1,6 +1,6 @@
-#include "Mesh.h"
+#include "MeshOld.h"
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture> textures)
+MeshOld::MeshOld(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture> textures)
 {
     this->vertices = vertices;
     this->indices = indices;
@@ -8,7 +8,7 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vecto
     this->SetupMesh();
 }
 
-void Mesh::Draw(Shader shader)
+void MeshOld::Draw(Shader shader)
 {
     // Bind appropriate textures
     GLuint diffuseNr = 1;
@@ -54,7 +54,7 @@ void Mesh::Draw(Shader shader)
     }
 }
 
-void Mesh::SetupMesh()
+void MeshOld::SetupMesh()
 {
     // Create buffers/arrays
     glGenVertexArrays(1, &this->VAO);

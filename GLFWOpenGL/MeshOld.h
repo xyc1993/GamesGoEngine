@@ -27,14 +27,14 @@ struct Texture
 	aiString path;
 };
 
-class Mesh
+class MeshOld
 {
 public:
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;
 	std::vector<Texture> textures;
 
-    Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture> textures);
+    MeshOld(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture> textures);
     void Draw(Shader shader);
 
 private:
