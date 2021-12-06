@@ -17,9 +17,12 @@ public:
 	void Init(GameObject* owner) override;
 	void Update() override;
 	void SetMaterial(Material* material);
+	void SetMaterial(Material* material, size_t materialIndex);
 	void SetMesh(MeshBase* mesh);
 
 private:
-	Material* material;
+	void CleanMaterialList();
+	
 	MeshBase* mesh;
+	std::vector<Material*> materialList;
 };

@@ -7,5 +7,6 @@ class CubePrimitive : public MeshBase
 public:
 	CubePrimitive();
 
-	void Draw() override;
+	virtual void DrawSubmesh(size_t submeshIndex) override;
+	virtual int GetSubmeshesCount() const override;
 };

@@ -27,8 +27,7 @@ public:
 	// all shaders have to support model, view, projection matrices!
 	void Draw(glm::mat4 model, glm::mat4 view, glm::mat4 projection);
 	void SetShader(const GLchar* vertexPath, const GLchar* fragmentPath);
-
-	// TO DO: should have some safety measure against adding texture that was already added
+	
 	void SetTexture(const GLchar* textureName, GLuint textureIndex, GLchar* path);
 	
 	void SetFloat(const GLchar* floatName, float value) const;

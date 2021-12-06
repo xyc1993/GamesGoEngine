@@ -10,13 +10,20 @@ extern glm::mat4 projection_global;
 
 MeshRenderer::MeshRenderer()
 {
-	material = nullptr;
+	mesh = nullptr;
+	materialList.clear();
 }
 
 MeshRenderer::~MeshRenderer()
 {
-	material->DeleteSafely();
 	mesh->DeleteSafely();
+	for (size_t i = 0; i < materialList.size(); i++)
+	{
+		if (materialList[i] != nullptr)
+		{
+			materialList[i]->DeleteSafely();
+		}
+	}
 }
 
 void MeshRenderer::Init(GameObject* owner)
@@ -27,35 +34,76 @@ void MeshRenderer::Init(GameObject* owner)
 
 void MeshRenderer::Update()
 {
-	if (owner != nullptr && material != nullptr && mesh != nullptr)
+	if (owner != nullptr && mesh != nullptr)
 	{
-		material->Draw(owner->GetTransform()->GetModelMatrix(), view_global, projection_global);		
-		mesh->Draw();
+		for (size_t i = 0; i < materialList.size(); i++)
+		{
+			if (materialList[i] != nullptr)
+			{
+				materialList[i]->Draw(owner->GetTransform()->GetModelMatrix(), view_global, projection_global);
+				mesh->DrawSubmesh(i);
+			}
+		}
 	}
 }
 
 void MeshRenderer::SetMaterial(Material* material)
 {
-	// firstly, if there's some material assigned, decrement its users number
-	if (this->material != nullptr)
+	SetMaterial(material, 0);
+}
+
+void MeshRenderer::SetMaterial(Material* material, size_t materialIndex)
+{
+	if (materialIndex < 0 || materialIndex >= materialList.size())
 	{
-		this->material->DecrementNumberOfUsers();
+		return;
+	}
+	
+	// firstly, if there's some material assigned, decrement its users number
+	if (materialList[materialIndex] != nullptr)
+	{
+		materialList[materialIndex]->DecrementNumberOfUsers();
 	}
 
-	// secondly assign new material & increment the number of users for the new material
-	this->material = material;
-	this->material->IncrementNumberOfUsers();
+	// secondly assign new material at given index & increment the number of users for the new material
+	materialList[materialIndex] = material;
+	materialList[materialIndex]->IncrementNumberOfUsers();
 }
 
 void MeshRenderer::SetMesh(MeshBase* mesh)
 {
+	if (this->mesh == mesh)
+	{
+		return;
+	}
+	
 	// firstly, if there's some mesh assigned, decrement its users number
 	if (this->mesh != nullptr)
 	{
 		this->mesh->DecrementNumberOfUsers();
 	}
-
+	
 	// secondly assign new mesh & increment the number of users for the new mesh
 	this->mesh = mesh;
 	this->mesh->IncrementNumberOfUsers();
+	
+	// finally, do material cleanup & set proper size to the list
+	CleanMaterialList();
+	materialList.resize(this->mesh->GetSubmeshesCount());
+}
+
+void MeshRenderer::CleanMaterialList()
+{
+	for (size_t i = 0; i < materialList.size(); i++)
+	{
+		if (materialList[i] != nullptr)
+		{
+			materialList[i]->DecrementNumberOfUsers();
+			// unreference material instead of destroying it
+			materialList[i] = nullptr;
+		}
+	}
+
+	// don't do this, it'll call destructor of materials, & we don't necessarily want that
+	//materialList.clear();
 }

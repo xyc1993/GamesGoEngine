@@ -25,9 +25,21 @@ CubePrimitive::CubePrimitive()
     glBindVertexArray(0);
 }
 
-void CubePrimitive::Draw()
+void CubePrimitive::DrawSubmesh(size_t submeshIndex)
 {
+    if (submeshIndex != 0)
+    {
+        std::cout << "CUBE PRIMITIVE :: TRYING TO DRAW NON EXISTING SUBMESH!" << std::endl;
+        return;
+    }
+
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
+}
+
+int CubePrimitive::GetSubmeshesCount() const
+{
+    // there's only 1 submesh in cube primitive - the cube
+    return 1;
 }

@@ -168,8 +168,8 @@ void MainLoop(GLFWwindow* window)
 
 	for (int i = 0; i < LAMPS_NUMBER; i++)
 	{
-		lampMeshRenderers[i]->SetMaterial(lampMaterial);
 		lampMeshRenderers[i]->SetMesh(cubeMesh);
+		lampMeshRenderers[i]->SetMaterial(lampMaterial);
 		lampObjects[i].AddComponent(lampMeshRenderers[i]);
 		lampObjects[i].GetTransform()->SetPosition(pointLightPositions[i]);
 		lampObjects[i].GetTransform()->SetScale(glm::vec3(0.2f));
@@ -201,8 +201,8 @@ void MainLoop(GLFWwindow* window)
 
 	for (int i = 0; i < LIT_BOXES_NUMBER; i++)
 	{
-		litBoxesMeshRenderers[i]->SetMaterial(cubeLitMaterial);
 		litBoxesMeshRenderers[i]->SetMesh(cubeMesh);
+		litBoxesMeshRenderers[i]->SetMaterial(cubeLitMaterial);
 		litBoxesObjects[i].AddComponent(litBoxesMeshRenderers[i]);
 		litBoxesObjects[i].GetTransform()->SetPosition(litBoxesPositions[i]);
 		litBoxesObjects[i].GetTransform()->SetRotationEulerDegrees(litBoxesRotations[i]);
