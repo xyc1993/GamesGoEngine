@@ -14,6 +14,7 @@ class MeshImported : public MeshBase
 {
 public:
 	MeshImported(GLchar* path);
+	MeshImported(std::string path);
 
 	virtual void DrawSubmesh(size_t submeshIndex) override;
 	virtual int GetSubmeshesCount() const override;

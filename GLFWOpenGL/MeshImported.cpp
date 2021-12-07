@@ -8,6 +8,11 @@ MeshImported::MeshImported(GLchar* path)
 	ImportMesh(path);
 }
 
+MeshImported::MeshImported(std::string path)
+{
+    ImportMesh(path);
+}
+
 void MeshImported::DrawSubmesh(size_t submeshIndex)
 {
 	if (submeshIndex >= 0 && submeshIndex < subMeshes.size())

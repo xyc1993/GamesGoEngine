@@ -210,17 +210,36 @@ void MainLoop(GLFWwindow* window)
 	}
 
 	GameObject nanoSuitObject = GameObject();
-	nanoSuitObject.GetTransform()->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+	nanoSuitObject.GetTransform()->SetPosition(glm::vec3(1.0f, -1.75f, 0.0f));
 	nanoSuitObject.GetTransform()->SetScale(glm::vec3(0.2f));
 	MeshRenderer* nanoSuitMeshRenderer = new MeshRenderer();
 	MeshImported* nanoSuitMesh = new MeshImported((GLchar*)"res/nanosuit/nanosuit.obj");
 	nanoSuitMeshRenderer->SetMesh(nanoSuitMesh);
 
-	Material* nanoSuitMaterial0 = new Material("res/shaders/lighting.vert", "res/shaders/lighting.frag");
-	nanoSuitMaterial0->SetTexture((GLchar*)"material.diffuse", 0, (GLchar*)"res/nanosuit/glass_dif.png");
-	nanoSuitMaterial0->SetFloat((GLchar*)"material.shininess", 32.0f);
-	nanoSuitMaterial0->SetLightModel(LightModelType::LitForward);
-	nanoSuitMeshRenderer->SetMaterial(nanoSuitMaterial0, 0);
+	const int NANOSUIT_MATERIALS_NUMBER = 7;
+	Material* nanoSuitMaterials[] = {
+		new Material(), new Material(), new Material(),
+		new Material(), new Material(), new Material(),
+		new Material()
+	};
+
+	std::vector<GLchar*> nanoSuitTexturePaths;
+	nanoSuitTexturePaths.push_back((GLchar*)"res/nanosuit/glass_dif.png");
+	nanoSuitTexturePaths.push_back((GLchar*)"res/nanosuit/leg_dif.png");
+	nanoSuitTexturePaths.push_back((GLchar*)"res/nanosuit/hand_dif.png");
+	nanoSuitTexturePaths.push_back((GLchar*)"res/nanosuit/arm_dif.png"); // this one is empty ??? TO DO: fix this, probably mesh importer has some issues
+	nanoSuitTexturePaths.push_back((GLchar*)"res/nanosuit/arm_dif.png");
+	nanoSuitTexturePaths.push_back((GLchar*)"res/nanosuit/helmet_diff.png");
+	nanoSuitTexturePaths.push_back((GLchar*)"res/nanosuit/body_dif.png");
+
+	for (int i = 0; i < NANOSUIT_MATERIALS_NUMBER; i++)
+	{
+		nanoSuitMaterials[i] = new Material("res/shaders/lighting.vert", "res/shaders/lighting.frag");
+		nanoSuitMaterials[i]->SetTexture((GLchar*)"material.diffuse", 0, nanoSuitTexturePaths[i]);
+		nanoSuitMaterials[i]->SetFloat((GLchar*)"material.shininess", 32.0f);
+		nanoSuitMaterials[i]->SetLightModel(LightModelType::LitForward);
+		nanoSuitMeshRenderer->SetMaterial(nanoSuitMaterials[i], i);
+	}
 
 	nanoSuitObject.AddComponent(nanoSuitMeshRenderer);
 
@@ -275,7 +294,7 @@ void MainLoop(GLFWwindow* window)
 		glUniformMatrix4fv(glGetUniformLocation(modelShader.GetProgram(), "view"), 1, GL_FALSE, glm::value_ptr(view_global));
 
 		glm::mat4 model(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f));
+		model = glm::translate(model, glm::vec3(-1.0f, -1.75f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.2f));
 
 		glUniformMatrix4fv(glGetUniformLocation(modelShader.GetProgram(), "model"), 1, GL_FALSE, glm::value_ptr(model));
