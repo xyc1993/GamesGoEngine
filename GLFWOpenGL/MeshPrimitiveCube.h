@@ -2,10 +2,10 @@
 
 #include "MeshBase.h"
 
-class CubePrimitive : public MeshBase
+class MeshPrimitiveCube : public MeshBase
 {
 public:
-	CubePrimitive();
+	MeshPrimitiveCube();
 
 	virtual void DrawSubmesh(size_t submeshIndex) override;
 	virtual int GetSubmeshesCount() const override;

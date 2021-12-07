@@ -1,8 +1,8 @@
-#include "CubePrimitive.h"
+#include "MeshPrimitiveCube.h"
 
 #include "Primitives.h"
 
-CubePrimitive::CubePrimitive()
+MeshPrimitiveCube::MeshPrimitiveCube()
 {
     glGenVertexArrays(1, &this->VAO);
     glGenBuffers(1, &this->VBO);
@@ -25,7 +25,7 @@ CubePrimitive::CubePrimitive()
     glBindVertexArray(0);
 }
 
-void CubePrimitive::DrawSubmesh(size_t submeshIndex)
+void MeshPrimitiveCube::DrawSubmesh(size_t submeshIndex)
 {
     if (submeshIndex != 0)
     {
@@ -38,7 +38,7 @@ void CubePrimitive::DrawSubmesh(size_t submeshIndex)
     glBindVertexArray(0);
 }
 
-int CubePrimitive::GetSubmeshesCount() const
+int MeshPrimitiveCube::GetSubmeshesCount() const
 {
     // there's only 1 submesh in cube primitive - the cube
     return 1;

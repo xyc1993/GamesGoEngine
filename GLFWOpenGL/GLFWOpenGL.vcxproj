@@ -155,7 +155,7 @@
     <ClCompile Include="..\External Libraries\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Component.cpp" />
-    <ClCompile Include="CubePrimitive.cpp" />
+    <ClCompile Include="MeshPrimitiveCube.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="EditorMovement.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -164,6 +164,7 @@
     <ClCompile Include="LightsManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
+    <ClCompile Include="MeshImported.cpp" />
     <ClCompile Include="MeshOld.cpp" />
     <ClCompile Include="MeshBase.cpp" />
     <ClCompile Include="MeshRenderer.cpp" />
@@ -173,6 +174,7 @@
     <ClCompile Include="SharedAsset.cpp" />
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="SpotLight.cpp" />
+    <ClCompile Include="SubMesh.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>
@@ -187,7 +189,7 @@
     <ClInclude Include="..\External Libraries\imgui\imstb_truetype.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Component.h" />
-    <ClInclude Include="CubePrimitive.h" />
+    <ClInclude Include="MeshPrimitiveCube.h" />
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="EditorMovement.h" />
     <ClInclude Include="GameObject.h" />
@@ -196,6 +198,7 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="LightsManager.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="MeshImported.h" />
     <ClInclude Include="MeshOld.h" />
     <ClInclude Include="MeshBase.h" />
     <ClInclude Include="Primitives.h" />
@@ -206,6 +209,7 @@
     <ClInclude Include="SharedAsset.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="SpotLight.h" />
+    <ClInclude Include="SubMesh.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="Transform.h" />
   </ItemGroup>

@@ -117,7 +117,7 @@
     <ClCompile Include="SharedAsset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CubePrimitive.cpp">
+    <ClCompile Include="MeshPrimitiveCube.cpp">
       <Filter>Source Files\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="MeshBase.cpp">
@@ -127,6 +127,12 @@
       <Filter>Source Files\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="ModelOld.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="SubMesh.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshImported.cpp">
       <Filter>Source Files\Mesh</Filter>
     </ClCompile>
   </ItemGroup>
@@ -221,7 +227,13 @@
     <ClInclude Include="Primitives.h">
       <Filter>Header Files\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="CubePrimitive.h">
+    <ClInclude Include="MeshPrimitiveCube.h">
+      <Filter>Header Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="SubMesh.h">
+      <Filter>Header Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshImported.h">
       <Filter>Header Files\Mesh</Filter>
     </ClInclude>
   </ItemGroup>

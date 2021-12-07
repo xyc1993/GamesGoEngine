@@ -16,7 +16,7 @@
 
 #include "Shader.h"
 #include "Camera.h"
-#include "CubePrimitive.h"
+#include "MeshPrimitiveCube.h"
 #include "EditorMovement.h"
 #include "GameObject.h"
 #include "InputEditorShortcuts.h"
@@ -26,6 +26,7 @@
 
 #include "LightsManager.h"
 #include "Material.h"
+#include "MeshImported.h"
 #include "MeshRenderer.h"
 
 const GLint WIDTH = 800, HEIGHT = 600;
@@ -147,7 +148,7 @@ void MainLoop(GLFWwindow* window)
 	projection_global = glm::perspective(45.0f, (GLfloat)SCREEN_WIDTH / (GLfloat)SCREEN_HEIGHT, 0.1f, 1000.0f);
 	
 	// NEW CODE DATA STRUCTURE REWORK (remember to add delete after while()!)
-	CubePrimitive* cubeMesh = new CubePrimitive();
+	MeshPrimitiveCube* cubeMesh = new MeshPrimitiveCube();
 
 	Material* lampMaterial = new Material("res/shaders/lamp.vert", "res/shaders/lamp.frag");
 	
@@ -208,6 +209,21 @@ void MainLoop(GLFWwindow* window)
 		litBoxesObjects[i].GetTransform()->SetRotationEulerDegrees(litBoxesRotations[i]);
 	}
 
+	GameObject nanoSuitObject = GameObject();
+	nanoSuitObject.GetTransform()->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+	nanoSuitObject.GetTransform()->SetScale(glm::vec3(0.2f));
+	MeshRenderer* nanoSuitMeshRenderer = new MeshRenderer();
+	MeshImported* nanoSuitMesh = new MeshImported((GLchar*)"res/nanosuit/nanosuit.obj");
+	nanoSuitMeshRenderer->SetMesh(nanoSuitMesh);
+
+	Material* nanoSuitMaterial0 = new Material("res/shaders/lighting.vert", "res/shaders/lighting.frag");
+	nanoSuitMaterial0->SetTexture((GLchar*)"material.diffuse", 0, (GLchar*)"res/nanosuit/glass_dif.png");
+	nanoSuitMaterial0->SetFloat((GLchar*)"material.shininess", 32.0f);
+	nanoSuitMaterial0->SetLightModel(LightModelType::LitForward);
+	nanoSuitMeshRenderer->SetMaterial(nanoSuitMaterial0, 0);
+
+	nanoSuitObject.AddComponent(nanoSuitMeshRenderer);
+
 	GameObject editorSpectatorObject = GameObject();
 	editorSpectatorObject.GetTransform()->SetRotationEulerDegrees(glm::vec3(0.0f, 180.0f, 0.0f));
 	editorSpectatorObject.GetTransform()->SetPosition(glm::vec3(0.0f, 0.0, 3.0f));
@@ -265,9 +281,11 @@ void MainLoop(GLFWwindow* window)
 		glUniformMatrix4fv(glGetUniformLocation(modelShader.GetProgram(), "model"), 1, GL_FALSE, glm::value_ptr(model));
 
 		loadedModel.Draw(modelShader);
-
+		
 		//SKYBOX
 		skybox.Draw(glm::mat4(glm::mat3(view_global)), projection_global);
+
+		nanoSuitObject.Update();
 				
 		for (int i = 0; i < LIT_BOXES_NUMBER; i++)
 		{
