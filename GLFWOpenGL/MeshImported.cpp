@@ -122,5 +122,5 @@ SubMesh* MeshImported::ProcessMesh(aiMesh* mesh, const aiScene* scene)
     }
     
     // Return a mesh object created from the extracted mesh data
-    return new SubMesh(vertices, indices);
+    return new SubMesh(static_cast<std::string>(mesh->mName.C_Str()), vertices, indices);
 }

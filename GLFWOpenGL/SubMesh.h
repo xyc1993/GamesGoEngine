@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <vector>
 #include <GL/glew.h>
 #include <glm/vec3.hpp>
@@ -15,13 +16,16 @@ struct Vertex
 class SubMesh
 {
 public:
-	SubMesh(std::vector<Vertex> vertices, std::vector<GLuint> indices);
+	SubMesh(std::string name, std::vector<Vertex> vertices, std::vector<GLuint> indices);
 
 	void Draw();
+	// useful for debugging mesh with several sub meshes
+	std::string GetName() const;
 
 private:
 	void SetupMesh();
 
+	std::string name;
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;
 	GLuint VAO, VBO, EBO;

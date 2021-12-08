@@ -1,7 +1,8 @@
 #include "SubMesh.h"
 
-SubMesh::SubMesh(std::vector<Vertex> vertices, std::vector<GLuint> indices)
+SubMesh::SubMesh(std::string name, std::vector<Vertex> vertices, std::vector<GLuint> indices)
 {
+    this->name = name;
 	this->vertices = vertices;
 	this->indices = indices;
     this->SetupMesh();
@@ -13,6 +14,11 @@ void SubMesh::Draw()
     glBindVertexArray(this->VAO);
     glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
+}
+
+std::string SubMesh::GetName() const
+{
+    return name;
 }
 
 void SubMesh::SetupMesh()

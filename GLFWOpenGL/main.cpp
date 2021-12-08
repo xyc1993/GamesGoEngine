@@ -223,7 +223,7 @@ void MainLoop(GLFWwindow* window)
 	nanoSuitTexturePaths.push_back((GLchar*)"res/nanosuit/glass_dif.png");
 	nanoSuitTexturePaths.push_back((GLchar*)"res/nanosuit/leg_dif.png");
 	nanoSuitTexturePaths.push_back((GLchar*)"res/nanosuit/hand_dif.png");
-	nanoSuitTexturePaths.push_back((GLchar*)"res/nanosuit/arm_dif.png"); // this one is empty ??? TO DO: fix this, probably mesh importer has some issues
+	nanoSuitTexturePaths.push_back((GLchar*)"res/nanosuit/glass_dif.png"); // this one is small 'lights' on the helmet under visor, no specific texture was given for those
 	nanoSuitTexturePaths.push_back((GLchar*)"res/nanosuit/arm_dif.png");
 	nanoSuitTexturePaths.push_back((GLchar*)"res/nanosuit/helmet_diff.png");
 	nanoSuitTexturePaths.push_back((GLchar*)"res/nanosuit/body_dif.png");
