@@ -41,7 +41,7 @@ void MeshRenderer::Update()
 			if (materialList[i] != nullptr)
 			{
 				materialList[i]->Draw(owner->GetTransform()->GetModelMatrix(), view_global, projection_global);
-				mesh->DrawSubmesh(i);
+				mesh->DrawSubMesh(i);
 			}
 		}
 	}
@@ -89,7 +89,7 @@ void MeshRenderer::SetMesh(MeshBase* mesh)
 	
 	// finally, do material cleanup & set proper size to the list
 	CleanMaterialList();
-	materialList.resize(this->mesh->GetSubmeshesCount());
+	materialList.resize(this->mesh->GetSubMeshesCount());
 }
 
 void MeshRenderer::CleanMaterialList()

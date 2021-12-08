@@ -13,18 +13,18 @@ MeshImported::MeshImported(std::string path)
     ImportMesh(path);
 }
 
-void MeshImported::DrawSubmesh(size_t submeshIndex)
+void MeshImported::DrawSubMesh(size_t subMeshIndex)
 {
-	if (submeshIndex >= 0 && submeshIndex < subMeshes.size())
+	if (subMeshIndex >= 0 && subMeshIndex < subMeshes.size())
 	{
-		if (subMeshes[submeshIndex] != nullptr)
+		if (subMeshes[subMeshIndex] != nullptr)
 		{
-			subMeshes[submeshIndex]->Draw();
+			subMeshes[subMeshIndex]->Draw();
 		}
 	}
 }
 
-int MeshImported::GetSubmeshesCount() const
+int MeshImported::GetSubMeshesCount() const
 {
 	return subMeshes.size();
 }
@@ -120,29 +120,7 @@ SubMesh* MeshImported::ProcessMesh(aiMesh* mesh, const aiScene* scene)
             indices.push_back(face.mIndices[j]);
         }
     }
-
-    /* NOT NEEDED, MATERIALS & TEXTURES ARE HANDLED VIA CUSTOM MATERIAL CLASS
-    // Process materials
-    if (mesh->mMaterialIndex >= 0)
-    {
-        aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-        // We assume a convention for sampler names in the shaders. Each diffuse texture should be named
-        // as 'texture_diffuseN' where N is a sequential number ranging from 1 to MAX_SAMPLER_NUMBER.
-        // Same applies to other texture as the following list summarizes:
-        // Diffuse: texture_diffuseN
-        // Specular: texture_specularN
-        // Normal: texture_normalN
-
-        // 1. Diffuse maps
-        std::vector<Texture> diffuseMaps = this->LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-        textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-
-        // 2. Specular maps
-        std::vector<Texture> specularMaps = this->LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-        textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-    }
-    */
-
+    
     // Return a mesh object created from the extracted mesh data
     return new SubMesh(vertices, indices);
 }

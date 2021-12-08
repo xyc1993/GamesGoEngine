@@ -47,7 +47,7 @@ void Skybox::Draw(glm::mat4 view, glm::mat4 projection)
 
 	skyboxShader.Use();
 
-	glActiveTexture(GL_TEXTURE0 + 1);
+	glActiveTexture(GL_TEXTURE0 + cubemapTexture);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
 
 	glUniformMatrix4fv(glGetUniformLocation(skyboxShader.GetProgram(), "view"), 1, GL_FALSE, glm::value_ptr(view));

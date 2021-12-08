@@ -27,9 +27,9 @@ MeshPrimitiveCube::MeshPrimitiveCube()
     glBindVertexArray(0);
 }
 
-void MeshPrimitiveCube::DrawSubmesh(size_t submeshIndex)
+void MeshPrimitiveCube::DrawSubMesh(size_t subMeshIndex)
 {
-    if (submeshIndex != 0)
+    if (subMeshIndex != 0)
     {
         std::cout << "CUBE PRIMITIVE :: TRYING TO DRAW NON EXISTING SUBMESH!" << std::endl;
         return;
@@ -40,7 +40,7 @@ void MeshPrimitiveCube::DrawSubmesh(size_t submeshIndex)
     glBindVertexArray(0);
 }
 
-int MeshPrimitiveCube::GetSubmeshesCount() const
+int MeshPrimitiveCube::GetSubMeshesCount() const
 {
     // there's only 1 submesh in cube primitive - the cube
     return 1;
