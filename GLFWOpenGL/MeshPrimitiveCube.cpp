@@ -1,5 +1,7 @@
 #include "MeshPrimitiveCube.h"
 
+#include <iostream>
+
 #include "Primitives.h"
 
 MeshPrimitiveCube::MeshPrimitiveCube()

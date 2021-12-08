@@ -21,7 +21,6 @@
 #include "GameObject.h"
 #include "InputEditorShortcuts.h"
 #include "InputManager.h"
-#include "ModelOld.h"
 #include "Skybox.h"
 
 #include "LightsManager.h"
@@ -109,9 +108,6 @@ void MainLoop(GLFWwindow* window)
 		glm::vec3(-4.0f,  -2.0f,  -11.0f),
 		glm::vec3(0.0f,  0.0f,  -3.0f)
 	};
-
-	Shader modelShader("res/shaders/modelLoading.vert", "res/shaders/modelLoading.frag");
-	ModelOld loadedModel((GLchar*)"res/nanosuit/nanosuit.obj");
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //use this for wireframe
 
@@ -210,7 +206,7 @@ void MainLoop(GLFWwindow* window)
 	}
 
 	GameObject nanoSuitObject = GameObject();
-	nanoSuitObject.GetTransform()->SetPosition(glm::vec3(1.0f, -1.75f, 0.0f));
+	nanoSuitObject.GetTransform()->SetPosition(glm::vec3(0.0f, -1.75f, 0.0f));
 	nanoSuitObject.GetTransform()->SetScale(glm::vec3(0.2f));
 	MeshRenderer* nanoSuitMeshRenderer = new MeshRenderer();
 	MeshImported* nanoSuitMesh = new MeshImported((GLchar*)"res/nanosuit/nanosuit.obj");
@@ -288,18 +284,6 @@ void MainLoop(GLFWwindow* window)
 
 		editorSpectatorObject.Update();
 		directionalLightObject.Update();
-
-		modelShader.Use();
-		glUniformMatrix4fv(glGetUniformLocation(modelShader.GetProgram(), "projection"), 1, GL_FALSE, glm::value_ptr(projection_global));
-		glUniformMatrix4fv(glGetUniformLocation(modelShader.GetProgram(), "view"), 1, GL_FALSE, glm::value_ptr(view_global));
-
-		glm::mat4 model(1.0f);
-		model = glm::translate(model, glm::vec3(-1.0f, -1.75f, 0.0f));
-		model = glm::scale(model, glm::vec3(0.2f));
-
-		glUniformMatrix4fv(glGetUniformLocation(modelShader.GetProgram(), "model"), 1, GL_FALSE, glm::value_ptr(model));
-
-		loadedModel.Draw(modelShader);
 		
 		//SKYBOX
 		skybox.Draw(glm::mat4(glm::mat3(view_global)), projection_global);

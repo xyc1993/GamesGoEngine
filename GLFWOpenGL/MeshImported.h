@@ -8,7 +8,6 @@
 #include <assimp/postprocess.h>
 
 #include "MeshBase.h"
-#include "SubMesh.h"
 
 class MeshImported : public MeshBase
 {

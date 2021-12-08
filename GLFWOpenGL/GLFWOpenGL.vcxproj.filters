@@ -123,12 +123,6 @@
     <ClCompile Include="MeshBase.cpp">
       <Filter>Source Files\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="MeshOld.cpp">
-      <Filter>Source Files\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="ModelOld.cpp">
-      <Filter>Source Files\Mesh</Filter>
-    </ClCompile>
     <ClCompile Include="SubMesh.cpp">
       <Filter>Source Files\Mesh</Filter>
     </ClCompile>
@@ -216,12 +210,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MeshBase.h">
-      <Filter>Header Files\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="MeshOld.h">
-      <Filter>Header Files\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="ModelOld.h">
       <Filter>Header Files\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Primitives.h">

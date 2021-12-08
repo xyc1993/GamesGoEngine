@@ -1,6 +1,16 @@
 #pragma once
 
-#include "MeshOld.h"
+#include <vector>
+#include <GL/glew.h>
+#include <glm/vec3.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+struct Vertex
+{
+	glm::vec3 Position;
+	glm::vec3 Normal;
+	glm::vec2 TexCoords;
+};
 
 class SubMesh
 {
