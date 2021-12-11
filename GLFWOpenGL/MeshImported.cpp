@@ -10,27 +10,13 @@ MeshImported::MeshImported(GLchar* path)
 
 MeshImported::MeshImported(std::string path)
 {
-    ImportMesh(path);
-}
-
-void MeshImported::DrawSubMesh(size_t subMeshIndex)
-{
-	if (subMeshIndex >= 0 && subMeshIndex < subMeshes.size())
-	{
-		if (subMeshes[subMeshIndex] != nullptr)
-		{
-			subMeshes[subMeshIndex]->Draw();
-		}
-	}
-}
-
-int MeshImported::GetSubMeshesCount() const
-{
-	return subMeshes.size();
+	ImportMesh(path);
 }
 
 void MeshImported::ImportMesh(std::string path)
 {
+    subMeshes.clear();
+
 	// Read file via ASSIMP
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);

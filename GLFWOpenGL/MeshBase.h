@@ -6,9 +6,9 @@
 class MeshBase : public SharedAsset
 {
 public:
-	virtual void DrawSubMesh(size_t subMeshIndex) = 0;
-	virtual int GetSubMeshesCount() const = 0;
+	virtual void DrawSubMesh(size_t subMeshIndex) const;
+	virtual int GetSubMeshesCount() const;
 
 protected:
-	GLuint VAO, VBO;
+	std::vector<SubMesh*> subMeshes;
 };
