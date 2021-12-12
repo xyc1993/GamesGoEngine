@@ -4,15 +4,24 @@
 
 #include "Primitives.h"
 
-//TO DO: cleanup where possible
+SubMesh* MeshPrimitiveCube::cubeSubMesh = nullptr;
+
 MeshPrimitiveCube::MeshPrimitiveCube()
 {
     subMeshes.clear();
+    if (cubeSubMesh == nullptr)
+    {
+        SetupMesh();
+    }
+    subMeshes.push_back(cubeSubMesh);
+}
 
+void MeshPrimitiveCube::SetupMesh()
+{
     std::vector<Vertex> vertices;
     std::vector<GLuint> indices;
 
-    glm::vec3 cubeVertices[] =
+    constexpr glm::vec3 cubeVertices[] =
     {
         // front
         glm::vec3(-0.5f, -0.5f,  0.5f),
@@ -51,7 +60,7 @@ MeshPrimitiveCube::MeshPrimitiveCube()
         glm::vec3(-0.5f,  0.5f,  0.5f),
     };
 
-    glm::vec3 cubeNormals[] =
+    constexpr glm::vec3 cubeNormals[] =
     {
         glm::vec3( 0.0f,  0.0f,  1.0f), // front
         glm::vec3( 0.0f,  0.0f, -1.0f), // back
@@ -61,7 +70,7 @@ MeshPrimitiveCube::MeshPrimitiveCube()
         glm::vec3( 0.0f,  1.0f,  0.0f)  // top
     };
 
-    glm::vec2 cubeTexCoords[]
+    constexpr glm::vec2 cubeTexCoords[]
     {
         glm::vec2(0.0f, 0.0f),
         glm::vec2(1.0f, 0.0f),
@@ -69,35 +78,6 @@ MeshPrimitiveCube::MeshPrimitiveCube()
         glm::vec2(0.0f, 1.0f)
     };
     
-    GLuint cubeIndices[] =
-    {
-        // front
-        0, 1, 2,
-        2, 3, 0,
-
-        // back
-        4, 5, 6,
-        6, 7, 4,
-
-        // right
-        8, 9, 10,
-        10, 11, 8,
-
-        // left
-        12, 13, 14,
-        14, 15, 12,
-
-        // bottom
-        16, 17, 18,
-        18, 19, 16,
-
-        // top
-        20, 21, 22,
-        22, 23, 20
-    };
-
-    GLuint cubeTexIndices[] = { 0,1,2,2,3,0 };
-
     for (GLuint i = 0; i < 24; i++)
     {
         Vertex vertex;
@@ -106,12 +86,18 @@ MeshPrimitiveCube::MeshPrimitiveCube()
         vertex.TexCoords = cubeTexCoords[i % 4];
         vertices.push_back(vertex);
     }
-    
-    for (GLuint i = 0; i < 36; i++)
+
+    // indices for the single face, repeat for every other face with proper index offset
+    constexpr GLuint cubeFaceIndices[] = { 0,1,2,2,3,0 };
+    for (GLuint i = 0; i < 6; i++)
     {
-        indices.push_back(cubeIndices[i]);
+        indices.push_back(cubeFaceIndices[0] + 4 * i);
+        indices.push_back(cubeFaceIndices[1] + 4 * i);
+        indices.push_back(cubeFaceIndices[2] + 4 * i);
+        indices.push_back(cubeFaceIndices[3] + 4 * i);
+        indices.push_back(cubeFaceIndices[4] + 4 * i);
+        indices.push_back(cubeFaceIndices[5] + 4 * i);
     }
 
-    SubMesh* cubeSubMesh = new SubMesh("Cube", vertices, indices);
-    subMeshes.push_back(cubeSubMesh);
+    cubeSubMesh = new SubMesh("Cube", vertices, indices);
 }
