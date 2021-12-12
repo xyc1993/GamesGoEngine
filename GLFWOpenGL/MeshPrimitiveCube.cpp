@@ -1,19 +1,15 @@
 #include "MeshPrimitiveCube.h"
 
-#include <iostream>
-
-#include "Primitives.h"
-
 SubMesh* MeshPrimitiveCube::cubeSubMesh = nullptr;
 
 MeshPrimitiveCube::MeshPrimitiveCube()
 {
-    subMeshes.clear();
-    if (cubeSubMesh == nullptr)
-    {
-        SetupMesh();
-    }
-    subMeshes.push_back(cubeSubMesh);
+    Init();
+}
+
+SubMesh* MeshPrimitiveCube::GetPrimitiveSubMesh()
+{
+	return cubeSubMesh;
 }
 
 void MeshPrimitiveCube::SetupMesh()

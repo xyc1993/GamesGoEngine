@@ -2,15 +2,15 @@
 
 #include "MeshPrimitiveBase.h"
 
-class MeshPrimitiveCube : public MeshPrimitiveBase
+class MeshPrimitiveQuad : public MeshPrimitiveBase
 {
 public:
-	MeshPrimitiveCube();
+	MeshPrimitiveQuad();
 
 protected:
 	virtual SubMesh* GetPrimitiveSubMesh() override;
 	virtual void SetupMesh() override;
 
 	// shared submesh among all of the cube instances, generated just once
-	static SubMesh* cubeSubMesh;
+	static SubMesh* quadSubMesh;
 };

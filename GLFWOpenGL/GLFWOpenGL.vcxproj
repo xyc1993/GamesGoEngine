@@ -155,6 +155,7 @@
     <ClCompile Include="..\External Libraries\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Component.cpp" />
+    <ClCompile Include="MeshPrimitiveBase.cpp" />
     <ClCompile Include="MeshPrimitiveCube.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="EditorMovement.cpp" />
@@ -166,6 +167,7 @@
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="MeshImported.cpp" />
     <ClCompile Include="MeshBase.cpp" />
+    <ClCompile Include="MeshPrimitiveQuad.cpp" />
     <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -187,6 +189,7 @@
     <ClInclude Include="..\External Libraries\imgui\imstb_truetype.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="MeshPrimitiveBase.h" />
     <ClInclude Include="MeshPrimitiveCube.h" />
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="EditorMovement.h" />
@@ -198,6 +201,7 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="MeshImported.h" />
     <ClInclude Include="MeshBase.h" />
+    <ClInclude Include="MeshPrimitiveQuad.h" />
     <ClInclude Include="Primitives.h" />
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="PointLight.h" />

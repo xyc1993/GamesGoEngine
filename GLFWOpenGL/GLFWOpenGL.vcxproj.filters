@@ -40,6 +40,12 @@
     <Filter Include="Source Files\Mesh">
       <UniqueIdentifier>{08f21b25-405d-40c3-9161-919eab43db5c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Mesh\Primitives">
+      <UniqueIdentifier>{1097f10c-e73f-496f-8523-49fe013dc570}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Mesh\Primitives">
+      <UniqueIdentifier>{0bc5c58c-8d02-4351-8f2c-886e9978e21e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -117,9 +123,6 @@
     <ClCompile Include="SharedAsset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MeshPrimitiveCube.cpp">
-      <Filter>Source Files\Mesh</Filter>
-    </ClCompile>
     <ClCompile Include="MeshBase.cpp">
       <Filter>Source Files\Mesh</Filter>
     </ClCompile>
@@ -128,6 +131,15 @@
     </ClCompile>
     <ClCompile Include="MeshImported.cpp">
       <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshPrimitiveCube.cpp">
+      <Filter>Source Files\Mesh\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshPrimitiveBase.cpp">
+      <Filter>Source Files\Mesh\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshPrimitiveQuad.cpp">
+      <Filter>Source Files\Mesh\Primitives</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -215,14 +227,20 @@
     <ClInclude Include="Primitives.h">
       <Filter>Header Files\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="MeshPrimitiveCube.h">
-      <Filter>Header Files\Mesh</Filter>
-    </ClInclude>
     <ClInclude Include="SubMesh.h">
       <Filter>Header Files\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="MeshImported.h">
       <Filter>Header Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshPrimitiveCube.h">
+      <Filter>Header Files\Mesh\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshPrimitiveBase.h">
+      <Filter>Header Files\Mesh\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshPrimitiveQuad.h">
+      <Filter>Header Files\Mesh\Primitives</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

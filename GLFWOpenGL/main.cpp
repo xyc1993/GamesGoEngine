@@ -26,6 +26,7 @@
 #include "LightsManager.h"
 #include "Material.h"
 #include "MeshImported.h"
+#include "MeshPrimitiveQuad.h"
 #include "MeshRenderer.h"
 
 const GLint WIDTH = 800, HEIGHT = 600;
@@ -145,6 +146,7 @@ void MainLoop(GLFWwindow* window)
 	
 	// NEW CODE DATA STRUCTURE REWORK (remember to add delete after while()!)
 	MeshPrimitiveCube* cubeMesh = new MeshPrimitiveCube();
+	//MeshPrimitiveQuad* quadMesh = new MeshPrimitiveQuad();
 
 	Material* lampMaterial = new Material("res/shaders/lamp.vert", "res/shaders/lamp.frag");
 	
