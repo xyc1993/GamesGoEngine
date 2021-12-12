@@ -168,6 +168,7 @@
     <ClCompile Include="MeshImported.cpp" />
     <ClCompile Include="MeshBase.cpp" />
     <ClCompile Include="MeshPrimitiveQuad.cpp" />
+    <ClCompile Include="MeshPrimitiveSphere.cpp" />
     <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -202,6 +203,7 @@
     <ClInclude Include="MeshImported.h" />
     <ClInclude Include="MeshBase.h" />
     <ClInclude Include="MeshPrimitiveQuad.h" />
+    <ClInclude Include="MeshPrimitiveSphere.h" />
     <ClInclude Include="Primitives.h" />
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="PointLight.h" />

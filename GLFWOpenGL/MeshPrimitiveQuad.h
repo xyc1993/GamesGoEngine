@@ -11,6 +11,6 @@ protected:
 	virtual SubMesh* GetPrimitiveSubMesh() override;
 	virtual void SetupMesh() override;
 
-	// shared submesh among all of the cube instances, generated just once
+	// shared submesh among all of the quad instances, generated just once
 	static SubMesh* quadSubMesh;
 };

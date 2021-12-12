@@ -27,6 +27,7 @@
 #include "Material.h"
 #include "MeshImported.h"
 #include "MeshPrimitiveQuad.h"
+#include "MeshPrimitiveSphere.h"
 #include "MeshRenderer.h"
 
 const GLint WIDTH = 800, HEIGHT = 600;
@@ -147,6 +148,7 @@ void MainLoop(GLFWwindow* window)
 	// NEW CODE DATA STRUCTURE REWORK (remember to add delete after while()!)
 	MeshPrimitiveCube* cubeMesh = new MeshPrimitiveCube();
 	//MeshPrimitiveQuad* quadMesh = new MeshPrimitiveQuad();
+	MeshPrimitiveSphere* sphereMesh = new MeshPrimitiveSphere();
 
 	Material* lampMaterial = new Material("res/shaders/lamp.vert", "res/shaders/lamp.frag");
 	
@@ -200,11 +202,14 @@ void MainLoop(GLFWwindow* window)
 
 	for (int i = 0; i < LIT_BOXES_NUMBER; i++)
 	{
-		litBoxesMeshRenderers[i]->SetMesh(cubeMesh);
+		//sphereMesh
+		//litBoxesMeshRenderers[i]->SetMesh(cubeMesh);
+		litBoxesMeshRenderers[i]->SetMesh(sphereMesh);
+
 		litBoxesMeshRenderers[i]->SetMaterial(cubeLitMaterial);
 		litBoxesObjects[i].AddComponent(litBoxesMeshRenderers[i]);
 		litBoxesObjects[i].GetTransform()->SetPosition(litBoxesPositions[i]);
-		litBoxesObjects[i].GetTransform()->SetRotationEulerDegrees(litBoxesRotations[i]);
+		//litBoxesObjects[i].GetTransform()->SetRotationEulerDegrees(litBoxesRotations[i]);
 	}
 
 	GameObject nanoSuitObject = GameObject();

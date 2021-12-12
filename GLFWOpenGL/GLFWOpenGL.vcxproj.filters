@@ -141,6 +141,9 @@
     <ClCompile Include="MeshPrimitiveQuad.cpp">
       <Filter>Source Files\Mesh\Primitives</Filter>
     </ClCompile>
+    <ClCompile Include="MeshPrimitiveSphere.cpp">
+      <Filter>Source Files\Mesh\Primitives</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -240,6 +243,9 @@
       <Filter>Header Files\Mesh\Primitives</Filter>
     </ClInclude>
     <ClInclude Include="MeshPrimitiveQuad.h">
+      <Filter>Header Files\Mesh\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshPrimitiveSphere.h">
       <Filter>Header Files\Mesh\Primitives</Filter>
     </ClInclude>
   </ItemGroup>
