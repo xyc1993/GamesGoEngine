@@ -6,6 +6,8 @@
 class MeshBase : public SharedAsset
 {
 public:
+	virtual ~MeshBase();
+
 	virtual void DrawSubMesh(size_t subMeshIndex) const;
 	virtual int GetSubMeshesCount() const;
 

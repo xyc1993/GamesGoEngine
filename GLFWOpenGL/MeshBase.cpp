@@ -1,5 +1,10 @@
 #include "MeshBase.h"
 
+MeshBase::~MeshBase()
+{
+	subMeshes.clear();
+}
+
 void MeshBase::DrawSubMesh(size_t subMeshIndex) const
 {
 	if (subMeshIndex >= 0 && subMeshIndex < subMeshes.size())
