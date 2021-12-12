@@ -169,7 +169,7 @@ void MainLoop(GLFWwindow* window)
 
 	for (int i = 0; i < LAMPS_NUMBER; i++)
 	{
-		lampMeshRenderers[i]->SetMesh(cubeMesh);
+		lampMeshRenderers[i]->SetMesh(sphereMesh);
 		lampMeshRenderers[i]->SetMaterial(lampMaterial);
 		lampObjects[i].AddComponent(lampMeshRenderers[i]);
 		lampObjects[i].GetTransform()->SetPosition(pointLightPositions[i]);
@@ -202,14 +202,11 @@ void MainLoop(GLFWwindow* window)
 
 	for (int i = 0; i < LIT_BOXES_NUMBER; i++)
 	{
-		//sphereMesh
-		//litBoxesMeshRenderers[i]->SetMesh(cubeMesh);
-		litBoxesMeshRenderers[i]->SetMesh(sphereMesh);
-
+		litBoxesMeshRenderers[i]->SetMesh(cubeMesh);
 		litBoxesMeshRenderers[i]->SetMaterial(cubeLitMaterial);
 		litBoxesObjects[i].AddComponent(litBoxesMeshRenderers[i]);
 		litBoxesObjects[i].GetTransform()->SetPosition(litBoxesPositions[i]);
-		//litBoxesObjects[i].GetTransform()->SetRotationEulerDegrees(litBoxesRotations[i]);
+		litBoxesObjects[i].GetTransform()->SetRotationEulerDegrees(litBoxesRotations[i]);
 	}
 
 	GameObject nanoSuitObject = GameObject();

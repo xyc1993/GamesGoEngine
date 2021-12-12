@@ -1,7 +1,5 @@
 #include "MeshPrimitiveSphere.h"
 
-#include <iostream>
-
 SubMesh* MeshPrimitiveSphere::sphereSubMesh = nullptr;
 
 MeshPrimitiveSphere::MeshPrimitiveSphere()
@@ -25,7 +23,7 @@ void MeshPrimitiveSphere::SetupMesh()
 	// init vertex data first
 	for (int i = 0; i < latitudesNumber; i++)
 	{
-		for (int j = 0; j < longitudesNumber; j++)
+		for (int j = 0; j <= longitudesNumber; j++)
 		{
 			Vertex vertex;
 
@@ -46,76 +44,44 @@ void MeshPrimitiveSphere::SetupMesh()
 
 			glm::vec2 texCoords;
 
-			texCoords.x = (float)j / (float)(longitudesNumber - 1);
+			texCoords.x = (float)j / (float)longitudesNumber;
 			texCoords.y = (float)i / (float)(latitudesNumber - 1);
 
 			vertex.TexCoords = texCoords;
-
-			//std::cout << vertices.size() << " : [" << j << "," << i << "] = <" << vertexPosition.x << ", " << vertexPosition.y << ", " << vertexPosition.z << ">" << std::endl;
-			//std::cout << "[" << i << "/" << latitudesNumber - 1 << ", " << j << "/" << longitudesNumber - 1 << "] = <" << texCoords.x << ", " << texCoords.y << ">\n";
-
+			
 			vertices.push_back(vertex);
 		}
 	}
 	
 	// south pole indices
-	for (int i = 0; i < longitudesNumber; i++)
+	for (GLuint i = 0; i < longitudesNumber; i++)
 	{
 		indices.push_back(i);
-		indices.push_back(i + longitudesNumber);
-
-		if (i == (longitudesNumber - 1))
-		{
-			indices.push_back(i + 1);
-		}
-		else
-		{
-			indices.push_back(i + longitudesNumber + 1);
-		}
+		indices.push_back(i + longitudesNumber + 1);
+		indices.push_back(i + longitudesNumber + 2);
 	}
-	
-	// middle part
-	for (int i = 0; i < latitudesNumber -1; i++)
+
+	// middle part indices
+	for (GLuint i = 0; i < latitudesNumber; i++)
 	{
 		for (int j = 0; j < longitudesNumber; j++)
 		{
-			if (j == (longitudesNumber - 1))
-			{
-				indices.push_back(j + longitudesNumber + i * longitudesNumber);
-				indices.push_back(j + 2 * longitudesNumber + i * longitudesNumber);
-				indices.push_back(j + 1 + i * longitudesNumber);
+			indices.push_back(j + (i + 1) * (1 + longitudesNumber));
+			indices.push_back(j + (i + 2) * (1 +  longitudesNumber));
+			indices.push_back(j + (i + 1) * (1 + longitudesNumber) + 1);
 
-				indices.push_back(j + 2 * longitudesNumber + i * longitudesNumber);
-				indices.push_back(j + 1 + longitudesNumber + i * longitudesNumber);
-				indices.push_back(j + 1 + i * longitudesNumber);
-			}
-			else
-			{
-				indices.push_back(j + longitudesNumber + i * longitudesNumber);
-				indices.push_back(j + 2 * longitudesNumber + i * longitudesNumber);
-				indices.push_back(j + 1 + longitudesNumber + i * longitudesNumber);
-
-				indices.push_back(j + 2 * longitudesNumber + i * longitudesNumber);
-				indices.push_back(j + 2 * longitudesNumber + 1 + i * longitudesNumber);
-				indices.push_back(j + 1 + longitudesNumber + i * longitudesNumber);
-			}
+			indices.push_back(j + (i + 2) * (1 + longitudesNumber));
+			indices.push_back(j + (i + 2) * (1 + longitudesNumber) + 1);
+			indices.push_back(j + (i + 1) * (1 + longitudesNumber) + 1);
 		}
 	}
-
+	
 	// north pole indices
-	for (int i = 0; i < longitudesNumber; i++)
+	for (GLuint i = 0; i < longitudesNumber; i++)
 	{
-		indices.push_back(vertices.size() - i - 1);
-		indices.push_back(vertices.size() - i - 1 - longitudesNumber);
-
-		if (i == 0)
-		{
-			indices.push_back(vertices.size() - i - 2 * longitudesNumber);
-		}
-		else
-		{
-			indices.push_back(vertices.size() - i - longitudesNumber);
-		}
+		indices.push_back(vertices.size() - 1 - i);
+		indices.push_back(vertices.size() - 1 - i  - longitudesNumber - 1);
+		indices.push_back(vertices.size() - 1 - i - longitudesNumber - 2);
 	}
 	
 	sphereSubMesh = new SubMesh("Sphere", vertices, indices);
