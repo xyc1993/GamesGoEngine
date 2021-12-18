@@ -52,6 +52,18 @@
     <Filter Include="Source Files\Rendering">
       <UniqueIdentifier>{be89765b-3ec6-492f-b651-ed72ab1a50dc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Scene Management">
+      <UniqueIdentifier>{426ec24e-4b24-4f95-b7e2-5f6cd1181028}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Scene Management">
+      <UniqueIdentifier>{7b8436ca-f701-42b9-abce-2fd90b161c8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Scene Management\Examples">
+      <UniqueIdentifier>{50dd6bd6-5f6e-43b9-a885-9f42b922b078}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Scene Management\Examples">
+      <UniqueIdentifier>{07eea2cd-86a6-42bf-87fa-3dd1369d44bc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -149,6 +161,15 @@
     </ClCompile>
     <ClCompile Include="Shader.cpp">
       <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source Files\Scene Management</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneExample_LitForward.cpp">
+      <Filter>Source Files\Scene Management\Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneExample.cpp">
+      <Filter>Source Files\Scene Management\Examples</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -253,6 +274,15 @@
     </ClInclude>
     <ClInclude Include="Shader.h">
       <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Header Files\Scene Management</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneExample_LitForward.h">
+      <Filter>Header Files\Scene Management\Examples</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneExample.h">
+      <Filter>Header Files\Scene Management\Examples</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

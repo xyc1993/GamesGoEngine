@@ -171,6 +171,9 @@
     <ClCompile Include="MeshPrimitiveSphere.cpp" />
     <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="PointLight.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneExample.cpp" />
+    <ClCompile Include="SceneExample_LitForward.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SharedAsset.cpp" />
     <ClCompile Include="Skybox.cpp" />
@@ -207,6 +210,9 @@
     <ClInclude Include="Primitives.h" />
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="PointLight.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneExample.h" />
+    <ClInclude Include="SceneExample_LitForward.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SharedAsset.h" />
     <ClInclude Include="Skybox.h" />
