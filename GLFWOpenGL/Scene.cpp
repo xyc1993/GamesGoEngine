@@ -7,7 +7,11 @@ Scene::Scene()
 
 Scene::~Scene()
 {
-	Clear();
+	for (int i = 0; i < sceneObjects.size(); i++)
+	{
+		delete sceneObjects[i];
+	}
+	sceneObjects.clear();
 }
 
 void Scene::AddGameObject(GameObject* gameObject)
@@ -24,13 +28,4 @@ void Scene::Update()
 			sceneObjects[i]->Update();
 		}
 	}
-}
-
-void Scene::Clear()
-{
-	for (int i = 0; i < sceneObjects.size(); i++)
-	{
-		delete sceneObjects[i];
-	}
-	sceneObjects.clear();
 }

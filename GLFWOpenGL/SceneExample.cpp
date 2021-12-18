@@ -14,8 +14,3 @@ void SceneExample::Update()
 {
 	scene->Update();
 }
-
-void SceneExample::Clear() const
-{
-	scene->Clear();
-}

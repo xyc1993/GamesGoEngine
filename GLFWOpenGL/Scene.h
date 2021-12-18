@@ -12,7 +12,6 @@ public:
 
 	void AddGameObject(GameObject* gameObject);
 	void Update();
-	void Clear();
 
 private:
 	std::vector<GameObject*> sceneObjects;
