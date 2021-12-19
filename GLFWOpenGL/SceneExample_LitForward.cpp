@@ -50,7 +50,7 @@ SceneExample_LitForward::SceneExample_LitForward()
 	skyboxTextures.push_back("res/images/skybox/back.tga");
 	skyboxTextures.push_back("res/images/skybox/front.tga");
 
-	Material* skyboxMaterial = new Material("res/shaders/skybox.vert", "res/shaders/skybox.frag");
+	Material* skyboxMaterial = new Material("res/shaders/skybox.vert.glsl", "res/shaders/skybox.frag.glsl");
 	skyboxMaterial->SetCubeTexture("skybox", 1, skyboxTextures);
 
 	Skybox* skyboxComponent = new Skybox();
@@ -64,7 +64,7 @@ SceneExample_LitForward::SceneExample_LitForward()
 	//MeshPrimitiveQuad* quadMesh = new MeshPrimitiveQuad();
 	MeshPrimitiveSphere* sphereMesh = new MeshPrimitiveSphere();
 
-	Material* lampMaterial = new Material("res/shaders/lamp.vert", "res/shaders/lamp.frag");
+	Material* lampMaterial = new Material("res/shaders/lamp.vert.glsl", "res/shaders/lamp.frag.glsl");
 	
 	MeshRenderer* lampMeshRenderers[] = {
 		new MeshRenderer(),
@@ -88,7 +88,7 @@ SceneExample_LitForward::SceneExample_LitForward()
 		scene->AddGameObject(lampObjects[i]);
 	}
 
-	Material* cubeLitMaterial = new Material("res/shaders/lighting.vert", "res/shaders/lighting.frag");
+	Material* cubeLitMaterial = new Material("res/shaders/lighting.vert.glsl", "res/shaders/lighting.frag.glsl");
 	cubeLitMaterial->SetTexture((GLchar*)"material.diffuse", 0, (GLchar*)"res/box/container2_diffuse.png");
 	cubeLitMaterial->SetTexture((GLchar*)"material.specular", 1, (GLchar*)"res/box/container2_specular.png");
 	cubeLitMaterial->SetFloat((GLchar*)"material.shininess", 32.0f);
@@ -145,7 +145,7 @@ SceneExample_LitForward::SceneExample_LitForward()
 
 	for (int i = 0; i < NANOSUIT_MATERIALS_NUMBER; i++)
 	{
-		nanoSuitMaterials[i] = new Material("res/shaders/lighting.vert", "res/shaders/lighting.frag");
+		nanoSuitMaterials[i] = new Material("res/shaders/lighting.vert.glsl", "res/shaders/lighting.frag.glsl");
 		nanoSuitMaterials[i]->SetTexture((GLchar*)"material.diffuse", 0, nanoSuitTexturePaths[i]);
 		nanoSuitMaterials[i]->SetFloat((GLchar*)"material.shininess", 32.0f);
 		nanoSuitMaterials[i]->SetLightModel(LightModelType::LitForward);

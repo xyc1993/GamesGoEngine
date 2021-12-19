@@ -283,28 +283,22 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\shaders\lamp.frag">
+    <None Include="res\shaders\lamp.frag.glsl">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="res\shaders\lamp.vert">
+    <None Include="res\shaders\lamp.vert.glsl">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="res\shaders\lighting.frag">
+    <None Include="res\shaders\lighting.frag.glsl">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="res\shaders\lighting.vert">
+    <None Include="res\shaders\lighting.vert.glsl">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="res\shaders\modelLoading.frag">
+    <None Include="res\shaders\skybox.frag.glsl">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="res\shaders\modelLoading.vert">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\shaders\skybox.frag">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\shaders\skybox.vert">
+    <None Include="res\shaders\skybox.vert.glsl">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

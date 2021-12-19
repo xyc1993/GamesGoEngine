@@ -221,14 +221,12 @@
     <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\shaders\lamp.frag" />
-    <None Include="res\shaders\lamp.vert" />
-    <None Include="res\shaders\lighting.frag" />
-    <None Include="res\shaders\lighting.vert" />
-    <None Include="res\shaders\modelLoading.frag" />
-    <None Include="res\shaders\modelLoading.vert" />
-    <None Include="res\shaders\skybox.frag" />
-    <None Include="res\shaders\skybox.vert" />
+    <None Include="res\shaders\lamp.frag.glsl" />
+    <None Include="res\shaders\lamp.vert.glsl" />
+    <None Include="res\shaders\lighting.frag.glsl" />
+    <None Include="res\shaders\lighting.vert.glsl" />
+    <None Include="res\shaders\skybox.frag.glsl" />
+    <None Include="res\shaders\skybox.vert.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
