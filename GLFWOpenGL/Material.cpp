@@ -38,6 +38,12 @@ void Material::Draw(glm::mat4 model, glm::mat4 view, glm::mat4 projection)
 		glActiveTexture(GL_TEXTURE0 + std::get<0>(it->second));
 		glBindTexture(GL_TEXTURE_2D, std::get<1>(it->second));
 	}
+
+	for (auto it = cubeTexturesMap.begin(); it != cubeTexturesMap.end(); ++it)
+	{
+		glActiveTexture(GL_TEXTURE0 + std::get<0>(it->second));
+		glBindTexture(GL_TEXTURE_CUBE_MAP, std::get<1>(it->second));
+	}
 	
 	const GLint modelLoc = glGetUniformLocation(shader->GetProgram(), "model");
 	const GLint viewLoc = glGetUniformLocation(shader->GetProgram(), "view");
@@ -70,6 +76,16 @@ void Material::SetTexture(const GLchar* textureName, GLuint textureIndex, GLchar
 		const GLint textureID = glGetUniformLocation(shader->GetProgram(), textureName);
 		GLuint texture = TextureLoader::LoadTexture(path);
 		texturesMap[textureID] = std::tuple<GLuint, GLuint>(textureIndex, texture);
+	}
+}
+
+void Material::SetCubeTexture(const GLchar* textureName, GLuint textureIndex, const std::vector<const GLchar*>& paths)
+{
+	if (shader != nullptr)
+	{
+		const GLint textureID = glGetUniformLocation(shader->GetProgram(), textureName);
+		GLuint texture = TextureLoader::LoadCubemap(paths);
+		cubeTexturesMap[textureID] = std::tuple<GLuint, GLuint>(textureIndex, texture);
 	}
 }
 

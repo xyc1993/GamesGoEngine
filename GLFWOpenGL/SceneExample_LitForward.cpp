@@ -9,6 +9,7 @@
 #include "MeshPrimitiveSphere.h"
 #include "MeshRenderer.h"
 #include "PointLight.h"
+#include "Skybox.h"
 #include "SpotLight.h"
 
 extern GLfloat currentTime;
@@ -40,6 +41,24 @@ SceneExample_LitForward::SceneExample_LitForward()
 		glm::vec3(240.0f,120.0f, 0.0f),
 		glm::vec3(270.0f,135.0f, 0.0f)
 	};
+
+	std::vector<const GLchar*> skyboxTextures;
+	skyboxTextures.push_back("res/images/skybox/right.tga");
+	skyboxTextures.push_back("res/images/skybox/left.tga");
+	skyboxTextures.push_back("res/images/skybox/top.tga");
+	skyboxTextures.push_back("res/images/skybox/bottom.tga");
+	skyboxTextures.push_back("res/images/skybox/back.tga");
+	skyboxTextures.push_back("res/images/skybox/front.tga");
+
+	Material* skyboxMaterial = new Material("res/shaders/skybox.vert", "res/shaders/skybox.frag");
+	skyboxMaterial->SetCubeTexture("skybox", 1, skyboxTextures);
+
+	Skybox* skyboxComponent = new Skybox();
+	skyboxComponent->SetMaterial(skyboxMaterial);
+
+	GameObject* skyboxObject = new GameObject();
+	skyboxObject->AddComponent(skyboxComponent);
+	scene->AddGameObject(skyboxObject);
 	
 	MeshPrimitiveCube* cubeMesh = new MeshPrimitiveCube();
 	//MeshPrimitiveQuad* quadMesh = new MeshPrimitiveQuad();

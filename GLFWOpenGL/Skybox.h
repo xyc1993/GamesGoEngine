@@ -1,21 +1,19 @@
 #pragma once
 
-#include <GL/glew.h>
-#include <glm/glm.hpp>
-#include <vector>
-#include "Shader.h"
+#include "Component.h"
+#include "Material.h"
+#include "MeshBase.h"
 
-class Skybox
+class Skybox : public Component
 {
 public:
 	Skybox();
-	Skybox(const std::vector<const GLchar*>& faces, const GLchar* vertexShaderPath, const GLchar* fragmentShaderPath);
-	void Draw(glm::mat4 view, glm::mat4 projection);
+	~Skybox();
+
+	void Update() override;
+	void SetMaterial(Material* material);
 
 private:
-	Shader skyboxShader;
-	GLuint cubemapTexture;
-	GLuint skyboxVAO;
-
-	void InitSkybox(const std::vector<const GLchar*>& faces, const GLchar* vertexShaderPath, const GLchar* fragmentShaderPath);
+	Material* material;
+	MeshBase* mesh;
 };

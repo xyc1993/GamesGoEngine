@@ -207,7 +207,6 @@
     <ClInclude Include="MeshBase.h" />
     <ClInclude Include="MeshPrimitiveQuad.h" />
     <ClInclude Include="MeshPrimitiveSphere.h" />
-    <ClInclude Include="Primitives.h" />
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Scene.h" />

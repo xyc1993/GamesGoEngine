@@ -2,6 +2,7 @@
 
 #include <map>
 #include <tuple>
+#include <vector>
 #include <glm/fwd.hpp>
 
 #include "Shader.h"
@@ -29,6 +30,7 @@ public:
 	void SetShader(const GLchar* vertexPath, const GLchar* fragmentPath);
 	
 	void SetTexture(const GLchar* textureName, GLuint textureIndex, GLchar* path);
+	void SetCubeTexture(const GLchar* textureName, GLuint textureIndex, const std::vector<const GLchar*>& paths);
 	
 	void SetFloat(const GLchar* floatName, float value) const;
 	void SetFloat(const GLint floatID, float value) const;
@@ -39,6 +41,7 @@ private:
 	Shader* shader;
 
 	std::map<GLint, std::tuple<GLuint, GLuint>> texturesMap;
+	std::map<GLint, std::tuple<GLuint, GLuint>> cubeTexturesMap;
 	
 	LightModelType lightModelType;	
 };

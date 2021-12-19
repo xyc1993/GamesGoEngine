@@ -12,13 +12,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Shader.h"
 #include "InputEditorShortcuts.h"
 #include "InputManager.h"
-#include "Skybox.h"
 
-#include "Material.h"
-#include "MeshImported.h"
 #include "SceneExample_LitForward.h"
 
 const GLint WIDTH = 800, HEIGHT = 600;
@@ -93,9 +89,6 @@ void MainLoop(GLFWwindow* window)
 
 	SceneExample_LitForward* activeScene = new SceneExample_LitForward();
 	
-	// SKYBOX
-	Skybox skybox = Skybox();
-
 	projection_global = glm::mat4(1.0f);
 	projection_global = glm::perspective(45.0f, (GLfloat)SCREEN_WIDTH / (GLfloat)SCREEN_HEIGHT, 0.1f, 1000.0f);
 		
@@ -115,9 +108,6 @@ void MainLoop(GLFWwindow* window)
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-
-		//SKYBOX
-		skybox.Draw(glm::mat4(glm::mat3(view_global)), projection_global);
 
 		activeScene->Update();
 		

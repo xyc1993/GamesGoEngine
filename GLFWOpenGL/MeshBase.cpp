@@ -5,6 +5,11 @@ MeshBase::~MeshBase()
 	subMeshes.clear();
 }
 
+void MeshBase::DrawSubMesh() const
+{
+	DrawSubMesh(0);
+}
+
 void MeshBase::DrawSubMesh(size_t subMeshIndex) const
 {
 	if (subMeshIndex >= 0 && subMeshIndex < subMeshes.size())

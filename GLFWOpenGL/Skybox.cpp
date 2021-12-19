@@ -1,61 +1,48 @@
 #include "Skybox.h"
-#include "Primitives.h"
-#include "TextureLoader.h"
-#include <glm/gtc/type_ptr.hpp>
+
+#include "MeshPrimitiveCube.h"
+
+// not a good way to handle this (especially without encapsulation), but 'projection' and 'view' should be accessible to all renderers so for now it's fine
+extern glm::mat4 view_global;
+extern glm::mat4 projection_global;
 
 Skybox::Skybox()
 {
-	std::vector<const GLchar*> faces;
-	faces.push_back("res/images/skybox/right.tga");
-	faces.push_back("res/images/skybox/left.tga");
-	faces.push_back("res/images/skybox/top.tga");
-	faces.push_back("res/images/skybox/bottom.tga");
-	faces.push_back("res/images/skybox/back.tga");
-	faces.push_back("res/images/skybox/front.tga");
-
-	GLchar* vert = (GLchar*)"res/shaders/skybox.vert";
-	GLchar* frag = (GLchar*)"res/shaders/skybox.frag";
-
-	InitSkybox(faces, vert, frag);
+	mesh = new MeshPrimitiveCube();
 }
 
-Skybox::Skybox(const std::vector<const GLchar*> &faces, const GLchar* vertexShaderPath, const GLchar* fragmentShaderPath)
+Skybox::~Skybox()
 {
-	InitSkybox(faces, vertexShaderPath, fragmentShaderPath);
+	if (material != nullptr)
+	{
+		material->DeleteSafely();
+	}
+	delete mesh;
 }
 
-void Skybox::InitSkybox(const std::vector<const GLchar*>& faces, const GLchar* vertexShaderPath, const GLchar* fragmentShaderPath)
+void Skybox::Update()
 {
-	skyboxShader = Shader(vertexShaderPath, fragmentShaderPath);
+	if (material != nullptr && mesh != nullptr)
+	{
+		glDepthFunc(GL_LEQUAL);
 
-	GLuint skyyboxVBO;
-	glGenVertexArrays(1, &skyboxVAO);
-	glGenBuffers(1, &skyyboxVBO);
-	glBindVertexArray(skyboxVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, skyyboxVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Primitives::skyboxVerticesCube), &Primitives::skyboxVerticesCube, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GL_FLOAT), (GLvoid*)0);
-	glBindVertexArray(0);
+		// for now let's assume there's only 1 mesh (cube) & 1 material slot (cube mesh material), it's enough for this implementation of the skybox
+		material->Draw(glm::mat4(1.0f), glm::mat4(glm::mat3(view_global)), projection_global);
+		mesh->DrawSubMesh();
 
-	cubemapTexture = TextureLoader::LoadCubemap(faces);
+		glDepthFunc(GL_LESS);
+	}
 }
 
-void Skybox::Draw(glm::mat4 view, glm::mat4 projection)
+void Skybox::SetMaterial(Material* material)
 {
-	glDepthFunc(GL_LEQUAL);
+	// firstly, if there's some material assigned, decrement its users number
+	if (this->material != nullptr)
+	{
+		this->material->DecrementNumberOfUsers();
+	}
 
-	skyboxShader.Use();
-
-	glActiveTexture(GL_TEXTURE0 + cubemapTexture);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-
-	glUniformMatrix4fv(glGetUniformLocation(skyboxShader.GetProgram(), "view"), 1, GL_FALSE, glm::value_ptr(view));
-	glUniformMatrix4fv(glGetUniformLocation(skyboxShader.GetProgram(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-
-	glBindVertexArray(skyboxVAO);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	glBindVertexArray(0);
-
-	glDepthFunc(GL_LESS);
+	// secondly assign new material at given index & increment the number of users for the new material
+	this->material = material;
+	this->material->IncrementNumberOfUsers();
 }
