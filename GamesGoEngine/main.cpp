@@ -5,6 +5,7 @@
 #include "imgui_impl_opengl3.h"
 
 #define GLEW_STATIC
+#include <string>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -127,8 +128,13 @@ void MainLoop(GLFWwindow* window)
 		ImGui::NewFrame();
 
 		activeScene->Update();
-		
+
+		GLfloat fps = 1.0f / deltaTime;
+		std::string fpsText = "FPS = ";
+		fpsText.append(std::to_string(fps));
+
 		ImGui::Begin("Basic ImGUI window");
+		ImGui::Text(fpsText.c_str());
 		ImGui::SliderFloat("Time Scale", &timeMultiplier, 0.0f, 5.0f);
 		ImGui::Checkbox("Wireframe only", &wireframeOnly);
 		ImGui::End();
