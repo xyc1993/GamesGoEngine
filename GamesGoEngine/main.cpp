@@ -42,7 +42,7 @@ GLFWwindow* InitWindow()
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE); //window won't be resizable
 
-	return glfwCreateWindow(WIDTH, HEIGHT, "OpenGL Engine", nullptr, nullptr);
+	return glfwCreateWindow(WIDTH, HEIGHT, "GamesGo Engine", nullptr, nullptr);
 }
 
 int SetWindow(GLFWwindow* window)

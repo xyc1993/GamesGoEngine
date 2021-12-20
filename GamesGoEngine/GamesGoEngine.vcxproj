@@ -22,9 +22,9 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{e2c0137d-1363-4cf7-89fd-01c9946a9d3a}</ProjectGuid>
-    <RootNamespace>GLFWOpenGL</RootNamespace>
+    <RootNamespace>GamesGoEngine</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>OpenGLEngine</ProjectName>
+    <ProjectName>GamesGoEngine</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -89,7 +89,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\External Libraries\assimp\include;$(SolutionDir)\GLFWOpenGL\SOIL2;$(SolutionDir)\GLFWOpenGL\glm;$(SolutionDir)\..\..\Libraries\GLFW\glfw-3.3.2.bin.WIN32\include;$(SolutionDir)\..\..\Libraries\GLEW\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\External Libraries\assimp\include;$(SolutionDir)\GamesGoEngine\SOIL2;$(SolutionDir)\GamesGoEngine\glm;$(SolutionDir)\..\..\Libraries\GLFW\glfw-3.3.2.bin.WIN32\include;$(SolutionDir)\..\..\Libraries\GLEW\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
