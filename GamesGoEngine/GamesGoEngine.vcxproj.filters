@@ -75,9 +75,6 @@
     <ClCompile Include="TextureLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Skybox.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DirectionalLight.cpp">
       <Filter>Source Files\Light</Filter>
     </ClCompile>
@@ -171,6 +168,9 @@
     <ClCompile Include="SceneExample.cpp">
       <Filter>Source Files\Scene Management\Examples</Filter>
     </ClCompile>
+    <ClCompile Include="Skybox.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -193,9 +193,6 @@
     </ClInclude>
     <ClInclude Include="LightsManager.h">
       <Filter>Header Files\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="Skybox.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\External Libraries\imgui\imconfig.h">
       <Filter>Header Files\imgui</Filter>
@@ -280,6 +277,9 @@
     </ClInclude>
     <ClInclude Include="SceneExample.h">
       <Filter>Header Files\Scene Management\Examples</Filter>
+    </ClInclude>
+    <ClInclude Include="Skybox.h">
+      <Filter>Header Files\Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
