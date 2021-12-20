@@ -25,12 +25,14 @@ void Skybox::Update()
 	if (material != nullptr && mesh != nullptr)
 	{
 		glDepthFunc(GL_LEQUAL);
+		glCullFace(GL_FRONT);
 
 		// for now let's assume there's only 1 mesh (cube) & 1 material slot (cube mesh material), it's enough for this implementation of the skybox
 		material->Draw(glm::mat4(1.0f), glm::mat4(glm::mat3(view_global)), projection_global);
 		mesh->DrawSubMesh();
 
 		glDepthFunc(GL_LESS);
+		glCullFace(GL_BACK);
 	}
 }
 

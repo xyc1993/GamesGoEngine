@@ -92,6 +92,9 @@ void MainLoop(GLFWwindow* window)
 	
 	projection_global = glm::mat4(1.0f);
 	projection_global = glm::perspective(45.0f, (GLfloat)SCREEN_WIDTH / (GLfloat)SCREEN_HEIGHT, 0.1f, 1000.0f);
+
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 		
 	while (!glfwWindowShouldClose(window))
 	{
