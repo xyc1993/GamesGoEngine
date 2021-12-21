@@ -64,6 +64,12 @@
     <Filter Include="Source Files\Scene Management\Examples">
       <UniqueIdentifier>{07eea2cd-86a6-42bf-87fa-3dd1369d44bc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\UI">
+      <UniqueIdentifier>{a2e583af-3fb3-4436-b9a7-2cf5b7cfee0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\UI">
+      <UniqueIdentifier>{18dd0aa9-36ff-4167-9780-9713ee244597}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -170,6 +176,9 @@
     </ClCompile>
     <ClCompile Include="Skybox.cpp">
       <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldOutlinerUI.cpp">
+      <Filter>Source Files\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -280,6 +289,9 @@
     </ClInclude>
     <ClInclude Include="Skybox.h">
       <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldOutlinerUI.h">
+      <Filter>Header Files\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

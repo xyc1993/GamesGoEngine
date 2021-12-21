@@ -17,6 +17,7 @@
 #include "InputManager.h"
 
 #include "SceneExample_LitForward.h"
+#include "WorldOutlinerUI.h"
 
 const GLint WIDTH = 1200, HEIGHT = 675;
 int SCREEN_WIDTH, SCREEN_HEIGHT;
@@ -140,21 +141,8 @@ void MainLoop(GLFWwindow* window)
 		ImGui::SliderFloat("Time Scale", &timeMultiplier, 0.0f, 5.0f);
 		ImGui::Checkbox("Wireframe only", &wireframeOnly);
 		ImGui::End();
-		
-		ImGui::Begin("World Outliner");
-		for (int i = 0; i < activeScene->GetScene().GetSceneObjects().size(); i++)
-		{
-			const GameObject* sceneObject = activeScene->GetScene().GetSceneObjects()[i];
-			if (sceneObject != nullptr)
-			{
-				const bool selected = ImGui::Selectable(sceneObject->GetName().c_str(), selectedSceneObjectIndex == i);
-				if (selected)
-				{
-					selectedSceneObjectIndex = (selectedSceneObjectIndex == i) ? -1 : i;
-				}
-			}
-		}
-		ImGui::End();
+
+		WorldOutlinerUI::Draw(activeScene->GetScene());
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

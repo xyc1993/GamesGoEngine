@@ -181,6 +181,7 @@
     <ClCompile Include="SubMesh.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="WorldOutlinerUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\External Libraries\imgui\imconfig.h" />
@@ -219,6 +220,7 @@
     <ClInclude Include="SubMesh.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="WorldOutlinerUI.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\lamp.frag.glsl" />
