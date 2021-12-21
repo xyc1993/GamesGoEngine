@@ -58,6 +58,10 @@ SceneExample_LitForward::SceneExample_LitForward()
 
 	GameObject* skyboxObject = new GameObject();
 	skyboxObject->AddComponent(skyboxComponent);
+
+	std::string skyboxName = "skybox";
+	skyboxObject->SetName(skyboxName);
+
 	scene->AddGameObject(skyboxObject);
 	
 	MeshPrimitiveCube* cubeMesh = new MeshPrimitiveCube();
@@ -84,6 +88,10 @@ SceneExample_LitForward::SceneExample_LitForward()
 
 		PointLight* pointLight = new PointLight(glm::vec3(0.05f), glm::vec3(0.8f), glm::vec3(1.0f), 1.0f, 0.09f, 0.032f);
 		lampObjects[i]->AddComponent(pointLight);
+
+		std::string name = "sphere_lamp_";
+		name.append(std::to_string(i));
+		lampObjects[i]->SetName(name);
 
 		scene->AddGameObject(lampObjects[i]);
 	}
@@ -116,6 +124,10 @@ SceneExample_LitForward::SceneExample_LitForward()
 		litBoxesObjects[i]->AddComponent(litBoxesMeshRenderers[i]);
 		litBoxesObjects[i]->GetTransform()->SetPosition(litBoxesPositions[i]);
 		litBoxesObjects[i]->GetTransform()->SetRotationEulerDegrees(litBoxesRotations[i]);
+
+		std::string name = "lit_box_";
+		name.append(std::to_string(i));
+		litBoxesObjects[i]->SetName(name);
 
 		scene->AddGameObject(litBoxesObjects[i]);
 	}
@@ -153,6 +165,10 @@ SceneExample_LitForward::SceneExample_LitForward()
 	}
 
 	nanoSuitObject->AddComponent(nanoSuitMeshRenderer);
+
+	std::string nanoSuitName = "nanosuit";
+	nanoSuitObject->SetName(nanoSuitName);
+
 	scene->AddGameObject(nanoSuitObject);
 
 	GameObject* editorSpectatorObject = new GameObject();
@@ -168,12 +184,18 @@ SceneExample_LitForward::SceneExample_LitForward()
 	editorSpectatorObject->AddComponent(cameraComponent);
 	editorSpectatorObject->AddComponent(spotLight);
 
+	std::string editorSpectatorName = "editor_spectator";
+	editorSpectatorObject->SetName(editorSpectatorName);
+
 	scene->AddGameObject(editorSpectatorObject);
 
 	GameObject* directionalLightObject = new GameObject();
 	directionalLightObject->GetTransform()->SetRotationEulerDegrees(glm::vec3(90.0f, -45.0f, 0.0f));
 	DirectionalLight* directionalLight = new DirectionalLight(glm::vec3(0.05f), glm::vec3(0.4f), glm::vec3(0.5f));
 	directionalLightObject->AddComponent(directionalLight);
+
+	std::string directionalLightName = "directional_light";
+	directionalLightObject->SetName(directionalLightName);
 
 	scene->AddGameObject(directionalLightObject);
 }
