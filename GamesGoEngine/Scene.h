@@ -12,6 +12,7 @@ public:
 
 	void AddGameObject(GameObject* gameObject);
 	void Update();
+	const std::vector<GameObject*>& GetSceneObjects() const;
 
 private:
 	std::vector<GameObject*> sceneObjects;

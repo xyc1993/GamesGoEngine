@@ -41,3 +41,13 @@ Transform* GameObject::GetTransform() const
 {
 	return transform;
 }
+
+std::string GameObject::GetName() const
+{
+	return name;
+}
+
+void GameObject::SetName(std::string name)
+{
+	this->name = name;
+}

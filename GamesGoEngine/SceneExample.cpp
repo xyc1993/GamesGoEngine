@@ -14,3 +14,8 @@ void SceneExample::Update()
 {
 	scene->Update();
 }
+
+const Scene& SceneExample::GetScene() const
+{
+	return *scene;
+}

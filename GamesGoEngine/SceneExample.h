@@ -9,6 +9,7 @@ public:
 	~SceneExample();
 	
 	virtual void Update();
+	const Scene& GetScene() const;
 
 protected:
 	Scene* scene;

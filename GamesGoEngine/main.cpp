@@ -18,7 +18,7 @@
 
 #include "SceneExample_LitForward.h"
 
-const GLint WIDTH = 800, HEIGHT = 600;
+const GLint WIDTH = 1200, HEIGHT = 675;
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 GLfloat currentTime = 0.0f;
@@ -96,7 +96,9 @@ void MainLoop(GLFWwindow* window)
 
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
-		
+
+	int selectedSceneObjectIndex = -1;
+	
 	while (!glfwWindowShouldClose(window))
 	{
 		if (wireframeOnly != lastWireframeOnly)
@@ -137,6 +139,21 @@ void MainLoop(GLFWwindow* window)
 		ImGui::Text(fpsText.c_str());
 		ImGui::SliderFloat("Time Scale", &timeMultiplier, 0.0f, 5.0f);
 		ImGui::Checkbox("Wireframe only", &wireframeOnly);
+		ImGui::End();
+		
+		ImGui::Begin("World Outliner");
+		for (int i = 0; i < activeScene->GetScene().GetSceneObjects().size(); i++)
+		{
+			const GameObject* sceneObject = activeScene->GetScene().GetSceneObjects()[i];
+			if (sceneObject != nullptr)
+			{
+				const bool selected = ImGui::Selectable(sceneObject->GetName().c_str(), selectedSceneObjectIndex == i);
+				if (selected)
+				{
+					selectedSceneObjectIndex = (selectedSceneObjectIndex == i) ? -1 : i;
+				}
+			}
+		}
 		ImGui::End();
 
 		ImGui::Render();
