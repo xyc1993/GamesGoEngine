@@ -4,7 +4,7 @@
 
 int WorldOutlinerUI::selectedSceneObjectIndex = -1;
 
-void WorldOutlinerUI::Draw(const Scene& activeScene)
+int WorldOutlinerUI::Draw(const Scene& activeScene)
 {
 	ImGui::Begin("World Outliner");
 	for (int i = 0; i < activeScene.GetSceneObjects().size(); i++)
@@ -18,6 +18,12 @@ void WorldOutlinerUI::Draw(const Scene& activeScene)
 				selectedSceneObjectIndex = (selectedSceneObjectIndex == i) ? -1 : i;
 			}
 		}
+		else
+		{
+			ImGui::Text("DELETED");
+		}
 	}
 	ImGui::End();
+
+	return selectedSceneObjectIndex;
 }

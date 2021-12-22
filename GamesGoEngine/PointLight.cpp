@@ -25,6 +25,11 @@ PointLight::PointLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular,
 	if (this->lightNumber == INITIALIZATION_ERROR) delete this;
 }
 
+PointLight::~PointLight()
+{
+	LightsManager::RemovePointLight(this);
+}
+
 void PointLight::Update()
 {
 	Light::Update();

@@ -28,6 +28,10 @@ public:
 	static GLuint AddPointLight(PointLight* pointLight);
 	static GLuint AddSpotLight(SpotLight* spotLight);
 
+	static void RemoveDirectionalLight(DirectionalLight* directionalLight);
+	static void RemovePointLight(PointLight* pointLight);
+	static void RemoveSpotLight(SpotLight* spotLight);
+
 	static void SetLightsInShader(const GLuint& shaderProgram);
 
 private:

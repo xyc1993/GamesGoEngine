@@ -19,3 +19,8 @@ const Scene& SceneExample::GetScene() const
 {
 	return *scene;
 }
+
+Scene* SceneExample::GetSceneUnsafe() const
+{
+	return scene;
+}

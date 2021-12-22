@@ -10,7 +10,8 @@ public:
 	Scene();
 	~Scene();
 
-	void AddGameObject(GameObject* gameObject);
+	int AddGameObject(GameObject* gameObject);
+	void RemoveGameObject(int gameObjectIndex);
 	void Update();
 	const std::vector<GameObject*>& GetSceneObjects() const;
 

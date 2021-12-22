@@ -29,6 +29,11 @@ SpotLight::SpotLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, f
 	if (this->lightNumber == INITIALIZATION_ERROR) delete this;
 }
 
+SpotLight::~SpotLight()
+{
+	LightsManager::RemoveSpotLight(this);
+}
+
 void SpotLight::Update()
 {
 	Light::Update();

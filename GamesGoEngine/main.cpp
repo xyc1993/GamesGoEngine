@@ -121,7 +121,7 @@ void MainLoop(GLFWwindow* window)
 		currentTime += deltaTime;
 		
 		glfwPollEvents();
-		InputEditorShortcuts::ProcessShortcuts(window);
+		InputEditorShortcuts::ProcessShortcuts(window, activeScene->GetSceneUnsafe(), selectedSceneObjectIndex);
 
 		glClearColor(0.1f, 0.15f, 0.15f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -142,7 +142,7 @@ void MainLoop(GLFWwindow* window)
 		ImGui::Checkbox("Wireframe only", &wireframeOnly);
 		ImGui::End();
 
-		WorldOutlinerUI::Draw(activeScene->GetScene());
+		selectedSceneObjectIndex = WorldOutlinerUI::Draw(activeScene->GetScene());
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

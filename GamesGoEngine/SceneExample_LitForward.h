@@ -19,5 +19,5 @@ private:
 		glm::vec3(0.0f,  0.0f,  -3.0f)
 	};
 
-	GameObject* lampObjects[LAMPS_NUMBER];
+	int lampObjectsIndices[LAMPS_NUMBER];
 };

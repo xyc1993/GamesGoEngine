@@ -23,6 +23,11 @@ DirectionalLight::DirectionalLight(glm::vec3 ambient, glm::vec3 diffuse, glm::ve
 	if (this->lightNumber == INITIALIZATION_ERROR) delete this;
 }
 
+DirectionalLight::~DirectionalLight()
+{
+	LightsManager::RemoveDirectionalLight(this);
+}
+
 void DirectionalLight::Update()
 {
 	Light::Update();

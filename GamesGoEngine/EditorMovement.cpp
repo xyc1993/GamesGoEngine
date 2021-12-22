@@ -51,6 +51,11 @@ void EditorMovement::Update()
 
 void EditorMovement::UpdatePosition() const
 {
+	if (InputManager::GetCursorEnabled())
+	{
+		return;
+	}
+
 	if (InputManager::GetKey(GLFW_KEY_W) || InputManager::GetKey(GLFW_KEY_UP))
 	{
 		const glm::vec3 newPosition = owner->GetTransform()->GetPosition() + movementSpeed * owner->GetTransform()->GetForward() * deltaTime;

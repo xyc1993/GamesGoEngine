@@ -64,23 +64,65 @@ GLuint LightsManager::AddSpotLight(SpotLight* spotLight)
 	return lightIndex;
 }
 
+void LightsManager::RemoveDirectionalLight(DirectionalLight* directionalLight)
+{
+	for (int i = 0; i < GetInstance()->directionalLightsNumber; i++)
+	{
+		if (GetInstance()->directionalLight[i] == directionalLight)
+		{
+			GetInstance()->directionalLight[i] = nullptr;
+		}
+	}
+}
+
+void LightsManager::RemovePointLight(PointLight* pointLight)
+{
+	for (int i = 0; i < GetInstance()->pointLightsNumber; i++)
+	{
+		if (GetInstance()->pointLights[i] == pointLight)
+		{
+			GetInstance()->pointLights[i] = nullptr;
+		}
+	}
+}
+
+void LightsManager::RemoveSpotLight(SpotLight* spotLight)
+{
+	for (int i = 0; i < GetInstance()->spotLightsNumber; i++)
+	{
+		if (GetInstance()->spotLight[i] == spotLight)
+		{
+			GetInstance()->spotLight[i] = nullptr;
+		}
+	}
+}
+
 void LightsManager::SetLightsInShader(const GLuint& shaderProgram)
 {
 	glUniform1i(glGetUniformLocation(shaderProgram, "dirLightsNumber"), GetInstance()->directionalLightsNumber);
 	for (int i = 0; i < GetInstance()->directionalLightsNumber; i++)
 	{
-		GetInstance()->directionalLight[i]->SetLightInShader(shaderProgram);
+		if (GetInstance()->directionalLight[i] != nullptr)
+		{
+			GetInstance()->directionalLight[i]->SetLightInShader(shaderProgram);
+		}
 	}	
 
 	glUniform1i(glGetUniformLocation(shaderProgram, "pointLightsNumber"), GetInstance()->pointLightsNumber);
 	for (int i = 0; i < GetInstance()->pointLightsNumber; i++)
 	{
-		GetInstance()->pointLights[i]->SetLightInShader(shaderProgram);
+		if (GetInstance()->pointLights[i] != nullptr)
+		{
+			GetInstance()->pointLights[i]->SetLightInShader(shaderProgram);
+		}		
 	}
 
 	glUniform1i(glGetUniformLocation(shaderProgram, "spotLightsNumber"), GetInstance()->spotLightsNumber);
 	for (int i = 0; i < GetInstance()->spotLightsNumber; i++)
 	{
-		GetInstance()->spotLight[i]->SetLightInShader(shaderProgram);
+		if (GetInstance()->spotLight[i] != nullptr)
+		{
+			GetInstance()->spotLight[i]->SetLightInShader(shaderProgram);
+		}
 	}
 }

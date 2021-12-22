@@ -70,30 +70,24 @@ SceneExample_LitForward::SceneExample_LitForward()
 
 	Material* lampMaterial = new Material("res/shaders/lamp.vert.glsl", "res/shaders/lamp.frag.glsl");
 	
-	MeshRenderer* lampMeshRenderers[] = {
-		new MeshRenderer(),
-		new MeshRenderer(),
-		new MeshRenderer(),
-		new MeshRenderer()
-	};
-
 	for (int i = 0; i < LAMPS_NUMBER; i++)
 	{
-		lampObjects[i] = new GameObject();
-		lampMeshRenderers[i]->SetMesh(sphereMesh);
-		lampMeshRenderers[i]->SetMaterial(lampMaterial);
-		lampObjects[i]->AddComponent(lampMeshRenderers[i]);
-		lampObjects[i]->GetTransform()->SetPosition(startPointLightPositions[i]);
-		lampObjects[i]->GetTransform()->SetScale(glm::vec3(0.2f));
+		GameObject* lampObject = new GameObject();
+		MeshRenderer* lampMeshRenderer = new MeshRenderer();
+		lampMeshRenderer->SetMesh(sphereMesh);
+		lampMeshRenderer->SetMaterial(lampMaterial);
+		lampObject->AddComponent(lampMeshRenderer);
+		lampObject->GetTransform()->SetPosition(startPointLightPositions[i]);
+		lampObject->GetTransform()->SetScale(glm::vec3(0.2f));
 
 		PointLight* pointLight = new PointLight(glm::vec3(0.05f), glm::vec3(0.8f), glm::vec3(1.0f), 1.0f, 0.09f, 0.032f);
-		lampObjects[i]->AddComponent(pointLight);
+		lampObject->AddComponent(pointLight);
 
 		std::string name = "sphere_lamp_";
 		name.append(std::to_string(i));
-		lampObjects[i]->SetName(name);
+		lampObject->SetName(name);
 
-		scene->AddGameObject(lampObjects[i]);
+		lampObjectsIndices[i] = scene->AddGameObject(lampObject);
 	}
 
 	Material* cubeLitMaterial = new Material("res/shaders/lighting.vert.glsl", "res/shaders/lighting.frag.glsl");
@@ -103,33 +97,21 @@ SceneExample_LitForward::SceneExample_LitForward()
 	cubeLitMaterial->SetLightModel(LightModelType::LitForward);
 
 	const int LIT_BOXES_NUMBER = 10;
-	GameObject* litBoxesObjects[] = {
-		new GameObject(), new GameObject(), new GameObject(),
-		new GameObject(), new GameObject(), new GameObject(),
-		new GameObject(), new GameObject(), new GameObject(),
-		new GameObject()
-	};
-
-	MeshRenderer* litBoxesMeshRenderers[] = {
-		new MeshRenderer(), new MeshRenderer(), new MeshRenderer(),
-		new MeshRenderer(), new MeshRenderer(), new MeshRenderer(),
-		new MeshRenderer(), new MeshRenderer(), new MeshRenderer(),
-		new MeshRenderer()
-	};
-
 	for (int i = 0; i < LIT_BOXES_NUMBER; i++)
 	{
-		litBoxesMeshRenderers[i]->SetMesh(cubeMesh);
-		litBoxesMeshRenderers[i]->SetMaterial(cubeLitMaterial);
-		litBoxesObjects[i]->AddComponent(litBoxesMeshRenderers[i]);
-		litBoxesObjects[i]->GetTransform()->SetPosition(litBoxesPositions[i]);
-		litBoxesObjects[i]->GetTransform()->SetRotationEulerDegrees(litBoxesRotations[i]);
+		GameObject* litBoxesObjects = new GameObject();
+		MeshRenderer* litBoxesMeshRenderer = new MeshRenderer();
+		litBoxesMeshRenderer->SetMesh(cubeMesh);
+		litBoxesMeshRenderer->SetMaterial(cubeLitMaterial);
+		litBoxesObjects->AddComponent(litBoxesMeshRenderer);
+		litBoxesObjects->GetTransform()->SetPosition(litBoxesPositions[i]);
+		litBoxesObjects->GetTransform()->SetRotationEulerDegrees(litBoxesRotations[i]);
 
 		std::string name = "lit_box_";
 		name.append(std::to_string(i));
-		litBoxesObjects[i]->SetName(name);
+		litBoxesObjects->SetName(name);
 
-		scene->AddGameObject(litBoxesObjects[i]);
+		scene->AddGameObject(litBoxesObjects);
 	}
 
 	GameObject* nanoSuitObject = new GameObject();
@@ -204,8 +186,11 @@ void SceneExample_LitForward::Update()
 {
 	for (int i = 0; i < LAMPS_NUMBER; i++)
 	{
-		glm::vec3 pointLightPosition = startPointLightPositions[i] + glm::vec3(0.0f, 1.0f, 0.0f) * sin(0.4f * ((GLfloat)i + 1.0f) * currentTime);
-		lampObjects[i]->GetTransform()->SetPosition(pointLightPosition);
+		if (scene->GetSceneObjects()[lampObjectsIndices[i]] != nullptr)
+		{
+			glm::vec3 pointLightPosition = startPointLightPositions[i] + glm::vec3(0.0f, 1.0f, 0.0f) * sin(0.4f * ((GLfloat)i + 1.0f) * currentTime);
+			scene->GetSceneObjects()[lampObjectsIndices[i]]->GetTransform()->SetPosition(pointLightPosition);
+		}
 	}
 
 	SceneExample::Update();

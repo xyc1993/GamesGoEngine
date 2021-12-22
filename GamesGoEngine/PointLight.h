@@ -7,6 +7,7 @@ class PointLight : public Light
 public:
 	PointLight();
 	PointLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float constant, float linear, float quadratic);
+	~PointLight();
 
 	void Update() override;
 	void SetLightInShader(const GLuint& shaderProgram) override;

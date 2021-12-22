@@ -10,6 +10,7 @@ public:
 	
 	virtual void Update();
 	const Scene& GetScene() const;
+	Scene* GetSceneUnsafe() const;
 
 protected:
 	Scene* scene;

@@ -7,6 +7,7 @@ class SpotLight : public Light
 public:
 	SpotLight();
 	SpotLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float constant, float linear, float quadratic, float cutOff, float outerCutOff);
+	~SpotLight();
 
 	void Update() override;
 	void SetLightInShader(const GLuint& shaderProgram) override;
