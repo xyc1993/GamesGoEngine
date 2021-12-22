@@ -4,9 +4,14 @@
 
 void InputEditorShortcuts::ProcessShortcuts(GLFWwindow* window)
 {
-	if (InputManager::GetKeyReleased(GLFW_KEY_H))
+	if (InputManager::GetMouseButtonPressed(GLFW_MOUSE_BUTTON_RIGHT))
 	{
-		InputManager::SetCursorEnabled(!InputManager::GetCursorEnabled());
+		InputManager::SetCursorEnabled(false);
+	}
+
+	if (InputManager::GetMouseButtonReleased(GLFW_MOUSE_BUTTON_RIGHT))
+	{
+		InputManager::SetCursorEnabled(true);
 	}
 	
 	if (InputManager::GetKeyReleased(GLFW_KEY_ESCAPE))

@@ -34,10 +34,11 @@ void InputManager::Init(GLFWwindow* window)
 	GetInstance()->lastMouseX = (float)width / 2.0f;
 	GetInstance()->lastMouseY = (float)height / 2.0f;
 
-	SetCursorEnabled(GetInstance()->cursorEnabled);
+	SetCursorEnabled(true);
 
 	glfwSetKeyCallback(window, KeyCallback);
-	glfwSetCursorPosCallback(window, MouseCallback);
+	glfwSetMouseButtonCallback(window, MouseButtonCallback);
+	glfwSetCursorPosCallback(window, MousePosCallback);	
 	glfwSetScrollCallback(window, ScrollCallback);
 }
 
@@ -48,16 +49,23 @@ void InputManager::LateUpdate()
 		// reset the state of the 'pressed' & 'released' keys since their status lasts only 1 frame
 		GetInstance()->keysPressed[i] = false;
 		GetInstance()->keysReleased[i] = false;
-
-		// after mouse input was used, reset it to avoid situation where there's no mouse callback but there's mouse input data
-		GetInstance()->mouseXInput = 0.0f;
-		GetInstance()->mouseYInput = 0.0f;
 	}
+
+	for (int i = 0; i < MOUSE_BUTTONS_NUMBER; i++)
+	{
+		// reset the state of the 'pressed' & 'released' buttons since their status lasts only 1 frame
+		GetInstance()->mouseButtonsPressed[i] = false;
+		GetInstance()->mouseButtonsReleased[i] = false;
+	}
+
+	// after mouse input was used, reset it to avoid situation where there's no mouse callback but there's mouse input data
+	GetInstance()->mouseXInput = 0.0f;
+	GetInstance()->mouseYInput = 0.0f;
 }
 
 bool InputManager::GetKey(int key)
 {
-	if (key >= 0 && key < 1024)
+	if (key >= 0 && key < KEYS_NUMBER)
 	{
 		return GetInstance()->keys[key];
 	}
@@ -66,7 +74,7 @@ bool InputManager::GetKey(int key)
 
 bool InputManager::GetKeyPressed(int key)
 {
-	if (key >= 0 && key < 1024)
+	if (key >= 0 && key < KEYS_NUMBER)
 	{
 		return GetInstance()->keysPressed[key];
 	}
@@ -75,9 +83,36 @@ bool InputManager::GetKeyPressed(int key)
 
 bool InputManager::GetKeyReleased(int key)
 {
-	if (key >= 0 && key < 1024)
+	if (key >= 0 && key < KEYS_NUMBER)
 	{
 		return GetInstance()->keysReleased[key];
+	}
+	return false;
+}
+
+bool InputManager::GetMouseButton(int button)
+{
+	if (button >= 0 && button < MOUSE_BUTTONS_NUMBER)
+	{
+		return GetInstance()->mouseButtons[button];
+	}
+	return false;
+}
+
+bool InputManager::GetMouseButtonPressed(int button)
+{
+	if (button >= 0 && button < MOUSE_BUTTONS_NUMBER)
+	{
+		return GetInstance()->mouseButtonsPressed[button];
+	}
+	return false;
+}
+
+bool InputManager::GetMouseButtonReleased(int button)
+{
+	if (button >= 0 && button < MOUSE_BUTTONS_NUMBER)
+	{
+		return GetInstance()->mouseButtonsReleased[button];
 	}
 	return false;
 }
@@ -121,7 +156,7 @@ void InputManager::SetCursorEnabled(bool enabled)
 
 void InputManager::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
-	if (key >= 0 && key < 1024)
+	if (key >= 0 && key < KEYS_NUMBER)
 	{
 		if (GLFW_PRESS == action)
 		{
@@ -140,7 +175,28 @@ void InputManager::KeyCallback(GLFWwindow* window, int key, int scancode, int ac
 	}
 }
 
-void InputManager::MouseCallback(GLFWwindow* window, double xPos, double yPos)
+void InputManager::MouseButtonCallback(GLFWwindow* window, int button, int action, int mode)
+{
+	if (button >= 0 && button < MOUSE_BUTTONS_NUMBER)
+	{
+		if (GLFW_PRESS == action)
+		{
+			// if the key wasn't held in the last frame then it is pressed now
+			GetInstance()->mouseButtonsPressed[button] = !GetInstance()->mouseButtons[button];
+
+			GetInstance()->mouseButtonsReleased[button] = false;
+			GetInstance()->mouseButtons[button] = true;
+		}
+		else if (GLFW_RELEASE == action)
+		{
+			GetInstance()->mouseButtons[button] = false;
+			GetInstance()->mouseButtonsPressed[button] = false;
+			GetInstance()->mouseButtonsReleased[button] = true;
+		}
+	}
+}
+
+void InputManager::MousePosCallback(GLFWwindow* window, double xPos, double yPos)
 {
 	if (GetInstance()->firstMouse)
 	{
