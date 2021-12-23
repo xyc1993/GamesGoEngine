@@ -14,7 +14,7 @@ Scene::~Scene()
 	sceneObjects.clear();
 }
 
-int Scene::AddGameObject(GameObject* gameObject)
+void Scene::AddGameObject(GameObject* gameObject)
 {
 	sceneObjects.push_back(gameObject);
 	if (gameObject->GetName().length() == 0)
@@ -23,7 +23,6 @@ int Scene::AddGameObject(GameObject* gameObject)
 		name.append(std::to_string(sceneObjects.size() - 1));
 		gameObject->SetName(name);
 	}
-	return (sceneObjects.size() - 1);
 }
 
 void Scene::RemoveGameObject(int gameObjectIndex)
@@ -33,6 +32,8 @@ void Scene::RemoveGameObject(int gameObjectIndex)
 		delete sceneObjects[gameObjectIndex];
 		// just in case set the nullptr to the place of the deleted game object
 		sceneObjects[gameObjectIndex] = nullptr;
+		// finally, after the proper cleanup, erase the element from the vector
+		sceneObjects.erase(sceneObjects.begin() + gameObjectIndex);
 	}
 }
 

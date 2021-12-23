@@ -9,6 +9,7 @@
 #include "MeshPrimitiveSphere.h"
 #include "MeshRenderer.h"
 #include "PointLight.h"
+#include "PositionOscillator.h"
 #include "Skybox.h"
 #include "SpotLight.h"
 
@@ -16,7 +17,9 @@ extern GLfloat currentTime;
 
 SceneExample_LitForward::SceneExample_LitForward()
 {
-	glm::vec3 litBoxesPositions[] = {
+	const int LIT_BOXES_NUMBER = 10;
+
+	glm::vec3 litBoxesPositions[LIT_BOXES_NUMBER] = {
 		glm::vec3(3.0f, 0.0f, 0.0f),
 		glm::vec3(2.0f, 5.0f, -15.0f),
 		glm::vec3(-1.5f, -2.2f, -2.5f),
@@ -29,7 +32,7 @@ SceneExample_LitForward::SceneExample_LitForward()
 		glm::vec3(-1.3f, 1.0f, -1.5f)
 	};
 
-	glm::vec3 litBoxesRotations[] = {
+	glm::vec3 litBoxesRotations[LIT_BOXES_NUMBER] = {
 		glm::vec3(0.0f, 0.0f, 0.0f),
 		glm::vec3(30.0f, 15.0f, 0.0f),
 		glm::vec3(60.0f, 30.0f, 0.0f),
@@ -40,6 +43,15 @@ SceneExample_LitForward::SceneExample_LitForward()
 		glm::vec3(210.0f,105.0f, 0.0f),
 		glm::vec3(240.0f,120.0f, 0.0f),
 		glm::vec3(270.0f,135.0f, 0.0f)
+	};
+
+	const int LAMPS_NUMBER = 4;
+
+	glm::vec3 startPointLightPositions[LAMPS_NUMBER] = {
+		glm::vec3(0.07,   0.2f,   1.0f),
+		glm::vec3(2.3f,   -3.3f,   -4.0f),
+		glm::vec3(-4.0f,  -2.0f,  -11.0f),
+		glm::vec3(0.0f,  0.0f,  -3.0f)
 	};
 
 	std::vector<const GLchar*> skyboxTextures;
@@ -83,11 +95,16 @@ SceneExample_LitForward::SceneExample_LitForward()
 		PointLight* pointLight = new PointLight(glm::vec3(0.05f), glm::vec3(0.8f), glm::vec3(1.0f), 1.0f, 0.09f, 0.032f);
 		lampObject->AddComponent(pointLight);
 
+		PositionOscillator* oscillator = new PositionOscillator();
+		oscillator->SetAmplitude(glm::vec3(0.0f, 1.0f, 0.0f));
+		oscillator->SetSpeed(0.4f + (float)i);
+		lampObject->AddComponent(oscillator);
+
 		std::string name = "sphere_lamp_";
 		name.append(std::to_string(i));
 		lampObject->SetName(name);
 
-		lampObjectsIndices[i] = scene->AddGameObject(lampObject);
+		scene->AddGameObject(lampObject);
 	}
 
 	Material* cubeLitMaterial = new Material("res/shaders/lighting.vert.glsl", "res/shaders/lighting.frag.glsl");
@@ -96,7 +113,7 @@ SceneExample_LitForward::SceneExample_LitForward()
 	cubeLitMaterial->SetFloat((GLchar*)"material.shininess", 32.0f);
 	cubeLitMaterial->SetLightModel(LightModelType::LitForward);
 
-	const int LIT_BOXES_NUMBER = 10;
+	
 	for (int i = 0; i < LIT_BOXES_NUMBER; i++)
 	{
 		GameObject* litBoxesObjects = new GameObject();
@@ -180,18 +197,4 @@ SceneExample_LitForward::SceneExample_LitForward()
 	directionalLightObject->SetName(directionalLightName);
 
 	scene->AddGameObject(directionalLightObject);
-}
-
-void SceneExample_LitForward::Update()
-{
-	for (int i = 0; i < LAMPS_NUMBER; i++)
-	{
-		if (scene->GetSceneObjects()[lampObjectsIndices[i]] != nullptr)
-		{
-			glm::vec3 pointLightPosition = startPointLightPositions[i] + glm::vec3(0.0f, 1.0f, 0.0f) * sin(0.4f * ((GLfloat)i + 1.0f) * currentTime);
-			scene->GetSceneObjects()[lampObjectsIndices[i]]->GetTransform()->SetPosition(pointLightPosition);
-		}
-	}
-
-	SceneExample::Update();
 }

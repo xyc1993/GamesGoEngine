@@ -70,6 +70,12 @@
     <Filter Include="Header Files\UI">
       <UniqueIdentifier>{18dd0aa9-36ff-4167-9780-9713ee244597}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Movement">
+      <UniqueIdentifier>{b9e98ca3-07bd-4f84-8f55-ade0cacd6b74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Movement">
+      <UniqueIdentifier>{fd26cba3-b8b6-4cf5-ab83-c9b6f7712c93}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -179,6 +185,9 @@
     </ClCompile>
     <ClCompile Include="WorldOutlinerUI.cpp">
       <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="PositionOscillator.cpp">
+      <Filter>Source Files\Movement</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -292,6 +301,9 @@
     </ClInclude>
     <ClInclude Include="WorldOutlinerUI.h">
       <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="PositionOscillator.h">
+      <Filter>Header Files\Movement</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
