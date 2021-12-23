@@ -13,8 +13,7 @@
 class LightsManager
 {
 private:
-	LightsManager();
-	~LightsManager();
+	LightsManager() = default;
 
 	static LightsManager* instance;
 	static LightsManager* GetInstance();
@@ -28,18 +27,22 @@ public:
 	static GLuint AddPointLight(PointLight* pointLight);
 	static GLuint AddSpotLight(SpotLight* spotLight);
 
+private:
+	static GLuint AddLight(std::vector<Light*>& lightsVector, Light* light, int maxContainerSize);
+
+public:
 	static void RemoveDirectionalLight(DirectionalLight* directionalLight);
 	static void RemovePointLight(PointLight* pointLight);
 	static void RemoveSpotLight(SpotLight* spotLight);
 
+private:
+	static void RemoveLight(std::vector<Light*>& lightsVector, Light* light);
+
+public:
 	static void SetLightsInShader(const GLuint& shaderProgram);
 
 private:
-	DirectionalLight* directionalLight[MAX_NUMBER_OF_DIR_LIGHTS];
-	PointLight* pointLights[MAX_NUMBER_OF_POINT_LIGHTS];
-	SpotLight* spotLight[MAX_NUMBER_OF_SPOT_LIGHTS];
-
-	int directionalLightsNumber;
-	int pointLightsNumber;
-	int spotLightsNumber;
+	std::vector<Light*> directionalLights;
+	std::vector<Light*> pointLights;
+	std::vector<Light*> spotLights;
 };
