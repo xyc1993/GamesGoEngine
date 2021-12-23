@@ -20,7 +20,10 @@ public:
 	std::string GetName() const;
 	void SetName(std::string name);
 
+	GameObject* GetParent() const;
 	void SetParent(GameObject* parent);
+
+	const std::vector<GameObject*>& GetChildren() const;
 
 private:
 	void RemoveParent();
@@ -33,6 +36,6 @@ private:
 	GameObject* parent;
 	// direct children of the game object
 	std::vector<GameObject*> children;
-	// all of the children won the game object hierarchy (i.e. children of children as well)
+	// all of the children in the game object hierarchy (i.e. children of children as well)
 	std::set<GameObject*> allChildren;
 };

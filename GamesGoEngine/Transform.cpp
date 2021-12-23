@@ -1,5 +1,7 @@
 #include "Transform.h"
 
+#include "GameObject.h"
+
 Transform::Transform()
 {
 	position = glm::vec3(0.0f);
@@ -9,10 +11,44 @@ Transform::Transform()
 	UpdateTransformDirections();
 }
 
+void Transform::Update()
+{
+
+}
+
 void Transform::SetPosition(glm::vec3 position)
 {
+	if (owner == nullptr)
+	{
+		return;
+	}
+
+	const glm::vec3 translation = position - this->position;
+
+	// update self
 	this->position = position;
+	if (owner->GetParent() != nullptr)
+	{
+		this->localPosition = this->position - owner->GetParent()->GetTransform()->GetPosition();
+	}
+	else
+	{
+		this->localPosition = this->position;
+	}
 	UpdateModelMatrix();
+
+	// update children
+	for (int i = 0; i < owner->GetChildren().size(); i++)
+	{
+		const glm::vec3 currentPosition = owner->GetChildren()[i]->GetTransform()->GetPosition();
+		owner->GetChildren()[i]->GetTransform()->SetPosition(currentPosition + translation);
+	}
+}
+
+void Transform::SetLocalPosition(glm::vec3 localPosition)
+{
+	const glm::vec3 translation = localPosition - this->localPosition;
+	SetPosition(this->position + translation);
 }
 
 void Transform::SetRotation(glm::quat rotation)
@@ -42,6 +78,11 @@ void Transform::SetScale(glm::vec3 scale)
 glm::vec3 Transform::GetPosition() const
 {
 	return position;
+}
+
+glm::vec3 Transform::GetLocalPosition() const
+{
+	return localPosition;
 }
 
 glm::quat Transform::GetRotation() const

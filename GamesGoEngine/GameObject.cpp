@@ -2,8 +2,9 @@
 
 GameObject::GameObject()
 {
-	transform = new Transform();
 	components.clear();
+	transform = new Transform();
+	AddComponent(transform);
 }
 
 GameObject::~GameObject()
@@ -13,8 +14,6 @@ GameObject::~GameObject()
 		delete component;
 	}
 	components.clear();
-
-	delete transform;
 }
 
 void GameObject::Update()
@@ -52,6 +51,11 @@ void GameObject::SetName(std::string name)
 	this->name = name;
 }
 
+GameObject* GameObject::GetParent() const
+{
+	return parent;
+}
+
 void GameObject::SetParent(GameObject* parent)
 {
 	// if 'parent' is one of GameObject's children, don't set it as this->parent
@@ -72,6 +76,11 @@ void GameObject::SetParent(GameObject* parent)
 		}
 		SetNewParent(parent);
 	}
+}
+
+const std::vector<GameObject*>& GameObject::GetChildren() const
+{
+	return children;
 }
 
 void GameObject::RemoveParent()

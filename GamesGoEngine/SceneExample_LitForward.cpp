@@ -81,7 +81,8 @@ SceneExample_LitForward::SceneExample_LitForward()
 	MeshPrimitiveSphere* sphereMesh = new MeshPrimitiveSphere();
 
 	Material* lampMaterial = new Material("res/shaders/lamp.vert.glsl", "res/shaders/lamp.frag.glsl");
-	
+
+	GameObject* lampParent = nullptr;
 	for (int i = 0; i < LAMPS_NUMBER; i++)
 	{
 		GameObject* lampObject = new GameObject();
@@ -105,6 +106,7 @@ SceneExample_LitForward::SceneExample_LitForward()
 		lampObject->SetName(name);
 
 		scene->AddGameObject(lampObject);
+		if (i == 0) lampParent = lampObject;
 	}
 
 	Material* cubeLitMaterial = new Material("res/shaders/lighting.vert.glsl", "res/shaders/lighting.frag.glsl");
@@ -113,23 +115,29 @@ SceneExample_LitForward::SceneExample_LitForward()
 	cubeLitMaterial->SetFloat((GLchar*)"material.shininess", 32.0f);
 	cubeLitMaterial->SetLightModel(LightModelType::LitForward);
 
-	
+	GameObject* boxChild = nullptr;
 	for (int i = 0; i < LIT_BOXES_NUMBER; i++)
 	{
-		GameObject* litBoxesObjects = new GameObject();
+		GameObject* litBoxesObject = new GameObject();
 		MeshRenderer* litBoxesMeshRenderer = new MeshRenderer();
 		litBoxesMeshRenderer->SetMesh(cubeMesh);
 		litBoxesMeshRenderer->SetMaterial(cubeLitMaterial);
-		litBoxesObjects->AddComponent(litBoxesMeshRenderer);
-		litBoxesObjects->GetTransform()->SetPosition(litBoxesPositions[i]);
-		litBoxesObjects->GetTransform()->SetRotationEulerDegrees(litBoxesRotations[i]);
+		litBoxesObject->AddComponent(litBoxesMeshRenderer);
+		litBoxesObject->GetTransform()->SetPosition(litBoxesPositions[i]);
+		litBoxesObject->GetTransform()->SetRotationEulerDegrees(litBoxesRotations[i]);
 
 		std::string name = "lit_box_";
 		name.append(std::to_string(i));
-		litBoxesObjects->SetName(name);
+		litBoxesObject->SetName(name);
 
-		scene->AddGameObject(litBoxesObjects);
+		scene->AddGameObject(litBoxesObject);
+		if (i == 0) boxChild = litBoxesObject;
 	}
+
+	if (boxChild != nullptr && lampParent != nullptr)
+	{
+		boxChild->SetParent(lampParent);
+	}	
 
 	GameObject* nanoSuitObject = new GameObject();
 	nanoSuitObject->GetTransform()->SetPosition(glm::vec3(0.0f, -1.75f, 0.0f));
