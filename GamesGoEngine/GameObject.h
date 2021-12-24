@@ -22,12 +22,17 @@ public:
 
 	GameObject* GetParent() const;
 	void SetParent(GameObject* parent);
+	// returns number of all of the parents up the hierarchy
+	int GetAllParentsNumber() const;
+
+	void SetSceneReferenece(class Scene* scene);
 
 	const std::vector<GameObject*>& GetChildren() const;
 
 private:
 	void RemoveParent();
 	void SetNewParent(GameObject* parent);
+	static void CalculateParentsNumber(GameObject* parent, int& currentParentNumber);
 
 	std::string name;
 	Transform* transform;
@@ -38,4 +43,5 @@ private:
 	std::vector<GameObject*> children;
 	// all of the children in the game object hierarchy (i.e. children of children as well)
 	std::set<GameObject*> allChildren;
+	int parentsNumber;
 };

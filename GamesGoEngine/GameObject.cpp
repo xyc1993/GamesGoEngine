@@ -76,6 +76,13 @@ void GameObject::SetParent(GameObject* parent)
 		}
 		SetNewParent(parent);
 	}
+
+	CalculateParentsNumber(this->parent, parentsNumber);
+}
+
+int GameObject::GetAllParentsNumber() const
+{
+	return parentsNumber;
 }
 
 const std::vector<GameObject*>& GameObject::GetChildren() const
@@ -119,5 +126,14 @@ void GameObject::SetNewParent(GameObject* parent)
 	{
 		GameObject* child = *it;
 		this->parent->allChildren.insert(child);
+	}
+}
+
+void GameObject::CalculateParentsNumber(GameObject* parent, int& currentParentNumber)
+{
+	if (parent != nullptr)
+	{
+		currentParentNumber++;
+		CalculateParentsNumber(parent->GetParent(), currentParentNumber);
 	}
 }
