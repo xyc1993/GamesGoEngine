@@ -7,9 +7,12 @@ Scene::Scene()
 
 Scene::~Scene()
 {
-	for (int i = 0; i < sceneObjects.size(); i++)
+	for (auto it = sceneObjects.begin(); it != sceneObjects.end(); ++it)
 	{
-		delete sceneObjects[i];
+		if (*it != nullptr)
+		{
+			delete *it;
+		}
 	}
 	sceneObjects.clear();
 }
@@ -17,7 +20,7 @@ Scene::~Scene()
 void Scene::AddGameObject(GameObject* gameObject)
 {
 	gameObject->SetSceneReferenece(this);
-	sceneObjects.push_back(gameObject);
+	sceneObjects.insert(gameObject);
 	if (gameObject->GetName().length() == 0)
 	{
 		std::string name = "GameObject_";
@@ -28,36 +31,26 @@ void Scene::AddGameObject(GameObject* gameObject)
 
 void Scene::RemoveGameObject(GameObject* gameObject)
 {
-	if (gameObject == nullptr)
+	auto iterator = sceneObjects.find(gameObject);
+	if (iterator != sceneObjects.end())
 	{
-		return;
-	}
-
-	for (int i = 0; i < sceneObjects.size(); i++)
-	{
-		if (sceneObjects[i] == gameObject)
-		{
-			delete sceneObjects[i];
-			// just in case set the nullptr to the place of the deleted game object
-			sceneObjects[i] = nullptr;
-			// finally, after the proper cleanup, erase the element from the vector
-			sceneObjects.erase(sceneObjects.begin() + i);
-		}
+		delete *iterator;
+		sceneObjects.erase(iterator);
 	}
 }
 
 void Scene::Update()
 {
-	for (int i = 0; i < sceneObjects.size(); i++)
+	for (auto it = sceneObjects.begin(); it != sceneObjects.end(); ++it)
 	{
-		if (sceneObjects[i] != nullptr)
+		if (*it != nullptr)
 		{
-			sceneObjects[i]->Update();
+			(*it)->Update();
 		}
 	}
 }
 
-const std::vector<GameObject*>& Scene::GetSceneObjects() const
+const std::set<GameObject*>& Scene::GetSceneObjects() const
 {
 	return sceneObjects;
 }

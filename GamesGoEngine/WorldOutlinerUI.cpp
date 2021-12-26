@@ -7,9 +7,11 @@ GameObject* WorldOutlinerUI::selectedSceneObject = nullptr;
 GameObject* WorldOutlinerUI::Draw(const Scene& activeScene)
 {
 	ImGui::Begin("World Outliner");
-	for (int i = 0; i < activeScene.GetSceneObjects().size(); i++)
+
+	const std::set<GameObject*>& sceneObjects = activeScene.GetSceneObjects();
+	for (auto it = sceneObjects.begin(); it != sceneObjects.end(); ++it)
 	{
-		GameObject* sceneObject = activeScene.GetSceneObjects()[i];
+		GameObject* sceneObject = *it;
 		if (sceneObject != nullptr)
 		{
 			if (sceneObject->GetAllParentsNumber() > 0)
