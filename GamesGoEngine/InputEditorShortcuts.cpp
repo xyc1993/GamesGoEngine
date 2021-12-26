@@ -2,7 +2,7 @@
 
 #include "InputManager.h"
 
-void InputEditorShortcuts::ProcessShortcuts(GLFWwindow* window, Scene* activeScene, int selectedGameObjectIndex)
+void InputEditorShortcuts::ProcessShortcuts(GLFWwindow* window, Scene* activeScene, GameObject* selectedGameObject)
 {
 	if (InputManager::GetMouseButtonPressed(GLFW_MOUSE_BUTTON_RIGHT))
 	{
@@ -16,7 +16,7 @@ void InputEditorShortcuts::ProcessShortcuts(GLFWwindow* window, Scene* activeSce
 
 	if (InputManager::GetKeyReleased(GLFW_KEY_DELETE))
 	{
-		activeScene->RemoveGameObject(selectedGameObjectIndex);
+		activeScene->RemoveGameObject(selectedGameObject);
 	}
 	
 	if (InputManager::GetKeyReleased(GLFW_KEY_ESCAPE))

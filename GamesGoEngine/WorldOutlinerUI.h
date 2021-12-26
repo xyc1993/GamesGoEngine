@@ -5,9 +5,11 @@
 class WorldOutlinerUI
 {
 public:
-	static int Draw(const Scene& activeScene);
+	static GameObject* Draw(const Scene& activeScene);
 
 private:
+	static void DrawSceneNodeChildren(GameObject* sceneObject);
+
 	static constexpr float IndentSpace = 8.0f;
-	static int selectedSceneObjectIndex;
+	static GameObject* selectedSceneObject;
 };

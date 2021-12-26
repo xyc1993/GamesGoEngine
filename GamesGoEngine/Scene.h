@@ -11,7 +11,7 @@ public:
 	~Scene();
 
 	void AddGameObject(GameObject* gameObject);
-	void RemoveGameObject(int gameObjectIndex);
+	void RemoveGameObject(GameObject* gameObject);
 	void Update();
 	const std::vector<GameObject*>& GetSceneObjects() const;
 

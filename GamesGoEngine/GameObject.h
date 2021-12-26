@@ -44,4 +44,6 @@ private:
 	// all of the children in the game object hierarchy (i.e. children of children as well)
 	std::set<GameObject*> allChildren;
 	int parentsNumber;
+
+	class Scene* scene;
 };

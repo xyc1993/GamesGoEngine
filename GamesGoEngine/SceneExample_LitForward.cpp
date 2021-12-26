@@ -115,7 +115,8 @@ SceneExample_LitForward::SceneExample_LitForward()
 	cubeLitMaterial->SetFloat((GLchar*)"material.shininess", 32.0f);
 	cubeLitMaterial->SetLightModel(LightModelType::LitForward);
 
-	GameObject* boxChild = nullptr;
+	GameObject* boxChild1 = nullptr;
+	GameObject* boxChild2 = nullptr;
 	for (int i = 0; i < LIT_BOXES_NUMBER; i++)
 	{
 		GameObject* litBoxesObject = new GameObject();
@@ -131,12 +132,14 @@ SceneExample_LitForward::SceneExample_LitForward()
 		litBoxesObject->SetName(name);
 
 		scene->AddGameObject(litBoxesObject);
-		if (i == 0) boxChild = litBoxesObject;
+		if (i == 0) boxChild1 = litBoxesObject;
+		if (i == 1) boxChild2 = litBoxesObject;
 	}
 
-	if (boxChild != nullptr && lampParent != nullptr)
+	if (boxChild1 != nullptr && lampParent != nullptr && boxChild2 != nullptr)
 	{
-		boxChild->SetParent(lampParent);
+		boxChild1->SetParent(lampParent);
+		boxChild2->SetParent(boxChild1);
 	}	
 
 	GameObject* nanoSuitObject = new GameObject();

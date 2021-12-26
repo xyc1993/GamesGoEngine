@@ -98,7 +98,7 @@ void MainLoop(GLFWwindow* window)
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 
-	int selectedSceneObjectIndex = -1;
+	GameObject* selectedSceneObject = nullptr;
 	
 	while (!glfwWindowShouldClose(window))
 	{
@@ -121,7 +121,7 @@ void MainLoop(GLFWwindow* window)
 		currentTime += deltaTime;
 		
 		glfwPollEvents();
-		InputEditorShortcuts::ProcessShortcuts(window, activeScene->GetSceneUnsafe(), selectedSceneObjectIndex);
+		InputEditorShortcuts::ProcessShortcuts(window, activeScene->GetSceneUnsafe(), selectedSceneObject);
 
 		glClearColor(0.1f, 0.15f, 0.15f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -142,7 +142,7 @@ void MainLoop(GLFWwindow* window)
 		ImGui::Checkbox("Wireframe only", &wireframeOnly);
 		ImGui::End();
 
-		selectedSceneObjectIndex = WorldOutlinerUI::Draw(activeScene->GetScene());
+		selectedSceneObject = WorldOutlinerUI::Draw(activeScene->GetScene());
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

@@ -16,6 +16,7 @@ Scene::~Scene()
 
 void Scene::AddGameObject(GameObject* gameObject)
 {
+	gameObject->SetSceneReferenece(this);
 	sceneObjects.push_back(gameObject);
 	if (gameObject->GetName().length() == 0)
 	{
@@ -25,15 +26,23 @@ void Scene::AddGameObject(GameObject* gameObject)
 	}
 }
 
-void Scene::RemoveGameObject(int gameObjectIndex)
+void Scene::RemoveGameObject(GameObject* gameObject)
 {
-	if (gameObjectIndex >= 0 && gameObjectIndex < sceneObjects.size())
+	if (gameObject == nullptr)
 	{
-		delete sceneObjects[gameObjectIndex];
-		// just in case set the nullptr to the place of the deleted game object
-		sceneObjects[gameObjectIndex] = nullptr;
-		// finally, after the proper cleanup, erase the element from the vector
-		sceneObjects.erase(sceneObjects.begin() + gameObjectIndex);
+		return;
+	}
+
+	for (int i = 0; i < sceneObjects.size(); i++)
+	{
+		if (sceneObjects[i] == gameObject)
+		{
+			delete sceneObjects[i];
+			// just in case set the nullptr to the place of the deleted game object
+			sceneObjects[i] = nullptr;
+			// finally, after the proper cleanup, erase the element from the vector
+			sceneObjects.erase(sceneObjects.begin() + i);
+		}
 	}
 }
 

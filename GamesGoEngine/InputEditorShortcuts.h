@@ -7,5 +7,5 @@
 class InputEditorShortcuts
 {
 public:
-	static void ProcessShortcuts(GLFWwindow* window, Scene* activeScene, int selectedGameObjectIndex);
+	static void ProcessShortcuts(GLFWwindow* window, Scene* activeScene, GameObject* selectedGameObject);
 };

@@ -1,5 +1,7 @@
 #include "GameObject.h"
 
+#include "Scene.h"
+
 GameObject::GameObject()
 {
 	components.clear();
@@ -78,11 +80,21 @@ void GameObject::SetParent(GameObject* parent)
 	}
 
 	CalculateParentsNumber(this->parent, parentsNumber);
+	for (auto it = allChildren.begin(); it != allChildren.end(); ++it)
+	{
+		GameObject* child = *it;
+		GameObject::CalculateParentsNumber(child->parent, child->parentsNumber);
+	}
 }
 
 int GameObject::GetAllParentsNumber() const
 {
 	return parentsNumber;
+}
+
+void GameObject::SetSceneReferenece(Scene* scene)
+{
+	this->scene = scene;
 }
 
 const std::vector<GameObject*>& GameObject::GetChildren() const
