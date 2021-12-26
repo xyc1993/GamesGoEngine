@@ -18,8 +18,8 @@ void PositionOscillator::Update()
 {
 	if (owner != nullptr)
 	{
-		const glm::vec3 pointLightPosition = startPosition + amplitude * sin(speed * currentTime);
-		owner->GetTransform()->SetPosition(pointLightPosition);
+		const glm::vec3 position = startPosition + amplitude * sin(speed * currentTime);
+		owner->GetTransform()->SetPosition(position);
 	}
 }
 

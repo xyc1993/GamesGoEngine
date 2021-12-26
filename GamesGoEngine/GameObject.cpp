@@ -11,6 +11,11 @@ GameObject::GameObject()
 
 GameObject::~GameObject()
 {
+	if (parent != nullptr)
+	{
+		parent->CleanChildren(this, allChildren);
+	}
+	
 	for (auto it = allChildren.begin(); it != allChildren.end(); ++it)
 	{
 		GameObject* child = *it;
@@ -23,12 +28,15 @@ GameObject::~GameObject()
 			delete child;
 		}
 	}
+	allChildren.clear();
+	children.clear();
 
 	for (Component* component : components)
 	{
 		delete component;
 	}
 	components.clear();
+	transform = nullptr;
 }
 
 void GameObject::Update()
@@ -160,5 +168,26 @@ void GameObject::CalculateParentsNumber(GameObject* parent, int& currentParentNu
 	{
 		currentParentNumber++;
 		CalculateParentsNumber(parent->GetParent(), currentParentNumber);
+	}
+}
+
+void GameObject::CleanChildren(GameObject* directChild, std::set<GameObject*> childsChildren)
+{
+	for (size_t i = 0; i < children.size(); i++)
+	{
+		if (children[i] == directChild)
+		{
+			children.erase(children.begin() + i);
+			break;
+		}
+	}
+
+	for (auto it = childsChildren.begin(); it != childsChildren.end(); ++it)
+	{
+		auto iterator = allChildren.find(*it);
+		if (iterator != allChildren.end())
+		{
+			allChildren.erase(iterator);
+		}
 	}
 }

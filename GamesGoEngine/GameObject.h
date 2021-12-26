@@ -33,6 +33,7 @@ private:
 	void RemoveParent();
 	void SetNewParent(GameObject* parent);
 	static void CalculateParentsNumber(GameObject* parent, int& currentParentNumber);
+	void CleanChildren(GameObject* directChild, std::set<GameObject*> childsChildren);
 
 	std::string name;
 	Transform* transform;

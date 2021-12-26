@@ -40,8 +40,12 @@ void Transform::SetPosition(glm::vec3 position)
 	// update children
 	for (int i = 0; i < owner->GetChildren().size(); i++)
 	{
-		const glm::vec3 currentPosition = owner->GetChildren()[i]->GetTransform()->GetPosition();
-		owner->GetChildren()[i]->GetTransform()->SetPosition(currentPosition + translation);
+		GameObject* child = owner->GetChildren()[i];
+		if (child != nullptr)
+		{
+			const glm::vec3 currentPosition = child->GetTransform()->GetPosition();
+			child->GetTransform()->SetPosition(currentPosition + translation);
+		}
 	}
 }
 
