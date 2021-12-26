@@ -11,6 +11,19 @@ GameObject::GameObject()
 
 GameObject::~GameObject()
 {
+	for (auto it = allChildren.begin(); it != allChildren.end(); ++it)
+	{
+		GameObject* child = *it;
+		if (scene != nullptr)
+		{
+			scene->RemoveGameObject(child);
+		}
+		else
+		{
+			delete child;
+		}
+	}
+
 	for (Component* component : components)
 	{
 		delete component;

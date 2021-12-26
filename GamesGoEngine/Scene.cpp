@@ -7,13 +7,6 @@ Scene::Scene()
 
 Scene::~Scene()
 {
-	for (auto it = sceneObjects.begin(); it != sceneObjects.end(); ++it)
-	{
-		if (*it != nullptr)
-		{
-			delete *it;
-		}
-	}
 	sceneObjects.clear();
 }
 
