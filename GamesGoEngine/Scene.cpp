@@ -7,6 +7,22 @@ Scene::Scene()
 
 Scene::~Scene()
 {
+	// delete only top most game objects in the scene since their destructor will delete their children as well
+	std::vector<GameObject*> markedForDeletion;
+	for (auto it = sceneObjects.begin(); it != sceneObjects.end(); ++it)
+	{
+		GameObject* go = *it;
+		if (go != nullptr && go->GetAllParentsNumber() == 0)
+		{
+			markedForDeletion.push_back(go);
+		}
+	}
+
+	for(int i = 0; i < markedForDeletion.size(); i++)
+	{
+		RemoveGameObject(markedForDeletion[i]);
+	}
+
 	sceneObjects.clear();
 }
 
