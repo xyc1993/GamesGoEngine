@@ -10,11 +10,14 @@
 class Rotator : public Component
 {
 public:
+	Rotator();
+	
 	virtual void Update() override;
 
+	// rotation speed expressed in degrees per second
 	void SetSpeed(glm::vec3 speed);
 
 private:
-	// rotation speed expressed in degrees per second
-	glm::vec3 speed;
+	glm::quat identityQuat;
+	glm::quat speed;
 };
