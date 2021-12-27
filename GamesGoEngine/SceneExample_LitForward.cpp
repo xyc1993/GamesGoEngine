@@ -10,6 +10,8 @@
 #include "MeshRenderer.h"
 #include "PointLight.h"
 #include "PositionOscillator.h"
+#include "Rotator.h"
+#include "ScaleOscillator.h"
 #include "Skybox.h"
 #include "SpotLight.h"
 
@@ -117,6 +119,7 @@ SceneExample_LitForward::SceneExample_LitForward()
 
 	GameObject* boxChild1 = nullptr;
 	GameObject* boxChild2 = nullptr;
+	GameObject* boxChild3 = nullptr;
 	for (int i = 0; i < LIT_BOXES_NUMBER; i++)
 	{
 		GameObject* litBoxesObject = new GameObject();
@@ -132,14 +135,32 @@ SceneExample_LitForward::SceneExample_LitForward()
 		litBoxesObject->SetName(name);
 
 		scene->AddGameObject(litBoxesObject);
-		if (i == 0) boxChild1 = litBoxesObject;
-		if (i == 1) boxChild2 = litBoxesObject;
+		if (i == 0)
+		{
+			Rotator* rotator = new Rotator();
+			rotator->SetSpeed(glm::vec3(0.0f, 60.0f, 0.0f));
+			litBoxesObject->AddComponent(rotator);
+			boxChild1 = litBoxesObject;
+		}
+		if (i == 1)
+		{
+			ScaleOscillator* scaleOscillator = new ScaleOscillator();
+			scaleOscillator->SetAmplitude(glm::vec3(0.5f));
+			scaleOscillator->SetSpeed(2.0f);
+			litBoxesObject->AddComponent(scaleOscillator);
+			boxChild2 = litBoxesObject;
+		}
+		if (i == 3)
+		{
+			boxChild3 = litBoxesObject;
+		}
 	}
 
-	if (boxChild1 != nullptr && lampParent != nullptr && boxChild2 != nullptr)
+	if (boxChild1 != nullptr && lampParent != nullptr && boxChild2 != nullptr && boxChild3 != nullptr)
 	{
 		boxChild1->SetParent(lampParent);
 		boxChild2->SetParent(boxChild1);
+		boxChild3->SetParent(boxChild2);
 	}	
 
 	GameObject* nanoSuitObject = new GameObject();

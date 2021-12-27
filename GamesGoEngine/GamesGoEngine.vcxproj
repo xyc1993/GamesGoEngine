@@ -172,6 +172,8 @@
     <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="PositionOscillator.cpp" />
+    <ClCompile Include="Rotator.cpp" />
+    <ClCompile Include="ScaleOscillator.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneExample.cpp" />
     <ClCompile Include="SceneExample_LitForward.cpp" />
@@ -212,6 +214,8 @@
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="PositionOscillator.h" />
+    <ClInclude Include="Rotator.h" />
+    <ClInclude Include="ScaleOscillator.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneExample.h" />
     <ClInclude Include="SceneExample_LitForward.h" />

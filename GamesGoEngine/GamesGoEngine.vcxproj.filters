@@ -189,6 +189,12 @@
     <ClCompile Include="PositionOscillator.cpp">
       <Filter>Source Files\Movement</Filter>
     </ClCompile>
+    <ClCompile Include="Rotator.cpp">
+      <Filter>Source Files\Movement</Filter>
+    </ClCompile>
+    <ClCompile Include="ScaleOscillator.cpp">
+      <Filter>Source Files\Movement</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -303,6 +309,12 @@
       <Filter>Header Files\UI</Filter>
     </ClInclude>
     <ClInclude Include="PositionOscillator.h">
+      <Filter>Header Files\Movement</Filter>
+    </ClInclude>
+    <ClInclude Include="Rotator.h">
+      <Filter>Header Files\Movement</Filter>
+    </ClInclude>
+    <ClInclude Include="ScaleOscillator.h">
       <Filter>Header Files\Movement</Filter>
     </ClInclude>
   </ItemGroup>

@@ -5,9 +5,9 @@
 #include "Component.h"
 
 /*
- * Test class used for testing position change
+ * Test class used for testing scale change
  */
-class PositionOscillator : public Component
+class ScaleOscillator : public Component
 {
 public:
 	virtual void Init(GameObject* owner) override;
@@ -17,7 +17,7 @@ public:
 	void SetSpeed(float speed);
 
 private:
-	glm::vec3 startPosition;
+	glm::vec3 startScale;
 	glm::vec3 amplitude;
 	float speed;
 };
