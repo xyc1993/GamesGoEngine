@@ -106,6 +106,21 @@ void GameObject::SetParent(GameObject* parent)
 		GameObject* child = *it;
 		GameObject::CalculateParentsNumber(child->parent, child->parentsNumber);
 	}
+
+	transform->UpdateTransformOnParenting();
+	UpdateDirectChildrenTransforms();
+}
+
+void GameObject::UpdateDirectChildrenTransforms()
+{
+	for (size_t i = 0; i < children.size(); i++)
+	{
+		if (children[i] != nullptr && children[i]->GetTransform() != nullptr)
+		{
+			children[i]->GetTransform()->UpdateTransformOnParenting();
+			children[i]->UpdateDirectChildrenTransforms();
+		}
+	}
 }
 
 int GameObject::GetAllParentsNumber() const

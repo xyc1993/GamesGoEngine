@@ -14,7 +14,7 @@ void Rotator::Update()
 	if (owner != nullptr && owner->GetTransform() != nullptr)
 	{
 		const glm::quat frameRotation = glm::mix(identityQuat, speed, deltaTime);
-		owner->GetTransform()->SetRotation(frameRotation * owner->GetTransform()->GetRotation());
+		owner->GetTransform()->SetLocalRotation(frameRotation * owner->GetTransform()->GetLocalRotation());
 	}
 }
 

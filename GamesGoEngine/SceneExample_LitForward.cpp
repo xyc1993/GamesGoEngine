@@ -138,7 +138,7 @@ SceneExample_LitForward::SceneExample_LitForward()
 		if (i == 0)
 		{
 			Rotator* rotator = new Rotator();
-			rotator->SetSpeed(glm::vec3(0.0f, 60.0f, 0.0f));
+			rotator->SetSpeed(glm::vec3(0.0f, 20.0f, 0.0f));
 			litBoxesObject->AddComponent(rotator);
 			boxChild1 = litBoxesObject;
 		}
@@ -152,6 +152,10 @@ SceneExample_LitForward::SceneExample_LitForward()
 		}
 		if (i == 3)
 		{
+			PositionOscillator* positionOscillator = new PositionOscillator();
+			positionOscillator->SetAmplitude(glm::vec3(1.0f, 0.0f, 0.0f));
+			positionOscillator->SetSpeed(0.4f + (float)i);
+			litBoxesObject->AddComponent(positionOscillator);
 			boxChild3 = litBoxesObject;
 		}
 	}
@@ -159,8 +163,8 @@ SceneExample_LitForward::SceneExample_LitForward()
 	if (boxChild1 != nullptr && lampParent != nullptr && boxChild2 != nullptr && boxChild3 != nullptr)
 	{
 		boxChild1->SetParent(lampParent);
-		boxChild2->SetParent(boxChild1);
-		boxChild3->SetParent(boxChild2);
+		//boxChild2->SetParent(boxChild1);
+		//boxChild3->SetParent(boxChild2);
 	}	
 
 	GameObject* nanoSuitObject = new GameObject();

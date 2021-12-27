@@ -22,6 +22,11 @@ public:
 
 	GameObject* GetParent() const;
 	void SetParent(GameObject* parent);
+
+private:
+	void UpdateDirectChildrenTransforms();
+
+public:
 	// returns number of all of the parents up the hierarchy
 	int GetAllParentsNumber() const;
 

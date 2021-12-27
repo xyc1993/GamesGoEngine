@@ -10,7 +10,7 @@ void PositionOscillator::Init(GameObject* owner)
 
 	if (owner != nullptr && owner->GetTransform() != nullptr)
 	{
-		startPosition = owner->GetTransform()->GetPosition();
+		startPosition = owner->GetTransform()->GetLocalPosition();
 	}	
 }
 
@@ -19,7 +19,7 @@ void PositionOscillator::Update()
 	if (owner != nullptr)
 	{
 		const glm::vec3 position = startPosition + amplitude * sin(speed * currentTime);
-		owner->GetTransform()->SetPosition(position);
+		owner->GetTransform()->SetLocalPosition(position);
 	}
 }
 

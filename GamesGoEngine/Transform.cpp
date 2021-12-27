@@ -5,8 +5,14 @@
 Transform::Transform()
 {
 	position = glm::vec3(0.0f);
+	localPosition = glm::vec3(0.0f);
+
 	rotation = glm::quat(glm::vec3(0.0f));
+	localRotation = glm::quat(glm::vec3(0.0f));
+
 	scale = glm::vec3(1.0f);
+	localScale = glm::vec3(1.0f);
+
 	UpdateModelMatrix();
 	UpdateTransformDirections();
 }
@@ -18,46 +24,24 @@ void Transform::Update()
 
 void Transform::SetPosition(glm::vec3 position)
 {
-	if (owner == nullptr)
-	{
-		return;
-	}
-
 	const glm::vec3 translation = position - this->position;
-
-	// update self
+	this->localPosition += translation;
 	this->position = position;
-	if (owner->GetParent() != nullptr)
-	{
-		this->localPosition = this->position - owner->GetParent()->GetTransform()->GetPosition();
-	}
-	else
-	{
-		this->localPosition = this->position;
-	}
 	UpdateModelMatrix();
-
-	// update children
-	for (int i = 0; i < owner->GetChildren().size(); i++)
-	{
-		GameObject* child = owner->GetChildren()[i];
-		if (child != nullptr)
-		{
-			const glm::vec3 currentPosition = child->GetTransform()->GetPosition();
-			child->GetTransform()->SetPosition(currentPosition + translation);
-		}
-	}
 }
 
 void Transform::SetLocalPosition(glm::vec3 localPosition)
 {
 	const glm::vec3 translation = localPosition - this->localPosition;
-	SetPosition(this->position + translation);
+	this->position += translation;
+	this->localPosition = localPosition;
+	UpdateModelMatrix();
 }
 
 void Transform::SetRotation(glm::quat rotation)
 {
 	this->rotation = rotation;
+	this->localRotation = rotation;
 	UpdateModelMatrix();
 	UpdateTransformDirections();
 }
@@ -69,14 +53,73 @@ void Transform::SetRotationEulerRadians(glm::vec3 eulerAngles)
 
 void Transform::SetRotationEulerDegrees(glm::vec3 eulerAngles)
 {
-	const glm::vec3 eulerAnglesRadians = glm::radians(eulerAngles);
-	SetRotationEulerRadians(eulerAnglesRadians);
+	SetRotationEulerRadians(glm::radians(eulerAngles));
+}
+
+void Transform::SetLocalRotation(glm::quat localRotation)
+{
+	this->localRotation = localRotation;
+	this->rotation = localRotation;
+	UpdateModelMatrix();
+	UpdateTransformDirections();
+}
+
+void Transform::SetLocalRotationEulerRadians(glm::vec3 eulerAngles)
+{
+	SetLocalRotation(glm::quat(eulerAngles));
+}
+
+void Transform::SetLocalRotationEulerDegrees(glm::vec3 eulerAngles)
+{
+	SetLocalRotationEulerRadians(glm::radians(eulerAngles));
 }
 
 void Transform::SetScale(glm::vec3 scale)
 {
+	this->localScale *= scale / this->scale;
 	this->scale = scale;
 	UpdateModelMatrix();
+}
+
+void Transform::SetLocalScale(glm::vec3 localScale)
+{
+	this->scale *= localScale / this->localScale;
+	this->localScale = localScale;
+	UpdateModelMatrix();
+}
+
+void Transform::UpdateTransformOnParenting()
+{
+	// update local scale
+	glm::vec3 cumulativeScale = glm::vec3(1.0f);
+	GetParentsCumulativeScale(owner, cumulativeScale);
+	localScale = scale / cumulativeScale;
+
+	// update local position
+	glm::vec3 cumulativePosition = glm::vec3(0.0f);
+	GetParentsCumulativePosition(owner, cumulativePosition);
+	localPosition = localScale * (position - cumulativePosition);
+
+	// TODO: update local rotation
+	
+}
+
+void Transform::GetParentsCumulativePosition(GameObject* transformOwner, glm::vec3& cumulativePosition)
+{
+	if (transformOwner != nullptr && transformOwner->GetParent() != nullptr)
+	{
+		cumulativePosition += transformOwner->GetParent()->GetTransform()->GetLocalPosition();
+		GetParentsCumulativePosition(transformOwner->GetParent(), cumulativePosition);
+	}
+}
+
+void Transform::GetParentsCumulativeScale(GameObject* transformOwner, glm::vec3& cumulativeScale)
+{
+	if (transformOwner != nullptr && transformOwner->GetParent() != nullptr)
+	{
+		cumulativeScale *= transformOwner->GetParent()->GetTransform()->GetLocalScale();
+		GetParentsCumulativeScale(transformOwner->GetParent(), cumulativeScale);
+	}
 }
 
 glm::vec3 Transform::GetPosition() const
@@ -101,14 +144,32 @@ glm::vec3 Transform::GetRotationEulerRadians() const
 
 glm::vec3 Transform::GetRotationEulerDegrees() const
 {
-	const glm::vec3 radians = GetRotationEulerRadians();
-	const glm::vec3 degrees = glm::degrees(radians);
-	return degrees;
+	return glm::degrees(GetRotationEulerRadians());
+}
+
+glm::quat Transform::GetLocalRotation() const
+{
+	return localRotation;
+}
+
+glm::vec3 Transform::GetLocalRotationEulerRadians() const
+{
+	return eulerAngles(GetLocalRotation());
+}
+
+glm::vec3 Transform::GetLocalRotationEulerDegrees() const
+{
+	return glm::degrees(GetLocalRotationEulerRadians());
 }
 
 glm::vec3 Transform::GetScale() const
 {
 	return scale;
+}
+
+glm::vec3 Transform::GetLocalScale() const
+{
+	return localScale;
 }
 
 glm::vec3 Transform::GetForward() const
@@ -140,9 +201,31 @@ void Transform::UpdateTransformDirections()
 
 void Transform::UpdateModelMatrix()
 {
-	const glm::mat4 translate = glm::translate(glm::mat4(1.0f), GetPosition());
-	const glm::mat4 rotate = glm::mat4_cast(GetRotation());
-	const glm::mat4 scale = glm::scale(glm::mat4(1.0f), GetScale());
+	const glm::mat4 translate = glm::translate(glm::mat4(1.0f), GetLocalPosition());
+	const glm::mat4 rotate = glm::mat4_cast(GetLocalRotation());
+	const glm::mat4 scale = glm::scale(glm::mat4(1.0f), GetLocalScale());	
 
 	model = translate * rotate * scale;
+
+	if (owner != nullptr && owner->GetParent() != nullptr)
+	{
+		model = owner->GetParent()->GetTransform()->GetModelMatrix() * model;
+	}
+
+	UpdateChildrenModelMatrix();
+}
+
+void Transform::UpdateChildrenModelMatrix()
+{
+	if (owner != nullptr)
+	{
+		auto children = owner->GetChildren();
+		for (size_t i = 0; i < children.size(); i++)
+		{
+			if (children[i] != nullptr)
+			{
+				children[i]->GetTransform()->UpdateModelMatrix();
+			}
+		}
+	}
 }
