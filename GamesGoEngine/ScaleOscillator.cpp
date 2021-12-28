@@ -10,7 +10,7 @@ void ScaleOscillator::Init(GameObject* owner)
 
 	if (owner != nullptr && owner->GetTransform() != nullptr)
 	{
-		startScale = owner->GetTransform()->GetScale();
+		startScale = owner->GetTransform()->GetLocalScale();
 	}
 }
 
@@ -19,7 +19,7 @@ void ScaleOscillator::Update()
 	if (owner != nullptr)
 	{
 		const glm::vec3 scale = startScale + amplitude * sin(speed * currentTime);
-		owner->GetTransform()->SetScale(scale);
+		owner->GetTransform()->SetLocalScale(scale);
 	}
 }
 
