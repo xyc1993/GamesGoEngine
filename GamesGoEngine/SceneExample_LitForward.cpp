@@ -137,25 +137,14 @@ SceneExample_LitForward::SceneExample_LitForward()
 		scene->AddGameObject(litBoxesObject);
 		if (i == 0)
 		{
-			Rotator* rotator = new Rotator();
-			rotator->SetSpeed(glm::vec3(0.0f, 20.0f, 0.0f));
-			litBoxesObject->AddComponent(rotator);
 			boxChild1 = litBoxesObject;
 		}
 		if (i == 1)
 		{
-			ScaleOscillator* scaleOscillator = new ScaleOscillator();
-			scaleOscillator->SetAmplitude(glm::vec3(0.5f));
-			scaleOscillator->SetSpeed(2.0f);
-			litBoxesObject->AddComponent(scaleOscillator);
 			boxChild2 = litBoxesObject;
 		}
 		if (i == 3)
 		{
-			PositionOscillator* positionOscillator = new PositionOscillator();
-			positionOscillator->SetAmplitude(glm::vec3(1.0f, 0.0f, 0.0f));
-			positionOscillator->SetSpeed(0.4f + (float)i);
-			litBoxesObject->AddComponent(positionOscillator);
 			boxChild3 = litBoxesObject;
 		}
 	}
@@ -163,8 +152,21 @@ SceneExample_LitForward::SceneExample_LitForward()
 	if (boxChild1 != nullptr && lampParent != nullptr && boxChild2 != nullptr && boxChild3 != nullptr)
 	{
 		boxChild1->SetParent(lampParent);
-		//boxChild2->SetParent(boxChild1);
-		//boxChild3->SetParent(boxChild2);
+		Rotator* rotator = new Rotator();
+		rotator->SetSpeed(glm::vec3(0.0f, 20.0f, 0.0f));
+		//litBoxesObject->AddComponent(rotator);
+
+		boxChild2->SetParent(boxChild1);
+		ScaleOscillator* scaleOscillator = new ScaleOscillator();
+		scaleOscillator->SetAmplitude(glm::vec3(0.5f));
+		scaleOscillator->SetSpeed(2.0f);
+		boxChild2->AddComponent(scaleOscillator);
+
+		boxChild3->SetParent(boxChild2);
+		PositionOscillator* positionOscillator = new PositionOscillator();
+		positionOscillator->SetAmplitude(glm::vec3(1.0f, 0.0f, 0.0f));
+		positionOscillator->SetSpeed(1.2f);
+		boxChild3->AddComponent(positionOscillator);
 	}	
 
 	GameObject* nanoSuitObject = new GameObject();
