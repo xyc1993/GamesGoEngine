@@ -40,8 +40,9 @@ void Transform::SetLocalPosition(glm::vec3 localPosition)
 
 void Transform::SetRotation(glm::quat rotation)
 {
+	const glm::quat rotationDifference = rotation * inverse(this->rotation);
+	this->localRotation = (rotationDifference * this->localRotation);
 	this->rotation = rotation;
-	this->localRotation = rotation;
 	UpdateModelMatrix();
 	UpdateTransformDirections();
 }
@@ -58,8 +59,9 @@ void Transform::SetRotationEulerDegrees(glm::vec3 eulerAngles)
 
 void Transform::SetLocalRotation(glm::quat localRotation)
 {
-	this->localRotation = localRotation;
-	this->rotation = localRotation;
+	const glm::quat rotationDifference = localRotation * inverse(this->localRotation);
+	this->rotation = (rotationDifference * this->rotation);
+	this->localRotation = localRotation;	
 	UpdateModelMatrix();
 	UpdateTransformDirections();
 }
@@ -99,8 +101,9 @@ void Transform::UpdateTransformOnParenting()
 	const glm::vec3 parentPosition = (owner != nullptr && owner->GetParent() != nullptr) ? owner->GetParent()->GetTransform()->position : glm::vec3(0.0f);
 	localPosition = localScale * (position - parentPosition);
 
-	// TODO: update local rotation
-	
+	// update local rotation
+	const glm::quat parentRotation = (owner != nullptr && owner->GetParent() != nullptr) ? owner->GetParent()->GetTransform()->rotation : glm::quat(glm::vec3(0.0f));
+	localRotation = rotation * inverse(parentRotation);
 }
 
 void Transform::GetParentsCumulativeScale(GameObject* transformOwner, glm::vec3& cumulativeScale)
