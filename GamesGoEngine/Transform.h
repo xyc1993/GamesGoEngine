@@ -26,7 +26,6 @@ public:
 	void UpdateTransformOnParenting();
 
 private:
-	static void GetParentsCumulativePosition(GameObject* transformOwner, glm::vec3& cumulativePosition);
 	static void GetParentsCumulativeScale(GameObject* transformOwner, glm::vec3& cumulativeScale);
 
 public:

@@ -25,7 +25,7 @@ void Transform::Update()
 void Transform::SetPosition(glm::vec3 position)
 {
 	const glm::vec3 translation = position - this->position;
-	this->localPosition += translation;
+	this->localPosition += (localScale * translation);
 	this->position = position;
 	UpdateModelMatrix();
 }
@@ -33,7 +33,7 @@ void Transform::SetPosition(glm::vec3 position)
 void Transform::SetLocalPosition(glm::vec3 localPosition)
 {
 	const glm::vec3 translation = localPosition - this->localPosition;
-	this->position += translation;
+	this->position += (translation / localScale);
 	this->localPosition = localPosition;
 	UpdateModelMatrix();
 }
@@ -96,21 +96,11 @@ void Transform::UpdateTransformOnParenting()
 	localScale = scale / cumulativeScale;
 
 	// update local position
-	glm::vec3 cumulativePosition = glm::vec3(0.0f);
-	GetParentsCumulativePosition(owner, cumulativePosition);
-	localPosition = localScale * (position - cumulativePosition);
+	const glm::vec3 parentPosition = (owner != nullptr && owner->GetParent() != nullptr) ? owner->GetParent()->GetTransform()->position : glm::vec3(0.0f);
+	localPosition = localScale * (position - parentPosition);
 
 	// TODO: update local rotation
 	
-}
-
-void Transform::GetParentsCumulativePosition(GameObject* transformOwner, glm::vec3& cumulativePosition)
-{
-	if (transformOwner != nullptr && transformOwner->GetParent() != nullptr)
-	{
-		cumulativePosition += transformOwner->GetParent()->GetTransform()->GetLocalPosition();
-		GetParentsCumulativePosition(transformOwner->GetParent(), cumulativePosition);
-	}
 }
 
 void Transform::GetParentsCumulativeScale(GameObject* transformOwner, glm::vec3& cumulativeScale)
