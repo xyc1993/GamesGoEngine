@@ -154,7 +154,7 @@ SceneExample_LitForward::SceneExample_LitForward()
 		boxChild1->SetParent(lampParent);
 		Rotator* rotator = new Rotator();
 		rotator->SetSpeed(glm::vec3(0.0f, 20.0f, 0.0f));
-		//litBoxesObject->AddComponent(rotator);
+		boxChild1->AddComponent(rotator);
 
 		boxChild2->SetParent(boxChild1);
 		ScaleOscillator* scaleOscillator = new ScaleOscillator();
@@ -164,8 +164,8 @@ SceneExample_LitForward::SceneExample_LitForward()
 
 		boxChild3->SetParent(boxChild2);
 		PositionOscillator* positionOscillator = new PositionOscillator();
-		positionOscillator->SetAmplitude(glm::vec3(1.0f, 0.0f, 0.0f));
-		positionOscillator->SetSpeed(1.2f);
+		positionOscillator->SetAmplitude(glm::vec3(4.0f, 0.0f, 0.0f));
+		positionOscillator->SetSpeed(3.2f);
 		boxChild3->AddComponent(positionOscillator);
 	}	
 
