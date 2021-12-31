@@ -71,6 +71,10 @@ std::string GameObject::GetName() const
 
 void GameObject::SetName(std::string name)
 {
+	if (name.size() > NAME_MAX_LENGTH)
+	{
+		name.resize(NAME_MAX_LENGTH - 1);
+	}
 	this->name = name;
 }
 

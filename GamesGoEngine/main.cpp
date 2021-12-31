@@ -15,6 +15,7 @@
 
 #include "InputEditorShortcuts.h"
 #include "InputManager.h"
+#include "PropertiesUI.h"
 
 #include "SceneExample_LitForward.h"
 #include "WorldOutlinerUI.h"
@@ -121,7 +122,7 @@ void MainLoop(GLFWwindow* window)
 		currentTime += deltaTime;
 		
 		glfwPollEvents();
-		InputEditorShortcuts::ProcessShortcuts(window, activeScene->GetSceneUnsafe(), selectedSceneObject);
+		InputEditorShortcuts::ProcessShortcuts(window);
 
 		glClearColor(0.1f, 0.15f, 0.15f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -142,7 +143,8 @@ void MainLoop(GLFWwindow* window)
 		ImGui::Checkbox("Wireframe only", &wireframeOnly);
 		ImGui::End();
 
-		selectedSceneObject = WorldOutlinerUI::Draw(activeScene->GetScene());
+		selectedSceneObject = WorldOutlinerUI::Draw(activeScene->GetSceneUnsafe());
+		PropertiesUI::Draw(selectedSceneObject);
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

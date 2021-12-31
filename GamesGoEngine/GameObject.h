@@ -52,4 +52,7 @@ private:
 	int parentsNumber;
 
 	class Scene* scene;
+
+public:
+	static constexpr int NAME_MAX_LENGTH = 256;
 };

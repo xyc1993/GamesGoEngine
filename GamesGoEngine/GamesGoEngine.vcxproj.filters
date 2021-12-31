@@ -195,6 +195,9 @@
     <ClCompile Include="ScaleOscillator.cpp">
       <Filter>Source Files\Movement</Filter>
     </ClCompile>
+    <ClCompile Include="PropertiesUI.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -316,6 +319,9 @@
     </ClInclude>
     <ClInclude Include="ScaleOscillator.h">
       <Filter>Header Files\Movement</Filter>
+    </ClInclude>
+    <ClInclude Include="PropertiesUI.h">
+      <Filter>Header Files\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

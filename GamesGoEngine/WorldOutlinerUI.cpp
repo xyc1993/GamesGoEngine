@@ -1,14 +1,15 @@
 #include "WorldOutlinerUI.h"
 
 #include "imgui.h"
+#include "InputManager.h"
 
 GameObject* WorldOutlinerUI::selectedSceneObject = nullptr;
 
-GameObject* WorldOutlinerUI::Draw(const Scene& activeScene)
+GameObject* WorldOutlinerUI::Draw(Scene* activeScene)
 {
 	ImGui::Begin("World Outliner");
 
-	const std::set<GameObject*>& sceneObjects = activeScene.GetSceneObjects();
+	const std::set<GameObject*>& sceneObjects = activeScene->GetSceneObjects();
 	for (auto it = sceneObjects.begin(); it != sceneObjects.end(); ++it)
 	{
 		GameObject* sceneObject = *it;
@@ -37,8 +38,18 @@ GameObject* WorldOutlinerUI::Draw(const Scene& activeScene)
 			ImGui::Text("DELETED");
 		}
 	}
-	ImGui::End();
+	
+	if (ImGui::IsWindowFocused())
+	{
+		if (InputManager::GetKeyReleased(GLFW_KEY_DELETE))
+		{
+			activeScene->RemoveGameObject(selectedSceneObject);
+			selectedSceneObject = nullptr;
+		}
+	}
 
+	ImGui::End();
+	
 	return selectedSceneObject;
 }
 
