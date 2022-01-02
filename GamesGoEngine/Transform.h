@@ -19,9 +19,9 @@ public:
 	void SetLocalRotation(glm::quat localRotation);
 	void SetLocalRotationEulerRadians(glm::vec3 eulerAngles);
 	void SetLocalRotationEulerDegrees(glm::vec3 eulerAngles);
-
 	void SetScale(glm::vec3 scale);
 	void SetLocalScale(glm::vec3 localScale);
+	void SetHintLocalRotation(glm::vec3 hintLocalRotation);
 
 	void UpdateTransformOnParenting();
 
@@ -39,6 +39,7 @@ public:
 	glm::vec3 GetLocalRotationEulerDegrees() const;
 	glm::vec3 GetScale() const;
 	glm::vec3 GetLocalScale() const;
+	glm::vec3 GetHintLocalRotation() const;
 	glm::vec3 GetForward() const;
 	glm::vec3 GetRight() const;
 	glm::vec3 GetUp() const;
@@ -59,4 +60,7 @@ private:
 	glm::vec3 right;
 	glm::vec3 up;
 	glm::mat4 transformMatrix;
+
+	// value in euler angles degrees, should only be used in properties panel UI!
+	glm::vec3 hintLocalRotation;
 };

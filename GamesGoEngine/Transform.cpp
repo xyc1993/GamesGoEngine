@@ -9,6 +9,7 @@ Transform::Transform()
 
 	rotation = glm::quat(glm::vec3(0.0f));
 	localRotation = glm::quat(glm::vec3(0.0f));
+	hintLocalRotation = glm::vec3(0.0f);
 
 	scale = glm::vec3(1.0f);
 	localScale = glm::vec3(1.0f);
@@ -43,6 +44,7 @@ void Transform::SetRotation(glm::quat rotation)
 	const glm::quat rotationDifference = rotation * inverse(this->rotation);
 	this->localRotation = (rotationDifference * this->localRotation);
 	this->rotation = rotation;
+	this->hintLocalRotation = GetLocalRotationEulerDegrees();
 	UpdateTransformMatrix();
 	UpdateTransformDirections();
 }
@@ -61,7 +63,8 @@ void Transform::SetLocalRotation(glm::quat localRotation)
 {
 	const glm::quat rotationDifference = localRotation * inverse(this->localRotation);
 	this->rotation = (rotationDifference * this->rotation);
-	this->localRotation = localRotation;	
+	this->localRotation = localRotation;
+	this->hintLocalRotation = GetLocalRotationEulerDegrees();
 	UpdateTransformMatrix();
 	UpdateTransformDirections();
 }
@@ -88,6 +91,16 @@ void Transform::SetLocalScale(glm::vec3 localScale)
 	this->scale *= localScale / this->localScale;
 	this->localScale = localScale;
 	UpdateTransformMatrix();
+}
+
+void Transform::SetHintLocalRotation(glm::vec3 hintLocalRotation)
+{
+	const glm::quat rotationDifference = glm::quat(hintLocalRotation - this->hintLocalRotation);
+	this->hintLocalRotation = hintLocalRotation;	
+	this->rotation = rotationDifference * this->rotation;
+	this->localRotation = rotationDifference * this->localRotation;	
+	UpdateTransformMatrix();
+	UpdateTransformDirections();
 }
 
 void Transform::UpdateTransformOnParenting()
@@ -163,6 +176,11 @@ glm::vec3 Transform::GetScale() const
 glm::vec3 Transform::GetLocalScale() const
 {
 	return localScale;
+}
+
+glm::vec3 Transform::GetHintLocalRotation() const
+{
+	return hintLocalRotation;
 }
 
 glm::vec3 Transform::GetForward() const

@@ -39,13 +39,11 @@ void PropertiesUI::DrawTransformField(GameObject* selectedGameObject)
 	{
 		transform->SetLocalPosition(localPosition);
 	}
-
-	const glm::vec3 oldLocalRotation = transform->GetLocalRotationEulerDegrees();
-	glm::vec3 localRotation = oldLocalRotation;
+	
+	glm::vec3 localRotation = transform->GetHintLocalRotation();
 	if (ImGui::DragFloat3("Rotation", glm::value_ptr(localRotation), 0.1f))
 	{
-		const glm::quat rotationDifference = glm::quat(localRotation - oldLocalRotation);
-		transform->SetLocalRotation(rotationDifference * transform->GetLocalRotation());
+		transform->SetHintLocalRotation(localRotation);
 	}
 
 	glm::vec3 localScale = transform->GetLocalScale();
