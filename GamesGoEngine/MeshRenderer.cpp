@@ -40,7 +40,7 @@ void MeshRenderer::Update()
 		{
 			if (materialList[i] != nullptr)
 			{
-				materialList[i]->Draw(owner->GetTransform()->GetModelMatrix(), view_global, projection_global);
+				materialList[i]->Draw(owner->GetTransform()->GetTransformMatrix(), view_global, projection_global);
 				mesh->DrawSubMesh(i);
 			}
 		}

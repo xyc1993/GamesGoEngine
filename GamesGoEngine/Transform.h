@@ -42,12 +42,12 @@ public:
 	glm::vec3 GetForward() const;
 	glm::vec3 GetRight() const;
 	glm::vec3 GetUp() const;
-	glm::mat4 GetModelMatrix() const;
+	glm::mat4 GetTransformMatrix() const;
 
 private:
 	void UpdateTransformDirections();
-	void UpdateModelMatrix();
-	void UpdateChildrenModelMatrix();
+	void UpdateTransformMatrix();
+	void UpdateChildrenTransformMatrix();
 
 	glm::vec3 position;
 	glm::vec3 localPosition;
@@ -58,5 +58,5 @@ private:
 	glm::vec3 forward;
 	glm::vec3 right;
 	glm::vec3 up;
-	glm::mat4 model;
+	glm::mat4 transformMatrix;
 };
