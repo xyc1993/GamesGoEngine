@@ -9,4 +9,5 @@ public:
 
 private:
 	static void DrawNameInputField(GameObject* selectedGameObject);
+	static void DrawTransformField(GameObject* selectedGameObject);
 };
