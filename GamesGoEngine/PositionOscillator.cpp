@@ -1,8 +1,7 @@
 #include "PositionOscillator.h"
 
 #include "GameObject.h"
-
-extern float currentTime;
+#include "Time.h"
 
 void PositionOscillator::Init(GameObject* owner)
 {
@@ -18,7 +17,7 @@ void PositionOscillator::Update()
 {
 	if (owner != nullptr)
 	{
-		const glm::vec3 position = startPosition + amplitude * sin(speed * currentTime);
+		const glm::vec3 position = startPosition + amplitude * sin(speed * (float)Time::GetTime());
 		owner->GetTransform()->SetLocalPosition(position);
 	}
 }

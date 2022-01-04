@@ -1,11 +1,8 @@
 #include "EditorMovement.h"
 
-#include <iostream>
-
 #include "GameObject.h"
 #include "InputManager.h"
-
-extern GLfloat deltaTime;
+#include "Time.h"
 
 EditorMovement::EditorMovement()
 {
@@ -44,12 +41,13 @@ void EditorMovement::Update()
 {
 	if (owner != nullptr)
 	{
-		UpdatePosition();
-		UpdateRotation();		
+		const float deltaTime = (float)Time::GetUnscaledDeltaTime();
+		UpdateRotation(deltaTime);		
+		UpdatePosition(deltaTime);
 	}
 }
 
-void EditorMovement::UpdatePosition() const
+void EditorMovement::UpdatePosition(const float deltaTime) const
 {
 	if (InputManager::GetCursorEnabled())
 	{
@@ -93,7 +91,7 @@ void EditorMovement::UpdatePosition() const
 	}
 }
 
-void EditorMovement::UpdateRotation()
+void EditorMovement::UpdateRotation(const float deltaTime)
 {
 	const GLfloat pitch = InputManager::GetMouseYInput() * rotationSpeed * deltaTime;
 	const GLfloat yaw = InputManager::GetMouseXInput() * rotationSpeed * deltaTime;

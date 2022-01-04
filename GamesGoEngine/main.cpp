@@ -18,14 +18,11 @@
 #include "PropertiesUI.h"
 
 #include "SceneExample_LitForward.h"
+#include "Time.h"
 #include "WorldOutlinerUI.h"
 
 const GLint WIDTH = 1200, HEIGHT = 675;
 int SCREEN_WIDTH, SCREEN_HEIGHT;
-
-GLfloat currentTime = 0.0f;
-GLfloat deltaTime = 0.0f;
-GLfloat lastFrame = 0.0f;
 
 // not a good way to handle this (especially without encapsulation), but 'projection' and 'view' should be accessible to all renderers so for now it's fine
 glm::mat4 view_global;
@@ -85,9 +82,6 @@ void MainLoop(GLFWwindow* window)
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 330");
 
-	GLfloat timeMultiplier = 1.0f;
-	currentTime = 0.0f;
-
 	bool wireframeOnly = false;
 	bool lastWireframeOnly = false;
 	
@@ -116,10 +110,7 @@ void MainLoop(GLFWwindow* window)
 			}
 		}
 
-		GLfloat currentFrame = glfwGetTime();
-		deltaTime = timeMultiplier * (currentFrame - lastFrame);
-		lastFrame = currentFrame;
-		currentTime += deltaTime;
+		Time::Update();
 		
 		glfwPollEvents();
 		InputEditorShortcuts::ProcessShortcuts(window);
@@ -133,13 +124,17 @@ void MainLoop(GLFWwindow* window)
 
 		activeScene->Update();
 
-		GLfloat fps = 1.0f / deltaTime;
+		GLfloat fps = 1.0f / Time::GetUnscaledDeltaTime();
 		std::string fpsText = "FPS = ";
 		fpsText.append(std::to_string(fps));
 
 		ImGui::Begin("Basic ImGUI window");
 		ImGui::Text(fpsText.c_str());
-		ImGui::SliderFloat("Time Scale", &timeMultiplier, 0.0f, 5.0f);
+		float timeScale = Time::GetTimeScale();
+		if (ImGui::SliderFloat("Time Scale", &timeScale, 0.0f, 5.0f))
+		{
+			Time::SetTimeScale(timeScale);
+		}
 		ImGui::Checkbox("Wireframe only", &wireframeOnly);
 		ImGui::End();
 

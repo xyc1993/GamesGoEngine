@@ -1,8 +1,7 @@
 #include "ScaleOscillator.h"
 
 #include "GameObject.h"
-
-extern float currentTime;
+#include "Time.h"
 
 void ScaleOscillator::Init(GameObject* owner)
 {
@@ -18,7 +17,7 @@ void ScaleOscillator::Update()
 {
 	if (owner != nullptr)
 	{
-		const glm::vec3 scale = startScale + amplitude * sin(speed * currentTime);
+		const glm::vec3 scale = startScale + amplitude * sin(speed * (float)Time::GetTime());
 		owner->GetTransform()->SetLocalScale(scale);
 	}
 }

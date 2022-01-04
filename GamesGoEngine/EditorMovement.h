@@ -13,8 +13,8 @@ public:
 	virtual void Update() override;
 
 private:
-	void UpdatePosition() const;
-	void UpdateRotation();
+	void UpdatePosition(const float deltaTime) const;
+	void UpdateRotation(const float deltaTime);
 
 	float movementSpeed;
 	float rotationSpeed;

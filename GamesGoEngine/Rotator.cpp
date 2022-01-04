@@ -1,8 +1,7 @@
 #include "Rotator.h"
 
 #include "GameObject.h"
-
-extern float deltaTime;
+#include "Time.h"
 
 Rotator::Rotator()
 {
@@ -13,7 +12,7 @@ void Rotator::Update()
 {
 	if (owner != nullptr && owner->GetTransform() != nullptr)
 	{
-		const glm::quat frameRotation = glm::mix(identityQuat, speed, deltaTime);
+		const glm::quat frameRotation = glm::mix(identityQuat, speed, (float)Time::GetDeltaTime());
 		owner->GetTransform()->SetLocalRotation(frameRotation * owner->GetTransform()->GetLocalRotation());
 	}
 }
