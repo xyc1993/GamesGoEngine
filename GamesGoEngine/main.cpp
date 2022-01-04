@@ -25,6 +25,7 @@ const GLint WIDTH = 1200, HEIGHT = 675;
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 // not a good way to handle this (especially without encapsulation), but 'projection' and 'view' should be accessible to all renderers so for now it's fine
+// TODO: move to the camera class with some way to determine active camera
 glm::mat4 view_global;
 glm::mat4 projection_global;
 
@@ -83,7 +84,6 @@ void MainLoop(GLFWwindow* window)
 	ImGui_ImplOpenGL3_Init("#version 330");
 
 	bool wireframeOnly = false;
-	bool lastWireframeOnly = false;
 	
 	SceneExample_LitForward* activeScene = new SceneExample_LitForward();
 	
@@ -97,19 +97,6 @@ void MainLoop(GLFWwindow* window)
 	
 	while (!glfwWindowShouldClose(window))
 	{
-		if (wireframeOnly != lastWireframeOnly)
-		{
-			lastWireframeOnly = wireframeOnly;
-			if (wireframeOnly)
-			{
-				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-			}
-			else
-			{
-				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			}
-		}
-
 		Time::Update();
 		
 		glfwPollEvents();
@@ -135,7 +122,10 @@ void MainLoop(GLFWwindow* window)
 		{
 			Time::SetTimeScale(timeScale);
 		}
-		ImGui::Checkbox("Wireframe only", &wireframeOnly);
+		if (ImGui::Checkbox("Wireframe only", &wireframeOnly))
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, wireframeOnly ? GL_LINE : GL_FILL);
+		}
 		ImGui::End();
 
 		selectedSceneObject = WorldOutlinerUI::Draw(activeScene->GetSceneUnsafe());
