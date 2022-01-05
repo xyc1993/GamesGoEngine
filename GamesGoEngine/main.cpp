@@ -9,10 +9,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
+#include "CamerasManager.h"
 #include "InputEditorShortcuts.h"
 #include "InputManager.h"
 #include "PropertiesUI.h"
@@ -23,10 +20,6 @@
 
 const GLint WIDTH = 1200, HEIGHT = 675;
 int SCREEN_WIDTH, SCREEN_HEIGHT;
-
-// not a good way to handle this (especially without encapsulation), but 'projection' and 'view' should be accessible to all renderers so for now it's fine
-// TODO: move to the camera class with some way to determine active camera
-glm::mat4 projection_global;
 
 GLFWwindow* InitWindow()
 {
@@ -86,9 +79,6 @@ void MainLoop(GLFWwindow* window)
 	
 	SceneExample_LitForward* activeScene = new SceneExample_LitForward();
 	
-	projection_global = glm::mat4(1.0f);
-	projection_global = glm::perspective(45.0f, (GLfloat)SCREEN_WIDTH / (GLfloat)SCREEN_HEIGHT, 0.1f, 1000.0f);
-
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 
@@ -97,6 +87,8 @@ void MainLoop(GLFWwindow* window)
 	while (!glfwWindowShouldClose(window))
 	{
 		Time::Update();
+
+		CamerasManager::SetCurrentViewAspectRatio((float)SCREEN_WIDTH / (float)SCREEN_HEIGHT);
 		
 		glfwPollEvents();
 		InputEditorShortcuts::ProcessShortcuts(window);

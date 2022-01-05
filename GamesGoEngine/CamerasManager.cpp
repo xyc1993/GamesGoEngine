@@ -1,8 +1,10 @@
 #include "CamerasManager.h"
 
 #include <algorithm>
+#include <glm/ext/matrix_clip_space.hpp>
 
 std::vector<Camera*> CamerasManager::sceneCameras;
+float CamerasManager::currentViewAspectRatio = 16.0f / 9.0f;
 
 glm::mat4 CamerasManager::GetActiveCameraViewMatrix()
 {
@@ -14,6 +16,19 @@ glm::mat4 CamerasManager::GetActiveCameraViewMatrix()
 	{
 		// always return view matrix of camera with highest priority
 		return sceneCameras[0]->GetCurrentViewMatrix();
+	}
+}
+
+glm::mat4 CamerasManager::GetActiveCameraProjectionMatrix()
+{
+	if (sceneCameras.empty())
+	{
+		return glm::perspective(45.0f, currentViewAspectRatio, 0.1f, 1000.0f);
+	}
+	else
+	{
+		// always return projection matrix of camera with highest priority
+		return sceneCameras[0]->GetCurrentProjectionMatrix();
 	}
 }
 
@@ -40,6 +55,16 @@ void CamerasManager::RemoveSceneCamera(Camera* camera)
 			break;
 		}
 	}
+}
+
+void CamerasManager::SetCurrentViewAspectRatio(float aspectRatio)
+{
+	currentViewAspectRatio = aspectRatio;
+}
+
+float CamerasManager::GetCurrentViewAspectRatio()
+{
+	return currentViewAspectRatio;
 }
 
 bool CamerasManager::CompareCameras(Camera* cam1, Camera* cam2)
