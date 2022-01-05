@@ -154,6 +154,7 @@
     <ClCompile Include="..\External Libraries\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\External Libraries\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CamerasManager.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="MeshPrimitiveBase.cpp" />
     <ClCompile Include="MeshPrimitiveCube.cpp" />
@@ -198,6 +199,7 @@
     <ClInclude Include="..\External Libraries\imgui\imstb_textedit.h" />
     <ClInclude Include="..\External Libraries\imgui\imstb_truetype.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CamerasManager.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="MeshPrimitiveBase.h" />
     <ClInclude Include="MeshPrimitiveCube.h" />

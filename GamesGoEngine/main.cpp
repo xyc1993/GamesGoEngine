@@ -26,7 +26,6 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 // not a good way to handle this (especially without encapsulation), but 'projection' and 'view' should be accessible to all renderers so for now it's fine
 // TODO: move to the camera class with some way to determine active camera
-glm::mat4 view_global;
 glm::mat4 projection_global;
 
 GLFWwindow* InitWindow()

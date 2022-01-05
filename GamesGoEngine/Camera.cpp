@@ -2,13 +2,44 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "CamerasManager.h"
 #include "GameObject.h"
 
-extern glm::mat4 view_global;
+Camera::Camera()
+{
+	currentViewMatrix = glm::mat4(1.0f);
+	priority = 0;
+}
+
+Camera::~Camera()
+{
+	CamerasManager::RemoveSceneCamera(this);
+}
+
+void Camera::Init(GameObject* owner)
+{
+	Component::Init(owner);
+	CamerasManager::AddSceneCamera(this);
+}
 
 void Camera::Update()
 {
-	view_global = GetViewMatrix();
+	currentViewMatrix = GetViewMatrix();
+}
+
+void Camera::SetCameraPriority(int priority)
+{
+	this->priority = priority;
+}
+
+glm::mat4 Camera::GetCurrentViewMatrix() const
+{
+	return currentViewMatrix;
+}
+
+int Camera::GetCameraPriority() const
+{
+	return priority;
 }
 
 glm::mat4 Camera::GetViewMatrix() const

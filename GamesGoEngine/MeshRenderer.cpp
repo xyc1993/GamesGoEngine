@@ -2,10 +2,10 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+#include "CamerasManager.h"
 #include "GameObject.h"
 
 // not a good way to handle this (especially without encapsulation), but 'projection' and 'view' should be accessible to all renderers so for now it's fine
-extern glm::mat4 view_global;
 extern glm::mat4 projection_global;
 
 MeshRenderer::MeshRenderer()
@@ -40,7 +40,7 @@ void MeshRenderer::Update()
 		{
 			if (materialList[i] != nullptr)
 			{
-				materialList[i]->Draw(owner->GetTransform()->GetTransformMatrix(), view_global, projection_global);
+				materialList[i]->Draw(owner->GetTransform()->GetTransformMatrix(), CamerasManager::GetActiveCameraViewMatrix(), projection_global);
 				mesh->DrawSubMesh(i);
 			}
 		}

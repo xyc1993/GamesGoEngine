@@ -1,5 +1,7 @@
 #include "Scene.h"
 
+#include "CamerasManager.h"
+
 Scene::Scene()
 {
 	sceneObjects.clear();
@@ -24,6 +26,7 @@ Scene::~Scene()
 	}
 
 	sceneObjects.clear();
+	CamerasManager::RemoveSceneCameras();
 }
 
 void Scene::AddGameObject(GameObject* gameObject)

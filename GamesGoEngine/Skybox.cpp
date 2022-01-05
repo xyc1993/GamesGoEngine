@@ -1,9 +1,9 @@
 #include "Skybox.h"
 
+#include "CamerasManager.h"
 #include "MeshPrimitiveCube.h"
 
 // not a good way to handle this (especially without encapsulation), but 'projection' and 'view' should be accessible to all renderers so for now it's fine
-extern glm::mat4 view_global;
 extern glm::mat4 projection_global;
 
 Skybox::Skybox()
@@ -28,7 +28,7 @@ void Skybox::Update()
 		glCullFace(GL_FRONT);
 
 		// for now let's assume there's only 1 mesh (cube) & 1 material slot (cube mesh material), it's enough for this implementation of the skybox
-		material->Draw(glm::mat4(1.0f), glm::mat4(glm::mat3(view_global)), projection_global);
+		material->Draw(glm::mat4(1.0f), glm::mat4(glm::mat3(CamerasManager::GetActiveCameraViewMatrix())), projection_global);
 		mesh->DrawSubMesh();
 
 		glDepthFunc(GL_LESS);
