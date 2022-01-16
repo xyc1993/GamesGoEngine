@@ -25,9 +25,6 @@
     <Filter Include="Header Files\GamesGo\Camera">
       <UniqueIdentifier>{ee289c51-d51d-45dd-91a0-188e67442243}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\GamesGo\Input">
-      <UniqueIdentifier>{5d2a0bd8-3874-40c6-bafe-db8cca90d746}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\GamesGo\Light">
       <UniqueIdentifier>{cd0209e2-f147-41cd-a7a0-fb19e61c4d78}</UniqueIdentifier>
     </Filter>
@@ -42,12 +39,6 @@
     </Filter>
     <Filter Include="Header Files\GamesGo\Scene Management">
       <UniqueIdentifier>{426ec24e-4b24-4f95-b7e2-5f6cd1181028}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\GamesGo\Scene Management\Examples">
-      <UniqueIdentifier>{50dd6bd6-5f6e-43b9-a885-9f42b922b078}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\GamesGo\UI">
-      <UniqueIdentifier>{18dd0aa9-36ff-4167-9780-9713ee244597}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\GamesGo">
       <UniqueIdentifier>{477c0546-e860-410d-b5ff-ef0ec38991dd}</UniqueIdentifier>
@@ -67,17 +58,14 @@
     <Filter Include="Source Files\GamesGo\Mesh\Primitives">
       <UniqueIdentifier>{0bc5c58c-8d02-4351-8f2c-886e9978e21e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\GamesGo\Rendering">
-      <UniqueIdentifier>{be89765b-3ec6-492f-b651-ed72ab1a50dc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\GamesGo\Scene Management">
       <UniqueIdentifier>{7b8436ca-f701-42b9-abce-2fd90b161c8f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\GamesGo\Scene Management\Examples">
-      <UniqueIdentifier>{07eea2cd-86a6-42bf-87fa-3dd1369d44bc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\GamesGo\UI">
       <UniqueIdentifier>{a2e583af-3fb3-4436-b9a7-2cf5b7cfee0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GamesGo\Input">
+      <UniqueIdentifier>{5d2a0bd8-3874-40c6-bafe-db8cca90d746}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\GamesGo\Components">
       <UniqueIdentifier>{86d05989-30e8-4a3a-b2e9-97e57c8269a2}</UniqueIdentifier>
@@ -85,14 +73,20 @@
     <Filter Include="Header Files\GamesGo\Components\Movement">
       <UniqueIdentifier>{b9e98ca3-07bd-4f84-8f55-ade0cacd6b74}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\GamesGo\Components\Editor">
-      <UniqueIdentifier>{56a90b72-33f5-4123-af96-998165041cd0}</UniqueIdentifier>
+    <Filter Include="Header Files\GamesGo\File Management">
+      <UniqueIdentifier>{8968cf73-9013-4e6a-97ac-1463636f6aac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GamesGo\Game Entities">
+      <UniqueIdentifier>{1590d556-d03c-40b9-8e4d-d54ee34e07ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GamesGo\Examples">
+      <UniqueIdentifier>{4f84915c-13b3-467f-a281-6986cf730154}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GamesGo\UI">
+      <UniqueIdentifier>{18dd0aa9-36ff-4167-9780-9713ee244597}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\GamesGo\Time">
       <UniqueIdentifier>{9abf7ab2-0993-4425-9713-5b1f413bf313}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\GamesGo\Time">
-      <UniqueIdentifier>{652a44e4-16d8-4fe8-b9f7-7aa15d10c50a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\GamesGo\Components">
       <UniqueIdentifier>{442069f4-fea9-4139-9e04-8faaccf43d47}</UniqueIdentifier>
@@ -100,20 +94,26 @@
     <Filter Include="Source Files\GamesGo\Components\Movement">
       <UniqueIdentifier>{fd26cba3-b8b6-4cf5-ab83-c9b6f7712c93}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\GamesGo\Components\Editor">
-      <UniqueIdentifier>{00ec278c-fadc-4e3e-8c64-c21496bb7cab}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\GamesGo\File Management">
-      <UniqueIdentifier>{8968cf73-9013-4e6a-97ac-1463636f6aac}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\GamesGo\File Management">
       <UniqueIdentifier>{8e05f66f-d12b-4172-83ea-514e08dad588}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\GamesGo\Game Entities">
-      <UniqueIdentifier>{1590d556-d03c-40b9-8e4d-d54ee34e07ba}</UniqueIdentifier>
+    <Filter Include="Source Files\GamesGo\Examples">
+      <UniqueIdentifier>{5e22592c-52b0-4130-b267-da665f4c26f9}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\GamesGo\Game Entities">
       <UniqueIdentifier>{ce55c88d-a5da-42e1-8fb9-8299b7d23bb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GamesGo\Time">
+      <UniqueIdentifier>{652a44e4-16d8-4fe8-b9f7-7aa15d10c50a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GamesGo\Rendering">
+      <UniqueIdentifier>{be89765b-3ec6-492f-b651-ed72ab1a50dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GamesGo\Components\Editor">
+      <UniqueIdentifier>{56a90b72-33f5-4123-af96-998165041cd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GamesGo\Components\Editor">
+      <UniqueIdentifier>{00ec278c-fadc-4e3e-8c64-c21496bb7cab}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -189,12 +189,6 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Source Files\GamesGo\Scene Management</Filter>
     </ClCompile>
-    <ClCompile Include="SceneExample_LitForward.cpp">
-      <Filter>Source Files\GamesGo\Scene Management\Examples</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneExample.cpp">
-      <Filter>Source Files\GamesGo\Scene Management\Examples</Filter>
-    </ClCompile>
     <ClCompile Include="Skybox.cpp">
       <Filter>Source Files\GamesGo\Rendering</Filter>
     </ClCompile>
@@ -239,6 +233,12 @@
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>Source Files\GamesGo\Game Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneExample_LitForward.cpp">
+      <Filter>Source Files\GamesGo\Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneExample.cpp">
+      <Filter>Source Files\GamesGo\Scene Management</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -320,12 +320,6 @@
     <ClInclude Include="Scene.h">
       <Filter>Header Files\GamesGo\Scene Management</Filter>
     </ClInclude>
-    <ClInclude Include="SceneExample_LitForward.h">
-      <Filter>Header Files\GamesGo\Scene Management\Examples</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneExample.h">
-      <Filter>Header Files\GamesGo\Scene Management\Examples</Filter>
-    </ClInclude>
     <ClInclude Include="Skybox.h">
       <Filter>Header Files\GamesGo\Rendering</Filter>
     </ClInclude>
@@ -367,6 +361,12 @@
     </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>Header Files\GamesGo\Game Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneExample_LitForward.h">
+      <Filter>Header Files\GamesGo\Examples</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneExample.h">
+      <Filter>Header Files\GamesGo\Scene Management</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
