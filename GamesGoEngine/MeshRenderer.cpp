@@ -11,20 +11,8 @@ MeshRenderer::MeshRenderer()
 
 MeshRenderer::~MeshRenderer()
 {
-	mesh->DeleteSafely();
-	for (size_t i = 0; i < materialList.size(); i++)
-	{
-		if (materialList[i] != nullptr)
-		{
-			materialList[i]->DeleteSafely();
-		}
-	}
-}
-
-void MeshRenderer::Init(GameObject* owner)
-{
-	Component::Init(owner);
-	
+	mesh.reset();
+	CleanMaterialList();
 }
 
 void MeshRenderer::Update()
@@ -42,63 +30,42 @@ void MeshRenderer::Update()
 	}
 }
 
-void MeshRenderer::SetMaterial(Material* material)
+void MeshRenderer::SetMaterial(const std::shared_ptr<Material>& material)
 {
 	SetMaterial(material, 0);
 }
 
-void MeshRenderer::SetMaterial(Material* material, size_t materialIndex)
+void MeshRenderer::SetMaterial(const std::shared_ptr<Material>& material, size_t materialIndex)
 {
-	if (materialIndex < 0 || materialIndex >= materialList.size())
+	if (materialIndex >= 0 && materialIndex < materialList.size())
 	{
-		return;
+		if (materialList[materialIndex] != material)
+		{
+			materialList[materialIndex].reset();
+			materialList[materialIndex] = material;
+		}
 	}
-	
-	// firstly, if there's some material assigned, decrement its users number
-	if (materialList[materialIndex] != nullptr)
-	{
-		materialList[materialIndex]->DecrementNumberOfUsers();
-	}
-
-	// secondly assign new material at given index & increment the number of users for the new material
-	materialList[materialIndex] = material;
-	materialList[materialIndex]->IncrementNumberOfUsers();
 }
 
-void MeshRenderer::SetMesh(MeshBase* mesh)
+void MeshRenderer::SetMesh(const std::shared_ptr<MeshBase>& mesh)
 {
-	if (this->mesh == mesh)
+	if (this->mesh != mesh)
 	{
-		return;
-	}
-	
-	// firstly, if there's some mesh assigned, decrement its users number
-	if (this->mesh != nullptr)
-	{
-		this->mesh->DecrementNumberOfUsers();
-	}
-	
-	// secondly assign new mesh & increment the number of users for the new mesh
-	this->mesh = mesh;
-	this->mesh->IncrementNumberOfUsers();
-	
-	// finally, do material cleanup & set proper size to the list
-	CleanMaterialList();
-	materialList.resize(this->mesh->GetSubMeshesCount());
+		// firstly set mesh
+		this->mesh.reset();
+		this->mesh = mesh;
+
+		// finally, do material cleanup & set proper size to the list
+		CleanMaterialList();
+		materialList.resize(this->mesh->GetSubMeshesCount());
+	}	
 }
 
 void MeshRenderer::CleanMaterialList()
 {
 	for (size_t i = 0; i < materialList.size(); i++)
 	{
-		if (materialList[i] != nullptr)
-		{
-			materialList[i]->DecrementNumberOfUsers();
-			// unreference material instead of destroying it
-			materialList[i] = nullptr;
-		}
+		materialList[i].reset();
 	}
-
-	// don't do this, it'll call destructor of materials, & we don't necessarily want that
-	//materialList.clear();
+	materialList.clear();
 }

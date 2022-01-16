@@ -1,9 +1,8 @@
 #pragma once
 
 #include "SubMesh.h"
-#include "SharedAsset.h"
 
-class MeshBase : public SharedAsset
+class MeshBase
 {
 public:
 	virtual ~MeshBase();

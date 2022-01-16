@@ -10,10 +10,7 @@ Skybox::Skybox()
 
 Skybox::~Skybox()
 {
-	if (material != nullptr)
-	{
-		material->DeleteSafely();
-	}
+	this->material.reset();
 	delete mesh;
 }
 
@@ -33,15 +30,11 @@ void Skybox::Update()
 	}
 }
 
-void Skybox::SetMaterial(Material* material)
+void Skybox::SetMaterial(const std::shared_ptr<Material>& material)
 {
-	// firstly, if there's some material assigned, decrement its users number
-	if (this->material != nullptr)
+	if (this->material != material)
 	{
-		this->material->DecrementNumberOfUsers();
+		this->material.reset();
+		this->material = material;
 	}
-
-	// secondly assign new material at given index & increment the number of users for the new material
-	this->material = material;
-	this->material->IncrementNumberOfUsers();
 }

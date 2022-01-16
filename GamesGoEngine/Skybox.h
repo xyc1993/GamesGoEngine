@@ -11,9 +11,9 @@ public:
 	~Skybox();
 
 	void Update() override;
-	void SetMaterial(Material* material);
+	void SetMaterial(const std::shared_ptr<Material>& material);
 
 private:
-	Material* material;
+	std::shared_ptr<Material> material;
 	MeshBase* mesh;
 };

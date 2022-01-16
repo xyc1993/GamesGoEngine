@@ -180,7 +180,6 @@
     <ClCompile Include="SceneExample.cpp" />
     <ClCompile Include="SceneExample_LitForward.cpp" />
     <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="SharedAsset.cpp" />
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="SubMesh.cpp" />
@@ -225,7 +224,6 @@
     <ClInclude Include="SceneExample.h" />
     <ClInclude Include="SceneExample_LitForward.h" />
     <ClInclude Include="Shader.h" />
-    <ClInclude Include="SharedAsset.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="SpotLight.h" />
     <ClInclude Include="SubMesh.h" />

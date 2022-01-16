@@ -14,15 +14,14 @@ public:
 	MeshRenderer();
 	~MeshRenderer() override;
 
-	void Init(GameObject* owner) override;
 	void Update() override;
-	void SetMaterial(Material* material);
-	void SetMaterial(Material* material, size_t materialIndex);
-	void SetMesh(MeshBase* mesh);
+	void SetMaterial(const std::shared_ptr<Material>& material);
+	void SetMaterial(const std::shared_ptr<Material>& material, size_t materialIndex);
+	void SetMesh(const std::shared_ptr<MeshBase>& mesh);
 
 private:
 	void CleanMaterialList();
 	
-	MeshBase* mesh;
-	std::vector<Material*> materialList;
+	std::shared_ptr<MeshBase> mesh;
+	std::vector<std::shared_ptr<Material>> materialList;
 };

@@ -6,7 +6,6 @@
 #include <glm/fwd.hpp>
 
 #include "Shader.h"
-#include "SharedAsset.h"
 
 enum class LightModelType
 {
@@ -18,7 +17,7 @@ enum class LightModelType
  * Class responsible for handling shaders
  * For now it assumes that it'll be provided with vertex shader & fragment shader (no extra shader types handled now)
  */
-class Material : public SharedAsset
+class Material
 {
 public:
 	Material();

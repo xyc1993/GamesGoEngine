@@ -6,6 +6,7 @@
 #include "Material.h"
 #include "MeshImported.h"
 #include "MeshPrimitiveCube.h"
+#include "MeshPrimitiveQuad.h"
 #include "MeshPrimitiveSphere.h"
 #include "MeshRenderer.h"
 #include "PointLight.h"
@@ -64,7 +65,7 @@ SceneExample_LitForward::SceneExample_LitForward()
 	skyboxTextures.push_back("res/images/skybox/back.tga");
 	skyboxTextures.push_back("res/images/skybox/front.tga");
 
-	Material* skyboxMaterial = new Material("res/shaders/skybox.vert.glsl", "res/shaders/skybox.frag.glsl");
+	std::shared_ptr<Material> skyboxMaterial = std::make_shared<Material>("res/shaders/skybox.vert.glsl", "res/shaders/skybox.frag.glsl");
 	skyboxMaterial->SetCubeTexture("skybox", 1, skyboxTextures);
 
 	Skybox* skyboxComponent = new Skybox();
@@ -78,11 +79,11 @@ SceneExample_LitForward::SceneExample_LitForward()
 
 	scene->AddGameObject(skyboxObject);
 	
-	MeshPrimitiveCube* cubeMesh = new MeshPrimitiveCube();
-	//MeshPrimitiveQuad* quadMesh = new MeshPrimitiveQuad();
-	MeshPrimitiveSphere* sphereMesh = new MeshPrimitiveSphere();
+	std::shared_ptr<MeshPrimitiveCube> cubeMesh = std::make_shared<MeshPrimitiveCube>();
+	//std::shared_ptr<MeshPrimitiveQuad> quadMesh = std::make_shared<MeshPrimitiveQuad>();
+	std::shared_ptr<MeshPrimitiveSphere> sphereMesh = std::make_shared<MeshPrimitiveSphere>();
 
-	Material* lampMaterial = new Material("res/shaders/lamp.vert.glsl", "res/shaders/lamp.frag.glsl");
+	std::shared_ptr<Material> lampMaterial = std::make_shared<Material>("res/shaders/lamp.vert.glsl", "res/shaders/lamp.frag.glsl");
 
 	GameObject* lampParent = nullptr;
 	for (int i = 0; i < LAMPS_NUMBER; i++)
@@ -111,7 +112,7 @@ SceneExample_LitForward::SceneExample_LitForward()
 		if (i == 0) lampParent = lampObject;
 	}
 
-	Material* cubeLitMaterial = new Material("res/shaders/lighting.vert.glsl", "res/shaders/lighting.frag.glsl");
+	std::shared_ptr<Material> cubeLitMaterial = std::make_shared<Material>("res/shaders/lighting.vert.glsl", "res/shaders/lighting.frag.glsl");
 	cubeLitMaterial->SetTexture((GLchar*)"material.diffuse", 0, (GLchar*)"res/box/container2_diffuse.png");
 	cubeLitMaterial->SetTexture((GLchar*)"material.specular", 1, (GLchar*)"res/box/container2_specular.png");
 	cubeLitMaterial->SetFloat((GLchar*)"material.shininess", 32.0f);
@@ -173,15 +174,11 @@ SceneExample_LitForward::SceneExample_LitForward()
 	nanoSuitObject->GetTransform()->SetPosition(glm::vec3(0.0f, -1.75f, 0.0f));
 	nanoSuitObject->GetTransform()->SetScale(glm::vec3(0.2f));
 	MeshRenderer* nanoSuitMeshRenderer = new MeshRenderer();
-	MeshImported* nanoSuitMesh = new MeshImported((GLchar*)"res/nanosuit/nanosuit.obj");
+	std::shared_ptr<MeshImported> nanoSuitMesh = std::make_shared<MeshImported>((GLchar*)"res/nanosuit/nanosuit.obj");
 	nanoSuitMeshRenderer->SetMesh(nanoSuitMesh);
 
 	const int NANOSUIT_MATERIALS_NUMBER = 7;
-	Material* nanoSuitMaterials[] = {
-		new Material(), new Material(), new Material(),
-		new Material(), new Material(), new Material(),
-		new Material()
-	};
+	std::shared_ptr<Material> nanoSuitMaterials[NANOSUIT_MATERIALS_NUMBER];
 
 	std::vector<GLchar*> nanoSuitTexturePaths;
 	nanoSuitTexturePaths.push_back((GLchar*)"res/nanosuit/glass_dif.png");
@@ -194,7 +191,7 @@ SceneExample_LitForward::SceneExample_LitForward()
 
 	for (int i = 0; i < NANOSUIT_MATERIALS_NUMBER; i++)
 	{
-		nanoSuitMaterials[i] = new Material("res/shaders/lighting.vert.glsl", "res/shaders/lighting.frag.glsl");
+		nanoSuitMaterials[i] = std::make_shared<Material>("res/shaders/lighting.vert.glsl", "res/shaders/lighting.frag.glsl");
 		nanoSuitMaterials[i]->SetTexture((GLchar*)"material.diffuse", 0, nanoSuitTexturePaths[i]);
 		nanoSuitMaterials[i]->SetFloat((GLchar*)"material.shininess", 32.0f);
 		nanoSuitMaterials[i]->SetLightModel(LightModelType::LitForward);
