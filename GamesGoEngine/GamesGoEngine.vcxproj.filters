@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="imgui">
-      <UniqueIdentifier>{8a1b09f5-d472-4bcb-aa30-220078d8b860}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
@@ -16,91 +13,121 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\Light">
-      <UniqueIdentifier>{cd0209e2-f147-41cd-a7a0-fb19e61c4d78}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Light">
-      <UniqueIdentifier>{6ea2d4fb-8567-490a-a483-4faab98716ef}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\imgui">
       <UniqueIdentifier>{48c8fa54-078d-4796-9a65-3c98fcd7b3eb}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\imgui">
       <UniqueIdentifier>{b272546e-e50f-4e09-bcf3-f1c505761b42}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Input">
-      <UniqueIdentifier>{5d2a0bd8-3874-40c6-bafe-db8cca90d746}</UniqueIdentifier>
+    <Filter Include="Header Files\GamesGo">
+      <UniqueIdentifier>{a89a1900-2bb0-4afe-997d-83f411786a3d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Input">
-      <UniqueIdentifier>{43625881-909f-4e8c-bfe2-ce640b444557}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Mesh">
-      <UniqueIdentifier>{7aed927b-ce7f-4fc3-acd1-ff2c7bd86e4b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Mesh">
-      <UniqueIdentifier>{08f21b25-405d-40c3-9161-919eab43db5c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Mesh\Primitives">
-      <UniqueIdentifier>{1097f10c-e73f-496f-8523-49fe013dc570}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Mesh\Primitives">
-      <UniqueIdentifier>{0bc5c58c-8d02-4351-8f2c-886e9978e21e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Rendering">
-      <UniqueIdentifier>{787dda44-b85b-4049-b944-4dc6c62cd6a7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Rendering">
-      <UniqueIdentifier>{be89765b-3ec6-492f-b651-ed72ab1a50dc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Scene Management">
-      <UniqueIdentifier>{426ec24e-4b24-4f95-b7e2-5f6cd1181028}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Scene Management">
-      <UniqueIdentifier>{7b8436ca-f701-42b9-abce-2fd90b161c8f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Scene Management\Examples">
-      <UniqueIdentifier>{50dd6bd6-5f6e-43b9-a885-9f42b922b078}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Scene Management\Examples">
-      <UniqueIdentifier>{07eea2cd-86a6-42bf-87fa-3dd1369d44bc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\UI">
-      <UniqueIdentifier>{a2e583af-3fb3-4436-b9a7-2cf5b7cfee0e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\UI">
-      <UniqueIdentifier>{18dd0aa9-36ff-4167-9780-9713ee244597}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Movement">
-      <UniqueIdentifier>{b9e98ca3-07bd-4f84-8f55-ade0cacd6b74}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Movement">
-      <UniqueIdentifier>{fd26cba3-b8b6-4cf5-ab83-c9b6f7712c93}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Camera">
+    <Filter Include="Header Files\GamesGo\Camera">
       <UniqueIdentifier>{ee289c51-d51d-45dd-91a0-188e67442243}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Camera">
+    <Filter Include="Header Files\GamesGo\Input">
+      <UniqueIdentifier>{5d2a0bd8-3874-40c6-bafe-db8cca90d746}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GamesGo\Light">
+      <UniqueIdentifier>{cd0209e2-f147-41cd-a7a0-fb19e61c4d78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GamesGo\Mesh">
+      <UniqueIdentifier>{7aed927b-ce7f-4fc3-acd1-ff2c7bd86e4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GamesGo\Mesh\Primitives">
+      <UniqueIdentifier>{1097f10c-e73f-496f-8523-49fe013dc570}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GamesGo\Rendering">
+      <UniqueIdentifier>{787dda44-b85b-4049-b944-4dc6c62cd6a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GamesGo\Scene Management">
+      <UniqueIdentifier>{426ec24e-4b24-4f95-b7e2-5f6cd1181028}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GamesGo\Scene Management\Examples">
+      <UniqueIdentifier>{50dd6bd6-5f6e-43b9-a885-9f42b922b078}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GamesGo\UI">
+      <UniqueIdentifier>{18dd0aa9-36ff-4167-9780-9713ee244597}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GamesGo">
+      <UniqueIdentifier>{477c0546-e860-410d-b5ff-ef0ec38991dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GamesGo\Camera">
       <UniqueIdentifier>{99dded03-4b35-44b0-81cc-22dc2b3e5595}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GamesGo\Input">
+      <UniqueIdentifier>{43625881-909f-4e8c-bfe2-ce640b444557}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GamesGo\Light">
+      <UniqueIdentifier>{6ea2d4fb-8567-490a-a483-4faab98716ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GamesGo\Mesh">
+      <UniqueIdentifier>{08f21b25-405d-40c3-9161-919eab43db5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GamesGo\Mesh\Primitives">
+      <UniqueIdentifier>{0bc5c58c-8d02-4351-8f2c-886e9978e21e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GamesGo\Rendering">
+      <UniqueIdentifier>{be89765b-3ec6-492f-b651-ed72ab1a50dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GamesGo\Scene Management">
+      <UniqueIdentifier>{7b8436ca-f701-42b9-abce-2fd90b161c8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GamesGo\Scene Management\Examples">
+      <UniqueIdentifier>{07eea2cd-86a6-42bf-87fa-3dd1369d44bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GamesGo\UI">
+      <UniqueIdentifier>{a2e583af-3fb3-4436-b9a7-2cf5b7cfee0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GamesGo\Components">
+      <UniqueIdentifier>{86d05989-30e8-4a3a-b2e9-97e57c8269a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GamesGo\Components\Movement">
+      <UniqueIdentifier>{b9e98ca3-07bd-4f84-8f55-ade0cacd6b74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GamesGo\Components\Editor">
+      <UniqueIdentifier>{56a90b72-33f5-4123-af96-998165041cd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GamesGo\Time">
+      <UniqueIdentifier>{9abf7ab2-0993-4425-9713-5b1f413bf313}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GamesGo\Time">
+      <UniqueIdentifier>{652a44e4-16d8-4fe8-b9f7-7aa15d10c50a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GamesGo\Components">
+      <UniqueIdentifier>{442069f4-fea9-4139-9e04-8faaccf43d47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GamesGo\Components\Movement">
+      <UniqueIdentifier>{fd26cba3-b8b6-4cf5-ab83-c9b6f7712c93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GamesGo\Components\Editor">
+      <UniqueIdentifier>{00ec278c-fadc-4e3e-8c64-c21496bb7cab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GamesGo\File Management">
+      <UniqueIdentifier>{8968cf73-9013-4e6a-97ac-1463636f6aac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GamesGo\File Management">
+      <UniqueIdentifier>{8e05f66f-d12b-4172-83ea-514e08dad588}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GamesGo\Game Entities">
+      <UniqueIdentifier>{1590d556-d03c-40b9-8e4d-d54ee34e07ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GamesGo\Game Entities">
+      <UniqueIdentifier>{ce55c88d-a5da-42e1-8fb9-8299b7d23bb9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TextureLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DirectionalLight.cpp">
-      <Filter>Source Files\Light</Filter>
+      <Filter>Source Files\GamesGo\Light</Filter>
     </ClCompile>
     <ClCompile Include="LightsManager.cpp">
-      <Filter>Source Files\Light</Filter>
+      <Filter>Source Files\GamesGo\Light</Filter>
     </ClCompile>
     <ClCompile Include="PointLight.cpp">
-      <Filter>Source Files\Light</Filter>
+      <Filter>Source Files\GamesGo\Light</Filter>
     </ClCompile>
     <ClCompile Include="SpotLight.cpp">
-      <Filter>Source Files\Light</Filter>
+      <Filter>Source Files\GamesGo\Light</Filter>
     </ClCompile>
     <ClCompile Include="..\External Libraries\imgui\imgui_widgets.cpp">
       <Filter>Source Files\imgui</Filter>
@@ -123,109 +150,112 @@
     <ClCompile Include="..\External Libraries\imgui\imgui_tables.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="Component.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Transform.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="InputManager.cpp">
-      <Filter>Source Files\Input</Filter>
+      <Filter>Source Files\GamesGo\Input</Filter>
     </ClCompile>
     <ClCompile Include="InputEditorShortcuts.cpp">
-      <Filter>Source Files\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="EditorMovement.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\GamesGo\Input</Filter>
     </ClCompile>
     <ClCompile Include="MeshBase.cpp">
-      <Filter>Source Files\Mesh</Filter>
+      <Filter>Source Files\GamesGo\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="SubMesh.cpp">
-      <Filter>Source Files\Mesh</Filter>
+      <Filter>Source Files\GamesGo\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="MeshImported.cpp">
-      <Filter>Source Files\Mesh</Filter>
+      <Filter>Source Files\GamesGo\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="MeshPrimitiveCube.cpp">
-      <Filter>Source Files\Mesh\Primitives</Filter>
+      <Filter>Source Files\GamesGo\Mesh\Primitives</Filter>
     </ClCompile>
     <ClCompile Include="MeshPrimitiveBase.cpp">
-      <Filter>Source Files\Mesh\Primitives</Filter>
+      <Filter>Source Files\GamesGo\Mesh\Primitives</Filter>
     </ClCompile>
     <ClCompile Include="MeshPrimitiveQuad.cpp">
-      <Filter>Source Files\Mesh\Primitives</Filter>
+      <Filter>Source Files\GamesGo\Mesh\Primitives</Filter>
     </ClCompile>
     <ClCompile Include="MeshPrimitiveSphere.cpp">
-      <Filter>Source Files\Mesh\Primitives</Filter>
+      <Filter>Source Files\GamesGo\Mesh\Primitives</Filter>
     </ClCompile>
     <ClCompile Include="Material.cpp">
-      <Filter>Source Files\Rendering</Filter>
+      <Filter>Source Files\GamesGo\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="MeshRenderer.cpp">
-      <Filter>Source Files\Rendering</Filter>
+      <Filter>Source Files\GamesGo\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="Shader.cpp">
-      <Filter>Source Files\Rendering</Filter>
+      <Filter>Source Files\GamesGo\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="Scene.cpp">
-      <Filter>Source Files\Scene Management</Filter>
+      <Filter>Source Files\GamesGo\Scene Management</Filter>
     </ClCompile>
     <ClCompile Include="SceneExample_LitForward.cpp">
-      <Filter>Source Files\Scene Management\Examples</Filter>
+      <Filter>Source Files\GamesGo\Scene Management\Examples</Filter>
     </ClCompile>
     <ClCompile Include="SceneExample.cpp">
-      <Filter>Source Files\Scene Management\Examples</Filter>
+      <Filter>Source Files\GamesGo\Scene Management\Examples</Filter>
     </ClCompile>
     <ClCompile Include="Skybox.cpp">
-      <Filter>Source Files\Rendering</Filter>
+      <Filter>Source Files\GamesGo\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="WorldOutlinerUI.cpp">
-      <Filter>Source Files\UI</Filter>
+      <Filter>Source Files\GamesGo\UI</Filter>
     </ClCompile>
     <ClCompile Include="PositionOscillator.cpp">
-      <Filter>Source Files\Movement</Filter>
+      <Filter>Source Files\GamesGo\Components\Movement</Filter>
     </ClCompile>
     <ClCompile Include="Rotator.cpp">
-      <Filter>Source Files\Movement</Filter>
+      <Filter>Source Files\GamesGo\Components\Movement</Filter>
     </ClCompile>
     <ClCompile Include="ScaleOscillator.cpp">
-      <Filter>Source Files\Movement</Filter>
+      <Filter>Source Files\GamesGo\Components\Movement</Filter>
     </ClCompile>
     <ClCompile Include="PropertiesUI.cpp">
-      <Filter>Source Files\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Time.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\GamesGo\UI</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>Source Files\Camera</Filter>
+      <Filter>Source Files\GamesGo\Camera</Filter>
     </ClCompile>
     <ClCompile Include="CamerasManager.cpp">
-      <Filter>Source Files\Camera</Filter>
+      <Filter>Source Files\GamesGo\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files\GamesGo</Filter>
+    </ClCompile>
+    <ClCompile Include="Time.cpp">
+      <Filter>Source Files\GamesGo\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>Source Files\GamesGo\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Source Files\GamesGo\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorMovement.cpp">
+      <Filter>Source Files\GamesGo\Components\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureLoader.cpp">
+      <Filter>Source Files\GamesGo\File Management</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Source Files\GamesGo\Game Entities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="TextureLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Light.h">
-      <Filter>Header Files\Light</Filter>
+      <Filter>Header Files\GamesGo\Light</Filter>
     </ClInclude>
     <ClInclude Include="PointLight.h">
-      <Filter>Header Files\Light</Filter>
+      <Filter>Header Files\GamesGo\Light</Filter>
     </ClInclude>
     <ClInclude Include="DirectionalLight.h">
-      <Filter>Header Files\Light</Filter>
+      <Filter>Header Files\GamesGo\Light</Filter>
     </ClInclude>
     <ClInclude Include="SpotLight.h">
-      <Filter>Header Files\Light</Filter>
+      <Filter>Header Files\GamesGo\Light</Filter>
     </ClInclude>
     <ClInclude Include="LightsManager.h">
-      <Filter>Header Files\Light</Filter>
+      <Filter>Header Files\GamesGo\Light</Filter>
     </ClInclude>
     <ClInclude Include="..\External Libraries\imgui\imconfig.h">
       <Filter>Header Files\imgui</Filter>
@@ -251,89 +281,92 @@
     <ClInclude Include="..\External Libraries\imgui\imstb_truetype.h">
       <Filter>Header Files\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Component.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="InputManager.h">
-      <Filter>Header Files\Input</Filter>
+      <Filter>Header Files\GamesGo\Input</Filter>
     </ClInclude>
     <ClInclude Include="InputEditorShortcuts.h">
-      <Filter>Header Files\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="EditorMovement.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\GamesGo\Input</Filter>
     </ClInclude>
     <ClInclude Include="MeshBase.h">
-      <Filter>Header Files\Mesh</Filter>
+      <Filter>Header Files\GamesGo\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="SubMesh.h">
-      <Filter>Header Files\Mesh</Filter>
+      <Filter>Header Files\GamesGo\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="MeshImported.h">
-      <Filter>Header Files\Mesh</Filter>
+      <Filter>Header Files\GamesGo\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="MeshPrimitiveCube.h">
-      <Filter>Header Files\Mesh\Primitives</Filter>
+      <Filter>Header Files\GamesGo\Mesh\Primitives</Filter>
     </ClInclude>
     <ClInclude Include="MeshPrimitiveBase.h">
-      <Filter>Header Files\Mesh\Primitives</Filter>
+      <Filter>Header Files\GamesGo\Mesh\Primitives</Filter>
     </ClInclude>
     <ClInclude Include="MeshPrimitiveQuad.h">
-      <Filter>Header Files\Mesh\Primitives</Filter>
+      <Filter>Header Files\GamesGo\Mesh\Primitives</Filter>
     </ClInclude>
     <ClInclude Include="MeshPrimitiveSphere.h">
-      <Filter>Header Files\Mesh\Primitives</Filter>
+      <Filter>Header Files\GamesGo\Mesh\Primitives</Filter>
     </ClInclude>
     <ClInclude Include="Material.h">
-      <Filter>Header Files\Rendering</Filter>
+      <Filter>Header Files\GamesGo\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="MeshRenderer.h">
-      <Filter>Header Files\Rendering</Filter>
+      <Filter>Header Files\GamesGo\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="Shader.h">
-      <Filter>Header Files\Rendering</Filter>
+      <Filter>Header Files\GamesGo\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
-      <Filter>Header Files\Scene Management</Filter>
+      <Filter>Header Files\GamesGo\Scene Management</Filter>
     </ClInclude>
     <ClInclude Include="SceneExample_LitForward.h">
-      <Filter>Header Files\Scene Management\Examples</Filter>
+      <Filter>Header Files\GamesGo\Scene Management\Examples</Filter>
     </ClInclude>
     <ClInclude Include="SceneExample.h">
-      <Filter>Header Files\Scene Management\Examples</Filter>
+      <Filter>Header Files\GamesGo\Scene Management\Examples</Filter>
     </ClInclude>
     <ClInclude Include="Skybox.h">
-      <Filter>Header Files\Rendering</Filter>
+      <Filter>Header Files\GamesGo\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="WorldOutlinerUI.h">
-      <Filter>Header Files\UI</Filter>
+      <Filter>Header Files\GamesGo\UI</Filter>
     </ClInclude>
     <ClInclude Include="PositionOscillator.h">
-      <Filter>Header Files\Movement</Filter>
+      <Filter>Header Files\GamesGo\Components\Movement</Filter>
     </ClInclude>
     <ClInclude Include="Rotator.h">
-      <Filter>Header Files\Movement</Filter>
+      <Filter>Header Files\GamesGo\Components\Movement</Filter>
     </ClInclude>
     <ClInclude Include="ScaleOscillator.h">
-      <Filter>Header Files\Movement</Filter>
+      <Filter>Header Files\GamesGo\Components\Movement</Filter>
     </ClInclude>
     <ClInclude Include="PropertiesUI.h">
-      <Filter>Header Files\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Time.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\GamesGo\UI</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>Header Files\Camera</Filter>
+      <Filter>Header Files\GamesGo\Camera</Filter>
     </ClInclude>
     <ClInclude Include="CamerasManager.h">
-      <Filter>Header Files\Camera</Filter>
+      <Filter>Header Files\GamesGo\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Header Files\GamesGo\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Header Files\GamesGo\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorMovement.h">
+      <Filter>Header Files\GamesGo\Components\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Time.h">
+      <Filter>Header Files\GamesGo\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureLoader.h">
+      <Filter>Header Files\GamesGo\File Management</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Header Files\GamesGo\Game Entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
