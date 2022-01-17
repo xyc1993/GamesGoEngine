@@ -33,9 +33,16 @@ GLFWwindow* InitWindow()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE); //window won't be resizable
+	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
 	return glfwCreateWindow(WIDTH, HEIGHT, "GamesGo Engine", nullptr, nullptr);
+}
+
+void FramebufferSizeCallback(GLFWwindow* window, int width, int height)
+{
+	glViewport(0, 0, width, height);
+	SCREEN_WIDTH = width;
+	SCREEN_HEIGHT = height;
 }
 
 int SetWindow(GLFWwindow* window)
@@ -62,6 +69,8 @@ int SetWindow(GLFWwindow* window)
 	}
 
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+	glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
 
 	return EXIT_SUCCESS;
 }
