@@ -61,6 +61,18 @@ void MeshRenderer::SetMesh(const std::shared_ptr<MeshBase>& mesh)
 	}	
 }
 
+size_t MeshRenderer::GetMaterialSlotsNumber() const
+{
+	if (mesh != nullptr)
+	{
+		return mesh->GetSubMeshesCount();
+	}
+	else
+	{
+		return 0;
+	}
+}
+
 void MeshRenderer::CleanMaterialList()
 {
 	for (size_t i = 0; i < materialList.size(); i++)

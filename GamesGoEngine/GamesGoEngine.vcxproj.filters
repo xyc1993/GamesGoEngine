@@ -240,6 +240,9 @@
     <ClCompile Include="SceneExample.cpp">
       <Filter>Source Files\GamesGo\Scene Management</Filter>
     </ClCompile>
+    <ClCompile Include="SceneExample_DepthTest.cpp">
+      <Filter>Source Files\GamesGo\Examples</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -368,6 +371,9 @@
     <ClInclude Include="SceneExample.h">
       <Filter>Header Files\GamesGo\Scene Management</Filter>
     </ClInclude>
+    <ClInclude Include="SceneExample_DepthTest.h">
+      <Filter>Header Files\GamesGo\Examples</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\lamp.frag.glsl">
@@ -386,6 +392,9 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="res\shaders\skybox.vert.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\shaders\depth.frag.glsl">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

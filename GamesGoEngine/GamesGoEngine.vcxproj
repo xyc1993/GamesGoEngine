@@ -178,6 +178,7 @@
     <ClCompile Include="ScaleOscillator.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneExample.cpp" />
+    <ClCompile Include="SceneExample_DepthTest.cpp" />
     <ClCompile Include="SceneExample_LitForward.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Skybox.cpp" />
@@ -222,6 +223,7 @@
     <ClInclude Include="ScaleOscillator.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneExample.h" />
+    <ClInclude Include="SceneExample_DepthTest.h" />
     <ClInclude Include="SceneExample_LitForward.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Skybox.h" />
@@ -233,6 +235,7 @@
     <ClInclude Include="WorldOutlinerUI.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\shaders\depth.frag.glsl" />
     <None Include="res\shaders\lamp.frag.glsl" />
     <None Include="res\shaders\lamp.vert.glsl" />
     <None Include="res\shaders\lighting.frag.glsl" />

@@ -13,7 +13,7 @@
 #include "InputEditorShortcuts.h"
 #include "InputManager.h"
 #include "PropertiesUI.h"
-
+#include "SceneExample_DepthTest.h"
 #include "SceneExample_LitForward.h"
 #include "Time.h"
 #include "WorldOutlinerUI.h"
@@ -87,6 +87,7 @@ void MainLoop(GLFWwindow* window)
 	bool wireframeOnly = false;
 	
 	SceneExample_LitForward* activeScene = new SceneExample_LitForward();
+	//SceneExample_DepthTest* activeScene = new SceneExample_DepthTest();
 	
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);

@@ -18,6 +18,7 @@ public:
 	void SetMaterial(const std::shared_ptr<Material>& material);
 	void SetMaterial(const std::shared_ptr<Material>& material, size_t materialIndex);
 	void SetMesh(const std::shared_ptr<MeshBase>& mesh);
+	size_t GetMaterialSlotsNumber() const;
 
 private:
 	void CleanMaterialList();
