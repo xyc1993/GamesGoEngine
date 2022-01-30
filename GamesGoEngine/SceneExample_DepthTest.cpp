@@ -12,7 +12,7 @@
 
 SceneExample_DepthTest::SceneExample_DepthTest()
 {
-	std::shared_ptr<Material> depthMaterial = std::make_shared<Material>("res/shaders/lamp.vert.glsl", "res/shaders/depth.frag.glsl");
+	std::shared_ptr<Material> depthMaterial = std::make_shared<Material>("res/shaders/unlit.vert.glsl", "res/shaders/depth.frag.glsl");
 
 	const int BOXES_NUMBER = 10;
 

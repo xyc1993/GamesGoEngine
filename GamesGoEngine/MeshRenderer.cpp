@@ -7,6 +7,8 @@ MeshRenderer::MeshRenderer()
 {
 	mesh = nullptr;
 	materialList.clear();
+
+	editorOutlineMaterial = new Material("res/shaders/unlit.vert.glsl", "res/shaders/unlit.frag.glsl");
 }
 
 MeshRenderer::~MeshRenderer()
@@ -19,12 +21,54 @@ void MeshRenderer::Update()
 {
 	if (owner != nullptr && mesh != nullptr)
 	{
+		if (owner->IsSelected())
+		{
+			return;
+		}
+
 		for (size_t i = 0; i < materialList.size(); i++)
 		{
 			if (materialList[i] != nullptr)
 			{
+				glStencilMask(0x00);
 				materialList[i]->Draw(owner->GetTransform()->GetTransformMatrix(), CamerasManager::GetActiveCameraViewMatrix(), CamerasManager::GetActiveCameraProjectionMatrix());
 				mesh->DrawSubMesh(i);
+			}
+		}
+	}
+}
+
+void MeshRenderer::LateUpdate()
+{
+	if (owner != nullptr && mesh != nullptr)
+	{
+		if (!owner->IsSelected())
+		{
+			return;
+		}
+
+		for (size_t i = 0; i < materialList.size(); i++)
+		{
+			if (materialList[i] != nullptr)
+			{
+				// draw the outline for the selected game object
+				glStencilFunc(GL_ALWAYS, 1, 0xFF);
+				glStencilMask(0xFF);
+				materialList[i]->Draw(owner->GetTransform()->GetTransformMatrix(), CamerasManager::GetActiveCameraViewMatrix(), CamerasManager::GetActiveCameraProjectionMatrix());
+				mesh->DrawSubMesh(i);
+
+				glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+				glStencilMask(0x00);
+				glDisable(GL_DEPTH_TEST);
+
+				Transform outlineTransform = *owner->GetTransform();
+				outlineTransform.SetLocalScale(1.05f * outlineTransform.GetLocalScale());
+				editorOutlineMaterial->Draw(outlineTransform.GetTransformMatrix(), CamerasManager::GetActiveCameraViewMatrix(), CamerasManager::GetActiveCameraProjectionMatrix());
+				mesh->DrawSubMesh(i);
+
+				glStencilMask(0xFF);
+				glStencilFunc(GL_ALWAYS, 0, 0xFF);
+				glEnable(GL_DEPTH_TEST);
 			}
 		}
 	}

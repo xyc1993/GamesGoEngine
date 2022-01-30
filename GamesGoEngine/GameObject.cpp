@@ -50,6 +50,17 @@ void GameObject::Update()
 	}
 }
 
+void GameObject::LateUpdate()
+{
+	for (Component* component : components)
+	{
+		if (component != nullptr)
+		{
+			component->LateUpdate();
+		}
+	}
+}
+
 void GameObject::AddComponent(Component* component)
 {
 	if (component != nullptr)
@@ -113,6 +124,16 @@ void GameObject::SetParent(GameObject* parent)
 
 	transform->UpdateTransformOnParenting();
 	UpdateDirectChildrenTransforms();
+}
+
+bool GameObject::IsSelected() const
+{
+	return selected;
+}
+
+void GameObject::SetSelected(bool selected)
+{
+	this->selected = selected;
 }
 
 void GameObject::UpdateDirectChildrenTransforms()

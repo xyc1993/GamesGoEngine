@@ -15,6 +15,7 @@ public:
 	~MeshRenderer() override;
 
 	void Update() override;
+	void LateUpdate() override;
 	void SetMaterial(const std::shared_ptr<Material>& material);
 	void SetMaterial(const std::shared_ptr<Material>& material, size_t materialIndex);
 	void SetMesh(const std::shared_ptr<MeshBase>& mesh);
@@ -25,4 +26,6 @@ private:
 	
 	std::shared_ptr<MeshBase> mesh;
 	std::vector<std::shared_ptr<Material>> materialList;
+	// used for outlining selected game objects
+	Material* editorOutlineMaterial;
 };

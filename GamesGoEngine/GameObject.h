@@ -14,6 +14,7 @@ public:
 	~GameObject();
 
 	void Update();
+	void LateUpdate();
 	void AddComponent(Component* component);
 
 	Transform* GetTransform() const;
@@ -22,6 +23,10 @@ public:
 
 	GameObject* GetParent() const;
 	void SetParent(GameObject* parent);
+
+	// methods to check the status of the selection in the editor's UI
+	bool IsSelected() const;
+	void SetSelected(bool selected);
 
 private:
 	void UpdateDirectChildrenTransforms();
@@ -52,6 +57,8 @@ private:
 	int parentsNumber;
 
 	class Scene* scene;
+
+	bool selected = false;
 
 public:
 	static constexpr int NAME_MAX_LENGTH = 256;

@@ -376,10 +376,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\shaders\lamp.frag.glsl">
+    <None Include="res\shaders\unlit.frag.glsl">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="res\shaders\lamp.vert.glsl">
+    <None Include="res\shaders\unlit.vert.glsl">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="res\shaders\lighting.frag.glsl">

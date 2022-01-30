@@ -83,7 +83,7 @@ SceneExample_LitForward::SceneExample_LitForward()
 	//std::shared_ptr<MeshPrimitiveQuad> quadMesh = std::make_shared<MeshPrimitiveQuad>();
 	std::shared_ptr<MeshPrimitiveSphere> sphereMesh = std::make_shared<MeshPrimitiveSphere>();
 
-	std::shared_ptr<Material> lampMaterial = std::make_shared<Material>("res/shaders/lamp.vert.glsl", "res/shaders/lamp.frag.glsl");
+	std::shared_ptr<Material> lampMaterial = std::make_shared<Material>("res/shaders/unlit.vert.glsl", "res/shaders/unlit.frag.glsl");
 
 	GameObject* lampParent = nullptr;
 	for (int i = 0; i < LAMPS_NUMBER; i++)

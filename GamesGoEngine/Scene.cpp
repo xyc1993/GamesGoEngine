@@ -60,6 +60,14 @@ void Scene::Update()
 			(*it)->Update();
 		}
 	}
+
+	for (auto it = sceneObjects.begin(); it != sceneObjects.end(); ++it)
+	{
+		if (*it != nullptr)
+		{
+			(*it)->LateUpdate();
+		}
+	}
 }
 
 const std::set<GameObject*>& Scene::GetSceneObjects() const

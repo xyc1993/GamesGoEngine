@@ -236,8 +236,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\depth.frag.glsl" />
-    <None Include="res\shaders\lamp.frag.glsl" />
-    <None Include="res\shaders\lamp.vert.glsl" />
+    <None Include="res\shaders\unlit.frag.glsl" />
+    <None Include="res\shaders\unlit.vert.glsl" />
     <None Include="res\shaders\lighting.frag.glsl" />
     <None Include="res\shaders\lighting.vert.glsl" />
     <None Include="res\shaders\skybox.frag.glsl" />

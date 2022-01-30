@@ -21,11 +21,16 @@ GameObject* WorldOutlinerUI::Draw(Scene* activeScene)
 			}
 
 			ImGuiTreeNodeFlags flags = (selectedSceneObject == sceneObject ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
-			bool opened = ImGui::TreeNodeEx((void*)(uint64_t)sceneObject, flags, sceneObject->GetName().c_str());
+			const bool opened = ImGui::TreeNodeEx((void*)(uint64_t)sceneObject, flags, sceneObject->GetName().c_str());
 
 			if (ImGui::IsItemClicked())
 			{
+				if (selectedSceneObject != nullptr)
+				{
+					selectedSceneObject->SetSelected(false);
+				}
 				selectedSceneObject = sceneObject;
+				selectedSceneObject->SetSelected(true);
 			}
 
 			if (opened)
