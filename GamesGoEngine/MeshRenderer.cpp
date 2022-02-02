@@ -9,6 +9,7 @@ MeshRenderer::MeshRenderer()
 	materialList.clear();
 
 	editorOutlineMaterial = new Material("res/shaders/unlit.vert.glsl", "res/shaders/unlit.frag.glsl");
+	editorOutlineMaterial->SetVector3((GLchar*)"unlitColor", glm::vec3(1.0f, 0.8f, 0.0f));
 }
 
 MeshRenderer::~MeshRenderer()

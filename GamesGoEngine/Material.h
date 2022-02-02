@@ -34,6 +34,12 @@ public:
 	void SetFloat(const GLchar* floatName, float value) const;
 	void SetFloat(const GLint floatID, float value) const;
 
+	void SetVector4(const GLchar* vectorName, glm::vec4 value) const;
+	void SetVector4(const GLint vectorID, glm::vec4 value) const;
+
+	void SetVector3(const GLchar* vectorName, glm::vec3 value) const;
+	void SetVector3(const GLint vectorID, glm::vec3 value) const;
+
 	void SetLightModel(LightModelType type);
 	
 private:

@@ -84,6 +84,7 @@ SceneExample_LitForward::SceneExample_LitForward()
 	std::shared_ptr<MeshPrimitiveSphere> sphereMesh = std::make_shared<MeshPrimitiveSphere>();
 
 	std::shared_ptr<Material> lampMaterial = std::make_shared<Material>("res/shaders/unlit.vert.glsl", "res/shaders/unlit.frag.glsl");
+	lampMaterial->SetVector3((GLchar*)"unlitColor", glm::vec3(1.0f));
 
 	GameObject* lampParent = nullptr;
 	for (int i = 0; i < LAMPS_NUMBER; i++)

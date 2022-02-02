@@ -104,6 +104,36 @@ void Material::SetFloat(const GLint floatID, float value) const
 	}
 }
 
+void Material::SetVector4(const GLchar* vectorName, glm::vec4 value) const
+{
+	const GLint vectorID = glGetUniformLocation(shader->GetProgram(), vectorName);
+	SetVector4(vectorID, value);
+}
+
+void Material::SetVector4(const GLint vectorID, glm::vec4 value) const
+{
+	if (shader != nullptr)
+	{
+		shader->Use();
+		glUniform4f(vectorID, value.x, value.y, value.z, value.w);
+	}
+}
+
+void Material::SetVector3(const GLchar* vectorName, glm::vec3 value) const
+{
+	const GLint vectorID = glGetUniformLocation(shader->GetProgram(), vectorName);
+	SetVector3(vectorID, value);
+}
+
+void Material::SetVector3(const GLint vectorID, glm::vec3 value) const
+{
+	if (shader != nullptr)
+	{
+		shader->Use();
+		glUniform3f(vectorID, value.x, value.y, value.z);
+	}
+}
+
 void Material::SetLightModel(LightModelType type)
 {
 	lightModelType = type;
