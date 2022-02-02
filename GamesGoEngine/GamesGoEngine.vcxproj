@@ -242,6 +242,7 @@
     <None Include="res\shaders\lighting.vert.glsl" />
     <None Include="res\shaders\skybox.frag.glsl" />
     <None Include="res\shaders\skybox.vert.glsl" />
+    <None Include="res\shaders\unlitProtruded.vert.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

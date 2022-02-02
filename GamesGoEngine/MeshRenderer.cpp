@@ -2,14 +2,12 @@
 
 #include "CamerasManager.h"
 #include "GameObject.h"
+#include "MeshImported.h"
 
 MeshRenderer::MeshRenderer()
 {
 	mesh = nullptr;
 	materialList.clear();
-
-	editorOutlineMaterial = new Material("res/shaders/unlit.vert.glsl", "res/shaders/unlit.frag.glsl");
-	editorOutlineMaterial->SetVector3((GLchar*)"unlitColor", glm::vec3(1.0f, 0.8f, 0.0f));
 }
 
 MeshRenderer::~MeshRenderer()
@@ -63,7 +61,11 @@ void MeshRenderer::LateUpdate()
 				glDisable(GL_DEPTH_TEST);
 
 				Transform outlineTransform = *owner->GetTransform();
-				outlineTransform.SetLocalScale(1.05f * outlineTransform.GetLocalScale());
+				// for non imported meshes we'll scale the mesh to have an outline, imported meshes use special vertex shader to achieve similar effect
+				if (!mesh->IsImportedMesh())
+				{
+					outlineTransform.SetLocalScale(1.05f * outlineTransform.GetLocalScale());
+				}
 				editorOutlineMaterial->Draw(outlineTransform.GetTransformMatrix(), CamerasManager::GetActiveCameraViewMatrix(), CamerasManager::GetActiveCameraProjectionMatrix());
 				mesh->DrawSubMesh(i);
 
@@ -103,7 +105,15 @@ void MeshRenderer::SetMesh(const std::shared_ptr<MeshBase>& mesh)
 		// finally, do material cleanup & set proper size to the list
 		CleanMaterialList();
 		materialList.resize(this->mesh->GetSubMeshesCount());
-	}	
+	}
+
+	// Editor only - set the proper material for the outline
+	editorOutlineMaterial = new Material(mesh->IsImportedMesh() ? "res/shaders/unlitProtruded.vert.glsl" : "res/shaders/unlit.vert.glsl", "res/shaders/unlit.frag.glsl");
+	if (mesh->IsImportedMesh())
+	{
+		editorOutlineMaterial->SetFloat((GLchar*)"protrusion", 0.03f);
+	}
+	editorOutlineMaterial->SetVector3((GLchar*)"unlitColor", glm::vec3(1.0f, 0.8f, 0.0f));
 }
 
 size_t MeshRenderer::GetMaterialSlotsNumber() const

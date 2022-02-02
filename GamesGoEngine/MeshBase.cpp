@@ -25,3 +25,8 @@ int MeshBase::GetSubMeshesCount() const
 {
 	return subMeshes.size();
 }
+
+bool MeshBase::IsImportedMesh() const
+{
+	return false;
+}

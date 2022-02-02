@@ -16,6 +16,7 @@ public:
 	MeshImported(std::string path);
 
 	void ImportMesh(std::string path);
+	virtual bool IsImportedMesh() const override;
 
 private:
 	// Processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).

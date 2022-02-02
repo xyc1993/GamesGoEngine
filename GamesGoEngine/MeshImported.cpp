@@ -35,6 +35,11 @@ void MeshImported::ImportMesh(std::string path)
     this->ProcessNode(scene->mRootNode, scene);
 }
 
+bool MeshImported::IsImportedMesh() const
+{
+    return true;
+}
+
 void MeshImported::ProcessNode(aiNode* node, const aiScene* scene)
 {
 	// Process each mesh located at the current node

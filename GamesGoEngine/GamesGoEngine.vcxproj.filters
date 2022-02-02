@@ -397,5 +397,8 @@
     <None Include="res\shaders\depth.frag.glsl">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="res\shaders\unlitProtruded.vert.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
