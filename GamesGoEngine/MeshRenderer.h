@@ -35,8 +35,7 @@ private:
 	
 	std::shared_ptr<MeshBase> mesh;
 	std::vector<std::shared_ptr<Material>> materialList;
-	// used for outlining selected game objects
-	Material* editorOutlineMaterial;
+	
 	// used to determine position in the render queue
 	int currentRenderQueuePosition;
 	// position in the render queue when the game object is not selected in the editor
