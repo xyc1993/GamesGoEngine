@@ -1,29 +1,18 @@
 #include "LightsManager.h"
 
-LightsManager* LightsManager::instance = new LightsManager();
-
-LightsManager* LightsManager::GetInstance()
-{
-	if (instance == nullptr)
-	{
-		instance = new LightsManager();
-	}
-	return instance;
-}
-
 GLuint LightsManager::AddDirectionalLight(DirectionalLight* directionalLight)
 {
-	return AddLight(GetInstance()->directionalLights, directionalLight, MAX_NUMBER_OF_DIR_LIGHTS);
+	return AddLight(directionalLights, directionalLight, MAX_NUMBER_OF_DIR_LIGHTS);
 }
 
 GLuint LightsManager::AddPointLight(PointLight* pointLight)
 {
-	return AddLight(GetInstance()->pointLights, pointLight, MAX_NUMBER_OF_POINT_LIGHTS);
+	return AddLight(pointLights, pointLight, MAX_NUMBER_OF_POINT_LIGHTS);
 }
 
 GLuint LightsManager::AddSpotLight(SpotLight* spotLight)
 {
-	return AddLight(GetInstance()->spotLights, spotLight, MAX_NUMBER_OF_SPOT_LIGHTS);
+	return AddLight(spotLights, spotLight, MAX_NUMBER_OF_SPOT_LIGHTS);
 }
 
 GLuint LightsManager::AddLight(std::vector<Light*>& lightsVector, Light* light, int maxContainerSize)
@@ -35,22 +24,22 @@ GLuint LightsManager::AddLight(std::vector<Light*>& lightsVector, Light* light, 
 
 void LightsManager::RemoveDirectionalLight(DirectionalLight* directionalLight)
 {
-	RemoveLight(GetInstance()->directionalLights, directionalLight);
+	RemoveLight(directionalLights, directionalLight);
 }
 
 void LightsManager::RemovePointLight(PointLight* pointLight)
 {
-	RemoveLight(GetInstance()->pointLights, pointLight);
+	RemoveLight(pointLights, pointLight);
 }
 
 void LightsManager::RemoveSpotLight(SpotLight* spotLight)
 {
-	RemoveLight(GetInstance()->spotLights, spotLight);
+	RemoveLight(spotLights, spotLight);
 }
 
 void LightsManager::RemoveLight(std::vector<Light*>& lightsVector, Light* light)
 {
-	for (int i = 0; i < lightsVector.size(); i++)
+	for (size_t i = 0; i < lightsVector.size(); i++)
 	{
 		if (lightsVector[i] == light)
 		{
@@ -61,30 +50,30 @@ void LightsManager::RemoveLight(std::vector<Light*>& lightsVector, Light* light)
 
 void LightsManager::SetLightsInShader(const GLuint& shaderProgram)
 {
-	glUniform1i(glGetUniformLocation(shaderProgram, "dirLightsNumber"), GetInstance()->directionalLights.size());
-	for (int i = 0; i < GetInstance()->directionalLights.size(); i++)
+	glUniform1i(glGetUniformLocation(shaderProgram, "dirLightsNumber"), directionalLights.size());
+	for (size_t i = 0; i < directionalLights.size(); i++)
 	{
-		if (GetInstance()->directionalLights[i] != nullptr)
+		if (directionalLights[i] != nullptr)
 		{
-			GetInstance()->directionalLights[i]->SetLightInShader(shaderProgram);
+			directionalLights[i]->SetLightInShader(shaderProgram);
 		}
 	}	
 
-	glUniform1i(glGetUniformLocation(shaderProgram, "pointLightsNumber"), GetInstance()->pointLights.size());
-	for (int i = 0; i < GetInstance()->pointLights.size(); i++)
+	glUniform1i(glGetUniformLocation(shaderProgram, "pointLightsNumber"), pointLights.size());
+	for (size_t i = 0; i < pointLights.size(); i++)
 	{
-		if (GetInstance()->pointLights[i] != nullptr)
+		if (pointLights[i] != nullptr)
 		{
-			GetInstance()->pointLights[i]->SetLightInShader(shaderProgram);
+			pointLights[i]->SetLightInShader(shaderProgram);
 		}		
 	}
 
-	glUniform1i(glGetUniformLocation(shaderProgram, "spotLightsNumber"), GetInstance()->spotLights.size());
-	for (int i = 0; i < GetInstance()->spotLights.size(); i++)
+	glUniform1i(glGetUniformLocation(shaderProgram, "spotLightsNumber"), spotLights.size());
+	for (size_t i = 0; i < spotLights.size(); i++)
 	{
-		if (GetInstance()->spotLights[i] != nullptr)
+		if (spotLights[i] != nullptr)
 		{
-			GetInstance()->spotLights[i]->SetLightInShader(shaderProgram);
+			spotLights[i]->SetLightInShader(shaderProgram);
 		}
 	}
 }

@@ -1,11 +1,11 @@
 #include "PointLight.h"
 
 #include "GameObject.h"
-#include "LightsManager.h"
+#include "RenderingManager.h"
 
 PointLight::PointLight()
 {
-	this->lightNumber = LightsManager::AddPointLight(this);
+	this->lightNumber = RenderingManager::GetLightsManager()->AddPointLight(this);
 	if (this->lightNumber == INITIALIZATION_ERROR) delete this;
 }
 
@@ -21,13 +21,13 @@ PointLight::PointLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular,
 	this->linear = linear;
 	this->quadratic = quadratic;
 
-	this->lightNumber = LightsManager::AddPointLight(this);
+	this->lightNumber = RenderingManager::GetLightsManager()->AddPointLight(this);
 	if (this->lightNumber == INITIALIZATION_ERROR) delete this;
 }
 
 PointLight::~PointLight()
 {
-	LightsManager::RemovePointLight(this);
+	RenderingManager::GetLightsManager()->RemovePointLight(this);
 }
 
 void PointLight::Update()

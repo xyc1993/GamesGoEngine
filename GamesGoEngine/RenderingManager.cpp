@@ -6,6 +6,11 @@
 
 RenderingManager* RenderingManager::instance = new RenderingManager();
 
+RenderingManager::RenderingManager()
+{
+	lightsManager = new LightsManager();
+}
+
 RenderingManager* RenderingManager::GetInstance()
 {
 	if (instance == nullptr)
@@ -36,6 +41,11 @@ void RenderingManager::AddMeshRenderer(MeshRenderer* meshRenderer)
 void RenderingManager::SortMeshRenderers()
 {
 	std::sort(GetInstance()->meshRenderers.begin(), GetInstance()->meshRenderers.end(), CompareRenderersPositions);
+}
+
+LightsManager* RenderingManager::GetLightsManager()
+{
+	return GetInstance()->lightsManager;
 }
 
 bool RenderingManager::CompareRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2)

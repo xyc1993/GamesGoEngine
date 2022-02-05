@@ -2,7 +2,7 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-#include "LightsManager.h"
+#include "RenderingManager.h"
 #include "TextureLoader.h"
 
 Material::Material()
@@ -58,7 +58,7 @@ void Material::Draw(glm::mat4 model, glm::mat4 view, glm::mat4 projection)
 	case LightModelType::Unlit:
 		break;
 	case LightModelType::LitForward:
-		LightsManager::SetLightsInShader(shader->GetProgram());
+		RenderingManager::GetLightsManager()->SetLightsInShader(shader->GetProgram());
 		break;
 	}
 }

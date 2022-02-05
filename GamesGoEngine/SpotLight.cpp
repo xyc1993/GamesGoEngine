@@ -1,11 +1,11 @@
 #include "SpotLight.h"
 
 #include "GameObject.h"
-#include "LightsManager.h"
+#include "RenderingManager.h"
 
 SpotLight::SpotLight()
 {
-	this->lightNumber = LightsManager::AddSpotLight(this);
+	this->lightNumber = RenderingManager::GetLightsManager()->AddSpotLight(this);
 	if (this->lightNumber == INITIALIZATION_ERROR) delete this;
 }
 
@@ -25,13 +25,13 @@ SpotLight::SpotLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, f
 	this->cutOff = cutOff;
 	this->outerCutOff = outerCutOff;
 
-	this->lightNumber = LightsManager::AddSpotLight(this);
+	this->lightNumber = RenderingManager::GetLightsManager()->AddSpotLight(this);
 	if (this->lightNumber == INITIALIZATION_ERROR) delete this;
 }
 
 SpotLight::~SpotLight()
 {
-	LightsManager::RemoveSpotLight(this);
+	RenderingManager::GetLightsManager()->RemoveSpotLight(this);
 }
 
 void SpotLight::Update()

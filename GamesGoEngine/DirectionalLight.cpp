@@ -1,13 +1,13 @@
 #include "DirectionalLight.h"
 
 #include "GameObject.h"
-#include "LightsManager.h"
+#include "RenderingManager.h"
 
 DirectionalLight::DirectionalLight()
 {
 	this->direction = glm::vec3(1.0f, -0.5f, 0.0f);
 
-	this->lightNumber = LightsManager::AddDirectionalLight(this);
+	this->lightNumber = RenderingManager::GetLightsManager()->AddDirectionalLight(this);
 	if (this->lightNumber == INITIALIZATION_ERROR) delete this;
 }
 
@@ -19,13 +19,13 @@ DirectionalLight::DirectionalLight(glm::vec3 ambient, glm::vec3 diffuse, glm::ve
 
 	this->direction = glm::vec3(1.0f, -0.5f, 0.0f);
 
-	this->lightNumber = LightsManager::AddDirectionalLight(this);
+	this->lightNumber = RenderingManager::GetLightsManager()->AddDirectionalLight(this);
 	if (this->lightNumber == INITIALIZATION_ERROR) delete this;
 }
 
 DirectionalLight::~DirectionalLight()
 {
-	LightsManager::RemoveDirectionalLight(this);
+	RenderingManager::GetLightsManager()->RemoveDirectionalLight(this);
 }
 
 void DirectionalLight::Update()
