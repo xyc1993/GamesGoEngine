@@ -134,6 +134,20 @@ bool GameObject::IsSelected() const
 void GameObject::SetSelected(bool selected)
 {
 	this->selected = selected;
+	for (size_t i = 0; i < components.size(); i++)
+	{
+		if (components[i] != nullptr)
+		{
+			if (selected)
+			{
+				components[i]->OnSelected();
+			}
+			else
+			{
+				components[i]->OnDeselected();
+			}
+		}
+	}
 }
 
 void GameObject::UpdateDirectChildrenTransforms()

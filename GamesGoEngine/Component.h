@@ -9,6 +9,8 @@ public:
 	virtual void Init(GameObject* owner);
 	virtual void Update() = 0;
 	virtual void LateUpdate() {};
+	virtual void OnSelected() {};
+	virtual void OnDeselected() {};
 
 protected:
 	GameObject* owner;

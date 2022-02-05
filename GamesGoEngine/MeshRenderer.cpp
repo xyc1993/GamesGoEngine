@@ -8,6 +8,8 @@ MeshRenderer::MeshRenderer()
 {
 	mesh = nullptr;
 	materialList.clear();
+	SetRenderQueuePosition(RenderQueuePosition::Opaque);
+	RenderingManager::AddMeshRenderer(this);
 }
 
 MeshRenderer::~MeshRenderer()
@@ -18,60 +20,64 @@ MeshRenderer::~MeshRenderer()
 
 void MeshRenderer::Update()
 {
-	if (owner != nullptr && mesh != nullptr)
-	{
-		if (owner->IsSelected())
-		{
-			return;
-		}
-
-		for (size_t i = 0; i < materialList.size(); i++)
-		{
-			if (materialList[i] != nullptr)
-			{
-				glStencilMask(0x00);
-				materialList[i]->Draw(owner->GetTransform()->GetTransformMatrix(), CamerasManager::GetActiveCameraViewMatrix(), CamerasManager::GetActiveCameraProjectionMatrix());
-				mesh->DrawSubMesh(i);
-			}
-		}
-	}
+	
 }
 
-void MeshRenderer::LateUpdate()
+void MeshRenderer::OnSelected()
+{
+	SetRenderQueuePosition(RenderQueuePosition::EditorOutline, true);
+}
+
+void MeshRenderer::OnDeselected()
+{
+	SetRenderQueuePosition(deselectedRenderQueuePosition, true);
+}
+
+void MeshRenderer::Draw()
 {
 	if (owner != nullptr && mesh != nullptr)
 	{
 		if (!owner->IsSelected())
 		{
-			return;
-		}
-
-		for (size_t i = 0; i < materialList.size(); i++)
-		{
-			if (materialList[i] != nullptr)
+			for (size_t i = 0; i < materialList.size(); i++)
 			{
-				// draw the outline for the selected game object
-				glStencilFunc(GL_ALWAYS, 1, 0xFF);
-				glStencilMask(0xFF);
-				materialList[i]->Draw(owner->GetTransform()->GetTransformMatrix(), CamerasManager::GetActiveCameraViewMatrix(), CamerasManager::GetActiveCameraProjectionMatrix());
-				mesh->DrawSubMesh(i);
-
-				glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-				glStencilMask(0x00);
-				glDisable(GL_DEPTH_TEST);
-
-				Transform outlineTransform = *owner->GetTransform();
-				// for non imported meshes we'll scale the mesh to have an outline, imported meshes use special vertex shader to achieve similar effect
-				if (!mesh->IsImportedMesh())
+				if (materialList[i] != nullptr)
 				{
-					outlineTransform.SetLocalScale(1.05f * outlineTransform.GetLocalScale());
+					glStencilMask(0x00);
+					materialList[i]->Draw(owner->GetTransform()->GetTransformMatrix(), CamerasManager::GetActiveCameraViewMatrix(), CamerasManager::GetActiveCameraProjectionMatrix());
+					mesh->DrawSubMesh(i);
 				}
-				editorOutlineMaterial->Draw(outlineTransform.GetTransformMatrix(), CamerasManager::GetActiveCameraViewMatrix(), CamerasManager::GetActiveCameraProjectionMatrix());
-				mesh->DrawSubMesh(i);
+			}
+		}
+		else
+		{
+			for (size_t i = 0; i < materialList.size(); i++)
+			{
+				if (materialList[i] != nullptr)
+				{
+					// draw the outline for the selected game object
+					glStencilFunc(GL_ALWAYS, 1, 0xFF);
+					glStencilMask(0xFF);
+					materialList[i]->Draw(owner->GetTransform()->GetTransformMatrix(), CamerasManager::GetActiveCameraViewMatrix(), CamerasManager::GetActiveCameraProjectionMatrix());
+					mesh->DrawSubMesh(i);
 
-				glStencilMask(0xFF);
-				glStencilFunc(GL_ALWAYS, 0, 0xFF);
-				glEnable(GL_DEPTH_TEST);
+					glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+					glStencilMask(0x00);
+					glDisable(GL_DEPTH_TEST);
+
+					Transform outlineTransform = *owner->GetTransform();
+					// for non imported meshes we'll scale the mesh to have an outline, imported meshes use special vertex shader to achieve similar effect
+					if (!mesh->IsImportedMesh())
+					{
+						outlineTransform.SetLocalScale(1.05f * outlineTransform.GetLocalScale());
+					}
+					editorOutlineMaterial->Draw(outlineTransform.GetTransformMatrix(), CamerasManager::GetActiveCameraViewMatrix(), CamerasManager::GetActiveCameraProjectionMatrix());
+					mesh->DrawSubMesh(i);
+
+					glStencilMask(0xFF);
+					glStencilFunc(GL_ALWAYS, 0, 0xFF);
+					glEnable(GL_DEPTH_TEST);
+				}
 			}
 		}
 	}
@@ -126,6 +132,26 @@ size_t MeshRenderer::GetMaterialSlotsNumber() const
 	{
 		return 0;
 	}
+}
+
+void MeshRenderer::SetRenderQueuePosition(RenderQueuePosition position, bool selected)
+{
+	SetRenderQueuePosition(static_cast<int>(position), selected);
+}
+
+void MeshRenderer::SetRenderQueuePosition(int position, bool selected)
+{
+	currentRenderQueuePosition = position;
+	if (!selected)
+	{
+		deselectedRenderQueuePosition = position;
+	}
+	RenderingManager::SortMeshRenderers();
+}
+
+int MeshRenderer::GetRenderQueuePosition() const
+{
+	return currentRenderQueuePosition;
 }
 
 void MeshRenderer::CleanMaterialList()

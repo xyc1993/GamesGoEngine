@@ -13,6 +13,7 @@
 #include "InputEditorShortcuts.h"
 #include "InputManager.h"
 #include "PropertiesUI.h"
+#include "RenderingManager.h"
 #include "SceneExample_DepthTest.h"
 #include "SceneExample_LitForward.h"
 #include "Time.h"
@@ -111,6 +112,7 @@ void MainLoop(GLFWwindow* window)
 		ImGui::NewFrame();
 
 		activeScene->Update();
+		RenderingManager::Update();
 
 		GLfloat fps = 1.0f / Time::GetUnscaledDeltaTime();
 		std::string fpsText = "FPS = ";

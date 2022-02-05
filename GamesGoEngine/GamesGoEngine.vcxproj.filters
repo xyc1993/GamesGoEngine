@@ -243,6 +243,9 @@
     <ClCompile Include="SceneExample_DepthTest.cpp">
       <Filter>Source Files\GamesGo\Examples</Filter>
     </ClCompile>
+    <ClCompile Include="RenderingManager.cpp">
+      <Filter>Source Files\GamesGo\Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -373,6 +376,9 @@
     </ClInclude>
     <ClInclude Include="SceneExample_DepthTest.h">
       <Filter>Header Files\GamesGo\Examples</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderingManager.h">
+      <Filter>Header Files\GamesGo\Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
