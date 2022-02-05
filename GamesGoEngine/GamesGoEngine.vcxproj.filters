@@ -61,9 +61,6 @@
     <Filter Include="Source Files\GamesGo\Scene Management">
       <UniqueIdentifier>{7b8436ca-f701-42b9-abce-2fd90b161c8f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\GamesGo\UI">
-      <UniqueIdentifier>{a2e583af-3fb3-4436-b9a7-2cf5b7cfee0e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\GamesGo\Input">
       <UniqueIdentifier>{5d2a0bd8-3874-40c6-bafe-db8cca90d746}</UniqueIdentifier>
     </Filter>
@@ -81,9 +78,6 @@
     </Filter>
     <Filter Include="Header Files\GamesGo\Examples">
       <UniqueIdentifier>{4f84915c-13b3-467f-a281-6986cf730154}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\GamesGo\UI">
-      <UniqueIdentifier>{18dd0aa9-36ff-4167-9780-9713ee244597}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\GamesGo\Time">
       <UniqueIdentifier>{9abf7ab2-0993-4425-9713-5b1f413bf313}</UniqueIdentifier>
@@ -114,6 +108,18 @@
     </Filter>
     <Filter Include="Source Files\GamesGo\Components\Editor">
       <UniqueIdentifier>{00ec278c-fadc-4e3e-8c64-c21496bb7cab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GamesGo\Editor">
+      <UniqueIdentifier>{06577834-39b6-417c-a680-5f32d4cc3ef9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GamesGo\Editor\UI">
+      <UniqueIdentifier>{a2e583af-3fb3-4436-b9a7-2cf5b7cfee0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GamesGo\Editor">
+      <UniqueIdentifier>{83bcb362-b61d-449d-8df7-5bbca8d49ad3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GamesGo\Editor\UI">
+      <UniqueIdentifier>{18dd0aa9-36ff-4167-9780-9713ee244597}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -193,7 +199,7 @@
       <Filter>Source Files\GamesGo\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="WorldOutlinerUI.cpp">
-      <Filter>Source Files\GamesGo\UI</Filter>
+      <Filter>Source Files\GamesGo\Editor\UI</Filter>
     </ClCompile>
     <ClCompile Include="PositionOscillator.cpp">
       <Filter>Source Files\GamesGo\Components\Movement</Filter>
@@ -205,7 +211,7 @@
       <Filter>Source Files\GamesGo\Components\Movement</Filter>
     </ClCompile>
     <ClCompile Include="PropertiesUI.cpp">
-      <Filter>Source Files\GamesGo\UI</Filter>
+      <Filter>Source Files\GamesGo\Editor\UI</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\GamesGo\Camera</Filter>
@@ -330,7 +336,7 @@
       <Filter>Header Files\GamesGo\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="WorldOutlinerUI.h">
-      <Filter>Header Files\GamesGo\UI</Filter>
+      <Filter>Header Files\GamesGo\Editor\UI</Filter>
     </ClInclude>
     <ClInclude Include="PositionOscillator.h">
       <Filter>Header Files\GamesGo\Components\Movement</Filter>
@@ -342,7 +348,7 @@
       <Filter>Header Files\GamesGo\Components\Movement</Filter>
     </ClInclude>
     <ClInclude Include="PropertiesUI.h">
-      <Filter>Header Files\GamesGo\UI</Filter>
+      <Filter>Header Files\GamesGo\Editor\UI</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Header Files\GamesGo\Camera</Filter>

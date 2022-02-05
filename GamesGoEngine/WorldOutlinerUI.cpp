@@ -70,7 +70,12 @@ void WorldOutlinerUI::DrawSceneNodeChildren(GameObject* sceneObject)
 
 			if (ImGui::IsItemClicked())
 			{
+				if (selectedSceneObject != nullptr)
+				{
+					selectedSceneObject->SetSelected(false);
+				}
 				selectedSceneObject = child;
+				selectedSceneObject->SetSelected(true);
 			}
 
 			if (opened)
