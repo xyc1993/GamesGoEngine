@@ -156,6 +156,8 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CamerasManager.cpp" />
     <ClCompile Include="Component.cpp" />
+    <ClCompile Include="Log.cpp" />
+    <ClCompile Include="LoggerUI.cpp" />
     <ClCompile Include="MeshPrimitiveBase.cpp" />
     <ClCompile Include="MeshPrimitiveCube.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
@@ -202,6 +204,8 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CamerasManager.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="Log.h" />
+    <ClInclude Include="LoggerUI.h" />
     <ClInclude Include="MeshPrimitiveBase.h" />
     <ClInclude Include="MeshPrimitiveCube.h" />
     <ClInclude Include="DirectionalLight.h" />

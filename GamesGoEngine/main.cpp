@@ -12,6 +12,7 @@
 #include "CamerasManager.h"
 #include "InputEditorShortcuts.h"
 #include "InputManager.h"
+#include "LoggerUI.h"
 #include "PropertiesUI.h"
 #include "RenderingManager.h"
 #include "SceneExample_DepthTest.h"
@@ -133,6 +134,7 @@ void MainLoop(GLFWwindow* window)
 
 		selectedSceneObject = WorldOutlinerUI::Draw(activeScene->GetSceneUnsafe());
 		PropertiesUI::Draw(selectedSceneObject);
+		LoggerUI::Draw();
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

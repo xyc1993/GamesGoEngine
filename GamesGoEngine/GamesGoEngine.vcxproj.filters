@@ -121,6 +121,12 @@
     <Filter Include="Header Files\GamesGo\Editor\UI">
       <UniqueIdentifier>{18dd0aa9-36ff-4167-9780-9713ee244597}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GamesGo\Debug">
+      <UniqueIdentifier>{832b9516-f7f3-41a3-9b1d-39b33674d05d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GamesGo\Debug">
+      <UniqueIdentifier>{5c3c2a3f-65b0-47d5-adfd-20c26fe0af3b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectionalLight.cpp">
@@ -251,6 +257,12 @@
     </ClCompile>
     <ClCompile Include="RenderingManager.cpp">
       <Filter>Source Files\GamesGo\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Log.cpp">
+      <Filter>Source Files\GamesGo\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="LoggerUI.cpp">
+      <Filter>Source Files\GamesGo\Editor\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -385,6 +397,12 @@
     </ClInclude>
     <ClInclude Include="RenderingManager.h">
       <Filter>Header Files\GamesGo\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Log.h">
+      <Filter>Header Files\GamesGo\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="LoggerUI.h">
+      <Filter>Header Files\GamesGo\Editor\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
