@@ -6,12 +6,12 @@
 
 void Log::PrintMsg(MsgType type, std::string msg)
 {
-	const time_t ttime = time(0);
-	tm local_time;
-	localtime_s(&local_time , &ttime);
+	const time_t currentTime = time(0);
+	tm localTime;
+	localtime_s(&localTime , &currentTime);
 
 	char buffer[256];
-	strftime(buffer, sizeof(buffer), "%Y.%b.%d %H:%M:%S", &local_time);
+	strftime(buffer, sizeof(buffer), "%Y.%b.%d %H:%M:%S", &localTime);
 
 	const std::string logTimeString = buffer;
 	const std::string logMsg = logTimeString + " " + msg;
