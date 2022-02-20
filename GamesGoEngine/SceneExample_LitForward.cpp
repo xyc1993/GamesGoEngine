@@ -58,12 +58,12 @@ SceneExample_LitForward::SceneExample_LitForward()
 	};
 
 	std::vector<const GLchar*> skyboxTextures;
-	skyboxTextures.push_back("res/images/skybox/right.tga");
-	skyboxTextures.push_back("res/images/skybox/left.tga");
-	skyboxTextures.push_back("res/images/skybox/top.tga");
-	skyboxTextures.push_back("res/images/skybox/bottom.tga");
-	skyboxTextures.push_back("res/images/skybox/back.tga");
-	skyboxTextures.push_back("res/images/skybox/front.tga");
+	skyboxTextures.push_back("res/textures/skybox/right.tga");
+	skyboxTextures.push_back("res/textures/skybox/left.tga");
+	skyboxTextures.push_back("res/textures/skybox/top.tga");
+	skyboxTextures.push_back("res/textures/skybox/bottom.tga");
+	skyboxTextures.push_back("res/textures/skybox/back.tga");
+	skyboxTextures.push_back("res/textures/skybox/front.tga");
 
 	std::shared_ptr<Material> skyboxMaterial = std::make_shared<Material>("res/shaders/skybox.vert.glsl", "res/shaders/skybox.frag.glsl");
 	skyboxMaterial->SetCubeTexture("skybox", 1, skyboxTextures);
