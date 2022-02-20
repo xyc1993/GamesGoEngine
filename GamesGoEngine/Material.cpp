@@ -69,12 +69,12 @@ void Material::SetShader(const GLchar* vertexPath, const GLchar* fragmentPath)
 	shader = new Shader(vertexPath, fragmentPath);	
 }
 
-void Material::SetTexture(const GLchar* textureName, GLuint textureIndex, GLchar* path)
+void Material::SetTexture(const GLchar* textureName, GLuint textureIndex, GLchar* path, bool transparencyEnabled)
 {
 	if (shader != nullptr)
 	{
 		const GLint textureID = glGetUniformLocation(shader->GetProgram(), textureName);
-		GLuint texture = TextureLoader::LoadTexture(path);
+		GLuint texture = TextureLoader::LoadTexture(path, transparencyEnabled);
 		texturesMap[textureID] = std::tuple<GLuint, GLuint>(textureIndex, texture);
 	}
 }

@@ -264,6 +264,9 @@
     <ClCompile Include="LoggerUI.cpp">
       <Filter>Source Files\GamesGo\Editor\UI</Filter>
     </ClCompile>
+    <ClCompile Include="SceneExample_Transparency.cpp">
+      <Filter>Source Files\GamesGo\Examples</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -404,6 +407,9 @@
     <ClInclude Include="LoggerUI.h">
       <Filter>Header Files\GamesGo\Editor\UI</Filter>
     </ClInclude>
+    <ClInclude Include="SceneExample_Transparency.h">
+      <Filter>Header Files\GamesGo\Examples</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\unlit.frag.glsl">
@@ -428,6 +434,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="res\shaders\unlitProtruded.vert.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\shaders\unlitTextured.vert.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\shaders\unlitTexturedMasked.frag.glsl">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

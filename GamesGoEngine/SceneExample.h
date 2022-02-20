@@ -13,5 +13,7 @@ public:
 	Scene* GetSceneUnsafe() const;
 
 protected:
+	GameObject* AddEditorSpectator() const;
+
 	Scene* scene;
 };

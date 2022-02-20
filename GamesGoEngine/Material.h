@@ -28,7 +28,7 @@ public:
 	void Draw(glm::mat4 model, glm::mat4 view, glm::mat4 projection);
 	void SetShader(const GLchar* vertexPath, const GLchar* fragmentPath);
 	
-	void SetTexture(const GLchar* textureName, GLuint textureIndex, GLchar* path);
+	void SetTexture(const GLchar* textureName, GLuint textureIndex, GLchar* path, bool transparencyEnabled = false);
 	void SetCubeTexture(const GLchar* textureName, GLuint textureIndex, const std::vector<const GLchar*>& paths);
 	
 	void SetFloat(const GLchar* floatName, float value) const;

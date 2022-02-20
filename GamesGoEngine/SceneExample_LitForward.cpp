@@ -205,25 +205,7 @@ SceneExample_LitForward::SceneExample_LitForward()
 	nanoSuitObject->SetName(nanoSuitName);
 
 	scene->AddGameObject(nanoSuitObject);
-
-	GameObject* editorSpectatorObject = new GameObject();
-	editorSpectatorObject->GetTransform()->SetRotationEulerDegrees(glm::vec3(0.0f, 180.0f, 0.0f));
-	editorSpectatorObject->GetTransform()->SetPosition(glm::vec3(0.0f, 0.0, 3.0f));
-
-	EditorMovement* editorMovementComponent = new EditorMovement();
-	Camera* cameraComponent = new Camera();
-	SpotLight* spotLight = new SpotLight(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(1.0f),
-		1.0f, 0.09f, 0.032f, glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(15.0f)));
-
-	editorSpectatorObject->AddComponent(editorMovementComponent);
-	editorSpectatorObject->AddComponent(cameraComponent);
-	editorSpectatorObject->AddComponent(spotLight);
-
-	std::string editorSpectatorName = "editor_spectator";
-	editorSpectatorObject->SetName(editorSpectatorName);
-
-	scene->AddGameObject(editorSpectatorObject);
-
+	
 	GameObject* directionalLightObject = new GameObject();
 	directionalLightObject->GetTransform()->SetRotationEulerDegrees(glm::vec3(90.0f, -45.0f, 0.0f));
 	DirectionalLight* directionalLight = new DirectionalLight(glm::vec3(0.05f), glm::vec3(0.4f), glm::vec3(0.5f));
@@ -233,4 +215,9 @@ SceneExample_LitForward::SceneExample_LitForward()
 	directionalLightObject->SetName(directionalLightName);
 
 	scene->AddGameObject(directionalLightObject);
+
+	GameObject* editorSpectatorObject = AddEditorSpectator();	
+	SpotLight* spotLight = new SpotLight(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(1.0f),
+		1.0f, 0.09f, 0.032f, glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(15.0f)));	
+	editorSpectatorObject->AddComponent(spotLight);
 }

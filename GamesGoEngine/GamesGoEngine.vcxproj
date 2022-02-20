@@ -183,6 +183,7 @@
     <ClCompile Include="SceneExample.cpp" />
     <ClCompile Include="SceneExample_DepthTest.cpp" />
     <ClCompile Include="SceneExample_LitForward.cpp" />
+    <ClCompile Include="SceneExample_Transparency.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="SpotLight.cpp" />
@@ -231,6 +232,7 @@
     <ClInclude Include="SceneExample.h" />
     <ClInclude Include="SceneExample_DepthTest.h" />
     <ClInclude Include="SceneExample_LitForward.h" />
+    <ClInclude Include="SceneExample_Transparency.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="SpotLight.h" />
@@ -249,6 +251,8 @@
     <None Include="res\shaders\skybox.frag.glsl" />
     <None Include="res\shaders\skybox.vert.glsl" />
     <None Include="res\shaders\unlitProtruded.vert.glsl" />
+    <None Include="res\shaders\unlitTextured.vert.glsl" />
+    <None Include="res\shaders\unlitTexturedMasked.frag.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

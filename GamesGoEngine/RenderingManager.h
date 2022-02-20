@@ -10,7 +10,8 @@ class Material;
 enum class RenderQueuePosition
 {
 	Opaque = 1000,
-	EditorOutline = 1500,
+	Transparent = 3000,
+	EditorOutline = 4500,
 };
 
 class RenderingManager

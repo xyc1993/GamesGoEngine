@@ -9,6 +9,6 @@
 class TextureLoader
 {
 public:
-    static GLuint LoadTexture(GLchar* path);
+    static GLuint LoadTexture(GLchar* path, bool transparencyEnabled);
     static GLuint LoadCubemap(std::vector<const GLchar*> faces);
 };

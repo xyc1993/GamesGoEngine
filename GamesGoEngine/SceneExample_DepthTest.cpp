@@ -95,31 +95,5 @@ SceneExample_DepthTest::SceneExample_DepthTest()
 		boxChild3->AddComponent(positionOscillator);
 	}
 
-	GameObject* nanoSuitObject = new GameObject();
-	nanoSuitObject->GetTransform()->SetPosition(glm::vec3(0.0f, -1.75f, 0.0f));
-	nanoSuitObject->GetTransform()->SetScale(glm::vec3(0.2f));
-	MeshRenderer* nanoSuitMeshRenderer = new MeshRenderer();
-	std::shared_ptr<MeshImported> nanoSuitMesh = std::make_shared<MeshImported>((GLchar*)"res/nanosuit/nanosuit.obj");
-	nanoSuitMeshRenderer->SetMesh(nanoSuitMesh);
-	for (size_t i = 0; i < nanoSuitMeshRenderer->GetMaterialSlotsNumber(); i++)
-	{
-		nanoSuitMeshRenderer->SetMaterial(depthMaterial, i);
-	}
-	nanoSuitObject->AddComponent(nanoSuitMeshRenderer);
-	scene->AddGameObject(nanoSuitObject);
-
-	GameObject* editorSpectatorObject = new GameObject();
-	editorSpectatorObject->GetTransform()->SetRotationEulerDegrees(glm::vec3(0.0f, 180.0f, 0.0f));
-	editorSpectatorObject->GetTransform()->SetPosition(glm::vec3(0.0f, 0.0, 3.0f));
-
-	EditorMovement* editorMovementComponent = new EditorMovement();
-	Camera* cameraComponent = new Camera();
-
-	editorSpectatorObject->AddComponent(editorMovementComponent);
-	editorSpectatorObject->AddComponent(cameraComponent);
-
-	std::string editorSpectatorName = "editor_spectator";
-	editorSpectatorObject->SetName(editorSpectatorName);
-
-	scene->AddGameObject(editorSpectatorObject);
+	AddEditorSpectator();
 }
