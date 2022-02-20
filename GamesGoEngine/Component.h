@@ -11,6 +11,7 @@ public:
 	virtual void LateUpdate() {};
 	virtual void OnSelected() {};
 	virtual void OnDeselected() {};
+	GameObject* GetOwner() const;
 
 protected:
 	GameObject* owner;

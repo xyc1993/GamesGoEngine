@@ -36,5 +36,25 @@ SceneExample_Transparency::SceneExample_Transparency()
 		scene->AddGameObject(grassObject);
 	}
 
+	std::shared_ptr<Material> windowMaterial = std::make_shared<Material>("res/shaders/unlitTextured.vert.glsl", "res/shaders/unlitTexturedTransparent.frag.glsl");
+	windowMaterial->SetTexture("mainTexture", 0, (GLchar*)"res/textures/blending_transparent_window.png", true);
+
+	for (size_t i = 0; i < grassPositions.size(); i++)
+	{
+		GameObject* windowObject = new GameObject();
+		MeshRenderer* meshRenderer = new MeshRenderer();
+		meshRenderer->SetMesh(quadMesh);
+		meshRenderer->SetMaterial(windowMaterial);
+		meshRenderer->SetRenderQueuePosition(RenderQueuePosition::Transparent);
+		windowObject->AddComponent(meshRenderer);
+		windowObject->GetTransform()->SetPosition(grassPositions[i] + glm::vec3(0.0f, 0.0f, 1.0f));
+
+		std::string name = "window_";
+		name.append(std::to_string(i));
+		windowObject->SetName(name);
+
+		scene->AddGameObject(windowObject);
+	}
+
 	AddEditorSpectator();
 }

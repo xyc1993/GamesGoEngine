@@ -253,6 +253,7 @@
     <None Include="res\shaders\unlitProtruded.vert.glsl" />
     <None Include="res\shaders\unlitTextured.vert.glsl" />
     <None Include="res\shaders\unlitTexturedMasked.frag.glsl" />
+    <None Include="res\shaders\unlitTexturedTransparent.frag.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

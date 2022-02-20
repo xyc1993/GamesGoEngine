@@ -7,6 +7,7 @@
 class CamerasManager
 {
 public:
+	static glm::vec3 GetActiveCameraPosition();
 	static glm::mat4 GetActiveCameraViewMatrix();
 	static glm::mat4 GetActiveCameraProjectionMatrix();
 

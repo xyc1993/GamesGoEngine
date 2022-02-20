@@ -442,5 +442,8 @@
     <None Include="res\shaders\unlitTexturedMasked.frag.glsl">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="res\shaders\unlitTexturedTransparent.frag.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

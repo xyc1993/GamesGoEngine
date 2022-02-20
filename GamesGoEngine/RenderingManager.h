@@ -24,16 +24,30 @@ private:
 
 public:
 	static void Update();
+
+private:
+	static void DrawRenderers(const std::vector<MeshRenderer*>& renderers);
+
+public:
 	static void AddMeshRenderer(MeshRenderer* meshRenderer);
 	static void SortMeshRenderers();
+
+private:
+	static void SortOpaqueMeshRenderers();
+	static void SortTransparentMeshRenderers();
+
+public:
 	static LightsManager* GetLightsManager();
 	static Material* GetEditorOutlineMaterial(bool isMeshImported);
 
 private:
 	static bool CompareRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2);
+	static bool CompareTransparentRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2);
 
 	LightsManager* lightsManager;
 	std::vector<MeshRenderer*> meshRenderers;
+	std::vector<MeshRenderer*> opaqueMeshRenderers;
+	std::vector<MeshRenderer*> transparentMeshRenderers;
 
 	// used for outlining selected game objects
 	Material* editorOutlineMaterialScale;

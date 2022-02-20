@@ -3,8 +3,29 @@
 #include <algorithm>
 #include <glm/ext/matrix_clip_space.hpp>
 
+#include "GameObject.h"
+
 std::vector<Camera*> CamerasManager::sceneCameras;
 float CamerasManager::currentViewAspectRatio = 16.0f / 9.0f;
+
+glm::vec3 CamerasManager::GetActiveCameraPosition()
+{
+	if (sceneCameras.empty())
+	{
+		return glm::vec3(0.0f);
+	}
+	else
+	{
+		if (sceneCameras[0]->GetOwner() != nullptr)
+		{
+			return sceneCameras[0]->GetOwner()->GetTransform()->GetPosition();
+		}
+		else
+		{
+			return glm::vec3(0.0f);
+		}
+	}
+}
 
 glm::mat4 CamerasManager::GetActiveCameraViewMatrix()
 {
