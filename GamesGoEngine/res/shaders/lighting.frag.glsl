@@ -3,6 +3,8 @@
 #define NUMBER_OF_POINT_LIGHTS 4
 #define NUMBER_OF_SPOT_LIGHTS 4
 
+#define SPEC_THRESHOLD 0.05
+
 struct Material
 {
 	sampler2D diffuse;
@@ -106,6 +108,9 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
 	vec3 reflectDir = reflect(-lightDir, normal);
 	float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
 
+	// multiply by diff to ensure specular will be 0 if the pixel is facing light 'backwards'
+	spec *= step(SPEC_THRESHOLD, diff);
+
 	vec3 ambient = light.ambient * vec3(texture(material.diffuse, TexCoord));
 	vec3 diffuse = light.diffuse * diff * vec3(texture(material.diffuse, TexCoord));
 	vec3 specular = light.specular * spec * vec3(texture(material.specular, TexCoord));
@@ -122,12 +127,15 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 	vec3 reflectDir = reflect(-lightDir, normal);
 	float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
 
+	// multiply by diff to ensure specular will be 0 if the pixel is facing light 'backwards'
+	spec *= step(SPEC_THRESHOLD, diff);
+
 	float distance = length(light.position - fragPos);
 	float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * distance * distance);
 
-	vec3 ambient = light.ambient * vec3(texture(material.diffuse, TexCoord));
-	vec3 diffuse = light.diffuse * diff * vec3(texture(material.diffuse, TexCoord));
-	vec3 specular = light.specular * spec * vec3(texture(material.specular, TexCoord));
+	vec3 ambient = light.ambient* vec3(texture(material.diffuse, TexCoord));
+	vec3 diffuse = light.diffuse* diff* vec3(texture(material.diffuse, TexCoord));
+	vec3 specular = light.specular* spec* vec3(texture(material.specular, TexCoord));
 
 	return attenuation * (ambient + diffuse + specular);
 }
@@ -140,6 +148,9 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 
 	vec3 reflectDir = reflect(-lightDir, normal);
 	float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+
+	// multiply by diff to ensure specular will be 0 if the pixel is facing light 'backwards'
+	spec *= step(SPEC_THRESHOLD, diff);
 
 	float distance = length(light.position - fragPos);
 	float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * distance * distance);
