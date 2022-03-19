@@ -127,6 +127,12 @@
     <Filter Include="Source Files\GamesGo\Debug">
       <UniqueIdentifier>{5c3c2a3f-65b0-47d5-adfd-20c26fe0af3b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GamesGo\Editor\UI\Panels">
+      <UniqueIdentifier>{b026b2f8-64a4-405a-8abb-5270ac13e742}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GamesGo\Editor\UI\Panels">
+      <UniqueIdentifier>{7d977a72-24e3-4e9d-b3f7-a5d857b9b81f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectionalLight.cpp">
@@ -204,9 +210,6 @@
     <ClCompile Include="Skybox.cpp">
       <Filter>Source Files\GamesGo\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="WorldOutlinerUI.cpp">
-      <Filter>Source Files\GamesGo\Editor\UI</Filter>
-    </ClCompile>
     <ClCompile Include="PositionOscillator.cpp">
       <Filter>Source Files\GamesGo\Components\Movement</Filter>
     </ClCompile>
@@ -215,9 +218,6 @@
     </ClCompile>
     <ClCompile Include="ScaleOscillator.cpp">
       <Filter>Source Files\GamesGo\Components\Movement</Filter>
-    </ClCompile>
-    <ClCompile Include="PropertiesUI.cpp">
-      <Filter>Source Files\GamesGo\Editor\UI</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\GamesGo\Camera</Filter>
@@ -261,11 +261,23 @@
     <ClCompile Include="Log.cpp">
       <Filter>Source Files\GamesGo\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="LoggerUI.cpp">
-      <Filter>Source Files\GamesGo\Editor\UI</Filter>
-    </ClCompile>
     <ClCompile Include="SceneExample_Transparency.cpp">
       <Filter>Source Files\GamesGo\Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorUIManager.cpp">
+      <Filter>Source Files\GamesGo\Editor\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="LoggerUI.cpp">
+      <Filter>Source Files\GamesGo\Editor\UI\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="PropertiesUI.cpp">
+      <Filter>Source Files\GamesGo\Editor\UI\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldOutlinerUI.cpp">
+      <Filter>Source Files\GamesGo\Editor\UI\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugToolsUI.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -350,9 +362,6 @@
     <ClInclude Include="Skybox.h">
       <Filter>Header Files\GamesGo\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="WorldOutlinerUI.h">
-      <Filter>Header Files\GamesGo\Editor\UI</Filter>
-    </ClInclude>
     <ClInclude Include="PositionOscillator.h">
       <Filter>Header Files\GamesGo\Components\Movement</Filter>
     </ClInclude>
@@ -361,9 +370,6 @@
     </ClInclude>
     <ClInclude Include="ScaleOscillator.h">
       <Filter>Header Files\GamesGo\Components\Movement</Filter>
-    </ClInclude>
-    <ClInclude Include="PropertiesUI.h">
-      <Filter>Header Files\GamesGo\Editor\UI</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Header Files\GamesGo\Camera</Filter>
@@ -404,11 +410,23 @@
     <ClInclude Include="Log.h">
       <Filter>Header Files\GamesGo\Debug</Filter>
     </ClInclude>
-    <ClInclude Include="LoggerUI.h">
-      <Filter>Header Files\GamesGo\Editor\UI</Filter>
-    </ClInclude>
     <ClInclude Include="SceneExample_Transparency.h">
       <Filter>Header Files\GamesGo\Examples</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorUIManager.h">
+      <Filter>Header Files\GamesGo\Editor\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="LoggerUI.h">
+      <Filter>Header Files\GamesGo\Editor\UI\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="PropertiesUI.h">
+      <Filter>Header Files\GamesGo\Editor\UI\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldOutlinerUI.h">
+      <Filter>Header Files\GamesGo\Editor\UI\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugToolsUI.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

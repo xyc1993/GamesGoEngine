@@ -1,15 +1,12 @@
 #include <iostream>
 
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
-
 #define GLEW_STATIC
 #include <string>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 #include "CamerasManager.h"
+#include "EditorUIManager.h"
 #include "InputEditorShortcuts.h"
 #include "InputManager.h"
 #include "LoggerUI.h"
@@ -80,23 +77,14 @@ int SetWindow(GLFWwindow* window)
 
 void MainLoop(GLFWwindow* window)
 {
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	ImGui::StyleColorsDark();
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
-	ImGui_ImplOpenGL3_Init("#version 330");
-
-	bool wireframeOnly = false;
+	EditorUIManager::Init(window);
 	
-	//SceneExample_LitForward* activeScene = new SceneExample_LitForward();
+	SceneExample_LitForward* activeScene = new SceneExample_LitForward();
 	//SceneExample_DepthTest* activeScene = new SceneExample_DepthTest();
-	SceneExample_Transparency* activeScene = new SceneExample_Transparency();
+	//SceneExample_Transparency* activeScene = new SceneExample_Transparency();
 	
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
-
-	GameObject* selectedSceneObject = nullptr;
 	
 	while (!glfwWindowShouldClose(window))
 	{
@@ -109,38 +97,11 @@ void MainLoop(GLFWwindow* window)
 
 		glClearColor(0.1f, 0.15f, 0.15f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-
+		
 		activeScene->Update();
 		RenderingManager::Update();
-
-		GLfloat fps = 1.0f / Time::GetUnscaledDeltaTime();
-		std::string fpsText = "FPS = ";
-		fpsText.append(std::to_string(fps));
-
-		ImGui::Begin("Basic ImGUI window");
-		ImGui::Text(fpsText.c_str());
-		float timeScale = Time::GetTimeScale();
-		if (ImGui::SliderFloat("Time Scale", &timeScale, 0.0f, 5.0f))
-		{
-			Time::SetTimeScale(timeScale);
-		}
-		if (ImGui::Checkbox("Wireframe only", &wireframeOnly))
-		{
-			glPolygonMode(GL_FRONT_AND_BACK, wireframeOnly ? GL_LINE : GL_FILL);
-		}
-		ImGui::End();
-
-		selectedSceneObject = WorldOutlinerUI::Draw(activeScene->GetSceneUnsafe());
-		PropertiesUI::Draw(selectedSceneObject);
-		LoggerUI::Draw();
-
-		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
+		EditorUIManager::Draw(activeScene->GetSceneUnsafe());
+		
 		glfwSwapBuffers(window);
 
 		//reset pressed & released keys statuses
@@ -149,9 +110,7 @@ void MainLoop(GLFWwindow* window)
 
 	delete activeScene;
 
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
-	ImGui::DestroyContext();
+	EditorUIManager::Shutdown();
 }
 
 int main()
