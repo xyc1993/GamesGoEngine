@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "LightsManager.h"
+#include "Skybox.h"
 
 class MeshRenderer;
 class Material;
@@ -23,12 +24,15 @@ private:
 	static RenderingManager* GetInstance();
 
 public:
+	static void Init();
 	static void Update();
 
 private:
+	static void DrawSkybox();
 	static void DrawRenderers(const std::vector<MeshRenderer*>& renderers);
 
 public:
+	static void SetSkybox(Skybox* skybox);
 	static void AddMeshRenderer(MeshRenderer* meshRenderer);
 	static void SortMeshRenderers();
 
@@ -45,6 +49,7 @@ private:
 	static bool CompareTransparentRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2);
 
 	LightsManager* lightsManager;
+	Skybox* skybox;
 	std::vector<MeshRenderer*> meshRenderers;
 	std::vector<MeshRenderer*> opaqueMeshRenderers;
 	std::vector<MeshRenderer*> transparentMeshRenderers;

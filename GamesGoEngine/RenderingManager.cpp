@@ -33,13 +33,40 @@ RenderingManager* RenderingManager::GetInstance()
 	return instance;
 }
 
+void RenderingManager::Init()
+{
+	glEnable(GL_DEPTH_TEST);
+
+	glEnable(GL_STENCIL_TEST);
+	//glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+}
+
 void RenderingManager::Update()
 {
-	// TODO:: more optimal sorting, it could sort on camera view change, not on every draw frame
+	glClearColor(0.1f, 0.15f, 0.15f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+	// TODO: more optimal sorting, it could sort on camera view change, not on every draw frame
 	SortTransparentMeshRenderers();
 
+	DrawSkybox();
 	DrawRenderers(GetInstance()->opaqueMeshRenderers);
 	DrawRenderers(GetInstance()->transparentMeshRenderers);
+}
+
+void RenderingManager::DrawSkybox()
+{
+	if (GetInstance()->skybox != nullptr)
+	{
+		GetInstance()->skybox->Draw();
+	}
 }
 
 void RenderingManager::DrawRenderers(const std::vector<MeshRenderer*>& renderers)
@@ -52,6 +79,15 @@ void RenderingManager::DrawRenderers(const std::vector<MeshRenderer*>& renderers
 			meshRenderer->Draw();
 		}
 	}
+}
+
+void RenderingManager::SetSkybox(Skybox* skybox)
+{
+	if (GetInstance()->skybox != nullptr)
+	{
+		delete GetInstance()->skybox;
+	}
+	GetInstance()->skybox = skybox;
 }
 
 void RenderingManager::AddMeshRenderer(MeshRenderer* meshRenderer)

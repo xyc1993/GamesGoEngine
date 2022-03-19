@@ -11,6 +11,7 @@ public:
 	~Skybox();
 
 	void Update() override;
+	void Draw();
 	void SetMaterial(const std::shared_ptr<Material>& material);
 
 private:

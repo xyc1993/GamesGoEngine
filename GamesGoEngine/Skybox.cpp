@@ -2,10 +2,12 @@
 
 #include "CamerasManager.h"
 #include "MeshPrimitiveCube.h"
+#include "RenderingManager.h"
 
 Skybox::Skybox()
 {
 	mesh = new MeshPrimitiveCube();
+	RenderingManager::SetSkybox(this);
 }
 
 Skybox::~Skybox()
@@ -15,6 +17,11 @@ Skybox::~Skybox()
 }
 
 void Skybox::Update()
+{
+	
+}
+
+void Skybox::Draw()
 {
 	if (material != nullptr && mesh != nullptr)
 	{

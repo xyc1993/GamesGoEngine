@@ -9,14 +9,11 @@
 #include "EditorUIManager.h"
 #include "InputEditorShortcuts.h"
 #include "InputManager.h"
-#include "LoggerUI.h"
-#include "PropertiesUI.h"
 #include "RenderingManager.h"
 #include "SceneExample_DepthTest.h"
 #include "SceneExample_LitForward.h"
 #include "SceneExample_Transparency.h"
 #include "Time.h"
-#include "WorldOutlinerUI.h"
 
 const GLint WIDTH = 1200, HEIGHT = 675;
 int SCREEN_WIDTH, SCREEN_HEIGHT;
@@ -77,14 +74,12 @@ int SetWindow(GLFWwindow* window)
 
 void MainLoop(GLFWwindow* window)
 {
+	RenderingManager::Init();
 	EditorUIManager::Init(window);
 	
 	SceneExample_LitForward* activeScene = new SceneExample_LitForward();
 	//SceneExample_DepthTest* activeScene = new SceneExample_DepthTest();
 	//SceneExample_Transparency* activeScene = new SceneExample_Transparency();
-	
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
 	
 	while (!glfwWindowShouldClose(window))
 	{
@@ -94,9 +89,6 @@ void MainLoop(GLFWwindow* window)
 		
 		glfwPollEvents();
 		InputEditorShortcuts::ProcessShortcuts(window);
-
-		glClearColor(0.1f, 0.15f, 0.15f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 		
 		activeScene->Update();
 		RenderingManager::Update();
@@ -109,25 +101,14 @@ void MainLoop(GLFWwindow* window)
 	}
 
 	delete activeScene;
-
 	EditorUIManager::Shutdown();
 }
 
 int main()
 {
 	GLFWwindow* window = InitWindow();
-	
-	int success = SetWindow(window);
+	const int success = SetWindow(window);
 	if (success != 0) return EXIT_FAILURE;
-
-	glEnable(GL_DEPTH_TEST);
-
-	glEnable(GL_STENCIL_TEST);
-	//glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-	
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
 	MainLoop(window);
 
