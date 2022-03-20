@@ -79,6 +79,15 @@ void Material::SetTexture(const GLchar* textureName, GLuint textureIndex, GLchar
 	}
 }
 
+void Material::SetTexture(const GLchar* textureName, GLuint texture, GLuint textureIndex)
+{
+	if (shader != nullptr)
+	{
+		const GLint textureID = glGetUniformLocation(shader->GetProgram(), textureName);
+		texturesMap[textureID] = std::tuple<GLuint, GLuint>(textureIndex, texture);
+	}
+}
+
 void Material::SetCubeTexture(const GLchar* textureName, GLuint textureIndex, const std::vector<const GLchar*>& paths)
 {
 	if (shader != nullptr)

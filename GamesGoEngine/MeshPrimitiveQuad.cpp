@@ -19,10 +19,17 @@ void MeshPrimitiveQuad::SetupMesh()
 
 	constexpr glm::vec3 quadVertices[] =
 	{
+		/* this is ok for regular objects scaling but for screen renderer it causes the framebuffer to be rendered at half width & height, therefore 1.0 instead of 0.5 is used		 
 		glm::vec3(-0.5f, -0.5f,  0.0f),
 		glm::vec3( 0.5f, -0.5f,  0.0f),
 		glm::vec3( 0.5f,  0.5f,  0.0f),
 		glm::vec3(-0.5f,  0.5f,  0.0f),
+		*/
+
+		glm::vec3(-1.0f, -1.0f,  0.0f),
+		glm::vec3(1.0f, -1.0f,  0.0f),
+		glm::vec3(1.0f,  1.0f,  0.0f),
+		glm::vec3(-1.0f,  1.0f,  0.0f),
 	};
 
 	constexpr glm::vec3 quadNormal = glm::vec3(0.0f, 0.0f, 1.0f);

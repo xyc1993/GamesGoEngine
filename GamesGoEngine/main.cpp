@@ -74,7 +74,7 @@ int SetWindow(GLFWwindow* window)
 
 void MainLoop(GLFWwindow* window)
 {
-	RenderingManager::Init();
+	RenderingManager::Init(SCREEN_WIDTH, SCREEN_HEIGHT);
 	EditorUIManager::Init(window);
 	
 	SceneExample_LitForward* activeScene = new SceneExample_LitForward();

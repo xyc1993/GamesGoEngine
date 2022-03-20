@@ -248,6 +248,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\depth.frag.glsl" />
+    <None Include="res\shaders\inverseColor.frag.glsl" />
+    <None Include="res\shaders\screenShader.frag.glsl" />
+    <None Include="res\shaders\screenShader.vert.glsl" />
     <None Include="res\shaders\unlit.frag.glsl" />
     <None Include="res\shaders\unlit.vert.glsl" />
     <None Include="res\shaders\lighting.frag.glsl" />

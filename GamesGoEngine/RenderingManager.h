@@ -24,7 +24,7 @@ private:
 	static RenderingManager* GetInstance();
 
 public:
-	static void Init();
+	static void Init(GLint SCR_WIDTH, GLint SCR_HEIGHT);
 	static void Update();
 
 private:
@@ -57,4 +57,12 @@ private:
 	// used for outlining selected game objects
 	Material* editorOutlineMaterialScale;
 	Material* editorOutlineMaterialNormals;
+
+	// used for rendering screen
+	GameObject* screenRendererObject;
+	MeshRenderer* screenRenderer;
+	std::shared_ptr<Material> screenMaterial;
+
+	static unsigned int framebuffer;
+	static unsigned int textureColorbuffer;
 };

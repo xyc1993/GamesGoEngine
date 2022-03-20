@@ -463,5 +463,14 @@
     <None Include="res\shaders\unlitTexturedTransparent.frag.glsl">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="res\shaders\screenShader.frag.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\shaders\screenShader.vert.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\shaders\inverseColor.frag.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

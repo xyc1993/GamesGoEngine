@@ -29,6 +29,7 @@ public:
 	void SetShader(const GLchar* vertexPath, const GLchar* fragmentPath);
 	
 	void SetTexture(const GLchar* textureName, GLuint textureIndex, GLchar* path, bool transparencyEnabled = false);
+	void SetTexture(const GLchar* textureName, GLuint texture, GLuint textureIndex = 0);
 	void SetCubeTexture(const GLchar* textureName, GLuint textureIndex, const std::vector<const GLchar*>& paths);
 	
 	void SetFloat(const GLchar* floatName, float value) const;

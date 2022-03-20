@@ -12,6 +12,17 @@ MeshRenderer::MeshRenderer()
 	RenderingManager::AddMeshRenderer(this);
 }
 
+MeshRenderer::MeshRenderer(bool shouldAddToRenderingManager)
+{
+	mesh = nullptr;
+	materialList.clear();
+	if (shouldAddToRenderingManager)
+	{
+		SetRenderQueuePosition(RenderQueuePosition::Opaque);
+		RenderingManager::AddMeshRenderer(this);
+	}
+}
+
 MeshRenderer::~MeshRenderer()
 {
 	mesh.reset();

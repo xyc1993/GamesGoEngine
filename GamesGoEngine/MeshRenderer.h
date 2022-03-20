@@ -13,6 +13,11 @@ class MeshRenderer : public Component
 {
 public:
 	MeshRenderer();
+
+private:
+	MeshRenderer(bool shouldAddToRenderingManager);
+
+public:
 	~MeshRenderer() override;
 	
 	virtual void Update() override;
@@ -40,4 +45,6 @@ private:
 	int currentRenderQueuePosition;
 	// position in the render queue when the game object is not selected in the editor
 	int deselectedRenderQueuePosition;
+
+	friend RenderingManager;
 };
