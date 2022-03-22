@@ -38,6 +38,7 @@ GLFWwindow* InitWindow()
 void FramebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
+	RenderingManager::ResizeBuffers(width, height);
 	SCREEN_WIDTH = width;
 	SCREEN_HEIGHT = height;
 }

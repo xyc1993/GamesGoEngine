@@ -24,7 +24,8 @@ private:
 	static RenderingManager* GetInstance();
 
 public:
-	static void Init(GLint SCR_WIDTH, GLint SCR_HEIGHT);
+	static void Init(GLint screenWidth, GLint screenHeight);
+	static void ResizeBuffers(GLint screenWidth, GLint screenHeight);
 	static void Update();
 
 private:
