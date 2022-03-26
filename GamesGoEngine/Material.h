@@ -43,7 +43,7 @@ public:
 
 	void SetLightModel(LightModelType type);
 	
-private:
+protected:
 	Shader* shader;
 
 	std::map<GLint, std::tuple<GLuint, GLuint>> texturesMap;

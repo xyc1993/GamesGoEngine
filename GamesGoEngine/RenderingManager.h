@@ -31,6 +31,7 @@ public:
 private:
 	static void DrawSkybox();
 	static void DrawRenderers(const std::vector<MeshRenderer*>& renderers);
+	static void DrawPostProcessEffects();
 
 public:
 	static void SetSkybox(Skybox* skybox);
@@ -60,10 +61,23 @@ private:
 	Material* editorOutlineMaterialNormals;
 
 	// used for rendering screen
-	GameObject* screenRendererObject;
 	MeshRenderer* screenRenderer;
 	std::shared_ptr<Material> screenMaterial;
+	MeshRenderer* screenRendererTest;
+	std::shared_ptr<Material> screenMaterialTest;
+
+	// just testing post process stacking
+	MeshRenderer* screenRenderer2;
+	std::shared_ptr<Material> screenMaterial2;
+	MeshRenderer* screenRenderer3;
+	std::shared_ptr<Material> screenMaterial3;
 
 	static unsigned int framebuffer;
+	static unsigned int framebuffer2;
+	
 	static unsigned int textureColorbuffer;
+	static unsigned int textureColorbuffer2;
+
+	static unsigned int rbo;
+	static unsigned int rbo2;
 };

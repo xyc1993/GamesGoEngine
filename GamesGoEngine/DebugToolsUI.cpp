@@ -14,16 +14,21 @@ void DebugToolsUI::Draw()
 	std::string fpsText = "FPS = ";
 	fpsText.append(std::to_string(fps));
 
-	ImGui::Begin("Basic ImGUI window");
+	ImGui::Begin("Debug Tools");
 	ImGui::Text(fpsText.c_str());
 	float timeScale = Time::GetTimeScale();
 	if (ImGui::SliderFloat("Time Scale", &timeScale, 0.0f, 5.0f))
 	{
 		Time::SetTimeScale(timeScale);
 	}
+
+	/* Due to framebuffer use in the rendering manager, this will not work and only display wireframe of the latest screen grab quad
+	 * TODO: Find a way to display debug wireframe (perhaps disabling postprocess stack since for debug purposes it's not needed when checking the wireframe)
 	if (ImGui::Checkbox("Wireframe only", &wireframeOnly))
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, wireframeOnly ? GL_LINE : GL_FILL);
 	}
+	*/
+	
 	ImGui::End();
 }

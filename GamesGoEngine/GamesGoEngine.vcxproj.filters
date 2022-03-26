@@ -133,6 +133,9 @@
     <Filter Include="Source Files\GamesGo\Editor\UI\Panels">
       <UniqueIdentifier>{7d977a72-24e3-4e9d-b3f7-a5d857b9b81f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\PostProcess">
+      <UniqueIdentifier>{e300ab3d-2095-4c19-ad1a-8c7897f819ed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectionalLight.cpp">
@@ -276,8 +279,11 @@
     <ClCompile Include="WorldOutlinerUI.cpp">
       <Filter>Source Files\GamesGo\Editor\UI\Panels</Filter>
     </ClCompile>
+    <ClCompile Include="PostProcessMaterial.cpp">
+      <Filter>Source Files\GamesGo\Rendering</Filter>
+    </ClCompile>
     <ClCompile Include="DebugToolsUI.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\GamesGo\Editor\UI\Panels</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -425,8 +431,11 @@
     <ClInclude Include="WorldOutlinerUI.h">
       <Filter>Header Files\GamesGo\Editor\UI\Panels</Filter>
     </ClInclude>
+    <ClInclude Include="PostProcessMaterial.h">
+      <Filter>Header Files\GamesGo\Rendering</Filter>
+    </ClInclude>
     <ClInclude Include="DebugToolsUI.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\GamesGo\Editor\UI\Panels</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -463,14 +472,17 @@
     <None Include="res\shaders\unlitTexturedTransparent.frag.glsl">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="res\shaders\screenShader.frag.glsl">
-      <Filter>Resource Files</Filter>
+    <None Include="res\shaders\PostProcess\blur.frag.glsl">
+      <Filter>Resource Files\PostProcess</Filter>
     </None>
-    <None Include="res\shaders\screenShader.vert.glsl">
-      <Filter>Resource Files</Filter>
+    <None Include="res\shaders\PostProcess\inverseColor.frag.glsl">
+      <Filter>Resource Files\PostProcess</Filter>
     </None>
-    <None Include="res\shaders\inverseColor.frag.glsl">
-      <Filter>Resource Files</Filter>
+    <None Include="res\shaders\PostProcess\screenShader.frag.glsl">
+      <Filter>Resource Files\PostProcess</Filter>
+    </None>
+    <None Include="res\shaders\PostProcess\screenShader.vert.glsl">
+      <Filter>Resource Files\PostProcess</Filter>
     </None>
   </ItemGroup>
 </Project>

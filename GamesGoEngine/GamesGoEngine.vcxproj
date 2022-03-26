@@ -177,6 +177,7 @@
     <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="PositionOscillator.cpp" />
+    <ClCompile Include="PostProcessMaterial.cpp" />
     <ClCompile Include="PropertiesUI.cpp" />
     <ClCompile Include="RenderingManager.cpp" />
     <ClCompile Include="Rotator.cpp" />
@@ -228,6 +229,7 @@
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="PositionOscillator.h" />
+    <ClInclude Include="PostProcessMaterial.h" />
     <ClInclude Include="PropertiesUI.h" />
     <ClInclude Include="RenderingManager.h" />
     <ClInclude Include="Rotator.h" />
@@ -248,9 +250,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\depth.frag.glsl" />
-    <None Include="res\shaders\inverseColor.frag.glsl" />
-    <None Include="res\shaders\screenShader.frag.glsl" />
-    <None Include="res\shaders\screenShader.vert.glsl" />
+    <None Include="res\shaders\PostProcess\blur.frag.glsl" />
+    <None Include="res\shaders\PostProcess\inverseColor.frag.glsl" />
+    <None Include="res\shaders\PostProcess\screenShader.frag.glsl" />
+    <None Include="res\shaders\PostProcess\screenShader.vert.glsl" />
     <None Include="res\shaders\unlit.frag.glsl" />
     <None Include="res\shaders\unlit.vert.glsl" />
     <None Include="res\shaders\lighting.frag.glsl" />
