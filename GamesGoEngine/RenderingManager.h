@@ -3,8 +3,10 @@
 #include <vector>
 
 #include "LightsManager.h"
+#include "PostProcessMaterial.h"
 #include "Skybox.h"
 
+class PostProcessRenderer;
 class MeshRenderer;
 class Material;
 
@@ -61,16 +63,16 @@ private:
 	Material* editorOutlineMaterialNormals;
 
 	// used for rendering screen
-	MeshRenderer* screenRenderer;
-	std::shared_ptr<Material> screenMaterial;
-	MeshRenderer* screenRendererTest;
-	std::shared_ptr<Material> screenMaterialTest;
+	PostProcessRenderer* screenRenderer;
+	std::shared_ptr<PostProcessMaterial> screenMaterial;
+	PostProcessRenderer* screenRendererTest;
+	std::shared_ptr<PostProcessMaterial> screenMaterialTest;
 
 	// just testing post process stacking
-	MeshRenderer* screenRenderer2;
-	std::shared_ptr<Material> screenMaterial2;
-	MeshRenderer* screenRenderer3;
-	std::shared_ptr<Material> screenMaterial3;
+	PostProcessRenderer* screenRenderer2;
+	std::shared_ptr<PostProcessMaterial> screenMaterial2;
+	PostProcessRenderer* screenRenderer3;
+	std::shared_ptr<PostProcessMaterial> screenMaterial3;
 
 	static unsigned int framebuffer;
 	static unsigned int framebuffer2;

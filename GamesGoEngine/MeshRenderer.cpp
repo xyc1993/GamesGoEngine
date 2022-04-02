@@ -12,26 +12,10 @@ MeshRenderer::MeshRenderer()
 	RenderingManager::AddMeshRenderer(this);
 }
 
-MeshRenderer::MeshRenderer(bool shouldAddToRenderingManager)
-{
-	mesh = nullptr;
-	materialList.clear();
-	if (shouldAddToRenderingManager)
-	{
-		SetRenderQueuePosition(RenderQueuePosition::Opaque);
-		RenderingManager::AddMeshRenderer(this);
-	}
-}
-
 MeshRenderer::~MeshRenderer()
 {
 	mesh.reset();
 	CleanMaterialList();
-}
-
-void MeshRenderer::Update()
-{
-	
 }
 
 void MeshRenderer::OnSelected()
@@ -155,13 +139,4 @@ void MeshRenderer::SetRenderQueuePosition(int position, bool selected)
 int MeshRenderer::GetRenderQueuePosition() const
 {
 	return currentRenderQueuePosition;
-}
-
-void MeshRenderer::CleanMaterialList()
-{
-	for (size_t i = 0; i < materialList.size(); i++)
-	{
-		materialList[i].reset();
-	}
-	materialList.clear();
 }

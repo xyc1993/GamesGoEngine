@@ -178,7 +178,9 @@
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="PositionOscillator.cpp" />
     <ClCompile Include="PostProcessMaterial.cpp" />
+    <ClCompile Include="PostProcessRenderer.cpp" />
     <ClCompile Include="PropertiesUI.cpp" />
+    <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderingManager.cpp" />
     <ClCompile Include="Rotator.cpp" />
     <ClCompile Include="ScaleOscillator.cpp" />
@@ -230,7 +232,9 @@
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="PositionOscillator.h" />
     <ClInclude Include="PostProcessMaterial.h" />
+    <ClInclude Include="PostProcessRenderer.h" />
     <ClInclude Include="PropertiesUI.h" />
+    <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderingManager.h" />
     <ClInclude Include="Rotator.h" />
     <ClInclude Include="ScaleOscillator.h" />

@@ -7,6 +7,7 @@
 #include "MeshPrimitiveQuad.h"
 #include "MeshRenderer.h"
 #include "PostProcessMaterial.h"
+#include "PostProcessRenderer.h"
 
 RenderingManager* RenderingManager::instance = nullptr;
 unsigned int RenderingManager::framebuffer = -1;
@@ -33,33 +34,28 @@ RenderingManager::RenderingManager()
 
 	std::shared_ptr<MeshPrimitiveQuad> quadMesh = std::make_shared<MeshPrimitiveQuad>();
 	screenMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/screenShader.frag.glsl");
-	//screenMaterial = std::make_shared<Material>("res/shaders/screenShader.vert.glsl", "res/shaders/inverseColor.frag.glsl");
-	screenRenderer = new MeshRenderer(false);
-	screenRenderer->SetMesh(quadMesh);
+	screenRenderer = new PostProcessRenderer();
 	screenRenderer->SetMaterial(screenMaterial);
 	GameObject* screenRendererObject = new GameObject();
 	screenRendererObject->SetName("screen_renderer_object");
 	screenRendererObject->AddComponent(screenRenderer);
 	
 	screenMaterialTest = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/screenShader.frag.glsl");
-	screenRendererTest = new MeshRenderer(false);
-	screenRendererTest->SetMesh(quadMesh);
+	screenRendererTest = new PostProcessRenderer();
 	screenRendererTest->SetMaterial(screenMaterialTest);
 	GameObject* screenRendererObjectTest = new GameObject();
 	screenRendererObjectTest->SetName("screen_renderer_object");
 	screenRendererObjectTest->AddComponent(screenRendererTest);
 
 	screenMaterial2 = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/inverseColor.frag.glsl");
-	screenRenderer2 = new MeshRenderer(false);
-	screenRenderer2->SetMesh(quadMesh);
+	screenRenderer2 = new PostProcessRenderer();
 	screenRenderer2->SetMaterial(screenMaterial2);
 	GameObject* screenRendererObject2 = new GameObject();
 	screenRendererObject2->SetName("screen_renderer_object_test");
 	screenRendererObject2->AddComponent(screenRenderer2);
 
 	screenMaterial3 = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/blur.frag.glsl");
-	screenRenderer3 = new MeshRenderer(false);
-	screenRenderer3->SetMesh(quadMesh);
+	screenRenderer3 = new PostProcessRenderer();
 	screenRenderer3->SetMaterial(screenMaterial3);
 	GameObject* screenRendererObject3 = new GameObject();
 	screenRendererObject3->SetName("screen_renderer_object_test2");
