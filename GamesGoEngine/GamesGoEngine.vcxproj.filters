@@ -136,6 +136,18 @@
     <Filter Include="Resource Files\PostProcess">
       <UniqueIdentifier>{e300ab3d-2095-4c19-ad1a-8c7897f819ed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\GamesGo\Rendering\Renderers">
+      <UniqueIdentifier>{00532eff-1448-4b19-8241-21393d52c0c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GamesGo\Rendering\Materials">
+      <UniqueIdentifier>{f6d39574-3bdd-4491-a3c0-12c4a4450341}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GamesGo\Rendering\Materials">
+      <UniqueIdentifier>{05f7a183-c7af-4f2d-b052-bebbd06c8750}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GamesGo\Rendering\Renderers">
+      <UniqueIdentifier>{65cb743c-dad7-43db-bcf1-73a669e1624c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectionalLight.cpp">
@@ -198,20 +210,11 @@
     <ClCompile Include="MeshPrimitiveSphere.cpp">
       <Filter>Source Files\GamesGo\Mesh\Primitives</Filter>
     </ClCompile>
-    <ClCompile Include="Material.cpp">
-      <Filter>Source Files\GamesGo\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="MeshRenderer.cpp">
-      <Filter>Source Files\GamesGo\Rendering</Filter>
-    </ClCompile>
     <ClCompile Include="Shader.cpp">
       <Filter>Source Files\GamesGo\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="Scene.cpp">
       <Filter>Source Files\GamesGo\Scene Management</Filter>
-    </ClCompile>
-    <ClCompile Include="Skybox.cpp">
-      <Filter>Source Files\GamesGo\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="PositionOscillator.cpp">
       <Filter>Source Files\GamesGo\Components\Movement</Filter>
@@ -279,17 +282,26 @@
     <ClCompile Include="WorldOutlinerUI.cpp">
       <Filter>Source Files\GamesGo\Editor\UI\Panels</Filter>
     </ClCompile>
-    <ClCompile Include="PostProcessMaterial.cpp">
-      <Filter>Source Files\GamesGo\Rendering</Filter>
-    </ClCompile>
     <ClCompile Include="DebugToolsUI.cpp">
       <Filter>Source Files\GamesGo\Editor\UI\Panels</Filter>
     </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Source Files\GamesGo\Rendering\Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshRenderer.cpp">
+      <Filter>Source Files\GamesGo\Rendering\Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="PostProcessMaterial.cpp">
+      <Filter>Source Files\GamesGo\Rendering\Materials</Filter>
+    </ClCompile>
     <ClCompile Include="PostProcessRenderer.cpp">
-      <Filter>Source Files\GamesGo\Rendering</Filter>
+      <Filter>Source Files\GamesGo\Rendering\Renderers</Filter>
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
-      <Filter>Source Files\GamesGo\Rendering</Filter>
+      <Filter>Source Files\GamesGo\Rendering\Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="Skybox.cpp">
+      <Filter>Source Files\GamesGo\Rendering\Renderers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -359,20 +371,11 @@
     <ClInclude Include="MeshPrimitiveSphere.h">
       <Filter>Header Files\GamesGo\Mesh\Primitives</Filter>
     </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>Header Files\GamesGo\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="MeshRenderer.h">
-      <Filter>Header Files\GamesGo\Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="Shader.h">
       <Filter>Header Files\GamesGo\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>Header Files\GamesGo\Scene Management</Filter>
-    </ClInclude>
-    <ClInclude Include="Skybox.h">
-      <Filter>Header Files\GamesGo\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="PositionOscillator.h">
       <Filter>Header Files\GamesGo\Components\Movement</Filter>
@@ -437,17 +440,26 @@
     <ClInclude Include="WorldOutlinerUI.h">
       <Filter>Header Files\GamesGo\Editor\UI\Panels</Filter>
     </ClInclude>
-    <ClInclude Include="PostProcessMaterial.h">
-      <Filter>Header Files\GamesGo\Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="DebugToolsUI.h">
       <Filter>Header Files\GamesGo\Editor\UI\Panels</Filter>
     </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Header Files\GamesGo\Rendering\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="PostProcessMaterial.h">
+      <Filter>Header Files\GamesGo\Rendering\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshRenderer.h">
+      <Filter>Header Files\GamesGo\Rendering\Renderers</Filter>
+    </ClInclude>
     <ClInclude Include="PostProcessRenderer.h">
-      <Filter>Header Files\GamesGo\Rendering</Filter>
+      <Filter>Header Files\GamesGo\Rendering\Renderers</Filter>
     </ClInclude>
     <ClInclude Include="Renderer.h">
-      <Filter>Header Files\GamesGo\Rendering</Filter>
+      <Filter>Header Files\GamesGo\Rendering\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="Skybox.h">
+      <Filter>Header Files\GamesGo\Rendering\Renderers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
