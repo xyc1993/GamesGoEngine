@@ -12,12 +12,6 @@ MeshRenderer::MeshRenderer()
 	RenderingManager::AddMeshRenderer(this);
 }
 
-MeshRenderer::~MeshRenderer()
-{
-	mesh.reset();
-	CleanMaterialList();
-}
-
 void MeshRenderer::OnSelected()
 {
 	SetRenderQueuePosition(RenderQueuePosition::EditorOutline, true);

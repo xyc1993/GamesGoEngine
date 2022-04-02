@@ -7,8 +7,11 @@
 class Renderer : public Component
 {
 public:
+	~Renderer() override;
+
 	virtual void Update() override;
 	virtual void Draw();
+	bool TryGetMaterial(std::shared_ptr<Material>& outMaterial, int index);
 
 protected:
 	void CleanMaterialList();

@@ -31,35 +31,6 @@ RenderingManager::RenderingManager()
 
 	constexpr float editorOutlineNormalsProtrusion = 0.03f;
 	editorOutlineMaterialNormals->SetFloat((GLchar*)"protrusion", editorOutlineNormalsProtrusion);
-
-	std::shared_ptr<MeshPrimitiveQuad> quadMesh = std::make_shared<MeshPrimitiveQuad>();
-	screenMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/screenShader.frag.glsl");
-	screenRenderer = new PostProcessRenderer();
-	screenRenderer->SetMaterial(screenMaterial);
-	GameObject* screenRendererObject = new GameObject();
-	screenRendererObject->SetName("screen_renderer_object");
-	screenRendererObject->AddComponent(screenRenderer);
-	
-	screenMaterialTest = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/screenShader.frag.glsl");
-	screenRendererTest = new PostProcessRenderer();
-	screenRendererTest->SetMaterial(screenMaterialTest);
-	GameObject* screenRendererObjectTest = new GameObject();
-	screenRendererObjectTest->SetName("screen_renderer_object");
-	screenRendererObjectTest->AddComponent(screenRendererTest);
-
-	screenMaterial2 = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/inverseColor.frag.glsl");
-	screenRenderer2 = new PostProcessRenderer();
-	screenRenderer2->SetMaterial(screenMaterial2);
-	GameObject* screenRendererObject2 = new GameObject();
-	screenRendererObject2->SetName("screen_renderer_object_test");
-	screenRendererObject2->AddComponent(screenRenderer2);
-
-	screenMaterial3 = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/blur.frag.glsl");
-	screenRenderer3 = new PostProcessRenderer();
-	screenRenderer3->SetMaterial(screenMaterial3);
-	GameObject* screenRendererObject3 = new GameObject();
-	screenRendererObject3->SetName("screen_renderer_object_test2");
-	screenRendererObject3->AddComponent(screenRenderer3);
 }
 
 RenderingManager* RenderingManager::GetInstance()
@@ -135,12 +106,6 @@ void RenderingManager::Init(GLint screenWidth, GLint screenHeight)
 		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	GetInstance()->screenMaterial->SetTexture("screenTexture", textureColorbuffer2);
-	GetInstance()->screenMaterialTest->SetTexture("screenTexture", textureColorbuffer);
-
-	GetInstance()->screenMaterial2->SetTexture("screenTexture", textureColorbuffer);
-	GetInstance()->screenMaterial3->SetTexture("screenTexture", textureColorbuffer2);
 }
 
 void RenderingManager::ResizeBuffers(GLint screenWidth, GLint screenHeight)
@@ -172,36 +137,28 @@ void RenderingManager::Update()
 	DrawSkybox();
 	DrawRenderers(GetInstance()->opaqueMeshRenderers);
 	DrawRenderers(GetInstance()->transparentMeshRenderers);
-
-	// now bind back to default framebuffer and draw a quad plane with the attached framebuffer color texture
-	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer2);
-	// disable depth test so screen-space quad isn't discarded due to depth test.
-	glDisable(GL_DEPTH_TEST);
-	// set clear color to white (not really necessary actually, since we won't be able to see behind the quad anyways)
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	GetInstance()->screenRenderer2->Draw();
-
-	// now bind back to default framebuffer and draw a quad plane with the attached framebuffer color texture
-	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-	// disable depth test so screen-space quad isn't discarded due to depth test.
-	glDisable(GL_DEPTH_TEST);
-	// set clear color to white (not really necessary actually, since we won't be able to see behind the quad anyways)
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	GetInstance()->screenRenderer3->Draw();
 	
-	// now bind back to default framebuffer and draw a quad plane with the attached framebuffer color texture
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	// disable depth test so screen-space quad isn't discarded due to depth test.
-	glDisable(GL_DEPTH_TEST);
-	// set clear color to white (not really necessary actually, since we won't be able to see behind the quad anyways)
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	for (size_t i = 0; i < GetInstance()->postProcessRenderers.size(); i++)
+	{
+		if (i == (GetInstance()->postProcessRenderers.size() - 1))
+		{
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		}
+		else
+		{
+			glBindFramebuffer(GL_FRAMEBUFFER, i % 2 == 0 ? framebuffer2 : framebuffer);
+		}
+		glDisable(GL_DEPTH_TEST);
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
 
-	GetInstance()->screenRendererTest->Draw();
+		std::shared_ptr<Material> ppMaterial;
+		if (GetInstance()->postProcessRenderers[i]->TryGetMaterial(ppMaterial, 0))
+		{
+			ppMaterial->SetTexture("screenTexture", i % 2 == 0 ? textureColorbuffer : textureColorbuffer2);
+			GetInstance()->postProcessRenderers[i]->Draw();
+		}
+	}
 }
 
 void RenderingManager::DrawSkybox()
@@ -242,6 +199,11 @@ void RenderingManager::AddMeshRenderer(MeshRenderer* meshRenderer)
 {
 	GetInstance()->meshRenderers.push_back(meshRenderer);
 	SortMeshRenderers();
+}
+
+void RenderingManager::AddPostProcessRenderer(PostProcessRenderer* postProcessRenderer)
+{
+	GetInstance()->postProcessRenderers.push_back(postProcessRenderer);
 }
 
 void RenderingManager::SortMeshRenderers()

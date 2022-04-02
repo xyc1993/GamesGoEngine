@@ -11,6 +11,7 @@
 #include "MeshRenderer.h"
 #include "PointLight.h"
 #include "PositionOscillator.h"
+#include "PostProcessRenderer.h"
 #include "Rotator.h"
 #include "ScaleOscillator.h"
 #include "Skybox.h"
@@ -205,6 +206,25 @@ SceneExample_LitForward::SceneExample_LitForward()
 	nanoSuitObject->SetName(nanoSuitName);
 
 	scene->AddGameObject(nanoSuitObject);
+
+	GameObject* postProcessHolder = new GameObject;
+
+	std::shared_ptr<PostProcessMaterial> ppMaterial1 = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/inverseColor.frag.glsl");
+	std::shared_ptr<PostProcessMaterial> ppMaterial2 = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/blur.frag.glsl");
+
+	PostProcessRenderer* pp1 = new PostProcessRenderer();
+	PostProcessRenderer* pp2 = new PostProcessRenderer();
+
+	pp1->SetMaterial(ppMaterial1);
+	pp2->SetMaterial(ppMaterial2);
+
+	postProcessHolder->AddComponent(pp1);
+	postProcessHolder->AddComponent(pp2);
+
+	std::string postProcessHolderName = "post_process_holder";
+	postProcessHolder->SetName(postProcessHolderName);
+
+	scene->AddGameObject(postProcessHolder);
 	
 	GameObject* directionalLightObject = new GameObject();
 	directionalLightObject->GetTransform()->SetRotationEulerDegrees(glm::vec3(90.0f, -45.0f, 0.0f));

@@ -38,6 +38,7 @@ private:
 public:
 	static void SetSkybox(Skybox* skybox);
 	static void AddMeshRenderer(MeshRenderer* meshRenderer);
+	static void AddPostProcessRenderer(PostProcessRenderer* postProcessRenderer);
 	static void SortMeshRenderers();
 
 private:
@@ -57,22 +58,11 @@ private:
 	std::vector<MeshRenderer*> meshRenderers;
 	std::vector<MeshRenderer*> opaqueMeshRenderers;
 	std::vector<MeshRenderer*> transparentMeshRenderers;
+	std::vector<PostProcessRenderer*> postProcessRenderers;
 
 	// used for outlining selected game objects
 	Material* editorOutlineMaterialScale;
 	Material* editorOutlineMaterialNormals;
-
-	// used for rendering screen
-	PostProcessRenderer* screenRenderer;
-	std::shared_ptr<PostProcessMaterial> screenMaterial;
-	PostProcessRenderer* screenRendererTest;
-	std::shared_ptr<PostProcessMaterial> screenMaterialTest;
-
-	// just testing post process stacking
-	PostProcessRenderer* screenRenderer2;
-	std::shared_ptr<PostProcessMaterial> screenMaterial2;
-	PostProcessRenderer* screenRenderer3;
-	std::shared_ptr<PostProcessMaterial> screenMaterial3;
 
 	static unsigned int framebuffer;
 	static unsigned int framebuffer2;

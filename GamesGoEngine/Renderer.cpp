@@ -3,6 +3,12 @@
 #include "CamerasManager.h"
 #include "GameObject.h"
 
+Renderer::~Renderer()
+{
+	mesh.reset();
+	CleanMaterialList();
+}
+
 void Renderer::Update()
 {
 
@@ -21,6 +27,16 @@ void Renderer::Draw()
 			}
 		}
 	}
+}
+
+bool Renderer::TryGetMaterial(std::shared_ptr<Material>& outMaterial, int index)
+{
+	if (index >= 0 && index < materialList.size())
+	{
+		outMaterial = materialList[index];
+		return true;
+	}
+	return false;
 }
 
 void Renderer::CleanMaterialList()

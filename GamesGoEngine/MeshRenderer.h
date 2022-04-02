@@ -13,8 +13,6 @@ public:
 	MeshRenderer();
 
 public:
-	~MeshRenderer() override;
-	
 	virtual void OnSelected() override;
 	virtual void OnDeselected() override;
 
