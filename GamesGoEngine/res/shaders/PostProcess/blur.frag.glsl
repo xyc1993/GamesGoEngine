@@ -4,6 +4,7 @@ out vec4 FragColor;
 in vec2 TexCoords;
 
 uniform sampler2D screenTexture;
+uniform sampler2D depthStencilTexture;
 
 const float offset = 1.0 / 150.0;
 

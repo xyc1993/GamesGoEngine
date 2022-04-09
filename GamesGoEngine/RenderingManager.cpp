@@ -10,12 +10,12 @@
 #include "PostProcessRenderer.h"
 
 RenderingManager* RenderingManager::instance = nullptr;
-unsigned int RenderingManager::framebuffer = -1;
+unsigned int RenderingManager::framebuffer1 = -1;
 unsigned int RenderingManager::framebuffer2 = -1;
-unsigned int RenderingManager::textureColorbuffer = -1;
-unsigned int RenderingManager::textureColorbuffer2 = -1;
-unsigned int RenderingManager::rbo = -1;
-unsigned int RenderingManager::rbo2 = -1;
+unsigned int RenderingManager::textureColorBuffer1 = -1;
+unsigned int RenderingManager::textureColorBuffer2 = -1;
+unsigned int RenderingManager::depthStencilBuffer1 = -1;
+unsigned int RenderingManager::depthStencilBuffer2 = -1;
 
 RenderingManager::RenderingManager()
 {
@@ -57,23 +57,26 @@ void RenderingManager::Init(GLint screenWidth, GLint screenHeight)
 	glCullFace(GL_BACK);
 
 	// framebuffer configuration
-	glGenFramebuffers(1, &framebuffer);
-	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+	glGenFramebuffers(1, &framebuffer1);
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer1);
 
 	// create a color attachment texture
-	glGenTextures(1, &textureColorbuffer);
-	glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
+	glGenTextures(1, &textureColorBuffer1);
+	glBindTexture(GL_TEXTURE_2D, textureColorBuffer1);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screenWidth, screenHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorbuffer, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorBuffer1, 0);
 
-	// create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
-	glGenRenderbuffers(1, &rbo);
-	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, screenWidth, screenHeight); // use a single renderbuffer object for both a depth AND stencil buffer.
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo); // now actually attach it
+	// create a depth & stencil attachment texture
+	glGenTextures(1, &depthStencilBuffer1);
+	glBindTexture(GL_TEXTURE_2D, depthStencilBuffer1);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, screenWidth, screenHeight, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, NULL);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depthStencilBuffer1, 0);
 
 	// now that we actually created the framebuffer and added all attachments we want to check if it is actually complete now
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
@@ -86,19 +89,22 @@ void RenderingManager::Init(GLint screenWidth, GLint screenHeight)
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer2);
 
 	// create a color attachment texture
-	glGenTextures(1, &textureColorbuffer2);
-	glBindTexture(GL_TEXTURE_2D, textureColorbuffer2);
+	glGenTextures(1, &textureColorBuffer2);
+	glBindTexture(GL_TEXTURE_2D, textureColorBuffer2);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screenWidth, screenHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorbuffer2, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorBuffer2, 0);
 
-	// create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
-	glGenRenderbuffers(1, &rbo2);
-	glBindRenderbuffer(GL_RENDERBUFFER, rbo2);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, screenWidth, screenHeight); // use a single renderbuffer object for both a depth AND stencil buffer.
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo2); // now actually attach it
+	// create a depth & stencil attachment texture
+	glGenTextures(1, &depthStencilBuffer2);
+	glBindTexture(GL_TEXTURE_2D, depthStencilBuffer2);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, screenWidth, screenHeight, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, NULL);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depthStencilBuffer2, 0);
 
 	// now that we actually created the framebuffer and added all attachments we want to check if it is actually complete now
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
@@ -110,22 +116,22 @@ void RenderingManager::Init(GLint screenWidth, GLint screenHeight)
 
 void RenderingManager::ResizeBuffers(GLint screenWidth, GLint screenHeight)
 {
-	glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
+	glBindTexture(GL_TEXTURE_2D, textureColorBuffer1);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screenWidth, screenHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 
-	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, screenWidth, screenHeight);
-
-	glBindTexture(GL_TEXTURE_2D, textureColorbuffer2);
+	glBindTexture(GL_TEXTURE_2D, depthStencilBuffer1);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, screenWidth, screenHeight, 0, GL_DEPTH24_STENCIL8, GL_UNSIGNED_BYTE, NULL);
+	
+	glBindTexture(GL_TEXTURE_2D, textureColorBuffer2);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screenWidth, screenHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 
-	glBindRenderbuffer(GL_RENDERBUFFER, rbo2);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, screenWidth, screenHeight);
+	glBindTexture(GL_TEXTURE_2D, depthStencilBuffer2);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, screenWidth, screenHeight, 0, GL_DEPTH24_STENCIL8, GL_UNSIGNED_BYTE, NULL);
 }
 
 void RenderingManager::Update()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer1);
 	glEnable(GL_DEPTH_TEST); // enable depth testing (is disabled for rendering screen-space quad)
 
 	glClearColor(0.1f, 0.15f, 0.15f, 1.0f);
@@ -146,7 +152,7 @@ void RenderingManager::Update()
 		}
 		else
 		{
-			glBindFramebuffer(GL_FRAMEBUFFER, i % 2 == 0 ? framebuffer2 : framebuffer);
+			glBindFramebuffer(GL_FRAMEBUFFER, i % 2 == 0 ? framebuffer2 : framebuffer1);
 		}
 		glDisable(GL_DEPTH_TEST);
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -155,7 +161,8 @@ void RenderingManager::Update()
 		std::shared_ptr<Material> ppMaterial;
 		if (GetInstance()->postProcessRenderers[i]->TryGetMaterial(ppMaterial, 0))
 		{
-			ppMaterial->SetTexture("screenTexture", i % 2 == 0 ? textureColorbuffer : textureColorbuffer2);
+			ppMaterial->SetTexture("screenTexture", i % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
+			ppMaterial->SetTexture("depthStencilTexture", i % 2 == 0 ? depthStencilBuffer1 : depthStencilBuffer2);
 			GetInstance()->postProcessRenderers[i]->Draw();
 		}
 	}

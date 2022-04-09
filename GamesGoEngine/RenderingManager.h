@@ -64,12 +64,13 @@ private:
 	Material* editorOutlineMaterialScale;
 	Material* editorOutlineMaterialNormals;
 
-	static unsigned int framebuffer;
+	// sets of 2 since we use ping pong rendering
+	static unsigned int framebuffer1;
 	static unsigned int framebuffer2;
 	
-	static unsigned int textureColorbuffer;
-	static unsigned int textureColorbuffer2;
+	static unsigned int textureColorBuffer1;
+	static unsigned int textureColorBuffer2;
 
-	static unsigned int rbo;
-	static unsigned int rbo2;
+	static unsigned int depthStencilBuffer1;
+	static unsigned int depthStencilBuffer2;
 };
