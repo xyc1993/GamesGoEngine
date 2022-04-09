@@ -190,7 +190,7 @@
     <ClCompile Include="SceneExample_LitForward.cpp" />
     <ClCompile Include="SceneExample_Transparency.cpp" />
     <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="Skybox.cpp" />
+    <ClCompile Include="SkyboxRenderer.cpp" />
     <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="SubMesh.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
@@ -244,7 +244,7 @@
     <ClInclude Include="SceneExample_LitForward.h" />
     <ClInclude Include="SceneExample_Transparency.h" />
     <ClInclude Include="Shader.h" />
-    <ClInclude Include="Skybox.h" />
+    <ClInclude Include="SkyboxRenderer.h" />
     <ClInclude Include="SpotLight.h" />
     <ClInclude Include="SubMesh.h" />
     <ClInclude Include="TextureLoader.h" />

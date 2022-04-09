@@ -15,6 +15,8 @@ public:
 
 protected:
 	void CleanMaterialList();
+	virtual glm::mat4 GetViewMatrix() const;
+	virtual glm::mat4 GetProjectionMatrix() const;
 
 	std::shared_ptr<MeshBase> mesh;
 	std::vector<std::shared_ptr<Material>> materialList;

@@ -186,7 +186,7 @@ void RenderingManager::DrawPostProcessEffects()
 
 }
 
-void RenderingManager::SetSkybox(Skybox* skybox)
+void RenderingManager::SetSkybox(SkyboxRenderer* skybox)
 {
 	if (GetInstance()->skybox != nullptr)
 	{

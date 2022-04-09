@@ -22,7 +22,7 @@ void Renderer::Draw()
 		{
 			if (materialList[i] != nullptr)
 			{
-				materialList[i]->Draw(owner->GetTransform()->GetTransformMatrix(), CamerasManager::GetActiveCameraViewMatrix(), CamerasManager::GetActiveCameraProjectionMatrix());
+				materialList[i]->Draw(owner->GetTransform()->GetTransformMatrix(), GetViewMatrix(), GetProjectionMatrix());
 				mesh->DrawSubMesh(i);
 			}
 		}
@@ -46,4 +46,14 @@ void Renderer::CleanMaterialList()
 		materialList[i].reset();
 	}
 	materialList.clear();
+}
+
+glm::mat4 Renderer::GetViewMatrix() const
+{
+	return CamerasManager::GetActiveCameraViewMatrix();
+}
+
+glm::mat4 Renderer::GetProjectionMatrix() const
+{
+	return CamerasManager::GetActiveCameraProjectionMatrix();
 }

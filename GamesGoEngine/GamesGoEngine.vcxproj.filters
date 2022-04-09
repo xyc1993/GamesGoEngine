@@ -300,7 +300,7 @@
     <ClCompile Include="Renderer.cpp">
       <Filter>Source Files\GamesGo\Rendering\Renderers</Filter>
     </ClCompile>
-    <ClCompile Include="Skybox.cpp">
+    <ClCompile Include="SkyboxRenderer.cpp">
       <Filter>Source Files\GamesGo\Rendering\Renderers</Filter>
     </ClCompile>
   </ItemGroup>
@@ -458,7 +458,7 @@
     <ClInclude Include="Renderer.h">
       <Filter>Header Files\GamesGo\Rendering\Renderers</Filter>
     </ClInclude>
-    <ClInclude Include="Skybox.h">
+    <ClInclude Include="SkyboxRenderer.h">
       <Filter>Header Files\GamesGo\Rendering\Renderers</Filter>
     </ClInclude>
   </ItemGroup>

@@ -14,7 +14,7 @@
 #include "PostProcessRenderer.h"
 #include "Rotator.h"
 #include "ScaleOscillator.h"
-#include "Skybox.h"
+#include "SkyboxRenderer.h"
 #include "SpotLight.h"
 
 extern GLfloat currentTime;
@@ -69,7 +69,7 @@ SceneExample_LitForward::SceneExample_LitForward()
 	std::shared_ptr<Material> skyboxMaterial = std::make_shared<Material>("res/shaders/skybox.vert.glsl", "res/shaders/skybox.frag.glsl");
 	skyboxMaterial->SetCubeTexture("skybox", 1, skyboxTextures);
 
-	Skybox* skyboxComponent = new Skybox();
+	SkyboxRenderer* skyboxComponent = new SkyboxRenderer();
 	skyboxComponent->SetMaterial(skyboxMaterial);
 
 	GameObject* skyboxObject = new GameObject();

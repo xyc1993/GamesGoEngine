@@ -4,7 +4,7 @@
 
 #include "LightsManager.h"
 #include "PostProcessMaterial.h"
-#include "Skybox.h"
+#include "SkyboxRenderer.h"
 
 class PostProcessRenderer;
 class MeshRenderer;
@@ -36,7 +36,7 @@ private:
 	static void DrawPostProcessEffects();
 
 public:
-	static void SetSkybox(Skybox* skybox);
+	static void SetSkybox(SkyboxRenderer* skybox);
 	static void AddMeshRenderer(MeshRenderer* meshRenderer);
 	static void AddPostProcessRenderer(PostProcessRenderer* postProcessRenderer);
 	static void SortMeshRenderers();
@@ -54,7 +54,7 @@ private:
 	static bool CompareTransparentRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2);
 
 	LightsManager* lightsManager;
-	Skybox* skybox;
+	SkyboxRenderer* skybox;
 	std::vector<MeshRenderer*> meshRenderers;
 	std::vector<MeshRenderer*> opaqueMeshRenderers;
 	std::vector<MeshRenderer*> transparentMeshRenderers;
