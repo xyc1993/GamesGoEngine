@@ -508,5 +508,8 @@
     <None Include="res\shaders\PostProcess\screenShader.vert.glsl">
       <Filter>Resource Files\PostProcess</Filter>
     </None>
+    <None Include="res\shaders\PostProcess\editorOutline.frag.glsl">
+      <Filter>Resource Files\PostProcess</Filter>
+    </None>
   </ItemGroup>
 </Project>

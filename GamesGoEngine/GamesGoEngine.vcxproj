@@ -255,6 +255,7 @@
   <ItemGroup>
     <None Include="res\shaders\depth.frag.glsl" />
     <None Include="res\shaders\PostProcess\blur.frag.glsl" />
+    <None Include="res\shaders\PostProcess\editorOutline.frag.glsl" />
     <None Include="res\shaders\PostProcess\inverseColor.frag.glsl" />
     <None Include="res\shaders\PostProcess\screenShader.frag.glsl" />
     <None Include="res\shaders\PostProcess\screenShader.vert.glsl" />

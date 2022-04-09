@@ -27,6 +27,7 @@ private:
 
 public:
 	static void Init(GLint screenWidth, GLint screenHeight);
+	static void ConfigureFramebuffer(GLint screenWidth, GLint screenHeight, unsigned int& framebuffer, unsigned int& textureColorBuffer, unsigned int& depthStencilBuffer);
 	static void ResizeBuffers(GLint screenWidth, GLint screenHeight);
 	static void Update();
 
