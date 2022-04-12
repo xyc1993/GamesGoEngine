@@ -22,9 +22,9 @@ GLFWwindow* InitWindow()
 {
 	glfwInit();
 
-	//sets OpenGL version to 3.3
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	//sets OpenGL version to 4.4
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
 
 	//sets profile, core has new features, compat prioritizes compatibility, might not have the newest features
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
