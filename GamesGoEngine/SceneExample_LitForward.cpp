@@ -67,7 +67,7 @@ SceneExample_LitForward::SceneExample_LitForward()
 	skyboxTextures.push_back("res/textures/skybox/front.tga");
 
 	std::shared_ptr<Material> skyboxMaterial = std::make_shared<Material>("res/shaders/skybox.vert.glsl", "res/shaders/skybox.frag.glsl");
-	skyboxMaterial->SetCubeTexture("skybox", 1, skyboxTextures);
+	skyboxMaterial->SetCubeTextureByPath("skybox", 1, skyboxTextures);
 
 	SkyboxRenderer* skyboxComponent = new SkyboxRenderer();
 	skyboxComponent->SetMaterial(skyboxMaterial);
@@ -115,8 +115,8 @@ SceneExample_LitForward::SceneExample_LitForward()
 	}
 
 	std::shared_ptr<Material> cubeLitMaterial = std::make_shared<Material>("res/shaders/lighting.vert.glsl", "res/shaders/lighting.frag.glsl");
-	cubeLitMaterial->SetTexture((GLchar*)"material.diffuse", 0, (GLchar*)"res/box/container2_diffuse.png");
-	cubeLitMaterial->SetTexture((GLchar*)"material.specular", 1, (GLchar*)"res/box/container2_specular.png");
+	cubeLitMaterial->SetTextureByPath((GLchar*)"material.diffuse", 0, (GLchar*)"res/box/container2_diffuse.png");
+	cubeLitMaterial->SetTextureByPath((GLchar*)"material.specular", 1, (GLchar*)"res/box/container2_specular.png");
 	cubeLitMaterial->SetFloat((GLchar*)"material.shininess", 32.0f);
 	cubeLitMaterial->SetLightModel(LightModelType::LitForward);
 
@@ -194,7 +194,7 @@ SceneExample_LitForward::SceneExample_LitForward()
 	for (int i = 0; i < NANOSUIT_MATERIALS_NUMBER; i++)
 	{
 		nanoSuitMaterials[i] = std::make_shared<Material>("res/shaders/lighting.vert.glsl", "res/shaders/lighting.frag.glsl");
-		nanoSuitMaterials[i]->SetTexture((GLchar*)"material.diffuse", 0, nanoSuitTexturePaths[i]);
+		nanoSuitMaterials[i]->SetTextureByPath((GLchar*)"material.diffuse", 0, nanoSuitTexturePaths[i]);
 		nanoSuitMaterials[i]->SetFloat((GLchar*)"material.shininess", 32.0f);
 		nanoSuitMaterials[i]->SetLightModel(LightModelType::LitForward);
 		nanoSuitMeshRenderer->SetMaterial(nanoSuitMaterials[i], i);

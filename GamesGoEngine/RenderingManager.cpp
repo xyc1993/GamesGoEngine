@@ -139,8 +139,8 @@ void RenderingManager::Update()
 		std::shared_ptr<Material> ppMaterial;
 		if (GetInstance()->postProcessRenderers[i]->TryGetMaterial(ppMaterial, 0))
 		{
-			ppMaterial->SetTexture("screenTexture", i % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
-			ppMaterial->SetTexture("depthStencilTexture", i % 2 == 0 ? depthStencilBuffer1 : depthStencilBuffer2);
+			ppMaterial->SetTexture("screenTexture", 0, i % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
+			ppMaterial->SetTexture("depthStencilTexture", 1, i % 2 == 0 ? depthStencilBuffer1 : depthStencilBuffer2);
 			GetInstance()->postProcessRenderers[i]->Draw();
 		}
 	}

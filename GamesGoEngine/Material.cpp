@@ -69,7 +69,7 @@ void Material::SetShader(const GLchar* vertexPath, const GLchar* fragmentPath)
 	shader = new Shader(vertexPath, fragmentPath);	
 }
 
-void Material::SetTexture(const GLchar* textureName, GLuint textureIndex, GLchar* path, bool transparencyEnabled)
+void Material::SetTextureByPath(const GLchar* textureName, GLuint textureIndex, GLchar* path, bool transparencyEnabled)
 {
 	if (shader != nullptr)
 	{
@@ -79,7 +79,7 @@ void Material::SetTexture(const GLchar* textureName, GLuint textureIndex, GLchar
 	}
 }
 
-void Material::SetTexture(const GLchar* textureName, GLuint texture, GLuint textureIndex)
+void Material::SetTexture(const GLchar* textureName, GLuint textureIndex, GLuint texture)
 {
 	if (shader != nullptr)
 	{
@@ -88,7 +88,7 @@ void Material::SetTexture(const GLchar* textureName, GLuint texture, GLuint text
 	}
 }
 
-void Material::SetCubeTexture(const GLchar* textureName, GLuint textureIndex, const std::vector<const GLchar*>& paths)
+void Material::SetCubeTextureByPath(const GLchar* textureName, GLuint textureIndex, const std::vector<const GLchar*>& paths)
 {
 	if (shader != nullptr)
 	{

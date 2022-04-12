@@ -18,7 +18,7 @@ SceneExample_Transparency::SceneExample_Transparency()
 	std::shared_ptr<MeshPrimitiveQuad> quadMesh = std::make_shared<MeshPrimitiveQuad>();
 
 	std::shared_ptr<Material> grassMaterial = std::make_shared<Material>("res/shaders/unlitTextured.vert.glsl", "res/shaders/unlitTexturedMasked.frag.glsl");
-	grassMaterial->SetTexture("mainTexture", 0, (GLchar*)"res/textures/grass.png", true);
+	grassMaterial->SetTextureByPath("mainTexture", 0, (GLchar*)"res/textures/grass.png", true);
 
 	for (size_t i = 0; i < grassPositions.size(); i++)
 	{
@@ -37,7 +37,7 @@ SceneExample_Transparency::SceneExample_Transparency()
 	}
 
 	std::shared_ptr<Material> windowMaterial = std::make_shared<Material>("res/shaders/unlitTextured.vert.glsl", "res/shaders/unlitTexturedTransparent.frag.glsl");
-	windowMaterial->SetTexture("mainTexture", 0, (GLchar*)"res/textures/blending_transparent_window.png", true);
+	windowMaterial->SetTextureByPath("mainTexture", 0, (GLchar*)"res/textures/blending_transparent_window.png", true);
 
 	for (size_t i = 0; i < grassPositions.size(); i++)
 	{
