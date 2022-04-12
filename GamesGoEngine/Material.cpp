@@ -37,6 +37,7 @@ void Material::Draw(glm::mat4 model, glm::mat4 view, glm::mat4 projection)
 	{
 		glActiveTexture(GL_TEXTURE0 + std::get<0>(it->second));
 		glBindTexture(GL_TEXTURE_2D, std::get<1>(it->second));
+		glUniform1i(it->first, std::get<0>(it->second));
 	}
 
 	for (auto it = cubeTexturesMap.begin(); it != cubeTexturesMap.end(); ++it)
