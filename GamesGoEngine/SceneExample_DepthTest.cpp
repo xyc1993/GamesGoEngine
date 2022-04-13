@@ -2,7 +2,6 @@
 
 #include "Camera.h"
 #include "EditorMovement.h"
-#include "Material.h"
 #include "MeshImported.h"
 #include "MeshPrimitiveCube.h"
 #include "MeshRenderer.h"

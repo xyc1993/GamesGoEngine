@@ -22,7 +22,7 @@ class Material
 public:
 	Material();
 	Material(const GLchar* vertexPath, const GLchar* fragmentPath);
-	~Material();
+	virtual ~Material();
 
 	// all shaders have to support model, view, projection matrices!
 	virtual void Draw(glm::mat4 model, glm::mat4 view, glm::mat4 projection);
