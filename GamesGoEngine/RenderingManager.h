@@ -48,7 +48,6 @@ private:
 
 public:
 	static LightsManager* GetLightsManager();
-	static Material* GetEditorOutlineMaterial(bool isMeshImported);
 
 private:
 	static bool CompareRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2);
@@ -60,10 +59,6 @@ private:
 	std::vector<MeshRenderer*> opaqueMeshRenderers;
 	std::vector<MeshRenderer*> transparentMeshRenderers;
 	std::vector<PostProcessRenderer*> postProcessRenderers;
-
-	// used for outlining selected game objects
-	Material* editorOutlineMaterialScale;
-	Material* editorOutlineMaterialNormals;
 
 	// sets of 2 since we use ping pong rendering
 	static unsigned int framebuffer1;

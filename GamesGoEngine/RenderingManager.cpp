@@ -22,17 +22,6 @@ unsigned int RenderingManager::stencilView2 = -1;
 RenderingManager::RenderingManager()
 {
 	lightsManager = new LightsManager();
-	
-	// set the outline materials
-	editorOutlineMaterialScale = new Material("res/shaders/unlit.vert.glsl", "res/shaders/unlit.frag.glsl");
-	editorOutlineMaterialNormals = new Material("res/shaders/unlitProtruded.vert.glsl", "res/shaders/unlit.frag.glsl");
-	
-	constexpr glm::vec3 editorOutlineColor = glm::vec3(1.0f, 0.8f, 0.0f);
-	editorOutlineMaterialScale->SetVector3((GLchar*)"unlitColor", editorOutlineColor);
-	editorOutlineMaterialNormals->SetVector3((GLchar*)"unlitColor", editorOutlineColor);
-
-	constexpr float editorOutlineNormalsProtrusion = 0.03f;
-	editorOutlineMaterialNormals->SetFloat((GLchar*)"protrusion", editorOutlineNormalsProtrusion);
 }
 
 RenderingManager* RenderingManager::GetInstance()
@@ -246,18 +235,6 @@ void RenderingManager::SortTransparentMeshRenderers()
 LightsManager* RenderingManager::GetLightsManager()
 {
 	return GetInstance()->lightsManager;
-}
-
-Material* RenderingManager::GetEditorOutlineMaterial(bool isMeshImported)
-{
-	if (isMeshImported)
-	{
-		return GetInstance()->editorOutlineMaterialNormals;
-	}
-	else
-	{
-		return GetInstance()->editorOutlineMaterialScale;
-	}
 }
 
 bool RenderingManager::CompareRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2)
