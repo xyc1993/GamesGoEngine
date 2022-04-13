@@ -119,9 +119,14 @@ void RenderingManager::Update()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer1);
 	glEnable(GL_DEPTH_TEST); // enable depth testing (is disabled for rendering screen-space quad)
+	glEnable(GL_STENCIL_TEST);
 
 	glClearColor(0.1f, 0.15f, 0.15f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);	
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+	glStencilMask(~0);
+	glClearStencil(0);
+	glClear(GL_STENCIL_BUFFER_BIT);	
 
 	// TODO: more optimal sorting, it could sort on camera view change, not on every draw frame
 	SortTransparentMeshRenderers();
@@ -129,6 +134,9 @@ void RenderingManager::Update()
 	DrawSkybox();
 	DrawRenderers(GetInstance()->opaqueMeshRenderers);
 	DrawRenderers(GetInstance()->transparentMeshRenderers);
+
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_STENCIL_TEST);
 	
 	for (size_t i = 0; i < GetInstance()->postProcessRenderers.size(); i++)
 	{
@@ -140,7 +148,7 @@ void RenderingManager::Update()
 		{
 			glBindFramebuffer(GL_FRAMEBUFFER, i % 2 == 0 ? framebuffer2 : framebuffer1);
 		}
-		glDisable(GL_DEPTH_TEST);
+		
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 

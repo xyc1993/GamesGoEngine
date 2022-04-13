@@ -24,26 +24,14 @@ void main()
         vec2(offset, -offset)  // bottom-right    
         );
 
-    float stencilDifference = 0.0;
+    uint stencilDifference = 0;
     for (int i = 0; i < 9; i++)
     {
-        stencilDifference += abs(texture(depthStencilTexture, TexCoords.st + offsets[i]).r - texture(depthStencilTexture, TexCoords).r);
+        stencilDifference += abs(texture(stencilView, TexCoords.st + offsets[i]).r - texture(stencilView, TexCoords).r);
     }
-    stencilDifference = clamp(stencilDifference, 0.0, 1.0);
-    //stencilDifference = step(stencilDifference, 0.5);
 
-    uint testStencilValue = texture(stencilView, TexCoords).r;
-    float test = clamp(float(testStencilValue), 0.0, 1.0);
-
+    int colorLerp = clamp(int(stencilDifference), 0, 1);
     vec3 col = texture(screenTexture, TexCoords).rgb;
-    col += vec3(test);
-
-    //vec3 finalColor = mix(col, outlineColor, stencilDifference);
-    //vec3 finalColor = vec3(texture(screenTexture, TexCoords));
-
-    //vec3 finalColor = vec3(float(testStencilValue));
-
-    vec3 finalColor = mix(col, outlineColor, testStencilValue);
-
+    vec3 finalColor = mix(col, outlineColor, stencilDifference);
     FragColor = vec4(finalColor, 1.0);
 }

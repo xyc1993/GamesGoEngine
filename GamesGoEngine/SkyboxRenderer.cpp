@@ -14,11 +14,13 @@ SkyboxRenderer::SkyboxRenderer()
 
 void SkyboxRenderer::Draw()
 {
+	glDisable(GL_STENCIL_TEST);
 	glDepthFunc(GL_LEQUAL);
 	glCullFace(GL_FRONT);
 
 	Renderer::Draw();
 
+	glEnable(GL_STENCIL_TEST);
 	glDepthFunc(GL_LESS);
 	glCullFace(GL_BACK);
 }

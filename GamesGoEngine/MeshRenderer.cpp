@@ -24,51 +24,21 @@ void MeshRenderer::OnDeselected()
 
 void MeshRenderer::Draw()
 {
-	if (owner != nullptr && mesh != nullptr)
+	if (owner != nullptr)
 	{
-		if (!owner->IsSelected())
+		if (owner->IsSelected())
 		{
-			for (size_t i = 0; i < materialList.size(); i++)
-			{
-				if (materialList[i] != nullptr)
-				{
-					glStencilMask(0x00);
-					materialList[i]->Draw(owner->GetTransform()->GetTransformMatrix(), CamerasManager::GetActiveCameraViewMatrix(), CamerasManager::GetActiveCameraProjectionMatrix());
-					mesh->DrawSubMesh(i);
-				}
-			}
+			glStencilFunc(GL_ALWAYS, 1, 0xFF);
+			glStencilMask(0xFF);
 		}
 		else
 		{
-			for (size_t i = 0; i < materialList.size(); i++)
-			{
-				if (materialList[i] != nullptr)
-				{
-					// draw the outline for the selected game object
-					glStencilFunc(GL_ALWAYS, 1, 0xFF);
-					glStencilMask(0xFF);
-					materialList[i]->Draw(owner->GetTransform()->GetTransformMatrix(), CamerasManager::GetActiveCameraViewMatrix(), CamerasManager::GetActiveCameraProjectionMatrix());
-					mesh->DrawSubMesh(i);
-
-					glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-					glStencilMask(0x00);
-					glDisable(GL_DEPTH_TEST);
-
-					Transform outlineTransform = *owner->GetTransform();
-					// for non imported meshes we'll scale the mesh to have an outline, imported meshes use special vertex shader to achieve similar effect
-					if (!mesh->IsImportedMesh())
-					{
-						outlineTransform.SetLocalScale(1.05f * outlineTransform.GetLocalScale());
-					}
-					RenderingManager::GetEditorOutlineMaterial(mesh->IsImportedMesh())->Draw(outlineTransform.GetTransformMatrix(), CamerasManager::GetActiveCameraViewMatrix(), CamerasManager::GetActiveCameraProjectionMatrix());
-					mesh->DrawSubMesh(i);
-
-					glStencilMask(0xFF);
-					glStencilFunc(GL_ALWAYS, 0, 0xFF);
-					glEnable(GL_DEPTH_TEST);
-				}
-			}
+			glStencilMask(0x00);
 		}
+
+		Renderer::Draw();
+
+		glStencilMask(0x00);
 	}
 }
 
