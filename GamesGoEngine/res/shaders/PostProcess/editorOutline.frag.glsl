@@ -3,11 +3,12 @@ out vec4 FragColor;
 
 in vec2 TexCoords;
 
-uniform sampler2D screenTexture;
-uniform sampler2D depthStencilTexture;
+layout(binding = 0) uniform sampler2D screenTexture;
+layout(binding = 1) uniform sampler2D depthStencilTexture;
+layout(binding = 2) uniform usampler2D stencilView;
 
 const vec3 outlineColor = vec3(1.0, 0.8, 0.0);
-const float offset = 1.0 / 300.0;
+const float offset = 1.0 / 600.0;
 
 void main()
 {
@@ -26,11 +27,23 @@ void main()
     float stencilDifference = 0.0;
     for (int i = 0; i < 9; i++)
     {
-        stencilDifference += abs(texture(depthStencilTexture, TexCoords.st + offsets[i]).a - texture(depthStencilTexture, TexCoords).a);
+        stencilDifference += abs(texture(depthStencilTexture, TexCoords.st + offsets[i]).r - texture(depthStencilTexture, TexCoords).r);
     }
     stencilDifference = clamp(stencilDifference, 0.0, 1.0);
+    //stencilDifference = step(stencilDifference, 0.5);
+
+    uint testStencilValue = texture(stencilView, TexCoords).r;
+    float test = clamp(float(testStencilValue), 0.0, 1.0);
 
     vec3 col = texture(screenTexture, TexCoords).rgb;
-    vec3 finalColor = mix(col, outlineColor, stencilDifference);
+    col += vec3(test);
+
+    //vec3 finalColor = mix(col, outlineColor, stencilDifference);
+    //vec3 finalColor = vec3(texture(screenTexture, TexCoords));
+
+    //vec3 finalColor = vec3(float(testStencilValue));
+
+    vec3 finalColor = mix(col, outlineColor, testStencilValue);
+
     FragColor = vec4(finalColor, 1.0);
 }

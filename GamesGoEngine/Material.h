@@ -25,7 +25,7 @@ public:
 	~Material();
 
 	// all shaders have to support model, view, projection matrices!
-	void Draw(glm::mat4 model, glm::mat4 view, glm::mat4 projection);
+	virtual void Draw(glm::mat4 model, glm::mat4 view, glm::mat4 projection);
 	void SetShader(const GLchar* vertexPath, const GLchar* fragmentPath);
 	
 	void SetTextureByPath(const GLchar* textureName, GLuint textureIndex, GLchar* path, bool transparencyEnabled = false);
@@ -46,6 +46,7 @@ public:
 protected:
 	Shader* shader;
 
+	// <textureID <textureIndex, texture>>
 	std::map<GLint, std::tuple<GLuint, GLuint>> texturesMap;
 	std::map<GLint, std::tuple<GLuint, GLuint>> cubeTexturesMap;
 	

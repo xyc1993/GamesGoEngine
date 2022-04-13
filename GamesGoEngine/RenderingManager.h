@@ -27,7 +27,7 @@ private:
 
 public:
 	static void Init(GLint screenWidth, GLint screenHeight);
-	static void ConfigureFramebuffer(GLint screenWidth, GLint screenHeight, unsigned int& framebuffer, unsigned int& textureColorBuffer, unsigned int& depthStencilBuffer);
+	static void ConfigureFramebuffer(GLint screenWidth, GLint screenHeight, unsigned int& framebuffer, unsigned int& textureColorBuffer, unsigned int& depthStencilBuffer, unsigned int& stencilView);
 	static void ResizeBuffers(GLint screenWidth, GLint screenHeight);
 	static void Update();
 
@@ -74,4 +74,7 @@ private:
 
 	static unsigned int depthStencilBuffer1;
 	static unsigned int depthStencilBuffer2;
+
+	static unsigned int stencilView1;
+	static unsigned int stencilView2;
 };

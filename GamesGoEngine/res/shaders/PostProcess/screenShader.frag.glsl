@@ -1,10 +1,11 @@
-#version 330 core
+#version 440
 out vec4 FragColor;
 
 in vec2 TexCoords;
 
-uniform sampler2D screenTexture;
-uniform sampler2D depthStencilTexture;
+layout(binding = 0) uniform sampler2D screenTexture;
+layout(binding = 1) uniform sampler2D depthStencilTexture;
+layout(binding = 2) uniform usampler2D stencilView;
 
 void main()
 {
