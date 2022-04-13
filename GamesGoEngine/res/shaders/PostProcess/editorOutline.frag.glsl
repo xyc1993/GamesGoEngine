@@ -24,7 +24,7 @@ void main()
         vec2(offset, -offset)  // bottom-right    
         );
 
-    uint stencilDifference = 0;
+    float stencilDifference = 0;
     for (int i = 0; i < 9; i++)
     {
         stencilDifference += abs(texture(stencilView, TexCoords.st + offsets[i]).r - texture(stencilView, TexCoords).r);
