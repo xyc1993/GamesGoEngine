@@ -7,6 +7,8 @@ layout(binding = 0) uniform sampler2D screenTexture;
 layout(binding = 1) uniform sampler2D depthStencilTexture;
 layout(binding = 2) uniform usampler2D stencilView;
 
+uniform float blendWeight;
+
 const vec3 outlineColor = vec3(1.0, 0.8, 0.0);
 const float offset = 1.0 / 600.0;
 

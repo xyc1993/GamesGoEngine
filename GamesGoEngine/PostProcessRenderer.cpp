@@ -17,5 +17,19 @@ void PostProcessRenderer::SetMaterial(const std::shared_ptr<PostProcessMaterial>
 	{
 		materialList[0].reset();
 		materialList[0] = material;
+		SetBlendWeight(1.0f);
+	}
+}
+
+void PostProcessRenderer::SetBlendWeight(float weight) const
+{
+	if (materialList[0] != nullptr)
+	{
+		Material* material = materialList[0].get();
+		PostProcessMaterial* postProcessMaterial = dynamic_cast<PostProcessMaterial*>(material);
+		if (postProcessMaterial != nullptr)
+		{
+			postProcessMaterial->SetBlendWeight(weight);
+		}
 	}
 }

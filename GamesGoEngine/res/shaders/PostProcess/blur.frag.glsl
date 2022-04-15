@@ -7,10 +7,14 @@ layout(binding = 0) uniform sampler2D screenTexture;
 layout(binding = 1) uniform sampler2D depthStencilTexture;
 layout(binding = 2) uniform usampler2D stencilView;
 
-const float offset = 1.0 / 150.0;
+uniform float blendWeight;
+
+const float maxOffset = 1.0 / 150.0;
 
 void main()
 {
+    float offset = mix(0, maxOffset, blendWeight);
+
     vec2 offsets[9] = vec2[](
         vec2(-offset, offset), // top-left
         vec2(0.0f, offset), // top-center
