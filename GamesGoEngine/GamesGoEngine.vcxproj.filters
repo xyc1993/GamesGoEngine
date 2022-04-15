@@ -148,6 +148,12 @@
     <Filter Include="Header Files\GamesGo\Rendering\Renderers">
       <UniqueIdentifier>{65cb743c-dad7-43db-bcf1-73a669e1624c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\GamesGo\Tools">
+      <UniqueIdentifier>{198a8f67-9f8e-4d07-8d0f-cf61dd816c45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GamesGo\Tools">
+      <UniqueIdentifier>{763ad8f6-137b-4ac6-a89b-671b464f47af}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectionalLight.cpp">
@@ -302,6 +308,9 @@
     </ClCompile>
     <ClCompile Include="SkyboxRenderer.cpp">
       <Filter>Source Files\GamesGo\Rendering\Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="Math.cpp">
+      <Filter>Source Files\GamesGo\Tools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -460,6 +469,9 @@
     </ClInclude>
     <ClInclude Include="SkyboxRenderer.h">
       <Filter>Header Files\GamesGo\Rendering\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="Math.h">
+      <Filter>Header Files\GamesGo\Tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

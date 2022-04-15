@@ -33,3 +33,18 @@ void PostProcessRenderer::SetBlendWeight(float weight) const
 		}
 	}
 }
+
+float PostProcessRenderer::GetBlendWeight() const
+{
+	if (materialList[0] != nullptr)
+	{
+		Material* material = materialList[0].get();
+		PostProcessMaterial* postProcessMaterial = dynamic_cast<PostProcessMaterial*>(material);
+		if (postProcessMaterial != nullptr)
+		{
+			return postProcessMaterial->GetBlendWeight();
+		}
+	}
+
+	return -1.0f;
+}

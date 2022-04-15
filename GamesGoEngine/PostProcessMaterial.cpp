@@ -22,6 +22,11 @@ void PostProcessMaterial::SetBlendWeight(float weight) const
 	SetFloat("blendWeight", weight);
 }
 
+float PostProcessMaterial::GetBlendWeight() const
+{
+	return GetFloat("blendWeight");
+}
+
 void PostProcessMaterial::Draw(glm::mat4 model, glm::mat4 view, glm::mat4 projection)
 {
 	if (shader == nullptr)

@@ -114,6 +114,23 @@ void Material::SetFloat(const GLint floatID, float value) const
 	}
 }
 
+float Material::GetFloat(const GLchar* floatName) const
+{
+	const GLint floatID = glGetUniformLocation(shader->GetProgram(), floatName);
+	return GetFloat(floatID);
+}
+
+float Material::GetFloat(const GLint floatID) const
+{
+	float errValue = -1.0f;
+	float* value = &errValue;
+	if (shader != nullptr)
+	{
+		glGetUniformfv(shader->GetProgram(), floatID, value);
+	}
+	return *value;
+}
+
 void Material::SetVector4(const GLchar* vectorName, glm::vec4 value) const
 {
 	const GLint vectorID = glGetUniformLocation(shader->GetProgram(), vectorName);
