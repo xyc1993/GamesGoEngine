@@ -48,6 +48,8 @@ private:
 
 public:
 	static LightsManager* GetLightsManager();
+	static void EnablePostProcessing(bool enable);
+	static bool IsPostProcessingEnabled();
 
 private:
 	static bool CompareRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2);
@@ -59,6 +61,7 @@ private:
 	std::vector<MeshRenderer*> opaqueMeshRenderers;
 	std::vector<MeshRenderer*> transparentMeshRenderers;
 	std::vector<PostProcessRenderer*> postProcessRenderers;
+	bool postProcessingEnabled = true;
 
 	// sets of 2 since we use ping pong rendering
 	static unsigned int framebuffer1;

@@ -106,7 +106,15 @@ void RenderingManager::ResizeBuffers(GLint screenWidth, GLint screenHeight)
 
 void RenderingManager::Update()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer1);
+	if (IsPostProcessingEnabled())
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer1);
+	}
+	else
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+	
 	glEnable(GL_DEPTH_TEST); // enable depth testing (is disabled for rendering screen-space quad)
 	glEnable(GL_STENCIL_TEST);
 
@@ -124,30 +132,33 @@ void RenderingManager::Update()
 	DrawRenderers(GetInstance()->opaqueMeshRenderers);
 	DrawRenderers(GetInstance()->transparentMeshRenderers);
 
-	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_STENCIL_TEST);
-	
-	for (size_t i = 0; i < GetInstance()->postProcessRenderers.size(); i++)
+	if (IsPostProcessingEnabled())
 	{
-		if (i == (GetInstance()->postProcessRenderers.size() - 1))
-		{
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		}
-		else
-		{
-			glBindFramebuffer(GL_FRAMEBUFFER, i % 2 == 0 ? framebuffer2 : framebuffer1);
-		}
-		
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_STENCIL_TEST);
 
-		std::shared_ptr<Material> ppMaterial;
-		if (GetInstance()->postProcessRenderers[i]->TryGetMaterial(ppMaterial, 0))
+		for (size_t i = 0; i < GetInstance()->postProcessRenderers.size(); i++)
 		{
-			ppMaterial->SetTexture("screenTexture", 0, i % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
-			ppMaterial->SetTexture("depthStencilTexture", 1, i % 2 == 0 ? depthStencilBuffer1 : depthStencilBuffer2);
-			ppMaterial->SetTexture("stencilView", 2, i % 2 == 0 ? stencilView1 : stencilView2);
-			GetInstance()->postProcessRenderers[i]->Draw();
+			if (i == (GetInstance()->postProcessRenderers.size() - 1))
+			{
+				glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			}
+			else
+			{
+				glBindFramebuffer(GL_FRAMEBUFFER, i % 2 == 0 ? framebuffer2 : framebuffer1);
+			}
+
+			glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT);
+
+			std::shared_ptr<Material> ppMaterial;
+			if (GetInstance()->postProcessRenderers[i]->TryGetMaterial(ppMaterial, 0))
+			{
+				ppMaterial->SetTexture("screenTexture", 0, i % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
+				ppMaterial->SetTexture("depthStencilTexture", 1, i % 2 == 0 ? depthStencilBuffer1 : depthStencilBuffer2);
+				ppMaterial->SetTexture("stencilView", 2, i % 2 == 0 ? stencilView1 : stencilView2);
+				GetInstance()->postProcessRenderers[i]->Draw();
+			}
 		}
 	}
 }
@@ -235,6 +246,16 @@ void RenderingManager::SortTransparentMeshRenderers()
 LightsManager* RenderingManager::GetLightsManager()
 {
 	return GetInstance()->lightsManager;
+}
+
+void RenderingManager::EnablePostProcessing(bool enable)
+{
+	GetInstance()->postProcessingEnabled = enable;
+}
+
+bool RenderingManager::IsPostProcessingEnabled()
+{
+	return GetInstance()->postProcessingEnabled;
 }
 
 bool RenderingManager::CompareRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2)
