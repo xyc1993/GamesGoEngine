@@ -62,8 +62,12 @@ private:
 	std::vector<MeshRenderer*> meshRenderers;
 	std::vector<MeshRenderer*> opaqueMeshRenderers;
 	std::vector<MeshRenderer*> transparentMeshRenderers;
+	// container holding only active post process renderers
+	std::vector<PostProcessRenderer*> usedPostProcessRenderers;
+	// container holding all subscribed post process renderers
 	std::vector<PostProcessRenderer*> postProcessRenderers;
 	bool postProcessingEnabled = true;
+	bool firstRenderedFrame = true;
 
 	// sets of 2 since we use ping pong rendering
 	static unsigned int framebuffer1;

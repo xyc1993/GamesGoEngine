@@ -4,6 +4,7 @@
 
 #include "CamerasManager.h"
 #include "GameObject.h"
+#include "Math.h"
 #include "MeshPrimitiveQuad.h"
 #include "MeshRenderer.h"
 #include "PostProcessMaterial.h"
@@ -132,14 +133,20 @@ void RenderingManager::Update()
 	DrawRenderers(GetInstance()->opaqueMeshRenderers);
 	DrawRenderers(GetInstance()->transparentMeshRenderers);
 
+	if (GetInstance()->firstRenderedFrame)
+	{
+		GetInstance()->firstRenderedFrame = false;
+		SortPostProcessRenderers();
+	}
+
 	if (IsPostProcessingEnabled())
 	{
 		glDisable(GL_DEPTH_TEST);
 		glDisable(GL_STENCIL_TEST);
-
-		for (size_t i = 0; i < GetInstance()->postProcessRenderers.size(); i++)
+		
+		for (size_t i = 0; i < GetInstance()->usedPostProcessRenderers.size(); i++)
 		{
-			if (i == (GetInstance()->postProcessRenderers.size() - 1))
+			if (i == (GetInstance()->usedPostProcessRenderers.size() - 1))
 			{
 				glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			}
@@ -152,12 +159,12 @@ void RenderingManager::Update()
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			std::shared_ptr<Material> ppMaterial;
-			if (GetInstance()->postProcessRenderers[i]->TryGetMaterial(ppMaterial, 0))
+			if (GetInstance()->usedPostProcessRenderers[i]->TryGetMaterial(ppMaterial, 0))
 			{
 				ppMaterial->SetTexture("screenTexture", 0, i % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
 				ppMaterial->SetTexture("depthStencilTexture", 1, i % 2 == 0 ? depthStencilBuffer1 : depthStencilBuffer2);
 				ppMaterial->SetTexture("stencilView", 2, i % 2 == 0 ? stencilView1 : stencilView2);
-				GetInstance()->postProcessRenderers[i]->Draw();
+				GetInstance()->usedPostProcessRenderers[i]->Draw();
 			}
 		}
 	}
@@ -233,6 +240,14 @@ void RenderingManager::SortMeshRenderers()
 void RenderingManager::SortPostProcessRenderers()
 {
 	std::sort(GetInstance()->postProcessRenderers.begin(), GetInstance()->postProcessRenderers.end(), ComparePostProcessRenderersPositions);
+	GetInstance()->usedPostProcessRenderers.clear();
+	for (size_t i = 0; i < GetInstance()->postProcessRenderers.size(); i++)
+	{
+		if (!Math::IsNearlyZero(GetInstance()->postProcessRenderers[i]->GetBlendWeight()))
+		{
+			GetInstance()->usedPostProcessRenderers.push_back(GetInstance()->postProcessRenderers[i]);
+		}
+	}
 }
 
 void RenderingManager::SortOpaqueMeshRenderers()
@@ -260,7 +275,7 @@ void RenderingManager::EnablePostProcessing(bool enable)
 
 bool RenderingManager::IsPostProcessingEnabled()
 {
-	return GetInstance()->postProcessingEnabled;
+	return (GetInstance()->postProcessingEnabled && !GetInstance()->usedPostProcessRenderers.empty());
 }
 
 bool RenderingManager::CompareRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2)

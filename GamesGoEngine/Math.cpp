@@ -11,5 +11,5 @@ bool Math::IsNearlyZero(float value)
 
 bool Math::IsNearlyZero(float value, float errorMargin)
 {
-	return (glm::abs(value - errorMargin) <= 0.0f);
+	return (glm::abs(value) <= errorMargin);
 }
