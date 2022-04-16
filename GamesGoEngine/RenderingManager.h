@@ -41,6 +41,7 @@ public:
 	static void AddMeshRenderer(MeshRenderer* meshRenderer);
 	static void AddPostProcessRenderer(PostProcessRenderer* postProcessRenderer);
 	static void SortMeshRenderers();
+	static void SortPostProcessRenderers();
 
 private:
 	static void SortOpaqueMeshRenderers();
@@ -54,6 +55,7 @@ public:
 private:
 	static bool CompareRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2);
 	static bool CompareTransparentRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2);
+	static bool ComparePostProcessRenderersPositions(PostProcessRenderer* ppr1, PostProcessRenderer* ppr2);
 
 	LightsManager* lightsManager;
 	SkyboxRenderer* skybox;

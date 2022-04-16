@@ -11,4 +11,9 @@ public:
 	void SetMaterial(const std::shared_ptr<PostProcessMaterial>& material);
 	void SetBlendWeight(float weight) const;
 	float GetBlendWeight() const;
+	void SetPostProcessOrder(int orderValue);
+	int GetPostProcessOrder() const;
+
+private:
+	int postProcessOrder;
 };

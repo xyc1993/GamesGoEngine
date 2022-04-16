@@ -230,6 +230,11 @@ void RenderingManager::SortMeshRenderers()
 	SortTransparentMeshRenderers();
 }
 
+void RenderingManager::SortPostProcessRenderers()
+{
+	std::sort(GetInstance()->postProcessRenderers.begin(), GetInstance()->postProcessRenderers.end(), ComparePostProcessRenderersPositions);
+}
+
 void RenderingManager::SortOpaqueMeshRenderers()
 {
 	std::sort(GetInstance()->opaqueMeshRenderers.begin(), GetInstance()->opaqueMeshRenderers.end(), CompareRenderersPositions);
@@ -275,4 +280,9 @@ bool RenderingManager::CompareTransparentRenderersPositions(MeshRenderer* mr1, M
 	{
 		return CompareRenderersPositions(mr1, mr2);
 	}
+}
+
+bool RenderingManager::ComparePostProcessRenderersPositions(PostProcessRenderer* ppr1, PostProcessRenderer* ppr2)
+{
+	return (ppr1->GetPostProcessOrder() < ppr2->GetPostProcessOrder());
 }

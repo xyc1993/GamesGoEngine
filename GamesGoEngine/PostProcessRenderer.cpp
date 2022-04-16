@@ -9,6 +9,7 @@ PostProcessRenderer::PostProcessRenderer()
 	materialList.clear();
 	materialList.resize(mesh->GetSubMeshesCount());
 	RenderingManager::AddPostProcessRenderer(this);
+	SetPostProcessOrder(0);
 }
 
 void PostProcessRenderer::SetMaterial(const std::shared_ptr<PostProcessMaterial>& material)
@@ -47,4 +48,15 @@ float PostProcessRenderer::GetBlendWeight() const
 	}
 
 	return -1.0f;
+}
+
+void PostProcessRenderer::SetPostProcessOrder(int orderValue)
+{
+	postProcessOrder = orderValue;
+	RenderingManager::SortPostProcessRenderers();
+}
+
+int PostProcessRenderer::GetPostProcessOrder() const
+{
+	return postProcessOrder;
 }
