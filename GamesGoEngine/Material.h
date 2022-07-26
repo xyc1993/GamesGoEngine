@@ -25,12 +25,13 @@ public:
 	virtual ~Material();
 
 	// all shaders have to support model, view, projection matrices!
-	virtual void Draw(glm::mat4 model, glm::mat4 view, glm::mat4 projection);
+	virtual void Draw(glm::mat4 model, glm::mat4 view, glm::mat4 projection, glm::vec3 cameraPos);
 	void SetShader(const GLchar* vertexPath, const GLchar* fragmentPath);
 	
 	void SetTextureByPath(const GLchar* textureName, GLuint textureIndex, GLchar* path, bool transparencyEnabled = false);
 	void SetTexture(const GLchar* textureName, GLuint textureIndex, GLuint texture);
 	void SetCubeTextureByPath(const GLchar* textureName, GLuint textureIndex, const std::vector<const GLchar*>& paths);
+	void SetCubeTexture(const GLchar* textureName, GLuint textureIndex, GLuint texture);
 	
 	void SetFloat(const GLchar* floatName, float value) const;
 	void SetFloat(const GLint floatID, float value) const;

@@ -22,7 +22,7 @@ void Renderer::Draw()
 		{
 			if (materialList[i] != nullptr)
 			{
-				materialList[i]->Draw(owner->GetTransform()->GetTransformMatrix(), GetViewMatrix(), GetProjectionMatrix());
+				materialList[i]->Draw(owner->GetTransform()->GetTransformMatrix(), GetViewMatrix(), GetProjectionMatrix(), GetCameraPosition());
 				mesh->DrawSubMesh(i);
 			}
 		}
@@ -56,4 +56,9 @@ glm::mat4 Renderer::GetViewMatrix() const
 glm::mat4 Renderer::GetProjectionMatrix() const
 {
 	return CamerasManager::GetActiveCameraProjectionMatrix();
+}
+
+glm::vec3 Renderer::GetCameraPosition() const
+{
+	return CamerasManager::GetActiveCameraPosition();
 }

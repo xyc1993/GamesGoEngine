@@ -14,8 +14,10 @@ SceneExample_EnvironmentMapping::SceneExample_EnvironmentMapping()
 	skyboxTextures.push_back("res/textures/skybox/back.tga");
 	skyboxTextures.push_back("res/textures/skybox/front.tga");
 
+	GLuint skyboxTexture = TextureLoader::LoadCubemap(skyboxTextures);
+
 	std::shared_ptr<Material> skyboxMaterial = std::make_shared<Material>("res/shaders/skybox.vert.glsl", "res/shaders/skybox.frag.glsl");
-	skyboxMaterial->SetCubeTextureByPath("skybox", 1, skyboxTextures);
+	skyboxMaterial->SetCubeTexture("skybox", 1, skyboxTexture);
 
 	SkyboxRenderer* skyboxComponent = new SkyboxRenderer();
 	skyboxComponent->SetMaterial(skyboxMaterial);
@@ -36,15 +38,11 @@ SceneExample_EnvironmentMapping::SceneExample_EnvironmentMapping()
 	MeshRenderer* skullMeshRenderer = new MeshRenderer();
 	std::shared_ptr<MeshImported> skullMesh = std::make_shared<MeshImported>((GLchar*)"res/skull/skull.obj");
 	skullMeshRenderer->SetMesh(skullMesh);
-
-	GLuint skullDiffuseTexture = TextureLoader::LoadTexture((GLchar*)"res/skull/diffuse.jpg", false);
 	
 	for (int i = 0; i < skullMesh->GetSubMeshesCount(); i++)
 	{
-		std::shared_ptr<Material> skullMaterial = std::make_shared<Material>("res/shaders/lighting.vert.glsl", "res/shaders/lighting.frag.glsl");
-		skullMaterial->SetTexture((GLchar*)"material.diffuse", 0, skullDiffuseTexture);
-		skullMaterial->SetFloat((GLchar*)"material.shininess", 32.0f);
-		skullMaterial->SetLightModel(LightModelType::LitForward);
+		std::shared_ptr<Material> skullMaterial = std::make_shared<Material>("res/shaders/skyboxReflect.vert.glsl", "res/shaders/skyboxReflect.frag.glsl");
+		skullMaterial->SetCubeTexture((GLchar*)"skybox", 1, skyboxTexture);
 		skullMeshRenderer->SetMaterial(skullMaterial, i);
 	}
 

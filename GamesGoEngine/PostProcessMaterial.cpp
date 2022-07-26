@@ -27,7 +27,7 @@ float PostProcessMaterial::GetBlendWeight() const
 	return GetFloat("blendWeight");
 }
 
-void PostProcessMaterial::Draw(glm::mat4 model, glm::mat4 view, glm::mat4 projection)
+void PostProcessMaterial::Draw(glm::mat4 model, glm::mat4 view, glm::mat4 projection, glm::vec3 cameraPos)
 {
 	if (shader == nullptr)
 	{

@@ -24,7 +24,7 @@ Material::~Material()
 	delete shader;
 }
 
-void Material::Draw(glm::mat4 model, glm::mat4 view, glm::mat4 projection)
+void Material::Draw(glm::mat4 model, glm::mat4 view, glm::mat4 projection, glm::vec3 cameraPos)
 {
 	if (shader == nullptr)
 	{
@@ -49,10 +49,12 @@ void Material::Draw(glm::mat4 model, glm::mat4 view, glm::mat4 projection)
 	const GLint modelLoc = glGetUniformLocation(shader->GetProgram(), "model");
 	const GLint viewLoc = glGetUniformLocation(shader->GetProgram(), "view");
 	const GLint projLoc = glGetUniformLocation(shader->GetProgram(), "projection");
+	const GLint cameraPosLoc = glGetUniformLocation(shader->GetProgram(), "cameraPos");
 
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+	glUniform3fv(cameraPosLoc, 1, glm::value_ptr(cameraPos));
 
 	switch (lightModelType)
 	{
@@ -95,6 +97,15 @@ void Material::SetCubeTextureByPath(const GLchar* textureName, GLuint textureInd
 	{
 		const GLint textureID = glGetUniformLocation(shader->GetProgram(), textureName);
 		GLuint texture = TextureLoader::LoadCubemap(paths);
+		cubeTexturesMap[textureID] = std::tuple<GLuint, GLuint>(textureIndex, texture);
+	}
+}
+
+void Material::SetCubeTexture(const GLchar* textureName, GLuint textureIndex, GLuint texture)
+{
+	if (shader != nullptr)
+	{
+		const GLint textureID = glGetUniformLocation(shader->GetProgram(), textureName);
 		cubeTexturesMap[textureID] = std::tuple<GLuint, GLuint>(textureIndex, texture);
 	}
 }

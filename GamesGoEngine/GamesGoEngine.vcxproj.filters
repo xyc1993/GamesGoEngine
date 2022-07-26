@@ -529,5 +529,11 @@
     <None Include="res\shaders\PostProcess\editorOutline.frag.glsl">
       <Filter>Resource Files\PostProcess</Filter>
     </None>
+    <None Include="res\shaders\skyboxReflect.frag.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\shaders\skyboxReflect.vert.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
