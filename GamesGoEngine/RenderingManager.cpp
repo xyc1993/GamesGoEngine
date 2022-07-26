@@ -129,9 +129,9 @@ void RenderingManager::Update()
 	// TODO: more optimal sorting, it could sort on camera view change, not on every draw frame
 	SortTransparentMeshRenderers();
 
-	DrawSkybox();
 	DrawRenderers(GetInstance()->opaqueMeshRenderers);
 	DrawRenderers(GetInstance()->transparentMeshRenderers);
+	DrawSkybox();
 
 	if (GetInstance()->firstRenderedFrame)
 	{
