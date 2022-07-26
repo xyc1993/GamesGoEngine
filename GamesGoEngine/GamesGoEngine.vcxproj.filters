@@ -312,6 +312,9 @@
     <ClCompile Include="Math.cpp">
       <Filter>Source Files\GamesGo\Tools</Filter>
     </ClCompile>
+    <ClCompile Include="SceneExample_EnvironmentMapping.cpp">
+      <Filter>Source Files\GamesGo\Examples</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -472,6 +475,9 @@
     </ClInclude>
     <ClInclude Include="Math.h">
       <Filter>Header Files\GamesGo\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneExample_EnvironmentMapping.h">
+      <Filter>Header Files\GamesGo\Examples</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
