@@ -19,6 +19,7 @@ unsigned int RenderingManager::depthStencilBuffer1 = -1;
 unsigned int RenderingManager::depthStencilBuffer2 = -1;
 unsigned int RenderingManager::stencilView1 = -1;
 unsigned int RenderingManager::stencilView2 = -1;
+unsigned int RenderingManager::uboMatrices = -1;
 
 RenderingManager::RenderingManager()
 {
@@ -51,6 +52,15 @@ void RenderingManager::Init(GLint screenWidth, GLint screenHeight)
 	// framebuffer configuration
 	ConfigureFramebuffer(screenWidth, screenHeight, framebuffer1, textureColorBuffer1, depthStencilBuffer1, stencilView1);
 	ConfigureFramebuffer(screenWidth, screenHeight, framebuffer2, textureColorBuffer2, depthStencilBuffer2, stencilView2);
+
+	// configure uniform buffer objects
+	glGenBuffers(1, &uboMatrices);
+
+	glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
+	glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), NULL, GL_STATIC_DRAW);
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+	glBindBufferRange(GL_UNIFORM_BUFFER, 0, uboMatrices, 0, 2 * sizeof(glm::mat4));
 }
 
 void RenderingManager::ConfigureFramebuffer(GLint screenWidth, GLint screenHeight, unsigned int& framebuffer, unsigned int& textureColorBuffer, unsigned int& depthStencilBuffer, unsigned int& stencilView)
@@ -124,7 +134,16 @@ void RenderingManager::Update()
 
 	glStencilMask(~0);
 	glClearStencil(0);
-	glClear(GL_STENCIL_BUFFER_BIT);	
+	glClear(GL_STENCIL_BUFFER_BIT);
+
+	// update uniform buffer objects
+	glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
+	glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(CamerasManager::GetActiveCameraProjectionMatrix()));
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	
+	glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
+	glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(CamerasManager::GetActiveCameraViewMatrix()));
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 	// TODO: more optimal sorting, it could sort on camera view change, not on every draw frame
 	SortTransparentMeshRenderers();

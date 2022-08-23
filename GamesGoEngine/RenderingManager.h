@@ -69,6 +69,9 @@ private:
 	bool postProcessingEnabled = true;
 	bool firstRenderedFrame = true;
 
+	// uniform buffers used globally by shaders
+	static unsigned int uboMatrices;
+
 	// sets of 2 since we use ping pong rendering
 	static unsigned int framebuffer1;
 	static unsigned int framebuffer2;
