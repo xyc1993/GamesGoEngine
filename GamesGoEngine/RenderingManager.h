@@ -27,11 +27,21 @@ private:
 
 public:
 	static void Init(GLint screenWidth, GLint screenHeight);
+
+private:
 	static void ConfigureFramebuffer(GLint screenWidth, GLint screenHeight, unsigned int& framebuffer, unsigned int& textureColorBuffer, unsigned int& depthStencilBuffer, unsigned int& stencilView);
+
+public:
 	static void ResizeBuffers(GLint screenWidth, GLint screenHeight);
+
+private:
+	void ConfigureUniformBufferObjects();
+
+public:
 	static void Update();
 
 private:
+	void UpdateUniformBufferObjects();
 	static void DrawSkybox();
 	static void DrawRenderers(const std::vector<MeshRenderer*>& renderers);
 	static void DrawPostProcessEffects();
@@ -70,7 +80,7 @@ private:
 	bool firstRenderedFrame = true;
 
 	// uniform buffers used globally by shaders
-	static unsigned int uboMatrices;
+	unsigned int uboMatrices;
 
 	// sets of 2 since we use ping pong rendering
 	static unsigned int framebuffer1;

@@ -22,7 +22,7 @@ void Renderer::Draw()
 		{
 			if (materialList[i] != nullptr)
 			{
-				materialList[i]->Draw(owner->GetTransform()->GetTransformMatrix(), GetViewMatrix(), GetProjectionMatrix(), GetCameraPosition());
+				materialList[i]->Draw(owner->GetTransform()->GetTransformMatrix(), GetCameraPosition());
 				mesh->DrawSubMesh(i);
 			}
 		}
@@ -46,16 +46,6 @@ void Renderer::CleanMaterialList()
 		materialList[i].reset();
 	}
 	materialList.clear();
-}
-
-glm::mat4 Renderer::GetViewMatrix() const
-{
-	return CamerasManager::GetActiveCameraViewMatrix();
-}
-
-glm::mat4 Renderer::GetProjectionMatrix() const
-{
-	return CamerasManager::GetActiveCameraProjectionMatrix();
 }
 
 glm::vec3 Renderer::GetCameraPosition() const

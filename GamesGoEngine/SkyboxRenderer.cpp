@@ -33,8 +33,3 @@ void SkyboxRenderer::SetMaterial(const std::shared_ptr<Material>& material)
 		materialList[0] = material;
 	}
 }
-
-glm::mat4 SkyboxRenderer::GetViewMatrix() const
-{
-	return glm::mat4(glm::mat3(CamerasManager::GetActiveCameraViewMatrix()));
-}

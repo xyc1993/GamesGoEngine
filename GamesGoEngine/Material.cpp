@@ -24,7 +24,7 @@ Material::~Material()
 	delete shader;
 }
 
-void Material::Draw(glm::mat4 model, glm::mat4 view, glm::mat4 projection, glm::vec3 cameraPos)
+void Material::Draw(glm::mat4 model, glm::vec3 cameraPos)
 {
 	if (shader == nullptr)
 	{
@@ -47,13 +47,9 @@ void Material::Draw(glm::mat4 model, glm::mat4 view, glm::mat4 projection, glm::
 	}
 	
 	const GLint modelLoc = glGetUniformLocation(shader->GetProgram(), "model");
-	const GLint viewLoc = glGetUniformLocation(shader->GetProgram(), "view");
-	const GLint projLoc = glGetUniformLocation(shader->GetProgram(), "projection");
 	const GLint cameraPosLoc = glGetUniformLocation(shader->GetProgram(), "cameraPos");
 
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 	glUniform3fv(cameraPosLoc, 1, glm::value_ptr(cameraPos));
 
 	switch (lightModelType)

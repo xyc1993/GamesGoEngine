@@ -1,4 +1,4 @@
-#version 330 core
+#version 420 core
 #define NUMBER_OF_DIR_LIGHTS 4
 #define NUMBER_OF_POINT_LIGHTS 4
 #define NUMBER_OF_SPOT_LIGHTS 4

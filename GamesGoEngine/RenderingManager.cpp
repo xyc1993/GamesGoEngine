@@ -19,7 +19,6 @@ unsigned int RenderingManager::depthStencilBuffer1 = -1;
 unsigned int RenderingManager::depthStencilBuffer2 = -1;
 unsigned int RenderingManager::stencilView1 = -1;
 unsigned int RenderingManager::stencilView2 = -1;
-unsigned int RenderingManager::uboMatrices = -1;
 
 RenderingManager::RenderingManager()
 {
@@ -54,13 +53,7 @@ void RenderingManager::Init(GLint screenWidth, GLint screenHeight)
 	ConfigureFramebuffer(screenWidth, screenHeight, framebuffer2, textureColorBuffer2, depthStencilBuffer2, stencilView2);
 
 	// configure uniform buffer objects
-	glGenBuffers(1, &uboMatrices);
-
-	glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
-	glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), NULL, GL_STATIC_DRAW);
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
-	glBindBufferRange(GL_UNIFORM_BUFFER, 0, uboMatrices, 0, 2 * sizeof(glm::mat4));
+	GetInstance()->ConfigureUniformBufferObjects();
 }
 
 void RenderingManager::ConfigureFramebuffer(GLint screenWidth, GLint screenHeight, unsigned int& framebuffer, unsigned int& textureColorBuffer, unsigned int& depthStencilBuffer, unsigned int& stencilView)
@@ -115,6 +108,17 @@ void RenderingManager::ResizeBuffers(GLint screenWidth, GLint screenHeight)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, screenWidth, screenHeight, 0, GL_DEPTH24_STENCIL8, GL_UNSIGNED_BYTE, NULL);
 }
 
+void RenderingManager::ConfigureUniformBufferObjects()
+{
+	glGenBuffers(1, &uboMatrices);
+
+	glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
+	glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), NULL, GL_STATIC_DRAW);
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+	glBindBufferRange(GL_UNIFORM_BUFFER, 0, uboMatrices, 0, 2 * sizeof(glm::mat4));
+}
+
 void RenderingManager::Update()
 {
 	if (IsPostProcessingEnabled())
@@ -137,13 +141,7 @@ void RenderingManager::Update()
 	glClear(GL_STENCIL_BUFFER_BIT);
 
 	// update uniform buffer objects
-	glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
-	glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(CamerasManager::GetActiveCameraProjectionMatrix()));
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
-	
-	glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
-	glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(CamerasManager::GetActiveCameraViewMatrix()));
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	GetInstance()->UpdateUniformBufferObjects();
 
 	// TODO: more optimal sorting, it could sort on camera view change, not on every draw frame
 	SortTransparentMeshRenderers();
@@ -187,6 +185,17 @@ void RenderingManager::Update()
 			}
 		}
 	}
+}
+
+void RenderingManager::UpdateUniformBufferObjects()
+{
+	glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
+	glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(CamerasManager::GetActiveCameraProjectionMatrix()));
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	
+	glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
+	glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(CamerasManager::GetActiveCameraViewMatrix()));
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 void RenderingManager::DrawSkybox()
