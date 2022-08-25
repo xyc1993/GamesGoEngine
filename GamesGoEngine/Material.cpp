@@ -19,6 +19,13 @@ Material::Material(const GLchar* vertexPath, const GLchar* fragmentPath)
 	lightModelType = LightModelType::Unlit;
 }
 
+Material::Material(const GLchar* vertexPath, const GLchar* fragmentPath, const GLchar* geometryPath)
+{
+	shader = new Shader(vertexPath, fragmentPath, geometryPath);
+	texturesMap.clear();
+	lightModelType = LightModelType::Unlit;
+}
+
 Material::~Material()
 {
 	delete shader;
