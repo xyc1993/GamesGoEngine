@@ -22,7 +22,7 @@ void Renderer::Draw()
 		{
 			if (materialList[i] != nullptr)
 			{
-				materialList[i]->Draw(owner->GetTransform()->GetTransformMatrix(), GetCameraPosition());
+				materialList[i]->Draw(owner->GetTransform()->GetTransformMatrix());
 				mesh->DrawSubMesh(i);
 			}
 		}

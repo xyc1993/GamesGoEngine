@@ -4,7 +4,12 @@ out vec4 FragColor;
 in vec3 Normal;
 in vec3 Position;
 
-uniform vec3 cameraPos;
+layout(std140, binding = 1) uniform CameraData
+{
+    vec3 cameraPos;
+    vec3 cameraDir;
+};
+
 uniform samplerCube skybox;
 
 void main()

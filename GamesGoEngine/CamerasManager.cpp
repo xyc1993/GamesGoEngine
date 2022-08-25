@@ -27,6 +27,25 @@ glm::vec3 CamerasManager::GetActiveCameraPosition()
 	}
 }
 
+glm::vec3 CamerasManager::GetActiveCameraDirection()
+{
+	if (sceneCameras.empty())
+	{
+		return glm::vec3(0.0f, 0.0f, 1.0f);
+	}
+	else
+	{
+		if (sceneCameras[0]->GetOwner() != nullptr)
+		{
+			return sceneCameras[0]->GetOwner()->GetTransform()->GetForward();
+		}
+		else
+		{
+			return glm::vec3(0.0f, 0.0f, 1.0f);
+		}
+	}
+}
+
 glm::mat4 CamerasManager::GetActiveCameraViewMatrix()
 {
 	if (sceneCameras.empty())

@@ -24,7 +24,7 @@ Material::~Material()
 	delete shader;
 }
 
-void Material::Draw(glm::mat4 model, glm::vec3 cameraPos)
+void Material::Draw(glm::mat4 model)
 {
 	if (shader == nullptr)
 	{
@@ -47,10 +47,7 @@ void Material::Draw(glm::mat4 model, glm::vec3 cameraPos)
 	}
 	
 	const GLint modelLoc = glGetUniformLocation(shader->GetProgram(), "model");
-	const GLint cameraPosLoc = glGetUniformLocation(shader->GetProgram(), "cameraPos");
-
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-	glUniform3fv(cameraPosLoc, 1, glm::value_ptr(cameraPos));
 
 	switch (lightModelType)
 	{

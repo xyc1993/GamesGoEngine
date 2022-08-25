@@ -25,7 +25,7 @@ public:
 	virtual ~Material();
 
 	// all shaders have to support model, view, projection matrices!
-	virtual void Draw(glm::mat4 model, glm::vec3 cameraPos);
+	virtual void Draw(glm::mat4 model);
 	void SetShader(const GLchar* vertexPath, const GLchar* fragmentPath);
 	
 	void SetTextureByPath(const GLchar* textureName, GLuint textureIndex, GLchar* path, bool transparencyEnabled = false);

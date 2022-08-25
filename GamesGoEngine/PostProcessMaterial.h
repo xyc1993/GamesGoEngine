@@ -11,5 +11,5 @@ public:
 	void SetBlendWeight(float weight) const;
 	float GetBlendWeight() const;
 
-	virtual void Draw(glm::mat4 model, glm::vec3 cameraPos) override;
+	virtual void Draw(glm::mat4 model) override;
 };
