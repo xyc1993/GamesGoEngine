@@ -326,6 +326,18 @@ bool RenderingManager::IsPostProcessingEnabled()
 	return (GetInstance()->postProcessingEnabled && !GetInstance()->usedPostProcessRenderers.empty());
 }
 
+void RenderingManager::SetWireframeOnly(bool wireframeOnly)
+{
+	glPolygonMode(GL_FRONT_AND_BACK, wireframeOnly ? GL_LINE : GL_FILL);
+	EnablePostProcessing(!wireframeOnly);
+	GetInstance()->renderWireframeOnly = wireframeOnly;
+}
+
+bool RenderingManager::IsWireframeOnly()
+{
+	return GetInstance()->renderWireframeOnly;
+}
+
 bool RenderingManager::CompareRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2)
 {
 	return (mr1->GetRenderQueuePosition() < mr2->GetRenderQueuePosition());

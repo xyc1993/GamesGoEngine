@@ -61,6 +61,8 @@ public:
 	static LightsManager* GetLightsManager();
 	static void EnablePostProcessing(bool enable);
 	static bool IsPostProcessingEnabled();
+	static void SetWireframeOnly(bool wireframeOnly);
+	static bool IsWireframeOnly();
 
 private:
 	static bool CompareRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2);
@@ -78,6 +80,7 @@ private:
 	std::vector<PostProcessRenderer*> postProcessRenderers;
 	bool postProcessingEnabled = true;
 	bool firstRenderedFrame = true;
+	bool renderWireframeOnly = false;
 
 	// uniform buffers used globally by shaders
 	unsigned int uboMatrices;
