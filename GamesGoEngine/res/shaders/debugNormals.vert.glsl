@@ -16,6 +16,7 @@ uniform mat4 model;
 
 void main()
 {
+    // projection matrix has to be applied after the vertices's positions are modified by geometry shader
     gl_Position = view * model * vec4(aPos, 1.0);
     // normal matrix is necessary to take into account rotations and scaling of the model
     mat3 normalMatrix = mat3(transpose(inverse(view * model)));

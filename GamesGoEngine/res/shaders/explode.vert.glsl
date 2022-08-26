@@ -17,5 +17,6 @@ uniform mat4 model;
 void main()
 {
     vs_out.texCoords = aTexCoords;
-    gl_Position = projection * view * model * vec4(aPos, 1.0);
+    // projection matrix has to be applied after the vertices's positions are modified by geometry shader
+    gl_Position = view * model * vec4(aPos, 1.0);
 }

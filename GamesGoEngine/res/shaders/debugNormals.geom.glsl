@@ -16,6 +16,7 @@ layout(std140, binding = 0) uniform Matrices
 
 void GenerateLine(int index)
 {
+    // projection matrix has to be applied after the vertices's positions are modified by geometry shader
     gl_Position = projection * gl_in[index].gl_Position;
     EmitVertex();
     gl_Position = projection * (gl_in[index].gl_Position +
