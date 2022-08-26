@@ -9,6 +9,7 @@
 #include "MeshRenderer.h"
 #include "PostProcessMaterial.h"
 #include "PostProcessRenderer.h"
+#include "Time.h"
 
 RenderingManager* RenderingManager::instance = nullptr;
 unsigned int RenderingManager::framebuffer1 = -1;
@@ -121,6 +122,12 @@ void RenderingManager::ConfigureUniformBufferObjects()
 	glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec3), NULL, GL_STATIC_DRAW);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	glBindBufferRange(GL_UNIFORM_BUFFER, 1, uboCameraData, 0, 2 * sizeof(glm::vec3));
+
+	glGenBuffers(1, &uboTimeData);
+	glBindBuffer(GL_UNIFORM_BUFFER, uboTimeData);
+	glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(float), NULL, GL_STATIC_DRAW);
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	glBindBufferRange(GL_UNIFORM_BUFFER, 2, uboTimeData, 0, 2 * sizeof(float));
 }
 
 void RenderingManager::Update()
@@ -201,6 +208,13 @@ void RenderingManager::UpdateUniformBufferObjects()
 	glBindBuffer(GL_UNIFORM_BUFFER, uboCameraData);
 	glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::vec3), glm::value_ptr(CamerasManager::GetActiveCameraPosition()));
 	glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::vec3), sizeof(glm::vec3), glm::value_ptr(CamerasManager::GetActiveCameraDirection()));
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+	glBindBuffer(GL_UNIFORM_BUFFER, uboTimeData);
+	const auto time = static_cast<float>(Time::GetTime());
+	const auto deltaTime = static_cast<float>(Time::GetDeltaTime());
+	glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(float), &time);
+	glBufferSubData(GL_UNIFORM_BUFFER, sizeof(float), sizeof(float), &deltaTime);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 

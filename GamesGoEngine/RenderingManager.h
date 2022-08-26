@@ -82,6 +82,7 @@ private:
 	// uniform buffers used globally by shaders
 	unsigned int uboMatrices;
 	unsigned int uboCameraData;
+	unsigned int uboTimeData;
 
 	// sets of 2 since we use ping pong rendering
 	static unsigned int framebuffer1;

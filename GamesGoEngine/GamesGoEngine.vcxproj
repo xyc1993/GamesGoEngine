@@ -189,6 +189,7 @@
     <ClCompile Include="SceneExample.cpp" />
     <ClCompile Include="SceneExample_DepthTest.cpp" />
     <ClCompile Include="SceneExample_EnvironmentMapping.cpp" />
+    <ClCompile Include="SceneExample_GeometryShader.cpp" />
     <ClCompile Include="SceneExample_LitForward.cpp" />
     <ClCompile Include="SceneExample_Transparency.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -245,6 +246,7 @@
     <ClInclude Include="SceneExample.h" />
     <ClInclude Include="SceneExample_DepthTest.h" />
     <ClInclude Include="SceneExample_EnvironmentMapping.h" />
+    <ClInclude Include="SceneExample_GeometryShader.h" />
     <ClInclude Include="SceneExample_LitForward.h" />
     <ClInclude Include="SceneExample_Transparency.h" />
     <ClInclude Include="Shader.h" />
@@ -258,6 +260,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\depth.frag.glsl" />
+    <None Include="res\shaders\explode.geom.glsl" />
+    <None Include="res\shaders\explode.vert.glsl" />
     <None Include="res\shaders\PostProcess\blur.frag.glsl" />
     <None Include="res\shaders\PostProcess\editorOutline.frag.glsl" />
     <None Include="res\shaders\PostProcess\inverseColor.frag.glsl" />
@@ -272,6 +276,7 @@
     <None Include="res\shaders\skybox.frag.glsl" />
     <None Include="res\shaders\skybox.vert.glsl" />
     <None Include="res\shaders\unlitProtruded.vert.glsl" />
+    <None Include="res\shaders\unlitTextured.frag.glsl" />
     <None Include="res\shaders\unlitTextured.vert.glsl" />
     <None Include="res\shaders\unlitTexturedMasked.frag.glsl" />
     <None Include="res\shaders\unlitTexturedTransparent.frag.glsl" />

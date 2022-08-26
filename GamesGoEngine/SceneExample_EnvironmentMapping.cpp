@@ -53,15 +53,5 @@ SceneExample_EnvironmentMapping::SceneExample_EnvironmentMapping()
 
 	scene->AddGameObject(skullObject);
 
-	GameObject* directionalLightObject = new GameObject();
-	directionalLightObject->GetTransform()->SetRotationEulerDegrees(glm::vec3(90.0f, -45.0f, 0.0f));
-	DirectionalLight* directionalLight = new DirectionalLight(glm::vec3(0.2f), glm::vec3(0.6f), glm::vec3(0.7f));
-	directionalLightObject->AddComponent(directionalLight);
-
-	std::string directionalLightName = "directional_light";
-	directionalLightObject->SetName(directionalLightName);
-
-	scene->AddGameObject(directionalLightObject);
-
 	GameObject* editorSpectatorObject = AddEditorSpectator();
 }

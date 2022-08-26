@@ -315,6 +315,9 @@
     <ClCompile Include="SceneExample_EnvironmentMapping.cpp">
       <Filter>Source Files\GamesGo\Examples</Filter>
     </ClCompile>
+    <ClCompile Include="SceneExample_GeometryShader.cpp">
+      <Filter>Source Files\GamesGo\Examples</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -479,6 +482,9 @@
     <ClInclude Include="SceneExample_EnvironmentMapping.h">
       <Filter>Header Files\GamesGo\Examples</Filter>
     </ClInclude>
+    <ClInclude Include="SceneExample_GeometryShader.h">
+      <Filter>Header Files\GamesGo\Examples</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\unlit.frag.glsl">
@@ -533,6 +539,15 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="res\shaders\skyboxReflect.vert.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\shaders\explode.geom.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\shaders\unlitTextured.frag.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\shaders\explode.vert.glsl">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
