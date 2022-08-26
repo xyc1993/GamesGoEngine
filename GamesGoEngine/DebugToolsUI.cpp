@@ -26,6 +26,12 @@ void DebugToolsUI::Draw()
 	{
 		RenderingManager::SetWireframeOnly(wireframeOnly);
 	}
+
+	bool normalsDebugEnabled = RenderingManager::IsNormalsDebugEnabled();
+	if (ImGui::Checkbox("Show normals", &normalsDebugEnabled))
+	{
+		RenderingManager::EnableNormalsDebug(normalsDebugEnabled);
+	}
 	
 	ImGui::End();
 }

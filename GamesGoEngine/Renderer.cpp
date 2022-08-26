@@ -29,6 +29,18 @@ void Renderer::Draw()
 	}
 }
 
+void Renderer::Draw(Material* material)
+{
+	if (owner != nullptr && mesh != nullptr && material != nullptr)
+	{
+		for (size_t i = 0; i < mesh->GetSubMeshesCount(); i++)
+		{
+			material->Draw(owner->GetTransform()->GetTransformMatrix());
+			mesh->DrawSubMesh(i);
+		}
+	}
+}
+
 bool Renderer::TryGetMaterial(std::shared_ptr<Material>& outMaterial, int index)
 {
 	if (index >= 0 && index < materialList.size())

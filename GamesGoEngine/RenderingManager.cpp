@@ -24,6 +24,13 @@ unsigned int RenderingManager::stencilView2 = -1;
 RenderingManager::RenderingManager()
 {
 	lightsManager = new LightsManager();
+	normalDebugMaterial = new Material("res/shaders/debugNormals.vert.glsl", "res/shaders/debugNormals.frag.glsl", "res/shaders/debugNormals.geom.glsl");
+}
+
+RenderingManager::~RenderingManager()
+{
+	delete lightsManager;
+	delete normalDebugMaterial;
 }
 
 RenderingManager* RenderingManager::GetInstance()
@@ -55,6 +62,9 @@ void RenderingManager::Init(GLint screenWidth, GLint screenHeight)
 
 	// configure uniform buffer objects
 	GetInstance()->ConfigureUniformBufferObjects();
+
+	// debug materials
+	GetInstance()->CreateDebugMaterials();
 }
 
 void RenderingManager::ConfigureFramebuffer(GLint screenWidth, GLint screenHeight, unsigned int& framebuffer, unsigned int& textureColorBuffer, unsigned int& depthStencilBuffer, unsigned int& stencilView)
@@ -130,6 +140,11 @@ void RenderingManager::ConfigureUniformBufferObjects()
 	glBindBufferRange(GL_UNIFORM_BUFFER, 2, uboTimeData, 0, 2 * sizeof(float));
 }
 
+void RenderingManager::CreateDebugMaterials()
+{
+
+}
+
 void RenderingManager::Update()
 {
 	if (IsPostProcessingEnabled())
@@ -160,6 +175,11 @@ void RenderingManager::Update()
 	DrawRenderers(GetInstance()->opaqueMeshRenderers);
 	DrawRenderers(GetInstance()->transparentMeshRenderers);
 	DrawSkybox();
+
+	if (IsNormalsDebugEnabled() && (GetInstance()->normalDebugMaterial != nullptr))
+	{
+		DrawRenderers(GetInstance()->meshRenderers, GetInstance()->normalDebugMaterial);
+	}
 
 	if (GetInstance()->firstRenderedFrame)
 	{
@@ -234,6 +254,18 @@ void RenderingManager::DrawRenderers(const std::vector<MeshRenderer*>& renderers
 		if (meshRenderer != nullptr)
 		{
 			meshRenderer->Draw();
+		}
+	}
+}
+
+void RenderingManager::DrawRenderers(const std::vector<MeshRenderer*>& renderers, Material* material)
+{
+	for (size_t i = 0; i < renderers.size(); i++)
+	{
+		MeshRenderer* meshRenderer = renderers[i];
+		if (meshRenderer != nullptr)
+		{
+			meshRenderer->Draw(material);
 		}
 	}
 }
@@ -336,6 +368,16 @@ void RenderingManager::SetWireframeOnly(bool wireframeOnly)
 bool RenderingManager::IsWireframeOnly()
 {
 	return GetInstance()->renderWireframeOnly;
+}
+
+void RenderingManager::EnableNormalsDebug(bool enable)
+{
+	GetInstance()->normalsDebugEnabled = enable;
+}
+
+bool RenderingManager::IsNormalsDebugEnabled()
+{
+	return GetInstance()->normalsDebugEnabled;
 }
 
 bool RenderingManager::CompareRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2)

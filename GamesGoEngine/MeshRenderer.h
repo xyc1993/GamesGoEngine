@@ -17,6 +17,7 @@ public:
 	virtual void OnDeselected() override;
 
 	virtual void Draw() override;
+	virtual void Draw(Material* material) override;
 
 	void SetMaterial(const std::shared_ptr<Material>& material);
 	void SetMaterial(const std::shared_ptr<Material>& material, size_t materialIndex);

@@ -11,6 +11,8 @@ public:
 
 	virtual void Update() override;
 	virtual void Draw();
+	// Draw using provided material, can be used for debug shaders
+	virtual void Draw(Material* material);
 	bool TryGetMaterial(std::shared_ptr<Material>& outMaterial, int index);
 
 protected:

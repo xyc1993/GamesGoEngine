@@ -42,6 +42,11 @@ void MeshRenderer::Draw()
 	}
 }
 
+void MeshRenderer::Draw(Material* material)
+{
+	Renderer::Draw(material);
+}
+
 void MeshRenderer::SetMaterial(const std::shared_ptr<Material>& material)
 {
 	SetMaterial(material, 0);

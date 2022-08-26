@@ -21,6 +21,7 @@ class RenderingManager
 {
 private:
 	RenderingManager();
+	~RenderingManager();
 
 	static RenderingManager* instance;
 	static RenderingManager* GetInstance();
@@ -36,6 +37,7 @@ public:
 
 private:
 	void ConfigureUniformBufferObjects();
+	void CreateDebugMaterials();
 
 public:
 	static void Update();
@@ -44,6 +46,7 @@ private:
 	void UpdateUniformBufferObjects();
 	static void DrawSkybox();
 	static void DrawRenderers(const std::vector<MeshRenderer*>& renderers);
+	static void DrawRenderers(const std::vector<MeshRenderer*>& renderers, Material* material);
 	static void DrawPostProcessEffects();
 
 public:
@@ -63,6 +66,8 @@ public:
 	static bool IsPostProcessingEnabled();
 	static void SetWireframeOnly(bool wireframeOnly);
 	static bool IsWireframeOnly();
+	static void EnableNormalsDebug(bool enable);
+	static bool IsNormalsDebugEnabled();
 
 private:
 	static bool CompareRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2);
@@ -81,6 +86,7 @@ private:
 	bool postProcessingEnabled = true;
 	bool firstRenderedFrame = true;
 	bool renderWireframeOnly = false;
+	bool normalsDebugEnabled = false;
 
 	// uniform buffers used globally by shaders
 	unsigned int uboMatrices;
@@ -99,4 +105,7 @@ private:
 
 	static unsigned int stencilView1;
 	static unsigned int stencilView2;
+
+	// debug materials
+	Material* normalDebugMaterial;
 };

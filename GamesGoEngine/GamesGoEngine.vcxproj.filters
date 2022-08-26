@@ -550,5 +550,14 @@
     <None Include="res\shaders\explode.vert.glsl">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="res\shaders\debugNormals.frag.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\shaders\debugNormals.geom.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\shaders\debugNormals.vert.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

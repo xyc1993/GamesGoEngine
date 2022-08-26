@@ -259,6 +259,9 @@
     <ClInclude Include="WorldOutlinerUI.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\shaders\debugNormals.frag.glsl" />
+    <None Include="res\shaders\debugNormals.geom.glsl" />
+    <None Include="res\shaders\debugNormals.vert.glsl" />
     <None Include="res\shaders\depth.frag.glsl" />
     <None Include="res\shaders\explode.geom.glsl" />
     <None Include="res\shaders\explode.vert.glsl" />
