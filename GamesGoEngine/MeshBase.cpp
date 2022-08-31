@@ -16,7 +16,14 @@ void MeshBase::DrawSubMesh(size_t subMeshIndex) const
 	{
 		if (subMeshes[subMeshIndex] != nullptr)
 		{
-			subMeshes[subMeshIndex]->Draw();
+			if (shouldDrawInstanced)
+			{
+				subMeshes[subMeshIndex]->DrawInstanced(instancesNumber);
+			}
+			else
+			{
+				subMeshes[subMeshIndex]->Draw();
+			}
 		}
 	}
 }
@@ -29,4 +36,19 @@ int MeshBase::GetSubMeshesCount() const
 bool MeshBase::IsImportedMesh() const
 {
 	return false;
+}
+
+SubMesh* MeshBase::GetSubMesh(int subMeshIndex) const
+{
+	if (subMeshIndex >= 0 && subMeshIndex < subMeshes.size())
+	{
+		return subMeshes[subMeshIndex];
+	}
+	return nullptr;
+}
+
+void MeshBase::SetInstancing(bool instancingEnabled, int numberOfInstances)
+{
+	shouldDrawInstanced = instancingEnabled;
+	instancesNumber = numberOfInstances;
 }

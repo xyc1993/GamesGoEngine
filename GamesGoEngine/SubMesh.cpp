@@ -16,9 +16,21 @@ void SubMesh::Draw()
     glBindVertexArray(0);
 }
 
+void SubMesh::DrawInstanced(int meshCount)
+{
+    glBindVertexArray(this->VAO);
+    glDrawElementsInstanced(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0, meshCount);
+    glBindVertexArray(0);
+}
+
 std::string SubMesh::GetName() const
 {
     return name;
+}
+
+GLuint SubMesh::GetVAO() const
+{
+    return VAO;
 }
 
 void SubMesh::SetupMesh()

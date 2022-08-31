@@ -19,8 +19,10 @@ public:
 	SubMesh(std::string name, std::vector<Vertex> vertices, std::vector<GLuint> indices);
 
 	void Draw();
+	void DrawInstanced(int meshCount);
 	// useful for debugging mesh with several sub meshes
 	std::string GetName() const;
+	GLuint GetVAO() const;
 
 private:
 	void SetupMesh();

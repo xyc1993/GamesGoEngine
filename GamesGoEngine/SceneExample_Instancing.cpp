@@ -27,12 +27,12 @@ SceneExample_Instancing::SceneExample_Instancing()
 
 	// Asteroid field initialization
 	//1) Calculate the positions
-	unsigned int asteroidsNumber = 3000;
+	unsigned int asteroidsNumber = 500000;
 	glm::mat4* modelMatrices;
 	modelMatrices = new glm::mat4[asteroidsNumber];
 	srand(Time::GetTime()); // initialize random seed	
-	float radius = 50.0;
-	float offset = 2.5f;
+	float radius = 200.0;
+	float offset = 75.0f;
 	for (unsigned int i = 0; i < asteroidsNumber; i++)
 	{
 		glm::mat4 model = glm::mat4(1.0f);
@@ -62,11 +62,24 @@ SceneExample_Instancing::SceneExample_Instancing()
 	std::shared_ptr<MeshImported> asteroidMesh = std::make_shared<MeshImported>((GLchar*)"res/rock/rock.obj");
 	GLuint asteroidTexture = TextureLoader::LoadTexture((GLchar*)"res/rock/rock.png", false);
 
-	for (int i = 0; i < asteroidsNumber; i++)
+	//InitAsteroidsUninstanced(asteroidsNumber, asteroidMesh, asteroidTexture, modelMatrices);
+	InitAsteroidsInstanced(asteroidsNumber, asteroidMesh, asteroidTexture, modelMatrices);
+
+	// Set editor spectator
+	GameObject* editorSpectatorObject = AddEditorSpectator(glm::vec3(0.0f, 60.0f, 300.0f), glm::vec3(0.0f, 180.0f, 0.0f));
+
+	delete modelMatrices;
+}
+
+void SceneExample_Instancing::InitAsteroidsUninstanced(int asteroidsNumber, std::shared_ptr<MeshImported> asteroidMesh, GLuint asteroidTexture, glm::mat4* modelMatrices)
+{
+	// for uninstanced meshes 2000 is a safe limit before the FPS starts dropping to jittery levels
+	int upperLimit = std::min(2000, asteroidsNumber);
+	for (int i = 0; i < upperLimit; i++)
 	{
 		GameObject* asteroidObject = new GameObject();
 
-		MeshRenderer* asteroidMeshRenderer = new MeshRenderer();		
+		MeshRenderer* asteroidMeshRenderer = new MeshRenderer();
 		asteroidMeshRenderer->SetMesh(asteroidMesh);
 
 		std::shared_ptr<Material> asteroidMaterial = std::make_shared<Material>("res/shaders/unlitTextured.vert.glsl", "res/shaders/unlitTextured.frag.glsl");
@@ -83,7 +96,58 @@ SceneExample_Instancing::SceneExample_Instancing()
 
 		scene->AddGameObject(asteroidObject);
 	}
+}
 
-	// Set editor spectator
-	GameObject* editorSpectatorObject = AddEditorSpectator(glm::vec3(0.0f, 10.0f, 95.0f), glm::vec3(0.0f, 180.0f, 0.0f));
+void SceneExample_Instancing::InitAsteroidsInstanced(int asteroidsNumber, std::shared_ptr<MeshImported> asteroidMesh,
+	GLuint asteroidTexture, glm::mat4* modelMatrices)
+{
+	unsigned int buffer;
+	glGenBuffers(1, &buffer);
+	glBindBuffer(GL_ARRAY_BUFFER, buffer);
+	glBufferData(GL_ARRAY_BUFFER, asteroidsNumber * sizeof(glm::mat4), &modelMatrices[0], GL_STATIC_DRAW);
+
+	for (int i = 0; i < asteroidMesh->GetSubMeshesCount(); i++)
+	{
+		unsigned int VAO = asteroidMesh->GetSubMesh(i)->GetVAO();
+		glBindVertexArray(VAO);
+		// vertex attributes
+		std::size_t vec4Size = sizeof(glm::vec4);
+		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)0);
+		glEnableVertexAttribArray(4);
+		glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)(1 * vec4Size));
+		glEnableVertexAttribArray(5);
+		glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)(2 * vec4Size));
+		glEnableVertexAttribArray(6);
+		glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)(3 * vec4Size));
+
+		// make attribute per instance instead of per vertex
+		glVertexAttribDivisor(3, 1);
+		glVertexAttribDivisor(4, 1);
+		glVertexAttribDivisor(5, 1);
+		glVertexAttribDivisor(6, 1);
+
+		glBindVertexArray(0);
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	asteroidMesh->SetInstancing(true, asteroidsNumber);
+
+	std::shared_ptr<Material> asteroidMaterial = std::make_shared<Material>("res/shaders/unlitTexturedInstanced.vert.glsl", "res/shaders/unlitTextured.frag.glsl");
+
+	GameObject* asteroidField = new GameObject();
+
+	MeshRenderer* asteroidFieldMeshRenderer = new MeshRenderer();
+	asteroidFieldMeshRenderer->SetMesh(asteroidMesh);
+
+	asteroidMaterial->SetTexture("mainTexture", 0, asteroidTexture);
+	asteroidFieldMeshRenderer->SetMaterial(asteroidMaterial, 0);
+
+	asteroidField->AddComponent(asteroidFieldMeshRenderer);
+
+	std::string asteroidFieldName = "asteroid_field";
+	asteroidField->SetName(asteroidFieldName);
+
+	scene->AddGameObject(asteroidField);
 }
