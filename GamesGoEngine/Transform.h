@@ -22,6 +22,7 @@ public:
 	void SetScale(glm::vec3 scale);
 	void SetLocalScale(glm::vec3 localScale);
 	void SetHintLocalRotation(glm::vec3 hintLocalRotation);
+	void SetTransformMatrix(glm::mat4 modelMatrix);
 
 	void UpdateTransformOnParenting();
 

@@ -28,11 +28,11 @@ Scene* SceneExample::GetSceneUnsafe() const
 	return scene;
 }
 
-GameObject* SceneExample::AddEditorSpectator() const
+GameObject* SceneExample::AddEditorSpectator(glm::vec3 position, glm::vec3 eulerAnglesRotation) const
 {
 	GameObject* editorSpectatorObject = new GameObject();
-	editorSpectatorObject->GetTransform()->SetRotationEulerDegrees(glm::vec3(0.0f, 180.0f, 0.0f));
-	editorSpectatorObject->GetTransform()->SetPosition(glm::vec3(0.0f, 0.0, 3.0f));
+	editorSpectatorObject->GetTransform()->SetRotationEulerDegrees(eulerAnglesRotation);
+	editorSpectatorObject->GetTransform()->SetPosition(position);
 
 	EditorMovement* editorMovementComponent = new EditorMovement();
 	Camera* cameraComponent = new Camera();
@@ -46,4 +46,9 @@ GameObject* SceneExample::AddEditorSpectator() const
 	scene->AddGameObject(editorSpectatorObject);
 
 	return editorSpectatorObject;
+}
+
+GameObject* SceneExample::AddEditorSpectator() const
+{
+	return AddEditorSpectator(glm::vec3(0.0f, 0.0, 3.0f), glm::vec3(0.0f, 180.0f, 0.0f));
 }

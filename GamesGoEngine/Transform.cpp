@@ -1,5 +1,7 @@
 #include "Transform.h"
 
+#include <glm/gtx/matrix_decompose.hpp>
+
 #include "GameObject.h"
 
 Transform::Transform()
@@ -101,6 +103,20 @@ void Transform::SetHintLocalRotation(glm::vec3 hintLocalRotation)
 	this->localRotation = rotationDifference * this->localRotation;	
 	UpdateTransformMatrix();
 	UpdateTransformDirections();
+}
+
+void Transform::SetTransformMatrix(glm::mat4 modelMatrix)
+{
+	glm::vec3 modelScale;
+	glm::quat orientation;
+	glm::vec3 translation;
+	glm::vec3 skew;
+	glm::vec4 perspective;
+	glm::decompose(modelMatrix, modelScale, orientation, translation, skew, perspective);
+
+	SetPosition(translation);
+	SetRotation(orientation);
+	SetScale(modelScale);
 }
 
 void Transform::UpdateTransformOnParenting()

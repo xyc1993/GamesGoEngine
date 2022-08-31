@@ -13,6 +13,7 @@ public:
 	Scene* GetSceneUnsafe() const;
 
 protected:
+	GameObject* AddEditorSpectator(glm::vec3 position, glm::vec3 eulerAnglesRotation) const;
 	GameObject* AddEditorSpectator() const;
 
 	Scene* scene;
