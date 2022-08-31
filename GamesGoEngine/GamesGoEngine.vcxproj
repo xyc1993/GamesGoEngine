@@ -190,6 +190,7 @@
     <ClCompile Include="SceneExample_DepthTest.cpp" />
     <ClCompile Include="SceneExample_EnvironmentMapping.cpp" />
     <ClCompile Include="SceneExample_GeometryShader.cpp" />
+    <ClCompile Include="SceneExample_Instancing.cpp" />
     <ClCompile Include="SceneExample_LitForward.cpp" />
     <ClCompile Include="SceneExample_Transparency.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -247,6 +248,7 @@
     <ClInclude Include="SceneExample_DepthTest.h" />
     <ClInclude Include="SceneExample_EnvironmentMapping.h" />
     <ClInclude Include="SceneExample_GeometryShader.h" />
+    <ClInclude Include="SceneExample_Instancing.h" />
     <ClInclude Include="SceneExample_LitForward.h" />
     <ClInclude Include="SceneExample_Transparency.h" />
     <ClInclude Include="Shader.h" />

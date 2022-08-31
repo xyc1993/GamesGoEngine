@@ -13,6 +13,7 @@
 #include "SceneExample_DepthTest.h"
 #include "SceneExample_EnvironmentMapping.h"
 #include "SceneExample_GeometryShader.h"
+#include "SceneExample_Instancing.h"
 #include "SceneExample_LitForward.h"
 #include "SceneExample_Transparency.h"
 #include "Time.h"
@@ -84,7 +85,8 @@ void MainLoop(GLFWwindow* window)
 	//SceneExample_DepthTest* activeScene = new SceneExample_DepthTest();
 	//SceneExample_Transparency* activeScene = new SceneExample_Transparency();
 	//SceneExample_EnvironmentMapping* activeScene = new SceneExample_EnvironmentMapping();
-	SceneExample_GeometryShader* activeScene = new SceneExample_GeometryShader();
+	//SceneExample_GeometryShader* activeScene = new SceneExample_GeometryShader();
+	SceneExample_Instancing* activeScene = new SceneExample_Instancing();
 	
 	while (!glfwWindowShouldClose(window))
 	{
