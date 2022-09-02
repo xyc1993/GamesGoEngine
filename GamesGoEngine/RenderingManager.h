@@ -30,12 +30,14 @@ public:
 	static void Init(GLint screenWidth, GLint screenHeight);
 
 private:
+	void ConfigureFramebuffers(GLint screenWidth, GLint screenHeight);
 	static void ConfigureFramebuffer(GLint screenWidth, GLint screenHeight, unsigned int& framebuffer, unsigned int& textureColorBuffer, unsigned int& depthStencilBuffer, unsigned int& stencilView);
 
 public:
 	static void ResizeBuffers(GLint screenWidth, GLint screenHeight);
 
 private:
+	void ResizeBuffersInternal(GLint screenWidth, GLint screenHeight);
 	void ConfigureUniformBufferObjects();
 	void CreateDebugMaterials();
 
@@ -94,17 +96,17 @@ private:
 	unsigned int uboTimeData;
 
 	// sets of 2 since we use ping pong rendering
-	static unsigned int framebuffer1;
-	static unsigned int framebuffer2;
+	unsigned int framebuffer1;
+	unsigned int framebuffer2;
 	
-	static unsigned int textureColorBuffer1;
-	static unsigned int textureColorBuffer2;
+	unsigned int textureColorBuffer1;
+	unsigned int textureColorBuffer2;
 
-	static unsigned int depthStencilBuffer1;
-	static unsigned int depthStencilBuffer2;
+	unsigned int depthStencilBuffer1;
+	unsigned int depthStencilBuffer2;
 
-	static unsigned int stencilView1;
-	static unsigned int stencilView2;
+	unsigned int stencilView1;
+	unsigned int stencilView2;
 
 	// debug materials
 	Material* normalDebugMaterial;

@@ -12,14 +12,6 @@
 #include "Time.h"
 
 RenderingManager* RenderingManager::instance = nullptr;
-unsigned int RenderingManager::framebuffer1 = -1;
-unsigned int RenderingManager::framebuffer2 = -1;
-unsigned int RenderingManager::textureColorBuffer1 = -1;
-unsigned int RenderingManager::textureColorBuffer2 = -1;
-unsigned int RenderingManager::depthStencilBuffer1 = -1;
-unsigned int RenderingManager::depthStencilBuffer2 = -1;
-unsigned int RenderingManager::stencilView1 = -1;
-unsigned int RenderingManager::stencilView2 = -1;
 
 RenderingManager::RenderingManager()
 {
@@ -55,16 +47,16 @@ void RenderingManager::Init(GLint screenWidth, GLint screenHeight)
 
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
+	
+	GetInstance()->ConfigureFramebuffers(screenWidth, screenHeight);
+	GetInstance()->ConfigureUniformBufferObjects();
+	GetInstance()->CreateDebugMaterials();
+}
 
-	// framebuffer configuration
+void RenderingManager::ConfigureFramebuffers(GLint screenWidth, GLint screenHeight)
+{
 	ConfigureFramebuffer(screenWidth, screenHeight, framebuffer1, textureColorBuffer1, depthStencilBuffer1, stencilView1);
 	ConfigureFramebuffer(screenWidth, screenHeight, framebuffer2, textureColorBuffer2, depthStencilBuffer2, stencilView2);
-
-	// configure uniform buffer objects
-	GetInstance()->ConfigureUniformBufferObjects();
-
-	// debug materials
-	GetInstance()->CreateDebugMaterials();
 }
 
 void RenderingManager::ConfigureFramebuffer(GLint screenWidth, GLint screenHeight, unsigned int& framebuffer, unsigned int& textureColorBuffer, unsigned int& depthStencilBuffer, unsigned int& stencilView)
@@ -106,12 +98,17 @@ void RenderingManager::ConfigureFramebuffer(GLint screenWidth, GLint screenHeigh
 
 void RenderingManager::ResizeBuffers(GLint screenWidth, GLint screenHeight)
 {
+	GetInstance()->ResizeBuffersInternal(screenWidth, screenHeight);
+}
+
+void RenderingManager::ResizeBuffersInternal(GLint screenWidth, GLint screenHeight)
+{
 	glBindTexture(GL_TEXTURE_2D, textureColorBuffer1);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screenWidth, screenHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 
 	glBindTexture(GL_TEXTURE_2D, depthStencilBuffer1);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, screenWidth, screenHeight, 0, GL_DEPTH24_STENCIL8, GL_UNSIGNED_BYTE, NULL);
-	
+
 	glBindTexture(GL_TEXTURE_2D, textureColorBuffer2);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screenWidth, screenHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 
@@ -149,7 +146,7 @@ void RenderingManager::Update()
 {
 	if (IsPostProcessingEnabled())
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer1);
+		glBindFramebuffer(GL_FRAMEBUFFER, GetInstance()->framebuffer1);
 	}
 	else
 	{
@@ -200,7 +197,7 @@ void RenderingManager::Update()
 			}
 			else
 			{
-				glBindFramebuffer(GL_FRAMEBUFFER, i % 2 == 0 ? framebuffer2 : framebuffer1);
+				glBindFramebuffer(GL_FRAMEBUFFER, i % 2 == 0 ? GetInstance()->framebuffer2 : GetInstance()->framebuffer1);
 			}
 
 			glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -209,9 +206,9 @@ void RenderingManager::Update()
 			std::shared_ptr<Material> ppMaterial;
 			if (GetInstance()->usedPostProcessRenderers[i]->TryGetMaterial(ppMaterial, 0))
 			{
-				ppMaterial->SetTexture("screenTexture", 0, i % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
-				ppMaterial->SetTexture("depthStencilTexture", 1, i % 2 == 0 ? depthStencilBuffer1 : depthStencilBuffer2);
-				ppMaterial->SetTexture("stencilView", 2, i % 2 == 0 ? stencilView1 : stencilView2);
+				ppMaterial->SetTexture("screenTexture", 0, i % 2 == 0 ? GetInstance()->textureColorBuffer1 : GetInstance()->textureColorBuffer2);
+				ppMaterial->SetTexture("depthStencilTexture", 1, i % 2 == 0 ? GetInstance()->depthStencilBuffer1 : GetInstance()->depthStencilBuffer2);
+				ppMaterial->SetTexture("stencilView", 2, i % 2 == 0 ? GetInstance()->stencilView1 : GetInstance()->stencilView2);
 				GetInstance()->usedPostProcessRenderers[i]->Draw();
 			}
 		}
