@@ -30,8 +30,11 @@ public:
 	static void Init(GLint screenWidth, GLint screenHeight);
 
 private:
-	void ConfigureFramebuffers(GLint screenWidth, GLint screenHeight);
-	static void ConfigureFramebuffer(GLint screenWidth, GLint screenHeight, unsigned int& framebuffer, unsigned int& textureColorBuffer, unsigned int& depthStencilBuffer, unsigned int& stencilView);
+	void ConfigureFramebuffers(GLint screenWidth, GLint screenHeight, bool shouldGenerateFramebuffer);
+	static void ConfigureFramebuffer(GLint screenWidth, GLint screenHeight,
+		unsigned int& framebuffer, unsigned int& textureColorBuffer,
+		unsigned int& depthStencilBuffer, unsigned int& stencilView,
+		bool shouldGenerateFramebuffer);
 
 public:
 	static void ResizeBuffers(GLint screenWidth, GLint screenHeight);

@@ -48,20 +48,26 @@ void RenderingManager::Init(GLint screenWidth, GLint screenHeight)
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	
-	GetInstance()->ConfigureFramebuffers(screenWidth, screenHeight);
+	GetInstance()->ConfigureFramebuffers(screenWidth, screenHeight, true);
 	GetInstance()->ConfigureUniformBufferObjects();
 	GetInstance()->CreateDebugMaterials();
 }
 
-void RenderingManager::ConfigureFramebuffers(GLint screenWidth, GLint screenHeight)
+void RenderingManager::ConfigureFramebuffers(GLint screenWidth, GLint screenHeight, bool shouldGenerateFramebuffer)
 {
-	ConfigureFramebuffer(screenWidth, screenHeight, framebuffer1, textureColorBuffer1, depthStencilBuffer1, stencilView1);
-	ConfigureFramebuffer(screenWidth, screenHeight, framebuffer2, textureColorBuffer2, depthStencilBuffer2, stencilView2);
+	ConfigureFramebuffer(screenWidth, screenHeight, framebuffer1, textureColorBuffer1, depthStencilBuffer1, stencilView1, shouldGenerateFramebuffer);
+	ConfigureFramebuffer(screenWidth, screenHeight, framebuffer2, textureColorBuffer2, depthStencilBuffer2, stencilView2, shouldGenerateFramebuffer);
 }
 
-void RenderingManager::ConfigureFramebuffer(GLint screenWidth, GLint screenHeight, unsigned int& framebuffer, unsigned int& textureColorBuffer, unsigned int& depthStencilBuffer, unsigned int& stencilView)
+void RenderingManager::ConfigureFramebuffer(GLint screenWidth, GLint screenHeight,
+	unsigned int& framebuffer, unsigned int& textureColorBuffer,
+	unsigned int& depthStencilBuffer, unsigned int& stencilView,
+	bool shouldGenerateFramebuffer)
 {
-	glGenFramebuffers(1, &framebuffer);
+	if (shouldGenerateFramebuffer)
+	{
+		glGenFramebuffers(1, &framebuffer);
+	}
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 
 	// create a color attachment texture
@@ -103,17 +109,15 @@ void RenderingManager::ResizeBuffers(GLint screenWidth, GLint screenHeight)
 
 void RenderingManager::ResizeBuffersInternal(GLint screenWidth, GLint screenHeight)
 {
-	glBindTexture(GL_TEXTURE_2D, textureColorBuffer1);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screenWidth, screenHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	// not the most lightweight approach since we need to recreate textures but it is required due to how we write data from stencil buffer into texture
+	glDeleteTextures(1, &textureColorBuffer1);
+	glDeleteTextures(1, &textureColorBuffer2);
+	glDeleteTextures(1, &depthStencilBuffer1);
+	glDeleteTextures(1, &depthStencilBuffer2);
+	glDeleteTextures(1, &stencilView1);
+	glDeleteTextures(1, &stencilView2);
 
-	glBindTexture(GL_TEXTURE_2D, depthStencilBuffer1);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, screenWidth, screenHeight, 0, GL_DEPTH24_STENCIL8, GL_UNSIGNED_BYTE, NULL);
-
-	glBindTexture(GL_TEXTURE_2D, textureColorBuffer2);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screenWidth, screenHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-
-	glBindTexture(GL_TEXTURE_2D, depthStencilBuffer2);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, screenWidth, screenHeight, 0, GL_DEPTH24_STENCIL8, GL_UNSIGNED_BYTE, NULL);
+	GetInstance()->ConfigureFramebuffers(screenWidth, screenHeight, false);
 }
 
 void RenderingManager::ConfigureUniformBufferObjects()
