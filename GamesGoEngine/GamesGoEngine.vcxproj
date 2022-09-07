@@ -200,6 +200,7 @@
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="WindowManager.cpp" />
     <ClCompile Include="WorldOutlinerUI.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -258,6 +259,7 @@
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="WindowManager.h" />
     <ClInclude Include="WorldOutlinerUI.h" />
   </ItemGroup>
   <ItemGroup>

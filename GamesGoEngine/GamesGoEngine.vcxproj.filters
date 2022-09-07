@@ -154,6 +154,12 @@
     <Filter Include="Header Files\GamesGo\Tools">
       <UniqueIdentifier>{763ad8f6-137b-4ac6-a89b-671b464f47af}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GamesGo\Window Management">
+      <UniqueIdentifier>{d19efd63-8338-43df-baf5-d7a3d8647055}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GamesGo\Window Management">
+      <UniqueIdentifier>{546312ad-e0d9-4585-8c98-01b821d3c49e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectionalLight.cpp">
@@ -320,6 +326,9 @@
     </ClCompile>
     <ClCompile Include="SceneExample_Instancing.cpp">
       <Filter>Source Files\GamesGo\Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowManager.cpp">
+      <Filter>Source Files\GamesGo\Window Management</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -490,6 +499,9 @@
     </ClInclude>
     <ClInclude Include="SceneExample_Instancing.h">
       <Filter>Header Files\GamesGo\Examples</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowManager.h">
+      <Filter>Header Files\GamesGo\Window Management</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

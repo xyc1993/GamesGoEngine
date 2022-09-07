@@ -17,82 +17,25 @@
 #include "SceneExample_LitForward.h"
 #include "SceneExample_Transparency.h"
 #include "Time.h"
-
-const GLint WIDTH = 1200, HEIGHT = 675;
-int SCREEN_WIDTH, SCREEN_HEIGHT;
-
-GLFWwindow* InitWindow()
-{
-	glfwInit();
-
-	//sets OpenGL version to 4.4
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
-
-	//sets profile, core has new features, compat prioritizes compatibility, might not have the newest features
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
-
-	return glfwCreateWindow(WIDTH, HEIGHT, "GamesGo Engine", nullptr, nullptr);
-}
-
-void FramebufferSizeCallback(GLFWwindow* window, int width, int height)
-{
-	glViewport(0, 0, width, height);
-	RenderingManager::ResizeBuffers(width, height);
-	SCREEN_WIDTH = width;
-	SCREEN_HEIGHT = height;
-}
-
-int SetWindow(GLFWwindow* window)
-{
-	glfwGetFramebufferSize(window, &SCREEN_WIDTH, &SCREEN_HEIGHT);
-
-	if (window == nullptr)
-	{
-		std::cout << "Failed to create GLFW window" << std::endl;
-		glfwTerminate();
-		return EXIT_FAILURE;
-	}
-
-	glfwMakeContextCurrent(window);
-
-	InputManager::Init(window);
-
-	glewExperimental = GL_TRUE; //GLEW will use modern approach, it's not 'experimental' per se
-
-	if (glewInit() != GLEW_OK)
-	{
-		std::cout << "Failed to initialize GLEW" << std::endl;
-		return EXIT_FAILURE;
-	}
-
-	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-	glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
-
-	return EXIT_SUCCESS;
-}
+#include "WindowManager.h"
 
 void MainLoop(GLFWwindow* window)
 {
-	RenderingManager::Init(SCREEN_WIDTH, SCREEN_HEIGHT);
+	RenderingManager::Init(WindowManager::GetCurrentWidth(), WindowManager::GetCurrentHeight());
 	EditorUIManager::Init(window);
 	
 	//SceneExample_LitForward* activeScene = new SceneExample_LitForward();
 	//SceneExample_DepthTest* activeScene = new SceneExample_DepthTest();
 	//SceneExample_Transparency* activeScene = new SceneExample_Transparency();
-	//SceneExample_EnvironmentMapping* activeScene = new SceneExample_EnvironmentMapping();
+	SceneExample_EnvironmentMapping* activeScene = new SceneExample_EnvironmentMapping();
 	//SceneExample_GeometryShader* activeScene = new SceneExample_GeometryShader();
-	SceneExample_Instancing* activeScene = new SceneExample_Instancing();
+	//SceneExample_Instancing* activeScene = new SceneExample_Instancing();
 	
 	while (!glfwWindowShouldClose(window))
 	{
 		Time::Update();
 
-		CamerasManager::SetCurrentViewAspectRatio((float)SCREEN_WIDTH / (float)SCREEN_HEIGHT);
+		CamerasManager::SetCurrentViewAspectRatio(static_cast<float>(WindowManager::GetCurrentWidth()) / static_cast<float>(WindowManager::GetCurrentHeight()));
 		
 		glfwPollEvents();
 		InputEditorShortcuts::ProcessShortcuts(window);
@@ -113,13 +56,8 @@ void MainLoop(GLFWwindow* window)
 
 int main()
 {
-	GLFWwindow* window = InitWindow();
-	const int success = SetWindow(window);
-	if (success != 0) return EXIT_FAILURE;
-	
-	MainLoop(window);
-
-	glfwTerminate();
-	
+	if (WindowManager::SetWindow() == false) return EXIT_FAILURE;	
+	MainLoop(WindowManager::GetWindow());
+	WindowManager::TerminateWindow();
 	return EXIT_SUCCESS;
 }
