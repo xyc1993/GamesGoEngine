@@ -1,7 +1,4 @@
-#include <iostream>
-
 #define GLEW_STATIC
-#include <string>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -10,14 +7,15 @@
 #include "InputEditorShortcuts.h"
 #include "InputManager.h"
 #include "RenderingManager.h"
+#include "Time.h"
+#include "WindowManager.h"
+
 #include "SceneExample_DepthTest.h"
 #include "SceneExample_EnvironmentMapping.h"
 #include "SceneExample_GeometryShader.h"
 #include "SceneExample_Instancing.h"
 #include "SceneExample_LitForward.h"
 #include "SceneExample_Transparency.h"
-#include "Time.h"
-#include "WindowManager.h"
 
 void MainLoop(GLFWwindow* window)
 {
