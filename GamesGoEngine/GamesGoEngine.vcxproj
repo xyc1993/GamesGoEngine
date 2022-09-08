@@ -158,6 +158,7 @@
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="DebugToolsUI.cpp" />
     <ClCompile Include="EditorUIManager.cpp" />
+    <ClCompile Include="GraphicsSettingsUI.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="LoggerUI.cpp" />
     <ClCompile Include="Math.cpp" />
@@ -217,6 +218,7 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="DebugToolsUI.h" />
     <ClInclude Include="EditorUIManager.h" />
+    <ClInclude Include="GraphicsSettingsUI.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="LoggerUI.h" />
     <ClInclude Include="Math.h" />

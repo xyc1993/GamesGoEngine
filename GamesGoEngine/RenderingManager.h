@@ -35,6 +35,10 @@ private:
 		unsigned int& framebuffer, unsigned int& textureColorBuffer,
 		unsigned int& depthStencilBuffer, unsigned int& stencilView,
 		bool shouldGenerateFramebuffer);
+	static void ConfigureMultisampledFramebuffer(GLint screenWidth, GLint screenHeight,
+		unsigned int& framebuffer, unsigned int& textureColorBuffer,
+		unsigned int& depthStencilBuffer, unsigned int& stencilView,
+		bool shouldGenerateFramebuffer, int samples);
 
 public:
 	static void ResizeBuffers(GLint screenWidth, GLint screenHeight);
@@ -73,6 +77,14 @@ public:
 	static bool IsWireframeOnly();
 	static void EnableNormalsDebug(bool enable);
 	static bool IsNormalsDebugEnabled();
+	static void EnableMSAA(bool enable);
+	static bool IsMSAAEnabled();
+	static void SetMSAASamplesNumber(int samples);
+	static int GetMSAASamplesNumber();
+	static int GetMaxMSAASamplesNumber();
+
+private:
+	void SetMSAAInternal(bool enable, int samples);
 
 private:
 	static bool CompareRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2);
@@ -92,6 +104,8 @@ private:
 	bool firstRenderedFrame = true;
 	bool renderWireframeOnly = false;
 	bool normalsDebugEnabled = false;
+	bool msaaEnabled = false;
+	int msaaSamplesNumber = 1;
 
 	// uniform buffers used globally by shaders
 	unsigned int uboMatrices;
@@ -101,15 +115,19 @@ private:
 	// sets of 2 since we use ping pong rendering
 	unsigned int framebuffer1;
 	unsigned int framebuffer2;
+	unsigned int msFramebuffer;
 	
 	unsigned int textureColorBuffer1;
 	unsigned int textureColorBuffer2;
+	unsigned int msTextureColorBuffer;
 
 	unsigned int depthStencilBuffer1;
 	unsigned int depthStencilBuffer2;
+	unsigned int msDepthStencilBuffer;
 
 	unsigned int stencilView1;
 	unsigned int stencilView2;
+	unsigned int msStencilView;
 
 	// debug materials
 	Material* normalDebugMaterial;

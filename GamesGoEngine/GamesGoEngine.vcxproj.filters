@@ -330,6 +330,9 @@
     <ClCompile Include="WindowManager.cpp">
       <Filter>Source Files\GamesGo\Window Management</Filter>
     </ClCompile>
+    <ClCompile Include="GraphicsSettingsUI.cpp">
+      <Filter>Source Files\GamesGo\Editor\UI\Panels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -502,6 +505,9 @@
     </ClInclude>
     <ClInclude Include="WindowManager.h">
       <Filter>Header Files\GamesGo\Window Management</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsSettingsUI.h">
+      <Filter>Header Files\GamesGo\Editor\UI\Panels</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

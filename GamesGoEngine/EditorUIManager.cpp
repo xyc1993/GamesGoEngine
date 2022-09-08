@@ -8,6 +8,7 @@
 #include "PropertiesUI.h"
 #include "WorldOutlinerUI.h"
 #include "DebugToolsUI.h"
+#include "GraphicsSettingsUI.h"
 
 void EditorUIManager::Init(GLFWwindow* window)
 {
@@ -29,6 +30,7 @@ void EditorUIManager::Draw(Scene* activeScene)
 	GameObject* selectedSceneObject = WorldOutlinerUI::Draw(activeScene);
 	PropertiesUI::Draw(selectedSceneObject);
 	LoggerUI::Draw();
+	GraphicsSettingsUI::Draw();
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
