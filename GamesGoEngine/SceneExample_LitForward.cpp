@@ -21,6 +21,16 @@ extern GLfloat currentTime;
 
 SceneExample_LitForward::SceneExample_LitForward()
 {
+	InitScene(false);
+}
+
+SceneExample_LitForward::SceneExample_LitForward(bool shouldAddPostProcessEffects)
+{
+	InitScene(shouldAddPostProcessEffects);
+}
+
+void SceneExample_LitForward::InitScene(bool shouldAddPostProcessEffects)
+{
 	const int LIT_BOXES_NUMBER = 10;
 
 	glm::vec3 litBoxesPositions[LIT_BOXES_NUMBER] = {
@@ -79,7 +89,7 @@ SceneExample_LitForward::SceneExample_LitForward()
 	skyboxObject->SetName(skyboxName);
 
 	scene->AddGameObject(skyboxObject);
-	
+
 	std::shared_ptr<MeshPrimitiveCube> cubeMesh = std::make_shared<MeshPrimitiveCube>();
 	//std::shared_ptr<MeshPrimitiveQuad> quadMesh = std::make_shared<MeshPrimitiveQuad>();
 	std::shared_ptr<MeshPrimitiveSphere> sphereMesh = std::make_shared<MeshPrimitiveSphere>();
@@ -170,7 +180,7 @@ SceneExample_LitForward::SceneExample_LitForward()
 		positionOscillator->SetAmplitude(glm::vec3(4.0f, 0.0f, 0.0f));
 		positionOscillator->SetSpeed(3.2f);
 		boxChild3->AddComponent(positionOscillator);
-	}	
+	}
 
 	GameObject* nanoSuitObject = new GameObject();
 	nanoSuitObject->GetTransform()->SetPosition(glm::vec3(0.0f, -1.75f, 0.0f));
@@ -207,24 +217,27 @@ SceneExample_LitForward::SceneExample_LitForward()
 
 	scene->AddGameObject(nanoSuitObject);
 
-	GameObject* postProcessHolder = new GameObject;
+	if (shouldAddPostProcessEffects)
+	{
+		GameObject* postProcessHolder = new GameObject;
 
-	std::shared_ptr<PostProcessMaterial> ppMaterial1 = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/inverseColor.frag.glsl");
-	std::shared_ptr<PostProcessMaterial> ppMaterial2 = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/blur.frag.glsl");
+		std::shared_ptr<PostProcessMaterial> ppMaterial1 = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/inverseColor.frag.glsl");
+		std::shared_ptr<PostProcessMaterial> ppMaterial2 = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/blur.frag.glsl");
 
-	PostProcessRenderer* pp1 = new PostProcessRenderer();
-	PostProcessRenderer* pp2 = new PostProcessRenderer();
+		PostProcessRenderer* pp1 = new PostProcessRenderer();
+		PostProcessRenderer* pp2 = new PostProcessRenderer();
 
-	pp1->SetMaterial(ppMaterial1);
-	pp2->SetMaterial(ppMaterial2);
+		pp1->SetMaterial(ppMaterial1);
+		pp2->SetMaterial(ppMaterial2);
 
-	postProcessHolder->AddComponent(pp1);
-	postProcessHolder->AddComponent(pp2);
+		postProcessHolder->AddComponent(pp1);
+		postProcessHolder->AddComponent(pp2);
 
-	std::string postProcessHolderName = "post_process_holder";
-	postProcessHolder->SetName(postProcessHolderName);
+		std::string postProcessHolderName = "post_process_holder";
+		postProcessHolder->SetName(postProcessHolderName);
 
-	scene->AddGameObject(postProcessHolder);
+		scene->AddGameObject(postProcessHolder);
+	}
 	
 	GameObject* directionalLightObject = new GameObject();
 	directionalLightObject->GetTransform()->SetRotationEulerDegrees(glm::vec3(90.0f, -45.0f, 0.0f));
@@ -236,8 +249,8 @@ SceneExample_LitForward::SceneExample_LitForward()
 
 	scene->AddGameObject(directionalLightObject);
 
-	GameObject* editorSpectatorObject = AddEditorSpectator();	
+	GameObject* editorSpectatorObject = AddEditorSpectator();
 	SpotLight* spotLight = new SpotLight(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(1.0f),
-		1.0f, 0.09f, 0.032f, glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(15.0f)));	
+		1.0f, 0.09f, 0.032f, glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(15.0f)));
 	editorSpectatorObject->AddComponent(spotLight);
 }
