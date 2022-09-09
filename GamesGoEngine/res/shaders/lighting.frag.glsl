@@ -102,11 +102,11 @@ void main()
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
 {
 	vec3 lightDir = normalize(-light.direction);
+	vec3 halfwayDir = normalize(lightDir + viewDir);
 
 	float diff = max(dot(normal, lightDir), 0.0);
 
-	vec3 reflectDir = reflect(-lightDir, normal);
-	float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+	float spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
 
 	// multiply by diff to ensure specular will be 0 if the pixel is facing light 'backwards'
 	spec *= step(SPEC_THRESHOLD, diff);
@@ -121,11 +121,11 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
 	vec3 lightDir = normalize(light.position - fragPos);
+	vec3 halfwayDir = normalize(lightDir + viewDir);
 
 	float diff = max(dot(normal, lightDir), 0.0);
 
-	vec3 reflectDir = reflect(-lightDir, normal);
-	float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+	float spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
 
 	// multiply by diff to ensure specular will be 0 if the pixel is facing light 'backwards'
 	spec *= step(SPEC_THRESHOLD, diff);
@@ -143,11 +143,11 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
 	vec3 lightDir = normalize(light.position - fragPos);
+	vec3 halfwayDir = normalize(lightDir + viewDir);
 
 	float diff = max(dot(normal, lightDir), 0.0);
 
-	vec3 reflectDir = reflect(-lightDir, normal);
-	float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+	float spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
 
 	// multiply by diff to ensure specular will be 0 if the pixel is facing light 'backwards'
 	spec *= step(SPEC_THRESHOLD, diff);
