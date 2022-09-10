@@ -18,6 +18,7 @@ RenderingManager::RenderingManager()
 {
 	lightsManager = new LightsManager();
 	normalDebugMaterial = new Material("res/shaders/debugNormals.vert.glsl", "res/shaders/debugNormals.frag.glsl", "res/shaders/debugNormals.geom.glsl");
+	gammaCorrectionMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/gammaCorrection.frag.glsl");
 }
 
 RenderingManager::~RenderingManager()
@@ -52,6 +53,23 @@ void RenderingManager::Init(GLint screenWidth, GLint screenHeight)
 	GetInstance()->ConfigureFramebuffers(screenWidth, screenHeight, true);
 	GetInstance()->ConfigureUniformBufferObjects();
 	GetInstance()->CreateDebugMaterials();
+	GetInstance()->InitGammaCorrection();
+}
+
+void RenderingManager::InitGammaCorrection()
+{
+	// make sure that the default gamma value is set in the material
+	SetGamma(GetGamma());
+
+	// TODO: rethink how post processes work right now:
+	// first of all they don't need to create mesh by themselves, they could share one quad mesh
+	// secondly, why do they need game object to work properly? especially when some post processes (such as gamma correction) are general rendering steps
+	PostProcessRenderer* gammaCorrectionRenderer = new PostProcessRenderer();
+	gammaCorrectionRenderer->SetMaterial(GetInstance()->gammaCorrectionMaterial);
+	gammaCorrectionRenderer->SetPostProcessOrder(9999);
+
+	GameObject* gammaCorrectionHolder = new GameObject();
+	gammaCorrectionHolder->AddComponent(gammaCorrectionRenderer);
 }
 
 void RenderingManager::ConfigureFramebuffers(GLint screenWidth, GLint screenHeight, bool shouldGenerateFramebuffer)
@@ -251,9 +269,10 @@ void RenderingManager::Update()
 		glDisable(GL_DEPTH_TEST);
 		glDisable(GL_STENCIL_TEST);
 		
-		for (size_t i = 0; i < GetInstance()->usedPostProcessRenderers.size(); i++)
+		const size_t postProcessEffects = GetInstance()->usedPostProcessRenderers.size();
+		for (size_t i = 0; i < postProcessEffects; i++)
 		{
-			if (i == (GetInstance()->usedPostProcessRenderers.size() - 1))
+			if (i == (postProcessEffects - 1))
 			{
 				glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			}
@@ -486,6 +505,25 @@ void RenderingManager::SetMSAAInternal(bool enable, int samples)
 
 	msaaEnabled = enable;
 	msaaSamplesNumber = samples;
+}
+
+void RenderingManager::SetGamma(float gammaVal)
+{
+	GetInstance()->SetGammaInternal(gammaVal);
+}
+
+float RenderingManager::GetGamma()
+{
+	return GetInstance()->gamma;
+}
+
+void RenderingManager::SetGammaInternal(float gammaVal)
+{
+	gamma = gammaVal;
+	if (gammaCorrectionMaterial != nullptr)
+	{
+		gammaCorrectionMaterial->SetFloat("gamma", gamma);
+	}
 }
 
 bool RenderingManager::CompareRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2)

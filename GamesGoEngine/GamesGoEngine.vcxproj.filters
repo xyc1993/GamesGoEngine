@@ -586,5 +586,8 @@
     <None Include="res\shaders\unlitTexturedInstanced.vert.glsl">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="res\shaders\PostProcess\gammaCorrection.frag.glsl">
+      <Filter>Resource Files\PostProcess</Filter>
+    </None>
   </ItemGroup>
 </Project>

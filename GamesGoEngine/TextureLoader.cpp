@@ -1,6 +1,6 @@
 #include "TextureLoader.h"
 
-GLuint TextureLoader::LoadTexture(GLchar* path, bool transparencyEnabled)
+GLuint TextureLoader::LoadTexture(GLchar* path, bool transparencyEnabled, bool sRGB)
 {
     //Generate texture ID and load texture data
     GLuint textureID;
@@ -10,9 +10,14 @@ GLuint TextureLoader::LoadTexture(GLchar* path, bool transparencyEnabled)
 
     unsigned char* image = SOIL_load_image(path, &imageWidth, &imageHeight, 0, transparencyEnabled ? SOIL_LOAD_RGBA : SOIL_LOAD_RGB);
 
+    const GLint internalFormat = sRGB ?
+        transparencyEnabled ? GL_SRGB_ALPHA : GL_SRGB :
+        transparencyEnabled ? GL_RGBA : GL_RGB;
+    const GLint format = transparencyEnabled ? GL_RGBA : GL_RGB;
+
     // Assign texture to ID
     glBindTexture(GL_TEXTURE_2D, textureID);
-    glTexImage2D(GL_TEXTURE_2D, 0, transparencyEnabled ? GL_RGBA : GL_RGB, imageWidth, imageHeight, 0, transparencyEnabled ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, image);
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, imageWidth, imageHeight, 0, format, GL_UNSIGNED_BYTE, image);
     glGenerateMipmap(GL_TEXTURE_2D);
 
     // Parameters
@@ -27,7 +32,7 @@ GLuint TextureLoader::LoadTexture(GLchar* path, bool transparencyEnabled)
     return textureID;
 }
 
-GLuint TextureLoader::LoadCubemap(std::vector<const GLchar*> faces)
+GLuint TextureLoader::LoadCubemap(std::vector<const GLchar*> faces, bool sRGB)
 {
     GLuint textureID;
     glGenTextures(1, &textureID);
@@ -35,12 +40,14 @@ GLuint TextureLoader::LoadCubemap(std::vector<const GLchar*> faces)
     int imageWidth, imageHeight;
     unsigned char* image;
 
+    const GLint internalFormat = sRGB ? GL_SRGB : GL_RGB;
+
     glBindTexture(GL_TEXTURE_BINDING_CUBE_MAP, textureID);
 
     for (GLuint i = 0; i < faces.size(); i++)
     {
         image = SOIL_load_image(faces[i], &imageWidth, &imageHeight, 0, SOIL_LOAD_RGB);
-        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, imageWidth, imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, internalFormat, imageWidth, imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
         SOIL_free_image_data(image);
     }
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

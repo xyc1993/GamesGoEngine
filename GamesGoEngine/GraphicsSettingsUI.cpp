@@ -22,5 +22,11 @@ void GraphicsSettingsUI::Draw()
 		}
 	}
 
+	float gamma = RenderingManager::GetGamma();
+	if (ImGui::SliderFloat("gamma", &gamma, 0.0f, 5.0f))
+	{
+		RenderingManager::SetGamma(gamma);
+	}
+
 	ImGui::End();
 }

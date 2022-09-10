@@ -30,6 +30,7 @@ public:
 	static void Init(GLint screenWidth, GLint screenHeight);
 
 private:
+	void InitGammaCorrection();
 	void ConfigureFramebuffers(GLint screenWidth, GLint screenHeight, bool shouldGenerateFramebuffer);
 	static void ConfigureFramebuffer(GLint screenWidth, GLint screenHeight,
 		unsigned int& framebuffer, unsigned int& textureColorBuffer,
@@ -82,9 +83,13 @@ public:
 	static void SetMSAASamplesNumber(int samples);
 	static int GetMSAASamplesNumber();
 	static int GetMaxMSAASamplesNumber();
-
 private:
 	void SetMSAAInternal(bool enable, int samples);
+public:
+	static void SetGamma(float gammaVal);
+	static float GetGamma();
+private:
+	void SetGammaInternal(float gammaVal);
 
 private:
 	static bool CompareRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2);
@@ -106,6 +111,7 @@ private:
 	bool normalsDebugEnabled = false;
 	bool msaaEnabled = false;
 	int msaaSamplesNumber = 1;
+	float gamma = 2.2f;
 
 	// uniform buffers used globally by shaders
 	unsigned int uboMatrices;
@@ -131,4 +137,7 @@ private:
 
 	// debug materials
 	Material* normalDebugMaterial;
+
+	// special post process materials
+	std::shared_ptr<PostProcessMaterial> gammaCorrectionMaterial;
 };
