@@ -62,9 +62,10 @@ private:
 public:
 	static void SetSkybox(SkyboxRenderer* skybox);
 	static void AddMeshRenderer(MeshRenderer* meshRenderer);
-	static void AddPostProcessRenderer(PostProcessRenderer* postProcessRenderer);
+	static void AddPostProcessMaterial(const std::shared_ptr<PostProcessMaterial>& ppMaterial);
+	static void RemovePostProcessMaterial(const std::shared_ptr<PostProcessMaterial>& ppMaterial);
 	static void SortMeshRenderers();
-	static void SortPostProcessRenderers();
+	static void SortPostProcessMaterials();
 
 private:
 	static void SortOpaqueMeshRenderers();
@@ -94,7 +95,7 @@ private:
 private:
 	static bool CompareRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2);
 	static bool CompareTransparentRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2);
-	static bool ComparePostProcessRenderersPositions(PostProcessRenderer* ppr1, PostProcessRenderer* ppr2);
+	static bool ComparePostProcessMaterialsPositions(const std::shared_ptr<PostProcessMaterial>& ppm1, const std::shared_ptr<PostProcessMaterial>& ppm2);
 
 	LightsManager* lightsManager;
 	SkyboxRenderer* skybox;
@@ -102,9 +103,9 @@ private:
 	std::vector<MeshRenderer*> opaqueMeshRenderers;
 	std::vector<MeshRenderer*> transparentMeshRenderers;
 	// container holding only active post process renderers
-	std::vector<PostProcessRenderer*> usedPostProcessRenderers;
+	std::vector<std::shared_ptr<PostProcessMaterial>> usedPostProcessMaterials;
 	// container holding all subscribed post process renderers
-	std::vector<PostProcessRenderer*> postProcessRenderers;
+	std::vector<std::shared_ptr<PostProcessMaterial>> postProcessMaterials;
 	bool postProcessingEnabled = true;
 	bool firstRenderedFrame = true;
 	bool renderWireframeOnly = false;

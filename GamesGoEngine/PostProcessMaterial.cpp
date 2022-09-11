@@ -2,6 +2,9 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Math.h"
+#include "RenderingManager.h"
+
 PostProcessMaterial::PostProcessMaterial()
 {
 	shader = nullptr;
@@ -17,14 +20,20 @@ PostProcessMaterial::PostProcessMaterial(const GLchar* fragmentPath)
 	SetBlendWeight(1.0f);
 }
 
-void PostProcessMaterial::SetBlendWeight(float weight) const
+void PostProcessMaterial::SetBlendWeight(float weight)
 {
-	SetFloat("blendWeight", weight);
+	blendWeight = weight;
+	SetFloat("blendWeight", blendWeight);
 }
 
 float PostProcessMaterial::GetBlendWeight() const
 {
-	return GetFloat("blendWeight");
+	return blendWeight;
+}
+
+bool PostProcessMaterial::IsActive() const
+{
+	return !Math::IsNearlyZero(blendWeight);
 }
 
 void PostProcessMaterial::Draw(glm::mat4 model)
@@ -72,4 +81,15 @@ void PostProcessMaterial::Draw(glm::mat4 model)
 	const GLint modelLoc = glGetUniformLocation(shader->GetProgram(), "model");
 
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+}
+
+void PostProcessMaterial::SetPostProcessOrder(int orderValue)
+{
+	postProcessOrder = orderValue;
+	RenderingManager::SortPostProcessMaterials();
+}
+
+int PostProcessMaterial::GetPostProcessOrder() const
+{
+	return postProcessOrder;
 }

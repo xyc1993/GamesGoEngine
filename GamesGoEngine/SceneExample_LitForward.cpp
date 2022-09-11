@@ -224,14 +224,12 @@ void SceneExample_LitForward::InitScene(bool shouldAddPostProcessEffects)
 		std::shared_ptr<PostProcessMaterial> ppMaterial1 = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/inverseColor.frag.glsl");
 		std::shared_ptr<PostProcessMaterial> ppMaterial2 = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/blur.frag.glsl");
 
-		PostProcessRenderer* pp1 = new PostProcessRenderer();
-		PostProcessRenderer* pp2 = new PostProcessRenderer();
+		PostProcessRenderer* ppr = new PostProcessRenderer();
 
-		pp1->SetMaterial(ppMaterial1);
-		pp2->SetMaterial(ppMaterial2);
+		ppr->AddMaterial(ppMaterial1);
+		ppr->AddMaterial(ppMaterial2);
 
-		postProcessHolder->AddComponent(pp1);
-		postProcessHolder->AddComponent(pp2);
+		postProcessHolder->AddComponent(ppr);
 
 		std::string postProcessHolderName = "post_process_holder";
 		postProcessHolder->SetName(postProcessHolderName);

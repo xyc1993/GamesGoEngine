@@ -12,7 +12,7 @@ Scene::Scene()
 
 	std::shared_ptr<PostProcessMaterial> ppMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/editorOutline.frag.glsl");
 	PostProcessRenderer* pp = new PostProcessRenderer();
-	pp->SetMaterial(ppMaterial);
+	pp->AddMaterial(ppMaterial);
 	editorOutlinePostProcessHolder->AddComponent(pp);
 
 	std::string postProcessHolderName = "editor_outline_post_process_holder";

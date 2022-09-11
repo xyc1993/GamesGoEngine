@@ -5,28 +5,32 @@
 
 PostProcessRenderer::PostProcessRenderer()
 {
-	mesh = MeshPrimitivesPool::GetQuadPrimitive();
-	materialList.clear();
-	materialList.resize(mesh->GetSubMeshesCount());
-	RenderingManager::AddPostProcessRenderer(this);
-	SetPostProcessOrder(0);
+	ppMaterialList.clear();
 }
 
-void PostProcessRenderer::SetMaterial(const std::shared_ptr<PostProcessMaterial>& material)
+void PostProcessRenderer::Draw()
 {
-	if (materialList[0] != material)
-	{
-		materialList[0].reset();
-		materialList[0] = material;
-		SetBlendWeight(1.0f);
-	}
+	// Drawing post processes is handled by Rendering manager, so we want to leave this method empty. 
 }
 
-void PostProcessRenderer::SetBlendWeight(float weight) const
+void PostProcessRenderer::AddMaterial(const std::shared_ptr<PostProcessMaterial>& material)
 {
-	if (materialList[0] != nullptr)
+	material->SetBlendWeight(1.0f);
+	ppMaterialList.push_back(material);
+	RenderingManager::AddPostProcessMaterial(material);
+}
+
+void PostProcessRenderer::RemoveMaterial(size_t materialIndex)
+{
+	RenderingManager::RemovePostProcessMaterial(ppMaterialList[materialIndex]);
+	ppMaterialList.erase(ppMaterialList.begin() + materialIndex);
+}
+
+void PostProcessRenderer::SetBlendWeight(float weight, size_t materialIndex) const
+{
+	if (materialIndex < ppMaterialList.size())
 	{
-		Material* material = materialList[0].get();
+		Material* material = ppMaterialList[materialIndex].get();
 		PostProcessMaterial* postProcessMaterial = dynamic_cast<PostProcessMaterial*>(material);
 		if (postProcessMaterial != nullptr)
 		{
@@ -35,28 +39,16 @@ void PostProcessRenderer::SetBlendWeight(float weight) const
 	}
 }
 
-float PostProcessRenderer::GetBlendWeight() const
+float PostProcessRenderer::GetBlendWeight(size_t materialIndex) const
 {
-	if (materialList[0] != nullptr)
+	if (materialIndex < ppMaterialList.size())
 	{
-		Material* material = materialList[0].get();
-		PostProcessMaterial* postProcessMaterial = dynamic_cast<PostProcessMaterial*>(material);
+		Material* material = ppMaterialList[materialIndex].get();
+		const PostProcessMaterial* postProcessMaterial = dynamic_cast<PostProcessMaterial*>(material);
 		if (postProcessMaterial != nullptr)
 		{
 			return postProcessMaterial->GetBlendWeight();
 		}
 	}
-
 	return -1.0f;
-}
-
-void PostProcessRenderer::SetPostProcessOrder(int orderValue)
-{
-	postProcessOrder = orderValue;
-	RenderingManager::SortPostProcessRenderers();
-}
-
-int PostProcessRenderer::GetPostProcessOrder() const
-{
-	return postProcessOrder;
 }

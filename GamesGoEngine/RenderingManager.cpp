@@ -5,7 +5,7 @@
 #include "CamerasManager.h"
 #include "GameObject.h"
 #include "Math.h"
-#include "MeshPrimitiveQuad.h"
+#include "MeshPrimitivesPool.h"
 #include "MeshRenderer.h"
 #include "PostProcessMaterial.h"
 #include "PostProcessRenderer.h"
@@ -60,16 +60,9 @@ void RenderingManager::InitGammaCorrection()
 {
 	// make sure that the default gamma value is set in the material
 	SetGamma(GetGamma());
-
-	// TODO: rethink how post processes work right now:
-	// first of all they don't need to create mesh by themselves, they could share one quad mesh
-	// secondly, why do they need game object to work properly? especially when some post processes (such as gamma correction) are general rendering steps
-	PostProcessRenderer* gammaCorrectionRenderer = new PostProcessRenderer();
-	gammaCorrectionRenderer->SetMaterial(GetInstance()->gammaCorrectionMaterial);
-	gammaCorrectionRenderer->SetPostProcessOrder(9999);
-
-	GameObject* gammaCorrectionHolder = new GameObject();
-	gammaCorrectionHolder->AddComponent(gammaCorrectionRenderer);
+	// always use gamma correction last
+	gammaCorrectionMaterial->SetPostProcessOrder(9999);
+	AddPostProcessMaterial(gammaCorrectionMaterial);
 }
 
 void RenderingManager::ConfigureFramebuffers(GLint screenWidth, GLint screenHeight, bool shouldGenerateFramebuffer)
@@ -251,7 +244,7 @@ void RenderingManager::Update()
 	if (GetInstance()->firstRenderedFrame)
 	{
 		GetInstance()->firstRenderedFrame = false;
-		SortPostProcessRenderers();
+		SortPostProcessMaterials();
 	}
 
 	if (IsPostProcessingEnabled())
@@ -269,7 +262,7 @@ void RenderingManager::Update()
 		glDisable(GL_DEPTH_TEST);
 		glDisable(GL_STENCIL_TEST);
 		
-		const size_t postProcessEffects = GetInstance()->usedPostProcessRenderers.size();
+		const size_t postProcessEffects = GetInstance()->usedPostProcessMaterials.size();
 		for (size_t i = 0; i < postProcessEffects; i++)
 		{
 			if (i == (postProcessEffects - 1))
@@ -284,14 +277,12 @@ void RenderingManager::Update()
 			glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 
-			std::shared_ptr<Material> ppMaterial;
-			if (GetInstance()->usedPostProcessRenderers[i]->TryGetMaterial(ppMaterial, 0))
-			{
-				ppMaterial->SetTexture("screenTexture", 0, i % 2 == 0 ? GetInstance()->textureColorBuffer1 : GetInstance()->textureColorBuffer2);
-				ppMaterial->SetTexture("depthStencilTexture", 1, i % 2 == 0 ? GetInstance()->depthStencilBuffer1 : GetInstance()->depthStencilBuffer2);
-				ppMaterial->SetTexture("stencilView", 2, i % 2 == 0 ? GetInstance()->stencilView1 : GetInstance()->stencilView2);
-				GetInstance()->usedPostProcessRenderers[i]->Draw();
-			}
+			const std::shared_ptr<Material> ppMaterial = GetInstance()->usedPostProcessMaterials[i];
+			ppMaterial->SetTexture("screenTexture", 0, i % 2 == 0 ? GetInstance()->textureColorBuffer1 : GetInstance()->textureColorBuffer2);
+			ppMaterial->SetTexture("depthStencilTexture", 1, i % 2 == 0 ? GetInstance()->depthStencilBuffer1 : GetInstance()->depthStencilBuffer2);
+			ppMaterial->SetTexture("stencilView", 2, i % 2 == 0 ? GetInstance()->stencilView1 : GetInstance()->stencilView2);
+			ppMaterial->Draw(glm::mat4());
+			MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
 		}
 	}
 }
@@ -368,9 +359,21 @@ void RenderingManager::AddMeshRenderer(MeshRenderer* meshRenderer)
 	SortMeshRenderers();
 }
 
-void RenderingManager::AddPostProcessRenderer(PostProcessRenderer* postProcessRenderer)
+void RenderingManager::AddPostProcessMaterial(const std::shared_ptr<PostProcessMaterial>& ppMaterial)
 {
-	GetInstance()->postProcessRenderers.push_back(postProcessRenderer);
+	GetInstance()->postProcessMaterials.push_back(ppMaterial);
+}
+
+void RenderingManager::RemovePostProcessMaterial(const std::shared_ptr<PostProcessMaterial>& ppMaterial)
+{
+	for (size_t i = 0; i < GetInstance()->postProcessMaterials.size(); i++)
+	{
+		if (ppMaterial == GetInstance()->postProcessMaterials[i])
+		{
+			GetInstance()->postProcessMaterials.erase(GetInstance()->postProcessMaterials.begin() + i);
+			break;
+		}
+	}
 }
 
 void RenderingManager::SortMeshRenderers()
@@ -395,15 +398,15 @@ void RenderingManager::SortMeshRenderers()
 	SortTransparentMeshRenderers();
 }
 
-void RenderingManager::SortPostProcessRenderers()
+void RenderingManager::SortPostProcessMaterials()
 {
-	std::sort(GetInstance()->postProcessRenderers.begin(), GetInstance()->postProcessRenderers.end(), ComparePostProcessRenderersPositions);
-	GetInstance()->usedPostProcessRenderers.clear();
-	for (size_t i = 0; i < GetInstance()->postProcessRenderers.size(); i++)
+	std::sort(GetInstance()->postProcessMaterials.begin(), GetInstance()->postProcessMaterials.end(), ComparePostProcessMaterialsPositions);
+	GetInstance()->usedPostProcessMaterials.clear();
+	for (size_t i = 0; i < GetInstance()->postProcessMaterials.size(); i++)
 	{
-		if (!Math::IsNearlyZero(GetInstance()->postProcessRenderers[i]->GetBlendWeight()))
+		if (!Math::IsNearlyZero(GetInstance()->postProcessMaterials[i]->GetBlendWeight()))
 		{
-			GetInstance()->usedPostProcessRenderers.push_back(GetInstance()->postProcessRenderers[i]);
+			GetInstance()->usedPostProcessMaterials.push_back(GetInstance()->postProcessMaterials[i]);
 		}
 	}
 }
@@ -433,7 +436,7 @@ void RenderingManager::EnablePostProcessing(bool enable)
 
 bool RenderingManager::IsPostProcessingEnabled()
 {
-	return (GetInstance()->postProcessingEnabled && !GetInstance()->usedPostProcessRenderers.empty());
+	return (GetInstance()->postProcessingEnabled && !GetInstance()->usedPostProcessMaterials.empty());
 }
 
 void RenderingManager::SetWireframeOnly(bool wireframeOnly)
@@ -545,7 +548,8 @@ bool RenderingManager::CompareTransparentRenderersPositions(MeshRenderer* mr1, M
 	}
 }
 
-bool RenderingManager::ComparePostProcessRenderersPositions(PostProcessRenderer* ppr1, PostProcessRenderer* ppr2)
+bool RenderingManager::ComparePostProcessMaterialsPositions(const std::shared_ptr<PostProcessMaterial>& ppm1,
+	const std::shared_ptr<PostProcessMaterial>& ppm2)
 {
-	return (ppr1->GetPostProcessOrder() < ppr2->GetPostProcessOrder());
+	return (ppm1->GetPostProcessOrder() < ppm2->GetPostProcessOrder());
 }
