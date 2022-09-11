@@ -19,6 +19,7 @@ RenderingManager::RenderingManager()
 	lightsManager = new LightsManager();
 	normalDebugMaterial = new Material("res/shaders/debugNormals.vert.glsl", "res/shaders/debugNormals.frag.glsl", "res/shaders/debugNormals.geom.glsl");
 	gammaCorrectionMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/gammaCorrection.frag.glsl");
+	editorOutlineMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/editorOutline.frag.glsl");
 }
 
 RenderingManager::~RenderingManager()
@@ -54,6 +55,7 @@ void RenderingManager::Init(GLint screenWidth, GLint screenHeight)
 	GetInstance()->ConfigureUniformBufferObjects();
 	GetInstance()->CreateDebugMaterials();
 	GetInstance()->InitGammaCorrection();
+	GetInstance()->InitEditorOutline();
 }
 
 void RenderingManager::InitGammaCorrection()
@@ -63,6 +65,12 @@ void RenderingManager::InitGammaCorrection()
 	// always use gamma correction last
 	gammaCorrectionMaterial->SetPostProcessOrder(9999);
 	AddPostProcessMaterial(gammaCorrectionMaterial);
+}
+
+void RenderingManager::InitEditorOutline()
+{
+	editorOutlineMaterial->SetPostProcessOrder(-1);
+	AddPostProcessMaterial(editorOutlineMaterial);
 }
 
 void RenderingManager::ConfigureFramebuffers(GLint screenWidth, GLint screenHeight, bool shouldGenerateFramebuffer)

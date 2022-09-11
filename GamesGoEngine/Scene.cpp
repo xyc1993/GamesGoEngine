@@ -6,19 +6,6 @@
 Scene::Scene()
 {
 	sceneObjects.clear();
-
-	// TODO: should happen only if dealing with editor
-	GameObject* editorOutlinePostProcessHolder = new GameObject;
-
-	std::shared_ptr<PostProcessMaterial> ppMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/editorOutline.frag.glsl");
-	PostProcessRenderer* pp = new PostProcessRenderer();
-	pp->AddMaterial(ppMaterial);
-	editorOutlinePostProcessHolder->AddComponent(pp);
-
-	std::string postProcessHolderName = "editor_outline_post_process_holder";
-	editorOutlinePostProcessHolder->SetName(postProcessHolderName);
-
-	AddGameObject(editorOutlinePostProcessHolder);
 }
 
 Scene::~Scene()
