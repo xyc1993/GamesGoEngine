@@ -176,6 +176,7 @@
     <ClCompile Include="MeshBase.cpp" />
     <ClCompile Include="MeshPrimitiveQuad.cpp" />
     <ClCompile Include="MeshPrimitiveSphere.cpp" />
+    <ClCompile Include="MeshPrimitivesPool.cpp" />
     <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="PositionOscillator.cpp" />
@@ -236,6 +237,7 @@
     <ClInclude Include="MeshBase.h" />
     <ClInclude Include="MeshPrimitiveQuad.h" />
     <ClInclude Include="MeshPrimitiveSphere.h" />
+    <ClInclude Include="MeshPrimitivesPool.h" />
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="PositionOscillator.h" />

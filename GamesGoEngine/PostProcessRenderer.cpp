@@ -1,11 +1,11 @@
 #include "PostProcessRenderer.h"
 
-#include "MeshPrimitiveQuad.h"
+#include "MeshPrimitivesPool.h"
 #include "RenderingManager.h"
 
 PostProcessRenderer::PostProcessRenderer()
 {
-	mesh = std::make_shared<MeshPrimitiveQuad>();
+	mesh = MeshPrimitivesPool::GetQuadPrimitive();
 	materialList.clear();
 	materialList.resize(mesh->GetSubMeshesCount());
 	RenderingManager::AddPostProcessRenderer(this);
