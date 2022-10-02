@@ -336,6 +336,9 @@
     <ClCompile Include="MeshPrimitivesPool.cpp">
       <Filter>Source Files\GamesGo\Mesh</Filter>
     </ClCompile>
+    <ClCompile Include="SceneExample_DirectionalShadows.cpp">
+      <Filter>Source Files\GamesGo\Examples</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -514,6 +517,12 @@
     </ClInclude>
     <ClInclude Include="MeshPrimitivesPool.h">
       <Filter>Header Files\GamesGo\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneExample_DirectionalShadows.h">
+      <Filter>Header Files\GamesGo\Examples</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneExamples.h">
+      <Filter>Header Files\GamesGo\Examples</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

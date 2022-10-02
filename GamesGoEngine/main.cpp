@@ -10,25 +10,21 @@
 #include "Time.h"
 #include "WindowManager.h"
 
-#include "SceneExample_DepthTest.h"
-#include "SceneExample_EnvironmentMapping.h"
-#include "SceneExample_GeometryShader.h"
-#include "SceneExample_Instancing.h"
-#include "SceneExample_LitForward.h"
-#include "SceneExample_Transparency.h"
+#include "SceneExamples.h"
 
 void MainLoop(GLFWwindow* window)
 {
 	RenderingManager::Init(WindowManager::GetCurrentWidth(), WindowManager::GetCurrentHeight());
 	EditorUIManager::Init(window);
 	
-	SceneExample_LitForward* activeScene = new SceneExample_LitForward(false);
+	//SceneExample_LitForward* activeScene = new SceneExample_LitForward(false);
 	//SceneExample_LitForward* activeScene = new SceneExample_LitForward(true);
 	//SceneExample_DepthTest* activeScene = new SceneExample_DepthTest();
 	//SceneExample_Transparency* activeScene = new SceneExample_Transparency();
 	//SceneExample_EnvironmentMapping* activeScene = new SceneExample_EnvironmentMapping();
 	//SceneExample_GeometryShader* activeScene = new SceneExample_GeometryShader();
 	//SceneExample_Instancing* activeScene = new SceneExample_Instancing();
+	SceneExample_DirectionalShadows* activeScene = new SceneExample_DirectionalShadows();
 	
 	while (!glfwWindowShouldClose(window))
 	{

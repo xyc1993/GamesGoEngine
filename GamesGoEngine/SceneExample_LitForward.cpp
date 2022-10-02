@@ -17,8 +17,6 @@
 #include "SkyboxRenderer.h"
 #include "SpotLight.h"
 
-extern GLfloat currentTime;
-
 SceneExample_LitForward::SceneExample_LitForward()
 {
 	InitScene(false);
