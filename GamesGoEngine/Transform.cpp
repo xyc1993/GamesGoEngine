@@ -97,7 +97,7 @@ void Transform::SetLocalScale(glm::vec3 localScale)
 
 void Transform::SetHintLocalRotation(glm::vec3 hintLocalRotation)
 {
-	const glm::quat rotationDifference = glm::quat(hintLocalRotation - this->hintLocalRotation);
+	const glm::quat rotationDifference = glm::quat(glm::radians(hintLocalRotation - this->hintLocalRotation));
 	this->hintLocalRotation = hintLocalRotation;	
 	this->rotation = rotationDifference * this->rotation;
 	this->localRotation = rotationDifference * this->localRotation;	
