@@ -77,3 +77,46 @@ void LightsManager::SetLightsInShader(const GLuint& shaderProgram)
 		}
 	}
 }
+
+bool LightsManager::TryGetDirectionalLight(Light& directionalLight, int lightIndex) const
+{
+	return TryGetLight(directionalLight, directionalLights, lightIndex);
+}
+
+bool LightsManager::TryGetPointLight(Light& pointLight, int lightIndex) const
+{
+	return TryGetLight(pointLight, pointLights, lightIndex);
+}
+
+bool LightsManager::TryGetSpotLight(Light& spotLight, int lightIndex) const
+{
+	return TryGetLight(spotLight, spotLights, lightIndex);
+}
+
+bool LightsManager::TryGetLight(Light& light, std::vector<Light*> lightsVector, int lightIndex)
+{
+	if (lightIndex >= 0 && lightIndex < lightsVector.size())
+	{
+		if (lightsVector[lightIndex] != nullptr)
+		{
+			light = *lightsVector[lightIndex];
+			return true;
+		}
+	}
+	return false;
+}
+
+size_t LightsManager::GetDirectionalLightsNumber() const
+{
+	return directionalLights.size();
+}
+
+size_t LightsManager::GetPointLightsNumber() const
+{
+	return pointLights.size();
+}
+
+size_t LightsManager::GetSpotLightsNumber() const
+{
+	return spotLights.size();
+}
