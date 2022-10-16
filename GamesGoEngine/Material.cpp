@@ -172,6 +172,21 @@ void Material::SetVector3(const GLint vectorID, glm::vec3 value) const
 	}
 }
 
+void Material::SetMat4(const GLchar* matrixName, glm::mat4 value) const
+{
+	const GLint matrtixID = glGetUniformLocation(shader->GetProgram(), matrixName);
+	SetMat4(matrtixID, value);
+}
+
+void Material::SetMat4(const GLint matrixID, glm::mat4 value) const
+{
+	if (shader != nullptr)
+	{
+		shader->Use();
+		glUniformMatrix4fv(matrixID, 1, GL_FALSE, glm::value_ptr(value));
+	}
+}
+
 void Material::SetLightModel(LightModelType type)
 {
 	lightModelType = type;
