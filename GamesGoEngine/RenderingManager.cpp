@@ -20,12 +20,14 @@ RenderingManager::RenderingManager()
 	normalDebugMaterial = new Material("res/shaders/debugNormals.vert.glsl", "res/shaders/debugNormals.frag.glsl", "res/shaders/debugNormals.geom.glsl");
 	gammaCorrectionMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/gammaCorrection.frag.glsl");
 	editorOutlineMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/editorOutline.frag.glsl");
+	depthMapMaterial = new Material("res/shaders/RenderPipeline/depthMap.vert.glsl", "res/shaders/RenderPipeline/depthMap.frag.glsl");
 }
 
 RenderingManager::~RenderingManager()
 {
 	delete lightsManager;
 	delete normalDebugMaterial;
+	delete depthMapMaterial;
 }
 
 RenderingManager* RenderingManager::GetInstance()
@@ -78,6 +80,7 @@ void RenderingManager::ConfigureFramebuffers(GLint screenWidth, GLint screenHeig
 	ConfigureFramebuffer(screenWidth, screenHeight, framebuffer1, textureColorBuffer1, depthStencilBuffer1, stencilView1, shouldGenerateFramebuffer);
 	ConfigureFramebuffer(screenWidth, screenHeight, framebuffer2, textureColorBuffer2, depthStencilBuffer2, stencilView2, shouldGenerateFramebuffer);
 	ConfigureFramebuffer(screenWidth, screenHeight, msFramebuffer, msTextureColorBuffer, msDepthStencilBuffer, msStencilView, shouldGenerateFramebuffer);
+	ConfigureShadowMapFramebuffer(SHADOW_WIDTH, SHADOW_HEIGHT, depthMapFBO, depthMap, shouldGenerateFramebuffer);
 }
 
 void RenderingManager::ConfigureFramebuffer(GLint screenWidth, GLint screenHeight,
@@ -166,6 +169,35 @@ void RenderingManager::ConfigureMultisampledFramebuffer(GLint screenWidth, GLint
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void RenderingManager::ConfigureShadowMapFramebuffer(GLint shadowMapWidth, GLint shadowMapHeight, unsigned& framebuffer,
+	unsigned& shadowMap, bool shouldGenerateFramebuffer)
+{
+	if (shouldGenerateFramebuffer)
+	{
+		glGenFramebuffers(1, &framebuffer);
+	}
+
+	glGenTextures(1, &shadowMap);
+	glBindTexture(GL_TEXTURE_2D, shadowMap);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
+		shadowMapWidth, shadowMapHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+	// ensure that the objects outside of map are not in shadow
+	constexpr float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowMap, 0);
+	// no color data needed for depth so disable draw & read buffers in the framebuffer
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 void RenderingManager::ResizeBuffers(GLint screenWidth, GLint screenHeight)
 {
 	GetInstance()->ResizeBuffersInternal(screenWidth, screenHeight);
@@ -183,6 +215,7 @@ void RenderingManager::ResizeBuffersInternal(GLint screenWidth, GLint screenHeig
 	glDeleteTextures(1, &stencilView1);
 	glDeleteTextures(1, &stencilView2);
 	glDeleteTextures(1, &msStencilView);
+	glDeleteTextures(1, &depthMap);
 
 	GetInstance()->ConfigureFramebuffers(screenWidth, screenHeight, false);
 }
@@ -215,6 +248,18 @@ void RenderingManager::CreateDebugMaterials()
 
 void RenderingManager::Update()
 {
+	// update uniform buffer objects
+	GetInstance()->UpdateUniformBufferObjects();
+
+	// TODO: more optimal sorting, it could sort on camera view change, not on every draw frame
+	SortTransparentMeshRenderers();
+
+	GetInstance()->UpdateShadowMap();
+	
+	// Rendering the scene
+	// reset viewport
+	glViewport(0, 0, WindowManager::GetCurrentWidth(), WindowManager::GetCurrentHeight());
+
 	if (IsPostProcessingEnabled())
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, GetInstance()->msFramebuffer);
@@ -233,12 +278,6 @@ void RenderingManager::Update()
 	glStencilMask(~0);
 	glClearStencil(0);
 	glClear(GL_STENCIL_BUFFER_BIT);
-
-	// update uniform buffer objects
-	GetInstance()->UpdateUniformBufferObjects();
-
-	// TODO: more optimal sorting, it could sort on camera view change, not on every draw frame
-	SortTransparentMeshRenderers();
 
 	DrawRenderers(GetInstance()->opaqueMeshRenderers);
 	DrawRenderers(GetInstance()->transparentMeshRenderers);
@@ -313,6 +352,54 @@ void RenderingManager::UpdateUniformBufferObjects()
 	glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(float), &time);
 	glBufferSubData(GL_UNIFORM_BUFFER, sizeof(float), sizeof(float), &deltaTime);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+}
+
+void RenderingManager::UpdateShadowMap()
+{
+	glEnable(GL_DEPTH_TEST);
+	glClearColor(0.1f, 0.15f, 0.15f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	float near_plane = 1.0f, far_plane = 30.0f;
+	glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, 10.0f, -10.0f, near_plane, far_plane);
+
+	glm::mat4 lightSpaceMatrix;
+
+	DirectionalLight directionalLight;
+	if (lightsManager->TryGetDirectionalLight(directionalLight, 0))
+	{
+		if (directionalLight.GetOwner() != nullptr)
+		{
+			Transform* lightTransform = directionalLight.GetOwner()->GetTransform();
+
+			glm::vec3 lightPosition = lightTransform->GetPosition() - 10.0f * lightTransform->GetForward();
+			glm::vec3 lightLookAtTarget = lightTransform->GetPosition() + 10.0f * lightTransform->GetForward();
+			glm::mat4 lightView = glm::lookAt(lightPosition,
+				lightLookAtTarget,
+				glm::vec3(0.0f, 1.0f, 0.0f));
+			lightSpaceMatrix = lightProjection * lightView;
+		}
+	}
+	depthMapMaterial->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
+
+	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glCullFace(GL_FRONT);
+	DrawRenderers(meshRenderers, depthMapMaterial);
+	glCullFace(GL_BACK);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	
+	// TODO: remove and implement more elegant solution
+	for (size_t i = 0; i < meshRenderers.size(); i++)
+	{
+		std::shared_ptr<Material> outMaterial;
+		if (meshRenderers[i]->TryGetMaterial(outMaterial, 0))
+		{
+			outMaterial->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
+			outMaterial->SetTexture("shadowMap", 1, depthMap);
+		}
+	}
 }
 
 void RenderingManager::DrawSkybox()

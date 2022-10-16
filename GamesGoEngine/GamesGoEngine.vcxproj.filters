@@ -133,9 +133,6 @@
     <Filter Include="Source Files\GamesGo\Editor\UI\Panels">
       <UniqueIdentifier>{7d977a72-24e3-4e9d-b3f7-a5d857b9b81f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\PostProcess">
-      <UniqueIdentifier>{e300ab3d-2095-4c19-ad1a-8c7897f819ed}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\GamesGo\Rendering\Renderers">
       <UniqueIdentifier>{00532eff-1448-4b19-8241-21393d52c0c4}</UniqueIdentifier>
     </Filter>
@@ -159,6 +156,15 @@
     </Filter>
     <Filter Include="Source Files\GamesGo\Window Management">
       <UniqueIdentifier>{546312ad-e0d9-4585-8c98-01b821d3c49e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders">
+      <UniqueIdentifier>{e6cfc736-8839-4c55-900b-4c02252ce00d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\RenderPipeline">
+      <UniqueIdentifier>{89ff943b-6906-4ef5-8e8f-debfa4d12b5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\PostProcess">
+      <UniqueIdentifier>{e300ab3d-2095-4c19-ad1a-8c7897f819ed}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -526,83 +532,98 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\shaders\unlit.frag.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\shaders\unlit.vert.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\shaders\lighting.frag.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\shaders\lighting.vert.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\shaders\skybox.frag.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\shaders\skybox.vert.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\shaders\depth.frag.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\shaders\unlitProtruded.vert.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\shaders\unlitTextured.vert.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\shaders\unlitTexturedMasked.frag.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\shaders\unlitTexturedTransparent.frag.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="res\shaders\PostProcess\blur.frag.glsl">
-      <Filter>Resource Files\PostProcess</Filter>
+      <Filter>Resource Files\Shaders\PostProcess</Filter>
     </None>
     <None Include="res\shaders\PostProcess\inverseColor.frag.glsl">
-      <Filter>Resource Files\PostProcess</Filter>
+      <Filter>Resource Files\Shaders\PostProcess</Filter>
     </None>
     <None Include="res\shaders\PostProcess\screenShader.frag.glsl">
-      <Filter>Resource Files\PostProcess</Filter>
+      <Filter>Resource Files\Shaders\PostProcess</Filter>
     </None>
     <None Include="res\shaders\PostProcess\screenShader.vert.glsl">
-      <Filter>Resource Files\PostProcess</Filter>
+      <Filter>Resource Files\Shaders\PostProcess</Filter>
     </None>
     <None Include="res\shaders\PostProcess\editorOutline.frag.glsl">
-      <Filter>Resource Files\PostProcess</Filter>
-    </None>
-    <None Include="res\shaders\skyboxReflect.frag.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\shaders\skyboxReflect.vert.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\shaders\explode.geom.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\shaders\unlitTextured.frag.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\shaders\explode.vert.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\shaders\debugNormals.frag.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\shaders\debugNormals.geom.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\shaders\debugNormals.vert.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\shaders\unlitTexturedInstanced.vert.glsl">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\Shaders\PostProcess</Filter>
     </None>
     <None Include="res\shaders\PostProcess\gammaCorrection.frag.glsl">
-      <Filter>Resource Files\PostProcess</Filter>
+      <Filter>Resource Files\Shaders\PostProcess</Filter>
+    </None>
+    <None Include="res\shaders\RenderPipeline\depthMap.frag.glsl">
+      <Filter>Resource Files\Shaders\RenderPipeline</Filter>
+    </None>
+    <None Include="res\shaders\RenderPipeline\depthMap.vert.glsl">
+      <Filter>Resource Files\Shaders\RenderPipeline</Filter>
+    </None>
+    <None Include="res\shaders\debugNormals.frag.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\debugNormals.geom.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\debugNormals.vert.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\depth.frag.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\explode.geom.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\explode.vert.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\lighting.frag.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\lighting.vert.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\skybox.frag.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\skybox.vert.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\skyboxReflect.frag.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\skyboxReflect.vert.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\unlit.frag.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\unlit.vert.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\unlitProtruded.vert.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\unlitTextured.frag.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\unlitTextured.vert.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\unlitTexturedInstanced.vert.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\unlitTexturedMasked.frag.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\unlitTexturedTransparent.frag.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\litShadowSimple.frag.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\litShadowSimple.vert.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\PostProcess\depth.frag.glsl">
+      <Filter>Resource Files\Shaders\PostProcess</Filter>
     </None>
   </ItemGroup>
 </Project>

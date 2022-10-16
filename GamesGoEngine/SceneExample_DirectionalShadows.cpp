@@ -9,9 +9,8 @@ SceneExample_DirectionalShadows::SceneExample_DirectionalShadows()
 	std::shared_ptr<MeshPrimitiveCube> cubeMesh = std::make_shared<MeshPrimitiveCube>();
 	std::shared_ptr<MeshPrimitiveQuad> quadMesh = std::make_shared<MeshPrimitiveQuad>();
 
-	std::shared_ptr<Material> woodMaterial = std::make_shared<Material>("res/shaders/lighting.vert.glsl", "res/shaders/lighting.frag.glsl");
-	woodMaterial->SetTextureByPath((GLchar*)"material.diffuse", 0, (GLchar*)"res/textures/wood.png");
-	woodMaterial->SetFloat((GLchar*)"material.shininess", 32.0f);
+	std::shared_ptr<Material> woodMaterial = std::make_shared<Material>("res/shaders/litShadowSimple.vert.glsl", "res/shaders/litShadowSimple.frag.glsl");
+	woodMaterial->SetTextureByPath((GLchar*)"diffuseTexture", 0, (GLchar*)"res/textures/wood.png");
 	woodMaterial->SetLightModel(LightModelType::LitForward);
 
 	// Add floor

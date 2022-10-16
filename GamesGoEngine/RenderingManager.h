@@ -41,6 +41,9 @@ private:
 		unsigned int& framebuffer, unsigned int& textureColorBuffer,
 		unsigned int& depthStencilBuffer, unsigned int& stencilView,
 		bool shouldGenerateFramebuffer, int samples);
+	static void ConfigureShadowMapFramebuffer(GLint shadowMapWidth, GLint shadowMapHeight,
+		unsigned int& framebuffer, unsigned int& shadowMap,
+		bool shouldGenerateFramebuffer);
 
 public:
 	static void ResizeBuffers(GLint screenWidth, GLint screenHeight);
@@ -55,6 +58,7 @@ public:
 
 private:
 	void UpdateUniformBufferObjects();
+	void UpdateShadowMap();
 	static void DrawSkybox();
 	static void DrawRenderers(const std::vector<MeshRenderer*>& renderers);
 	static void DrawRenderers(const std::vector<MeshRenderer*>& renderers, Material* material);
@@ -124,6 +128,7 @@ private:
 	unsigned int framebuffer1;
 	unsigned int framebuffer2;
 	unsigned int msFramebuffer;
+	unsigned int depthMapFBO;
 	
 	unsigned int textureColorBuffer1;
 	unsigned int textureColorBuffer2;
@@ -137,10 +142,18 @@ private:
 	unsigned int stencilView2;
 	unsigned int msStencilView;
 
+	unsigned int depthMap;
+
 	// debug materials
 	Material* normalDebugMaterial;
 
 	// special post process materials
 	std::shared_ptr<PostProcessMaterial> gammaCorrectionMaterial;
 	std::shared_ptr<PostProcessMaterial> editorOutlineMaterial;
+
+	// render pipeline materials
+	Material* depthMapMaterial;
+
+	const unsigned int SHADOW_WIDTH = 1024;
+	const unsigned int SHADOW_HEIGHT = 1024;
 };
