@@ -80,7 +80,7 @@ void RenderingManager::ConfigureFramebuffers(GLint screenWidth, GLint screenHeig
 	ConfigureFramebuffer(screenWidth, screenHeight, framebuffer1, textureColorBuffer1, depthStencilBuffer1, stencilView1, shouldGenerateFramebuffer);
 	ConfigureFramebuffer(screenWidth, screenHeight, framebuffer2, textureColorBuffer2, depthStencilBuffer2, stencilView2, shouldGenerateFramebuffer);
 	ConfigureFramebuffer(screenWidth, screenHeight, msFramebuffer, msTextureColorBuffer, msDepthStencilBuffer, msStencilView, shouldGenerateFramebuffer);
-	ConfigureShadowMapFramebuffer(SHADOW_WIDTH, SHADOW_HEIGHT, depthMapFBO, depthMap, shouldGenerateFramebuffer);
+	ConfigureShadowMapFramebuffer(shadowWidth, shadowHeight, depthMapFBO, depthMap, shouldGenerateFramebuffer);
 }
 
 void RenderingManager::ConfigureFramebuffer(GLint screenWidth, GLint screenHeight,
@@ -382,7 +382,7 @@ void RenderingManager::UpdateShadowMap()
 	}
 	depthMapMaterial->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
 
-	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+	glViewport(0, 0, shadowWidth, shadowHeight);
 	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glCullFace(GL_FRONT);
@@ -622,6 +622,27 @@ void RenderingManager::SetGammaInternal(float gammaVal)
 	{
 		gammaCorrectionMaterial->SetFloat("gamma", gamma);
 	}
+}
+
+void RenderingManager::SetShadowMapResolution(unsigned shadowMapRes)
+{
+	GetInstance()->SetShadowMapResolutionInternal(shadowMapRes);
+}
+
+unsigned int RenderingManager::GetShadowMapResolution()
+{
+	// shadow maps are currently square textures
+	return GetInstance()->shadowWidth;
+}
+
+void RenderingManager::SetShadowMapResolutionInternal(unsigned shadowMapRes)
+{
+	glDeleteTextures(1, &depthMap);
+
+	shadowWidth = shadowMapRes;
+	shadowHeight = shadowMapRes;
+
+	ConfigureShadowMapFramebuffer(shadowWidth, shadowHeight, depthMapFBO, depthMap, false);
 }
 
 bool RenderingManager::CompareRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2)

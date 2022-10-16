@@ -96,7 +96,13 @@ public:
 	static float GetGamma();
 private:
 	void SetGammaInternal(float gammaVal);
-
+public:
+	// assume square textures
+	static void SetShadowMapResolution(unsigned int shadowMapRes);
+	static unsigned int GetShadowMapResolution();
+private:
+	void SetShadowMapResolutionInternal(unsigned int shadowMapRes);
+	
 private:
 	static bool CompareRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2);
 	static bool CompareTransparentRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2);
@@ -118,6 +124,8 @@ private:
 	bool msaaEnabled = false;
 	int msaaSamplesNumber = 1;
 	float gamma = 2.2f;
+	unsigned int shadowWidth = 1024;
+	unsigned int shadowHeight = 1024;
 
 	// uniform buffers used globally by shaders
 	unsigned int uboMatrices;
@@ -153,7 +161,4 @@ private:
 
 	// render pipeline materials
 	Material* depthMapMaterial;
-
-	const unsigned int SHADOW_WIDTH = 1024;
-	const unsigned int SHADOW_HEIGHT = 1024;
 };

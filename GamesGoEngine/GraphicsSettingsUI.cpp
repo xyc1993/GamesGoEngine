@@ -28,5 +28,30 @@ void GraphicsSettingsUI::Draw()
 		RenderingManager::SetGamma(gamma);
 	}
 
+	constexpr size_t shadowMapResolutionsNumber = 5;
+	const char* shadowMaps[shadowMapResolutionsNumber] = { "256", "512", "1024", "2048", "4096"};
+	static const char* currentShadowMap = shadowMaps[2];
+	if (ImGui::BeginCombo("shadow map res", currentShadowMap))
+	{
+		for (int i = 0; i < shadowMapResolutionsNumber; i++)
+		{
+			const bool isSelected = (currentShadowMap == shadowMaps[i]);
+			if (ImGui::Selectable(shadowMaps[i], isSelected))
+			{
+				currentShadowMap = shadowMaps[i];
+
+				std::stringstream strValue;
+				strValue << currentShadowMap;
+
+				unsigned int shadowMapResInt;
+				strValue >> shadowMapResInt;
+				
+				RenderingManager::SetShadowMapResolution(shadowMapResInt);
+			}
+				
+		}
+		ImGui::EndCombo();
+	}
+
 	ImGui::End();
 }
