@@ -48,6 +48,7 @@ float ShadowCalculation(vec4 fragPosLightSpace, float bias)
     return shadow;
 }
 
+// assume single directional light in scene for this shader
 void main()
 {           
     vec3 color = texture(diffuseTexture, fs_in.TexCoords).rgb;
