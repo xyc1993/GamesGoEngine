@@ -59,6 +59,7 @@ public:
 private:
 	void UpdateUniformBufferObjects();
 	void UpdateShadowMap();
+	void DrawOrientationDebug() const;
 	static void DrawSkybox();
 	static void DrawRenderers(const std::vector<MeshRenderer*>& renderers);
 	static void DrawRenderers(const std::vector<MeshRenderer*>& renderers, Material* material);
@@ -78,6 +79,7 @@ private:
 
 public:
 	static LightsManager* GetLightsManager();
+	static void SetSelectedGameObject(GameObject* selectedObject);
 	static void EnablePostProcessing(bool enable);
 	static bool IsPostProcessingEnabled();
 	static void SetWireframeOnly(bool wireframeOnly);
@@ -113,6 +115,7 @@ private:
 	std::vector<MeshRenderer*> meshRenderers;
 	std::vector<MeshRenderer*> opaqueMeshRenderers;
 	std::vector<MeshRenderer*> transparentMeshRenderers;
+	GameObject* selectedGameObject;
 	// container holding only active post process renderers
 	std::vector<std::shared_ptr<PostProcessMaterial>> usedPostProcessMaterials;
 	// container holding all subscribed post process renderers
@@ -154,6 +157,7 @@ private:
 
 	// debug materials
 	Material* normalDebugMaterial;
+	Material* orientationDebugMaterial;
 
 	// special post process materials
 	std::shared_ptr<PostProcessMaterial> gammaCorrectionMaterial;

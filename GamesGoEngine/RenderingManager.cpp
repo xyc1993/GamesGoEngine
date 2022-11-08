@@ -21,6 +21,7 @@ RenderingManager::RenderingManager()
 	gammaCorrectionMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/gammaCorrection.frag.glsl");
 	editorOutlineMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/editorOutline.frag.glsl");
 	depthMapMaterial = new Material("res/shaders/RenderPipeline/depthMap.vert.glsl", "res/shaders/RenderPipeline/depthMap.frag.glsl");
+	orientationDebugMaterial = new Material("res/shaders/Debug/debugOrientation.vert.glsl", "res/shaders/Debug/debugOrientation.frag.glsl", "res/shaders/Debug/debugOrientation.geom.glsl");	
 }
 
 RenderingManager::~RenderingManager()
@@ -288,6 +289,8 @@ void RenderingManager::Update()
 		DrawRenderers(GetInstance()->meshRenderers, GetInstance()->normalDebugMaterial);
 	}
 
+	GetInstance()->DrawOrientationDebug();
+
 	if (GetInstance()->firstRenderedFrame)
 	{
 		GetInstance()->firstRenderedFrame = false;
@@ -399,6 +402,37 @@ void RenderingManager::UpdateShadowMap()
 			outMaterial->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
 			outMaterial->SetTexture("shadowMap", 1, depthMap);
 		}
+	}
+}
+
+void RenderingManager::DrawOrientationDebug() const
+{
+	if (selectedGameObject != nullptr)
+	{
+		const Transform* transform = selectedGameObject->GetTransform();
+		const glm::mat4 transformMatrix = transform->GetTransformMatrix();
+		const glm::vec3 forward = transform->GetForward();
+		const glm::vec3 up = transform->GetUp();
+		const glm::vec3 right = transform->GetRight();
+		const glm::vec3 position = transform->GetPosition();
+
+		const GLfloat vertexPosition[3] = { position.x, position.y, position.z };
+
+		orientationDebugMaterial->SetVector3("forward", forward);
+		orientationDebugMaterial->SetVector3("up", up);
+		orientationDebugMaterial->SetVector3("right", right);
+		orientationDebugMaterial->Draw(transformMatrix);
+
+		GLuint vao;
+		glGenVertexArrays(1, &vao);
+		glBindVertexArray(vao);
+		GLuint vbo;
+		glGenBuffers(1, &vbo);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertexPosition), vertexPosition, GL_STATIC_DRAW);
+		glBindVertexArray(vao);
+		glDrawArrays(GL_POINTS, 0, 1);
+		glBindVertexArray(0);
 	}
 }
 
@@ -522,6 +556,11 @@ void RenderingManager::SortTransparentMeshRenderers()
 LightsManager* RenderingManager::GetLightsManager()
 {
 	return GetInstance()->lightsManager;
+}
+
+void RenderingManager::SetSelectedGameObject(GameObject* selectedObject)
+{
+	GetInstance()->selectedGameObject = selectedObject;
 }
 
 void RenderingManager::EnablePostProcessing(bool enable)

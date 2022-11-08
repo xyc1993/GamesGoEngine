@@ -9,7 +9,8 @@ class Transform : public Component
 public:
 	Transform();
 
-	void Update() override;
+	virtual void Update() override;
+	virtual void OnSelected() override;
 
 	void SetPosition(glm::vec3 position);
 	void SetLocalPosition(glm::vec3 localPosition);

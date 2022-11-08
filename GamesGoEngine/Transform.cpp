@@ -3,6 +3,7 @@
 #include <glm/gtx/matrix_decompose.hpp>
 
 #include "GameObject.h"
+#include "RenderingManager.h"
 
 Transform::Transform()
 {
@@ -23,6 +24,11 @@ Transform::Transform()
 void Transform::Update()
 {
 
+}
+
+void Transform::OnSelected()
+{
+	RenderingManager::SetSelectedGameObject(GetOwner());
 }
 
 void Transform::SetPosition(glm::vec3 position)
