@@ -369,7 +369,8 @@ void RenderingManager::UpdateShadowMap()
 	glm::mat4 lightSpaceMatrix;
 
 	DirectionalLight directionalLight;
-	if (lightsManager->TryGetDirectionalLight(directionalLight, 0))
+	const bool wasDirectionalLightFound = lightsManager->TryGetDirectionalLight(directionalLight, 0);
+	if (wasDirectionalLightFound)
 	{
 		if (directionalLight.GetOwner() != nullptr)
 		{
@@ -393,14 +394,19 @@ void RenderingManager::UpdateShadowMap()
 	glCullFace(GL_BACK);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	
-	// TODO: remove and implement more elegant solution
+	// TODO: remove and implement more elegant solution, this is not universal solution, just one for specific example scene
 	for (size_t i = 0; i < meshRenderers.size(); i++)
 	{
 		std::shared_ptr<Material> outMaterial;
 		if (meshRenderers[i]->TryGetMaterial(outMaterial, 0))
 		{
-			outMaterial->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
+			outMaterial->SetMat4("lightSpaceMatrix", lightSpaceMatrix);			
 			outMaterial->SetTexture("shadowMap", 1, depthMap);
+			if (wasDirectionalLightFound)
+			{
+				// We want direction from fragment to light position
+				outMaterial->SetVector3("lightDir", -directionalLight.GetOwner()->GetTransform()->GetForward());
+			}
 		}
 	}
 }

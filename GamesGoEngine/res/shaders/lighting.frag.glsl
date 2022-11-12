@@ -56,7 +56,11 @@ in vec3 Normal;
 in vec3 FragPos;
 in vec2 TexCoord;
 
-uniform vec3 viewPos;
+layout(std140, binding = 1) uniform CameraData
+{
+    vec3 cameraPos;
+    vec3 cameraDir;
+};
 
 uniform int dirLightsNumber;
 uniform int pointLightsNumber;
@@ -74,7 +78,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 void main()
 {
 	vec3 norm = normalize(Normal);
-	vec3 viewDir = normalize(viewPos - FragPos);
+	vec3 viewDir = normalize(cameraPos - FragPos);
 
 	vec3 result = vec3(0.0, 0.0 ,0.0);
 

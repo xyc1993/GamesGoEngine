@@ -11,8 +11,14 @@ in VS_OUT {
 uniform sampler2D diffuseTexture;
 uniform sampler2D shadowMap;
 
-uniform vec3 lightPos;
-uniform vec3 viewPos;
+//uniform vec3 lightPos;
+uniform vec3 lightDir;
+
+layout(std140, binding = 1) uniform CameraData
+{
+    vec3 cameraPos;
+    vec3 cameraDir;
+};
 
 float ShadowCalculation(vec4 fragPosLightSpace, float bias)
 {
@@ -54,22 +60,26 @@ void main()
     vec3 color = texture(diffuseTexture, fs_in.TexCoords).rgb;
     vec3 normal = normalize(fs_in.Normal);
     vec3 lightColor = vec3(1.0);
+
     // ambient
     vec3 ambient = 0.15 * lightColor;
+
     // diffuse
-    vec3 lightDir = normalize(lightPos - fs_in.FragPos);
     float diff = max(dot(lightDir, normal), 0.0);
     vec3 diffuse = diff * lightColor;
+
     // specular
-    vec3 viewDir = normalize(viewPos - fs_in.FragPos);
+    vec3 viewDir = normalize(cameraPos - fs_in.FragPos);
     float spec = 0.0;
     vec3 halfwayDir = normalize(lightDir + viewDir);  
     spec = pow(max(dot(normal, halfwayDir), 0.0), 64.0);
-    vec3 specular = spec * lightColor;    
-    // calculate shadow
-    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
-    float shadow = ShadowCalculation(fs_in.FragPosLightSpace, bias);       
-    vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular)) * color;    
-    
+    vec3 specular = spec * lightColor;
+
+    // calculate shadow <- This part works correctly, however there is sth wrong with rest of the shader, lit and unlit areas aren't shaded correctly
+    float bias = max(0.005 * (1.0 - dot(normal, lightDir)), 0.005);
+    float shadow = ShadowCalculation(fs_in.FragPosLightSpace, 0.005);       
+
+    // finally put all the things above together
+    vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular)) * color; 
     FragColor = vec4(lighting, 1.0);
 }

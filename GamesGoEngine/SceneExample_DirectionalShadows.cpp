@@ -3,11 +3,13 @@
 #include "MeshImported.h"
 #include "MeshPrimitiveCube.h"
 #include "MeshPrimitiveQuad.h"
+#include "MeshPrimitiveSphere.h"
 #include "MeshRenderer.h"
 
 SceneExample_DirectionalShadows::SceneExample_DirectionalShadows()
 {
 	std::shared_ptr<MeshPrimitiveCube> cubeMesh = std::make_shared<MeshPrimitiveCube>();
+	std::shared_ptr<MeshPrimitiveSphere> sphereMesh = std::make_shared<MeshPrimitiveSphere>();
 	std::shared_ptr<MeshPrimitiveQuad> quadMesh = std::make_shared<MeshPrimitiveQuad>();
 
 	std::shared_ptr<Material> woodMaterial = std::make_shared<Material>("res/shaders/litShadowSimple.vert.glsl", "res/shaders/litShadowSimple.frag.glsl");
@@ -26,7 +28,7 @@ SceneExample_DirectionalShadows::SceneExample_DirectionalShadows()
 	floorObject->GetTransform()->SetScale(glm::vec3(20.0f));
 	scene->AddGameObject(floorObject);
 
-	// Add cubes
+	// Add cubes & sphere
 	std::vector<glm::vec3> cubePositions;
 	cubePositions.push_back(glm::vec3(2.0f, -1.5f, -3.5f));
 	cubePositions.push_back(glm::vec3(-3.0f, 1.0f, -2.0f));
@@ -41,7 +43,14 @@ SceneExample_DirectionalShadows::SceneExample_DirectionalShadows()
 	{
 		GameObject* cubeObject = new GameObject();
 		MeshRenderer* cubeMeshRenderer = new MeshRenderer();
-		cubeMeshRenderer->SetMesh(cubeMesh);
+		if (i == 0)
+		{
+			cubeMeshRenderer->SetMesh(sphereMesh);
+		}
+		else
+		{
+			cubeMeshRenderer->SetMesh(cubeMesh);
+		}
 		cubeMeshRenderer->SetMaterial(woodMaterial);
 		cubeObject->AddComponent(cubeMeshRenderer);
 		std::string name = "cube_";
