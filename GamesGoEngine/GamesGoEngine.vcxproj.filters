@@ -166,7 +166,7 @@
     <Filter Include="Resource Files\Shaders\PostProcess">
       <UniqueIdentifier>{e300ab3d-2095-4c19-ad1a-8c7897f819ed}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\Shaders\Debug">
+    <Filter Include="Resource Files\Shaders\DebugShaders">
       <UniqueIdentifier>{7ae7d5f2-e51e-482b-ba17-5226219632ef}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -629,13 +629,13 @@
       <Filter>Resource Files\Shaders\PostProcess</Filter>
     </None>
     <None Include="res\shaders\Debug\debugOrientation.frag.glsl">
-      <Filter>Resource Files\Shaders\Debug</Filter>
+      <Filter>Resource Files\Shaders\DebugShaders</Filter>
     </None>
     <None Include="res\shaders\Debug\debugOrientation.geom.glsl">
-      <Filter>Resource Files\Shaders\Debug</Filter>
+      <Filter>Resource Files\Shaders\DebugShaders</Filter>
     </None>
     <None Include="res\shaders\Debug\debugOrientation.vert.glsl">
-      <Filter>Resource Files\Shaders\Debug</Filter>
+      <Filter>Resource Files\Shaders\DebugShaders</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -21,7 +21,7 @@ RenderingManager::RenderingManager()
 	gammaCorrectionMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/gammaCorrection.frag.glsl");
 	editorOutlineMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/editorOutline.frag.glsl");
 	depthMapMaterial = new Material("res/shaders/RenderPipeline/depthMap.vert.glsl", "res/shaders/RenderPipeline/depthMap.frag.glsl");
-	orientationDebugMaterial = new Material("res/shaders/Debug/debugOrientation.vert.glsl", "res/shaders/Debug/debugOrientation.frag.glsl", "res/shaders/Debug/debugOrientation.geom.glsl");	
+	orientationDebugMaterial = new Material("res/shaders/DebugShaders/debugOrientation.vert.glsl", "res/shaders/DebugShaders/debugOrientation.frag.glsl", "res/shaders/DebugShaders/debugOrientation.geom.glsl");	
 }
 
 RenderingManager::~RenderingManager()
