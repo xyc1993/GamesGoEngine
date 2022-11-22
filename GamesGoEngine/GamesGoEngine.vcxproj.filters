@@ -348,6 +348,9 @@
     <ClCompile Include="SceneExample_DirectionalShadows.cpp">
       <Filter>Source Files\GamesGo\Examples</Filter>
     </ClCompile>
+    <ClCompile Include="SceneExample_OmnidirectionalShadows.cpp">
+      <Filter>Source Files\GamesGo\Examples</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -531,6 +534,9 @@
       <Filter>Header Files\GamesGo\Examples</Filter>
     </ClInclude>
     <ClInclude Include="SceneExamples.h">
+      <Filter>Header Files\GamesGo\Examples</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneExample_OmnidirectionalShadows.h">
       <Filter>Header Files\GamesGo\Examples</Filter>
     </ClInclude>
   </ItemGroup>

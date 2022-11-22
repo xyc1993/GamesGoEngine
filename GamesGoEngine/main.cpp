@@ -24,7 +24,8 @@ void MainLoop(GLFWwindow* window)
 	//SceneExample_EnvironmentMapping* activeScene = new SceneExample_EnvironmentMapping();
 	//SceneExample_GeometryShader* activeScene = new SceneExample_GeometryShader();
 	//SceneExample_Instancing* activeScene = new SceneExample_Instancing();
-	SceneExample_DirectionalShadows* activeScene = new SceneExample_DirectionalShadows();
+	//SceneExample_DirectionalShadows* activeScene = new SceneExample_DirectionalShadows();
+	SceneExample_OmnidirectionalShadows* activeScene = new SceneExample_OmnidirectionalShadows();
 	
 	while (!glfwWindowShouldClose(window))
 	{
