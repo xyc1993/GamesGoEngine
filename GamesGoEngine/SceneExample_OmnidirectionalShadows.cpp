@@ -119,12 +119,12 @@ SceneExample_OmnidirectionalShadows::SceneExample_OmnidirectionalShadows()
 	scene->AddGameObject(nanoSuitObject);
 
 	// Add source of light
-	GameObject* directionalLightObject = new GameObject();
-	directionalLightObject->GetTransform()->SetRotationEulerDegrees(glm::vec3(30.0f, -45.0f, 0.0f));
-	DirectionalLight* directionalLight = new DirectionalLight(glm::vec3(0.05f), glm::vec3(0.4f), glm::vec3(0.5f));
-	directionalLightObject->AddComponent(directionalLight);
-	directionalLightObject->SetName("directional_light");
-	scene->AddGameObject(directionalLightObject);
+	GameObject* pointLightObject = new GameObject();
+	pointLightObject->GetTransform()->SetPosition(glm::vec3(1.0f, 0.0f, -2.0f));
+	PointLight* pointLight = new PointLight(glm::vec3(0.05f), glm::vec3(0.8f), glm::vec3(1.0f), 1.0f, 0.09f, 0.032f);
+	pointLightObject->AddComponent(pointLight);
+	pointLightObject->SetName("point_light");
+	scene->AddGameObject(pointLightObject);
 
 	AddEditorSpectator();
 }
