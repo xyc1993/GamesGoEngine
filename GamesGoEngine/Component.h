@@ -12,6 +12,7 @@ public:
 	virtual void OnSelected() {};
 	virtual void OnDeselected() {};
 	GameObject* GetOwner() const;
+	static bool IsValid(const Component* component);
 
 protected:
 	GameObject* owner;
