@@ -368,21 +368,21 @@ void RenderingManager::UpdateShadowMap()
 
 	glm::mat4 lightSpaceMatrix;
 
-	DirectionalLight directionalLight;
-	const bool wasDirectionalLightFound = lightsManager->TryGetDirectionalLight(directionalLight, 0);
-	if (wasDirectionalLightFound)
+	Light* directionalLight = lightsManager->GetDirectionalLight(0);
+	if (Component::IsValid(directionalLight))
 	{
-		if (directionalLight.GetOwner() != nullptr)
-		{
-			Transform* lightTransform = directionalLight.GetOwner()->GetTransform();
+		Transform* lightTransform = directionalLight->GetOwner()->GetTransform();
 
-			glm::vec3 lightPosition = lightTransform->GetPosition() - 10.0f * lightTransform->GetForward();
-			glm::vec3 lightLookAtTarget = lightTransform->GetPosition() + 10.0f * lightTransform->GetForward();
-			glm::mat4 lightView = glm::lookAt(lightPosition,
-				lightLookAtTarget,
-				glm::vec3(0.0f, 1.0f, 0.0f));
-			lightSpaceMatrix = lightProjection * lightView;
-		}
+		glm::vec3 lightPosition = lightTransform->GetPosition() - 10.0f * lightTransform->GetForward();
+		glm::vec3 lightLookAtTarget = lightTransform->GetPosition() + 10.0f * lightTransform->GetForward();
+		glm::mat4 lightView = glm::lookAt(lightPosition,
+			lightLookAtTarget,
+			glm::vec3(0.0f, 1.0f, 0.0f));
+		lightSpaceMatrix = lightProjection * lightView;
+	}
+	else
+	{
+		return;
 	}
 	depthMapMaterial->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
 
@@ -402,10 +402,10 @@ void RenderingManager::UpdateShadowMap()
 		{
 			outMaterial->SetMat4("lightSpaceMatrix", lightSpaceMatrix);			
 			outMaterial->SetTexture("shadowMap", 1, depthMap);
-			if (wasDirectionalLightFound)
+			if (Component::IsValid(directionalLight))
 			{
 				// We want direction from fragment to light position
-				outMaterial->SetVector3("lightDir", -directionalLight.GetOwner()->GetTransform()->GetForward());
+				outMaterial->SetVector3("lightDir", -directionalLight->GetOwner()->GetTransform()->GetForward());
 			}
 		}
 	}

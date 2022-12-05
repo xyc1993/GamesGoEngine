@@ -36,12 +36,12 @@ private:
 public:
 	void SetLightsInShader(const GLuint& shaderProgram);
 
-	bool TryGetDirectionalLight(Light& directionalLight, int lightIndex) const;
-	bool TryGetPointLight(Light& pointLight, int lightIndex) const;
-	bool TryGetSpotLight(Light& spotLight, int lightIndex) const;
+	Light* GetDirectionalLight(int lightIndex) const;
+	Light* GetPointLight(int lightIndex) const;
+	Light* GetSpotLight(int lightIndex) const;
 
 private:
-	static bool TryGetLight(Light& light, std::vector<Light*> lightsVector, int lightIndex);
+	static Light* GetLight(std::vector<Light*> lightsVector, int lightIndex);
 
 public:
 	size_t GetDirectionalLightsNumber() const;
