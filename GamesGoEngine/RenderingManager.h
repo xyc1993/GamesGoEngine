@@ -44,6 +44,9 @@ private:
 	static void ConfigureShadowMapFramebuffer(GLint shadowMapWidth, GLint shadowMapHeight,
 		unsigned int& framebuffer, unsigned int& shadowMap,
 		bool shouldGenerateFramebuffer);
+	static void ConfigureShadowCubeMapFramebuffer(GLint shadowMapWidth, GLint shadowMapHeight,
+		unsigned int& framebuffer, unsigned int& shadowCubeMap,
+		bool shouldGenerateFramebuffer);
 
 public:
 	static void ResizeBuffers(GLint screenWidth, GLint screenHeight);
@@ -59,6 +62,8 @@ public:
 private:
 	void UpdateUniformBufferObjects();
 	void UpdateShadowMap();
+	void UpdateDirectionalShadowMap();
+	void UpdateOmnidirectionalShadowMap();
 	void DrawOrientationDebug() const;
 	static void DrawSkybox();
 	static void DrawRenderers(const std::vector<MeshRenderer*>& renderers);
@@ -140,6 +145,7 @@ private:
 	unsigned int framebuffer2;
 	unsigned int msFramebuffer;
 	unsigned int depthMapFBO;
+	unsigned int omniDepthMapFBO;
 	
 	unsigned int textureColorBuffer1;
 	unsigned int textureColorBuffer2;
@@ -154,6 +160,7 @@ private:
 	unsigned int msStencilView;
 
 	unsigned int depthMap;
+	unsigned int omniDepthMap;
 
 	// debug materials
 	Material* normalDebugMaterial;
@@ -165,4 +172,5 @@ private:
 
 	// render pipeline materials
 	Material* depthMapMaterial;
+	Material* omniDepthMapMaterial;
 };

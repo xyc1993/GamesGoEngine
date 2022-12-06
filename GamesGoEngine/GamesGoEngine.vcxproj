@@ -281,6 +281,8 @@
     <None Include="res\shaders\depth.frag.glsl" />
     <None Include="res\shaders\explode.geom.glsl" />
     <None Include="res\shaders\explode.vert.glsl" />
+    <None Include="res\shaders\litOmniShadowSimple.frag.glsl" />
+    <None Include="res\shaders\litOmniShadowSimple.vert.glsl" />
     <None Include="res\shaders\litShadowSimple.frag.glsl" />
     <None Include="res\shaders\litShadowSimple.vert.glsl" />
     <None Include="res\shaders\PostProcess\blur.frag.glsl" />
@@ -292,6 +294,9 @@
     <None Include="res\shaders\PostProcess\screenShader.vert.glsl" />
     <None Include="res\shaders\RenderPipeline\depthMap.frag.glsl" />
     <None Include="res\shaders\RenderPipeline\depthMap.vert.glsl" />
+    <None Include="res\shaders\RenderPipeline\omniDepthMap.frag.glsl" />
+    <None Include="res\shaders\RenderPipeline\omniDepthMap.geom.glsl" />
+    <None Include="res\shaders\RenderPipeline\omniDepthMap.vert.glsl" />
     <None Include="res\shaders\skyboxReflect.frag.glsl" />
     <None Include="res\shaders\skyboxReflect.vert.glsl" />
     <None Include="res\shaders\unlit.frag.glsl" />

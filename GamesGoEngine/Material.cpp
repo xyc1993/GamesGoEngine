@@ -37,14 +37,11 @@ void Material::Draw(glm::mat4 model)
 	{
 		return;
 	}
-
-	shader->Use();
-	
+		
 	for (auto it = texturesMap.begin(); it != texturesMap.end(); ++it)
 	{
 		glActiveTexture(GL_TEXTURE0 + std::get<0>(it->second));
 		glBindTexture(GL_TEXTURE_2D, std::get<1>(it->second));
-		glUniform1i(it->first, std::get<0>(it->second));
 	}
 
 	for (auto it = cubeTexturesMap.begin(); it != cubeTexturesMap.end(); ++it)
@@ -52,6 +49,8 @@ void Material::Draw(glm::mat4 model)
 		glActiveTexture(GL_TEXTURE0 + std::get<0>(it->second));
 		glBindTexture(GL_TEXTURE_CUBE_MAP, std::get<1>(it->second));
 	}
+
+	shader->Use();
 	
 	const GLint modelLoc = glGetUniformLocation(shader->GetProgram(), "model");
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
@@ -76,9 +75,8 @@ void Material::SetTextureByPath(const GLchar* textureName, GLuint textureIndex, 
 {
 	if (shader != nullptr)
 	{
-		const GLint textureID = glGetUniformLocation(shader->GetProgram(), textureName);
-		GLuint texture = TextureLoader::LoadTexture(path, transparencyEnabled);
-		texturesMap[textureID] = std::tuple<GLuint, GLuint>(textureIndex, texture);
+		const GLuint texture = TextureLoader::LoadTexture(path, transparencyEnabled);
+		SetTexture(textureName, textureIndex, texture);
 	}
 }
 
@@ -88,6 +86,9 @@ void Material::SetTexture(const GLchar* textureName, GLuint textureIndex, GLuint
 	{
 		const GLint textureID = glGetUniformLocation(shader->GetProgram(), textureName);
 		texturesMap[textureID] = std::tuple<GLuint, GLuint>(textureIndex, texture);
+		// Tell OpenGL for each sampler to which texture unit it belongs to (only has to be done once)
+		shader->Use();
+		glUniform1i(textureID, textureIndex);
 	}
 }
 
@@ -95,9 +96,8 @@ void Material::SetCubeTextureByPath(const GLchar* textureName, GLuint textureInd
 {
 	if (shader != nullptr)
 	{
-		const GLint textureID = glGetUniformLocation(shader->GetProgram(), textureName);
-		GLuint texture = TextureLoader::LoadCubemap(paths);
-		cubeTexturesMap[textureID] = std::tuple<GLuint, GLuint>(textureIndex, texture);
+		const GLuint texture = TextureLoader::LoadCubemap(paths);
+		SetCubeTexture(textureName, textureIndex, texture);
 	}
 }
 
@@ -107,6 +107,9 @@ void Material::SetCubeTexture(const GLchar* textureName, GLuint textureIndex, GL
 	{
 		const GLint textureID = glGetUniformLocation(shader->GetProgram(), textureName);
 		cubeTexturesMap[textureID] = std::tuple<GLuint, GLuint>(textureIndex, texture);
+		// Tell OpenGL for each sampler to which texture unit it belongs to (only has to be done once)
+		shader->Use();
+		glUniform1i(textureID, textureIndex);
 	}
 }
 

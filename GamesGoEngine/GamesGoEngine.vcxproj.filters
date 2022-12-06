@@ -643,5 +643,20 @@
     <None Include="res\shaders\Debug\debugOrientation.vert.glsl">
       <Filter>Resource Files\Shaders\DebugShaders</Filter>
     </None>
+    <None Include="res\shaders\RenderPipeline\omniDepthMap.frag.glsl">
+      <Filter>Resource Files\Shaders\RenderPipeline</Filter>
+    </None>
+    <None Include="res\shaders\RenderPipeline\omniDepthMap.geom.glsl">
+      <Filter>Resource Files\Shaders\RenderPipeline</Filter>
+    </None>
+    <None Include="res\shaders\RenderPipeline\omniDepthMap.vert.glsl">
+      <Filter>Resource Files\Shaders\RenderPipeline</Filter>
+    </None>
+    <None Include="res\shaders\litOmniShadowSimple.frag.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\litOmniShadowSimple.vert.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

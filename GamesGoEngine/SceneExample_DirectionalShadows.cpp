@@ -43,17 +43,19 @@ SceneExample_DirectionalShadows::SceneExample_DirectionalShadows()
 	{
 		GameObject* cubeObject = new GameObject();
 		MeshRenderer* cubeMeshRenderer = new MeshRenderer();
+		std::string name;
 		if (i == 0)
 		{
+			name = "sphere_";
 			cubeMeshRenderer->SetMesh(sphereMesh);
 		}
 		else
 		{
+			name = "cube_";
 			cubeMeshRenderer->SetMesh(cubeMesh);
 		}
 		cubeMeshRenderer->SetMaterial(woodMaterial);
 		cubeObject->AddComponent(cubeMeshRenderer);
-		std::string name = "cube_";
 		name.append(std::to_string(i));
 		cubeObject->SetName(name);
 		cubeObject->GetTransform()->SetPosition(cubePositions[i]);

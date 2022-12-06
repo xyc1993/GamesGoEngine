@@ -21,6 +21,7 @@ RenderingManager::RenderingManager()
 	gammaCorrectionMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/gammaCorrection.frag.glsl");
 	editorOutlineMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/editorOutline.frag.glsl");
 	depthMapMaterial = new Material("res/shaders/RenderPipeline/depthMap.vert.glsl", "res/shaders/RenderPipeline/depthMap.frag.glsl");
+	omniDepthMapMaterial = new Material("res/shaders/RenderPipeline/omniDepthMap.vert.glsl", "res/shaders/RenderPipeline/omniDepthMap.frag.glsl", "res/shaders/RenderPipeline/omniDepthMap.geom.glsl");
 	orientationDebugMaterial = new Material("res/shaders/DebugShaders/debugOrientation.vert.glsl", "res/shaders/DebugShaders/debugOrientation.frag.glsl", "res/shaders/DebugShaders/debugOrientation.geom.glsl");	
 }
 
@@ -29,6 +30,7 @@ RenderingManager::~RenderingManager()
 	delete lightsManager;
 	delete normalDebugMaterial;
 	delete depthMapMaterial;
+	delete omniDepthMapMaterial;
 }
 
 RenderingManager* RenderingManager::GetInstance()
@@ -82,6 +84,7 @@ void RenderingManager::ConfigureFramebuffers(GLint screenWidth, GLint screenHeig
 	ConfigureFramebuffer(screenWidth, screenHeight, framebuffer2, textureColorBuffer2, depthStencilBuffer2, stencilView2, shouldGenerateFramebuffer);
 	ConfigureFramebuffer(screenWidth, screenHeight, msFramebuffer, msTextureColorBuffer, msDepthStencilBuffer, msStencilView, shouldGenerateFramebuffer);
 	ConfigureShadowMapFramebuffer(shadowWidth, shadowHeight, depthMapFBO, depthMap, shouldGenerateFramebuffer);
+	ConfigureShadowCubeMapFramebuffer(shadowWidth, shadowHeight, omniDepthMapFBO, omniDepthMap, shouldGenerateFramebuffer);
 }
 
 void RenderingManager::ConfigureFramebuffer(GLint screenWidth, GLint screenHeight,
@@ -170,8 +173,8 @@ void RenderingManager::ConfigureMultisampledFramebuffer(GLint screenWidth, GLint
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void RenderingManager::ConfigureShadowMapFramebuffer(GLint shadowMapWidth, GLint shadowMapHeight, unsigned& framebuffer,
-	unsigned& shadowMap, bool shouldGenerateFramebuffer)
+void RenderingManager::ConfigureShadowMapFramebuffer(GLint shadowMapWidth, GLint shadowMapHeight,
+	unsigned& framebuffer, unsigned& shadowMap, bool shouldGenerateFramebuffer)
 {
 	if (shouldGenerateFramebuffer)
 	{
@@ -199,6 +202,34 @@ void RenderingManager::ConfigureShadowMapFramebuffer(GLint shadowMapWidth, GLint
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void RenderingManager::ConfigureShadowCubeMapFramebuffer(GLint shadowMapWidth, GLint shadowMapHeight,
+	unsigned& framebuffer, unsigned& shadowCubeMap, bool shouldGenerateFramebuffer)
+{
+	if (shouldGenerateFramebuffer)
+	{
+		glGenFramebuffers(1, &framebuffer);
+	}
+	
+	glGenTextures(1, &shadowCubeMap);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, shadowCubeMap);
+	for (unsigned int i = 0; i < 6; ++i)
+	{
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT, shadowMapWidth, shadowMapHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	}	
+
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, shadowCubeMap, 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 void RenderingManager::ResizeBuffers(GLint screenWidth, GLint screenHeight)
 {
 	GetInstance()->ResizeBuffersInternal(screenWidth, screenHeight);
@@ -217,6 +248,7 @@ void RenderingManager::ResizeBuffersInternal(GLint screenWidth, GLint screenHeig
 	glDeleteTextures(1, &stencilView2);
 	glDeleteTextures(1, &msStencilView);
 	glDeleteTextures(1, &depthMap);
+	glDeleteTextures(1, &omniDepthMap);
 
 	GetInstance()->ConfigureFramebuffers(screenWidth, screenHeight, false);
 }
@@ -359,31 +391,31 @@ void RenderingManager::UpdateUniformBufferObjects()
 
 void RenderingManager::UpdateShadowMap()
 {
+	//UpdateDirectionalShadowMap();
+	UpdateOmnidirectionalShadowMap();
+}
+
+void RenderingManager::UpdateDirectionalShadowMap()
+{
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(0.1f, 0.15f, 0.15f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	Light* directionalLight = lightsManager->GetDirectionalLight(0);
+	if (!Component::IsValid(directionalLight))
+	{
+		return;
+	}
 
 	float near_plane = 1.0f, far_plane = 30.0f;
 	glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, 10.0f, -10.0f, near_plane, far_plane);
 
 	glm::mat4 lightSpaceMatrix;
-
-	Light* directionalLight = lightsManager->GetDirectionalLight(0);
-	if (Component::IsValid(directionalLight))
-	{
-		Transform* lightTransform = directionalLight->GetOwner()->GetTransform();
-
-		glm::vec3 lightPosition = lightTransform->GetPosition() - 10.0f * lightTransform->GetForward();
-		glm::vec3 lightLookAtTarget = lightTransform->GetPosition() + 10.0f * lightTransform->GetForward();
-		glm::mat4 lightView = glm::lookAt(lightPosition,
-			lightLookAtTarget,
-			glm::vec3(0.0f, 1.0f, 0.0f));
-		lightSpaceMatrix = lightProjection * lightView;
-	}
-	else
-	{
-		return;
-	}
+	Transform* lightTransform = directionalLight->GetOwner()->GetTransform();
+	glm::vec3 lightPosition = lightTransform->GetPosition() - 10.0f * lightTransform->GetForward();
+	glm::vec3 lightLookAtTarget = lightTransform->GetPosition() + 10.0f * lightTransform->GetForward();
+	glm::mat4 lightView = glm::lookAt(lightPosition, lightLookAtTarget, glm::vec3(0.0f, 1.0f, 0.0f));
+	lightSpaceMatrix = lightProjection * lightView;
 	depthMapMaterial->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
 
 	glViewport(0, 0, shadowWidth, shadowHeight);
@@ -400,13 +432,68 @@ void RenderingManager::UpdateShadowMap()
 		std::shared_ptr<Material> outMaterial;
 		if (meshRenderers[i]->TryGetMaterial(outMaterial, 0))
 		{
-			outMaterial->SetMat4("lightSpaceMatrix", lightSpaceMatrix);			
+			outMaterial->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
 			outMaterial->SetTexture("shadowMap", 1, depthMap);
-			if (Component::IsValid(directionalLight))
-			{
-				// We want direction from fragment to light position
-				outMaterial->SetVector3("lightDir", -directionalLight->GetOwner()->GetTransform()->GetForward());
-			}
+			// We want direction from fragment to light position
+			outMaterial->SetVector3("lightDir", -directionalLight->GetOwner()->GetTransform()->GetForward());
+		}
+	}
+}
+
+void RenderingManager::UpdateOmnidirectionalShadowMap()
+{
+	glEnable(GL_DEPTH_TEST);
+	glClearColor(0.1f, 0.15f, 0.15f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	Light* pointLight = lightsManager->GetPointLight(0);
+	if (!Component::IsValid(pointLight))
+	{
+		return;
+	}
+
+	float aspect = (float)shadowWidth / (float)shadowHeight;
+	float near = 1.0f;
+	float far = 25.0f;
+	glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), aspect, near, far);
+
+	glm::vec3 lightPos = pointLight->GetOwner()->GetTransform()->GetPosition();
+
+	std::vector<glm::mat4> shadowTransforms;
+	shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
+	shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
+	shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 1.0, 0.0), glm::vec3(0.0, 0.0, 1.0)));
+	shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, -1.0, 0.0), glm::vec3(0.0, 0.0, -1.0)));
+	shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, -1.0, 0.0)));
+	shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, -1.0, 0.0)));
+
+	glViewport(0, 0, shadowWidth, shadowHeight);
+	glBindFramebuffer(GL_FRAMEBUFFER, omniDepthMapFBO);
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glCullFace(GL_FRONT);
+	for (unsigned int i = 0; i < 6; ++i)
+	{
+		std::stringstream stream;
+		std::string matrixName;
+		stream << "shadowMatrices[" << std::to_string(i) << "]";
+		stream >> matrixName;
+		omniDepthMapMaterial->SetMat4(matrixName.c_str(), shadowTransforms[i]);
+	}
+	omniDepthMapMaterial->SetFloat("far_plane", far);
+	omniDepthMapMaterial->SetVector3("lightPos", lightPos);
+	DrawRenderers(meshRenderers, omniDepthMapMaterial);
+	glCullFace(GL_BACK);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	
+	// TODO: remove and implement more elegant solution, this is not universal solution, just one for specific example scene
+	for (size_t i = 0; i < meshRenderers.size(); i++)
+	{
+		std::shared_ptr<Material> outMaterial;
+		if (meshRenderers[i]->TryGetMaterial(outMaterial, 0))
+		{
+			outMaterial->SetCubeTexture("depthMap", 1, omniDepthMap);
+			outMaterial->SetFloat("far_plane", far);
+			outMaterial->SetVector3("lightPos", lightPos);
 		}
 	}
 }
@@ -683,11 +770,13 @@ unsigned int RenderingManager::GetShadowMapResolution()
 void RenderingManager::SetShadowMapResolutionInternal(unsigned shadowMapRes)
 {
 	glDeleteTextures(1, &depthMap);
+	glDeleteTextures(1, &omniDepthMap);
 
 	shadowWidth = shadowMapRes;
 	shadowHeight = shadowMapRes;
 
 	ConfigureShadowMapFramebuffer(shadowWidth, shadowHeight, depthMapFBO, depthMap, false);
+	ConfigureShadowCubeMapFramebuffer(shadowWidth, shadowHeight, omniDepthMapFBO, omniDepthMap, false);
 }
 
 bool RenderingManager::CompareRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2)

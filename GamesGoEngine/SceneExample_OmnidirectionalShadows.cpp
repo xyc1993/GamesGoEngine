@@ -12,7 +12,7 @@ SceneExample_OmnidirectionalShadows::SceneExample_OmnidirectionalShadows()
 	std::shared_ptr<MeshPrimitiveSphere> sphereMesh = std::make_shared<MeshPrimitiveSphere>();
 	std::shared_ptr<MeshPrimitiveQuad> quadMesh = std::make_shared<MeshPrimitiveQuad>();
 
-	std::shared_ptr<Material> woodMaterial = std::make_shared<Material>("res/shaders/litShadowSimple.vert.glsl", "res/shaders/litShadowSimple.frag.glsl");
+	std::shared_ptr<Material> woodMaterial = std::make_shared<Material>("res/shaders/litOmniShadowSimple.vert.glsl", "res/shaders/litOmniShadowSimple.frag.glsl");
 	woodMaterial->SetTextureByPath((GLchar*)"diffuseTexture", 0, (GLchar*)"res/textures/wood.png");
 	woodMaterial->SetLightModel(LightModelType::LitForward);
 
@@ -64,17 +64,19 @@ SceneExample_OmnidirectionalShadows::SceneExample_OmnidirectionalShadows()
 	{
 		GameObject* cubeObject = new GameObject();
 		MeshRenderer* cubeMeshRenderer = new MeshRenderer();
+		std::string name;
 		if (i == 0)
 		{
+			name = "sphere_";
 			cubeMeshRenderer->SetMesh(sphereMesh);
 		}
 		else
 		{
+			name = "cube_";
 			cubeMeshRenderer->SetMesh(cubeMesh);
 		}
 		cubeMeshRenderer->SetMaterial(woodMaterial);
 		cubeObject->AddComponent(cubeMeshRenderer);
-		std::string name = "cube_";
 		name.append(std::to_string(i));
 		cubeObject->SetName(name);
 		cubeObject->GetTransform()->SetPosition(cubePositions[i]);
@@ -105,8 +107,9 @@ SceneExample_OmnidirectionalShadows::SceneExample_OmnidirectionalShadows()
 
 	for (int i = 0; i < NANOSUIT_MATERIALS_NUMBER; i++)
 	{
-		nanoSuitMaterials[i] = std::make_shared<Material>("res/shaders/litShadowSimple.vert.glsl", "res/shaders/litShadowSimple.frag.glsl");
-		nanoSuitMaterials[i]->SetTextureByPath((GLchar*)"diffuseTexture", 0, nanoSuitTexturePaths[i]);
+		nanoSuitMaterials[i] = std::make_shared<Material>("res/shaders/litOmniShadowSimple.vert.glsl", "res/shaders/litOmniShadowSimple.frag.glsl");
+		// TODO: Find out why texture index different than 2 does not work
+		nanoSuitMaterials[i]->SetTextureByPath((GLchar*)"diffuseTexture", 2, nanoSuitTexturePaths[i]);
 		nanoSuitMaterials[i]->SetLightModel(LightModelType::LitForward);
 		nanoSuitMeshRenderer->SetMaterial(nanoSuitMaterials[i], i);
 	}
@@ -121,8 +124,18 @@ SceneExample_OmnidirectionalShadows::SceneExample_OmnidirectionalShadows()
 	// Add source of light
 	GameObject* pointLightObject = new GameObject();
 	pointLightObject->GetTransform()->SetPosition(glm::vec3(1.0f, 0.0f, -2.0f));
+	pointLightObject->GetTransform()->SetScale(glm::vec3(0.2f));
+	// Add debug renderer
+	std::shared_ptr<Material> lampMaterial = std::make_shared<Material>("res/shaders/unlit.vert.glsl", "res/shaders/unlit.frag.glsl");
+	lampMaterial->SetVector3((GLchar*)"unlitColor", glm::vec3(1.0f));
+	MeshRenderer* lampMeshRenderer = new MeshRenderer();
+	lampMeshRenderer->SetMesh(sphereMesh);
+	lampMeshRenderer->SetMaterial(lampMaterial);
+	pointLightObject->AddComponent(lampMeshRenderer);
+	// Add point light component
 	PointLight* pointLight = new PointLight(glm::vec3(0.05f), glm::vec3(0.8f), glm::vec3(1.0f), 1.0f, 0.09f, 0.032f);
 	pointLightObject->AddComponent(pointLight);
+	// Name and add to scene
 	pointLightObject->SetName("point_light");
 	scene->AddGameObject(pointLightObject);
 
