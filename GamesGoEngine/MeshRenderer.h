@@ -27,12 +27,16 @@ public:
 	void SetRenderQueuePosition(RenderQueuePosition position, bool selected = false);
 	void SetRenderQueuePosition(int position, bool selected = false);
 	int GetRenderQueuePosition() const;
+	void SetIsCastingShadow(bool shadowCastingEnabled);
+	bool IsCastingShadow() const;
 
 private:
 	// used to determine position in the render queue
 	int currentRenderQueuePosition;
 	// position in the render queue when the game object is not selected in the editor
 	int deselectedRenderQueuePosition;
+
+	bool isCastingShadow = true;
 
 	friend RenderingManager;
 };

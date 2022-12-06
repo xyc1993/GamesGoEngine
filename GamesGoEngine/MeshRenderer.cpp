@@ -109,3 +109,13 @@ int MeshRenderer::GetRenderQueuePosition() const
 {
 	return currentRenderQueuePosition;
 }
+
+void MeshRenderer::SetIsCastingShadow(bool shadowCastingEnabled)
+{
+	isCastingShadow = shadowCastingEnabled;
+}
+
+bool MeshRenderer::IsCastingShadow() const
+{
+	return isCastingShadow;
+}

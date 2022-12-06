@@ -131,6 +131,7 @@ SceneExample_OmnidirectionalShadows::SceneExample_OmnidirectionalShadows()
 	MeshRenderer* lampMeshRenderer = new MeshRenderer();
 	lampMeshRenderer->SetMesh(sphereMesh);
 	lampMeshRenderer->SetMaterial(lampMaterial);
+	lampMeshRenderer->SetIsCastingShadow(false);
 	pointLightObject->AddComponent(lampMeshRenderer);
 	// Add point light component
 	PointLight* pointLight = new PointLight(glm::vec3(0.05f), glm::vec3(0.8f), glm::vec3(1.0f), 1.0f, 0.09f, 0.032f);

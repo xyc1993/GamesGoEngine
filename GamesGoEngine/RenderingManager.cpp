@@ -422,7 +422,7 @@ void RenderingManager::UpdateDirectionalShadowMap()
 	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glCullFace(GL_FRONT);
-	DrawRenderers(meshRenderers, depthMapMaterial);
+	DrawShadowCastingRenderers(meshRenderers, depthMapMaterial);
 	glCullFace(GL_BACK);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	
@@ -481,7 +481,7 @@ void RenderingManager::UpdateOmnidirectionalShadowMap()
 	}
 	omniDepthMapMaterial->SetFloat("far_plane", far);
 	omniDepthMapMaterial->SetVector3("lightPos", lightPos);
-	DrawRenderers(meshRenderers, omniDepthMapMaterial);
+	DrawShadowCastingRenderers(meshRenderers, omniDepthMapMaterial);
 	glCullFace(GL_BACK);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	
@@ -555,6 +555,18 @@ void RenderingManager::DrawRenderers(const std::vector<MeshRenderer*>& renderers
 	{
 		MeshRenderer* meshRenderer = renderers[i];
 		if (meshRenderer != nullptr)
+		{
+			meshRenderer->Draw(material);
+		}
+	}
+}
+
+void RenderingManager::DrawShadowCastingRenderers(const std::vector<MeshRenderer*>& renderers, Material* material)
+{
+	for (size_t i = 0; i < renderers.size(); i++)
+	{
+		MeshRenderer* meshRenderer = renderers[i];
+		if ((meshRenderer != nullptr) && (meshRenderer->IsCastingShadow()))
 		{
 			meshRenderer->Draw(material);
 		}
