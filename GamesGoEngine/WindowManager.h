@@ -19,6 +19,8 @@ public:
 	static void TerminateWindow();
 	static GLint GetCurrentWidth();
 	static GLint GetCurrentHeight();
+	static void EnableVSync(bool enable);
+	static bool IsVSyncEnabled();
 
 private:
 	static void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
@@ -30,4 +32,6 @@ private:
 
 	int currentScreenWidth;
 	int currentScreenHeight;
+
+	bool vsyncEnabled;
 };

@@ -61,6 +61,8 @@ int WindowManager::SetWindow(GLFWwindow* window)
 
 	glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
 
+	EnableVSync(vsyncEnabled);
+
 	return EXIT_SUCCESS;
 }
 
@@ -88,6 +90,17 @@ GLint WindowManager::GetCurrentWidth()
 GLint WindowManager::GetCurrentHeight()
 {
 	return GetInstance()->currentScreenHeight;
+}
+
+void WindowManager::EnableVSync(bool enable)
+{
+	GetInstance()->vsyncEnabled = enable;
+	glfwSwapInterval(IsVSyncEnabled() ? 1 : 0);
+}
+
+bool WindowManager::IsVSyncEnabled()
+{
+	return GetInstance()->vsyncEnabled;
 }
 
 void WindowManager::FramebufferSizeCallback(GLFWwindow* window, int width, int height)

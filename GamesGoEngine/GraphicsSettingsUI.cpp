@@ -2,10 +2,17 @@
 
 #include "imgui.h"
 #include "RenderingManager.h"
+#include "WindowManager.h"
 
 void GraphicsSettingsUI::Draw()
 {
 	ImGui::Begin("Graphics Settings");
+
+	bool vsyncEnabled = WindowManager::IsVSyncEnabled();
+	if (ImGui::Checkbox("V-Sync Enabled", &vsyncEnabled))
+	{
+		WindowManager::EnableVSync(vsyncEnabled);
+	}
 
 	bool msaaEnabled = RenderingManager::IsMSAAEnabled();
 	if (ImGui::Checkbox("MSAA Enabled", &msaaEnabled))
