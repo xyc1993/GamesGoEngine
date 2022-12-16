@@ -470,7 +470,7 @@ void RenderingManager::UpdateOmnidirectionalShadowMap()
 	glViewport(0, 0, shadowWidth, shadowHeight);
 	glBindFramebuffer(GL_FRAMEBUFFER, omniDepthMapFBO);
 	glClear(GL_DEPTH_BUFFER_BIT);
-	glCullFace(GL_FRONT);
+	//glCullFace(GL_FRONT);
 	for (unsigned int i = 0; i < 6; ++i)
 	{
 		std::stringstream stream;
@@ -482,7 +482,7 @@ void RenderingManager::UpdateOmnidirectionalShadowMap()
 	omniDepthMapMaterial->SetFloat("far_plane", far);
 	omniDepthMapMaterial->SetVector3("lightPos", lightPos);
 	DrawShadowCastingRenderers(meshRenderers, omniDepthMapMaterial);
-	glCullFace(GL_BACK);
+	//glCullFace(GL_BACK);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	
 	// TODO: remove and implement more elegant solution, this is not universal solution, just one for specific example scene
