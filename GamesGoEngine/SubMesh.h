@@ -11,10 +11,6 @@ struct Vertex
 	glm::vec3 Position;
 	glm::vec3 Normal;
 	glm::vec2 TexCoords;
-};
-
-struct Tangents
-{
 	glm::vec3 Tangent;
 	glm::vec3 Bitangent;
 };
@@ -23,7 +19,6 @@ class SubMesh
 {
 public:
 	SubMesh(std::string name, std::vector<Vertex> vertices, std::vector<GLuint> indices);
-	SubMesh(std::string name, std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Tangents> tangents);
 
 	void Draw();
 	void DrawInstanced(int meshCount);
@@ -36,7 +31,6 @@ private:
 
 	std::string name;
 	std::vector<Vertex> vertices;
-	std::vector<Tangents> tangents;
 	std::vector<GLuint> indices;
 	GLuint VAO, VBO, EBO;
 };
