@@ -34,7 +34,7 @@ void Transform::OnSelected()
 void Transform::SetPosition(glm::vec3 position)
 {
 	const glm::vec3 translation = position - this->position;
-	this->localPosition += (localScale * translation);
+	this->localPosition += translation;
 	this->position = position;
 	UpdateTransformMatrix();
 }
@@ -42,7 +42,7 @@ void Transform::SetPosition(glm::vec3 position)
 void Transform::SetLocalPosition(glm::vec3 localPosition)
 {
 	const glm::vec3 translation = localPosition - this->localPosition;
-	this->position += (translation / localScale);
+	this->position += translation;
 	this->localPosition = localPosition;
 	UpdateTransformMatrix();
 }
