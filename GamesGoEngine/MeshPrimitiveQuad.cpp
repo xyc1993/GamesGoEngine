@@ -61,6 +61,9 @@ void MeshPrimitiveQuad::SetupMesh()
 	bitangent.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
 	bitangent.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
 
+	tangent = normalize(tangent);
+	bitangent = normalize(bitangent);
+
 	// Set vertex and tangent data
 	for (GLuint i = 0; i < 4; i++)
 	{

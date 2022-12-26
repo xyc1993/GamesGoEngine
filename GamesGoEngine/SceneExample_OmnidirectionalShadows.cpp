@@ -110,11 +110,20 @@ SceneExample_OmnidirectionalShadows::SceneExample_OmnidirectionalShadows()
 	nanoSuitTexturePaths.push_back((GLchar*)"res/nanosuit/helmet_diff.png");
 	nanoSuitTexturePaths.push_back((GLchar*)"res/nanosuit/body_dif.png");
 
+	std::vector<GLchar*> nanoSuitNormalTexturePaths;
+	nanoSuitNormalTexturePaths.push_back((GLchar*)"res/nanosuit/glass_ddn.png");
+	nanoSuitNormalTexturePaths.push_back((GLchar*)"res/nanosuit/leg_showroom_ddn.png");
+	nanoSuitNormalTexturePaths.push_back((GLchar*)"res/nanosuit/hand_showroom_ddn.png");
+	nanoSuitNormalTexturePaths.push_back((GLchar*)"res/nanosuit/glass_ddn.png"); // this one is small 'lights' on the helmet under visor, no specific texture was given for those
+	nanoSuitNormalTexturePaths.push_back((GLchar*)"res/nanosuit/arm_showroom_ddn.png");
+	nanoSuitNormalTexturePaths.push_back((GLchar*)"res/nanosuit/helmet_showroom_ddn.png");
+	nanoSuitNormalTexturePaths.push_back((GLchar*)"res/nanosuit/body_showroom_ddn.png");
+
 	for (int i = 0; i < NANOSUIT_MATERIALS_NUMBER; i++)
 	{
-		nanoSuitMaterials[i] = std::make_shared<Material>("res/shaders/litOmniShadowSimple.vert.glsl", "res/shaders/litOmniShadowSimple.frag.glsl");
-		// TODO: Find out why texture index different than 2 does not work
-		nanoSuitMaterials[i]->SetTextureByPath((GLchar*)"diffuseTexture", 2, nanoSuitTexturePaths[i]);
+		nanoSuitMaterials[i] = std::make_shared<Material>("res/shaders/litOmniShadowNormalMapping.vert.glsl", "res/shaders/litOmniShadowNormalMapping.frag.glsl");
+		nanoSuitMaterials[i]->SetTextureByPath((GLchar*)"diffuseTexture", 0, nanoSuitTexturePaths[i]);
+		nanoSuitMaterials[i]->SetTextureByPath((GLchar*)"normalTexture", 2, nanoSuitNormalTexturePaths[i]);
 		nanoSuitMaterials[i]->SetLightModel(LightModelType::LitForward);
 		nanoSuitMeshRenderer->SetMaterial(nanoSuitMaterials[i], i);
 	}
