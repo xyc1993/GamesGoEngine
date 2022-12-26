@@ -15,6 +15,7 @@ SubMesh* MeshPrimitiveQuad::GetPrimitiveSubMesh()
 void MeshPrimitiveQuad::SetupMesh()
 {
 	std::vector<Vertex> vertices;
+	std::vector<Tangents> tangents;
 	std::vector<GLuint> indices;
 
 	constexpr glm::vec3 quadVertices[] =
@@ -42,6 +43,25 @@ void MeshPrimitiveQuad::SetupMesh()
 		glm::vec2(0.0f, 1.0f)
 	};
 
+	// calculate tangents, for quad only 1 tangent and 1 bitangent is needed
+	Tangents quadTangent;
+
+	glm::vec3 edge1 = quadVertices[1] - quadVertices[0];
+	glm::vec3 edge2 = quadVertices[2] - quadVertices[0];
+	glm::vec2 deltaUV1 = quadTexCoords[1] - quadTexCoords[0];
+	glm::vec2 deltaUV2 = quadTexCoords[2] - quadTexCoords[0];
+
+	float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+
+	quadTangent.Tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+	quadTangent.Tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+	quadTangent.Tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+
+	quadTangent.Bitangent.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
+	quadTangent.Bitangent.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
+	quadTangent.Bitangent.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
+
+	// Set vertex and tangent data
 	for (GLuint i = 0; i < 4; i++)
 	{
 		Vertex vertex;
@@ -49,6 +69,7 @@ void MeshPrimitiveQuad::SetupMesh()
 		vertex.Normal = quadNormal;
 		vertex.TexCoords = quadTexCoords[i];
 		vertices.push_back(vertex);
+		tangents.push_back(quadTangent);
 	}
 
 	constexpr GLuint quadFaceIndices[] = { 0,1,2,2,3,0 };

@@ -12,6 +12,11 @@ SceneExample_OmnidirectionalShadows::SceneExample_OmnidirectionalShadows()
 	std::shared_ptr<MeshPrimitiveSphere> sphereMesh = std::make_shared<MeshPrimitiveSphere>();
 	std::shared_ptr<MeshPrimitiveQuad> quadMesh = std::make_shared<MeshPrimitiveQuad>();
 
+	std::shared_ptr<Material> brickwallMaterial = std::make_shared<Material>("res/shaders/litOmniShadowNormalMapping.vert.glsl", "res/shaders/litOmniShadowNormalMapping.frag.glsl");
+	brickwallMaterial->SetTextureByPath((GLchar*)"diffuseTexture", 0, (GLchar*)"res/textures/brickwall/brickwall.jpg");
+	brickwallMaterial->SetTextureByPath((GLchar*)"normalTexture", 2, (GLchar*)"res/textures/brickwall/brickwall_normal.jpg");
+	brickwallMaterial->SetLightModel(LightModelType::LitForward);
+
 	std::shared_ptr<Material> woodMaterial = std::make_shared<Material>("res/shaders/litOmniShadowSimple.vert.glsl", "res/shaders/litOmniShadowSimple.frag.glsl");
 	woodMaterial->SetTextureByPath((GLchar*)"diffuseTexture", 0, (GLchar*)"res/textures/wood.png");
 	woodMaterial->SetLightModel(LightModelType::LitForward);
@@ -38,7 +43,7 @@ SceneExample_OmnidirectionalShadows::SceneExample_OmnidirectionalShadows()
 		GameObject* boundObject = new GameObject();
 		MeshRenderer* boundMeshRenderer = new MeshRenderer();
 		boundMeshRenderer->SetMesh(quadMesh);
-		boundMeshRenderer->SetMaterial(woodMaterial);
+		boundMeshRenderer->SetMaterial(brickwallMaterial);
 		boundObject->AddComponent(boundMeshRenderer);
 		std::string name = "bound_";
 		name.append(std::to_string(i));

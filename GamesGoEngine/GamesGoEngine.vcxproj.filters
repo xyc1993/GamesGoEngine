@@ -658,5 +658,11 @@
     <None Include="res\shaders\litOmniShadowSimple.vert.glsl">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="res\shaders\litOmniShadowNormalMapping.frag.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\litOmniShadowNormalMapping.vert.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
