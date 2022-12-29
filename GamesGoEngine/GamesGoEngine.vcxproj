@@ -283,6 +283,8 @@
     <None Include="res\shaders\explode.vert.glsl" />
     <None Include="res\shaders\litOmniShadowNormalMapping.frag.glsl" />
     <None Include="res\shaders\litOmniShadowNormalMapping.vert.glsl" />
+    <None Include="res\shaders\litOmniShadowParallaxMapping.frag.glsl" />
+    <None Include="res\shaders\litOmniShadowParallaxMapping.vert.glsl" />
     <None Include="res\shaders\litOmniShadowSimple.frag.glsl" />
     <None Include="res\shaders\litOmniShadowSimple.vert.glsl" />
     <None Include="res\shaders\litShadowSimple.frag.glsl" />

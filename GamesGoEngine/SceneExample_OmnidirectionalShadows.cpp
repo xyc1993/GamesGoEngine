@@ -20,6 +20,20 @@ SceneExample_OmnidirectionalShadows::SceneExample_OmnidirectionalShadows()
 	std::shared_ptr<Material> woodMaterial = std::make_shared<Material>("res/shaders/litOmniShadowSimple.vert.glsl", "res/shaders/litOmniShadowSimple.frag.glsl");
 	woodMaterial->SetTextureByPath((GLchar*)"diffuseTexture", 0, (GLchar*)"res/textures/wood.png");
 	woodMaterial->SetLightModel(LightModelType::LitForward);
+	
+	std::shared_ptr<Material> brickParallaxMaterial = std::make_shared<Material>("res/shaders/litOmniShadowParallaxMapping.vert.glsl", "res/shaders/litOmniShadowParallaxMapping.frag.glsl");
+	brickParallaxMaterial->SetTextureByPath((GLchar*)"diffuseTexture", 0, (GLchar*)"res/textures/bricksParallax/bricks2.jpg");
+	brickParallaxMaterial->SetTextureByPath((GLchar*)"normalTexture", 2, (GLchar*)"res/textures/bricksParallax/bricks2_normal.jpg");
+	brickParallaxMaterial->SetTextureByPath((GLchar*)"parallaxTexture", 3, (GLchar*)"res/textures/bricksParallax/bricks2_disp.jpg");
+	brickParallaxMaterial->SetLightModel(LightModelType::LitForward);
+	brickParallaxMaterial->SetFloat("height_scale", 0.1f);
+
+	std::shared_ptr<Material> woodParallaxMaterial = std::make_shared<Material>("res/shaders/litOmniShadowParallaxMapping.vert.glsl", "res/shaders/litOmniShadowParallaxMapping.frag.glsl");
+	woodParallaxMaterial->SetTextureByPath((GLchar*)"diffuseTexture", 0, (GLchar*)"res/textures/woodParallax/wood.png");
+	woodParallaxMaterial->SetTextureByPath((GLchar*)"normalTexture", 2, (GLchar*)"res/textures/woodParallax/toy_box_normal.png");
+	woodParallaxMaterial->SetTextureByPath((GLchar*)"parallaxTexture", 3, (GLchar*)"res/textures/woodParallax/toy_box_disp.png");
+	woodParallaxMaterial->SetLightModel(LightModelType::LitForward);
+	woodParallaxMaterial->SetFloat("height_scale", 0.1f);
 
 	// Add walls, floor and ceiling
 	std::vector<glm::vec3> boundsPositions;
@@ -43,14 +57,36 @@ SceneExample_OmnidirectionalShadows::SceneExample_OmnidirectionalShadows()
 		GameObject* boundObject = new GameObject();
 		MeshRenderer* boundMeshRenderer = new MeshRenderer();
 		boundMeshRenderer->SetMesh(quadMesh);
-		boundMeshRenderer->SetMaterial(brickwallMaterial);
+
+		if (i == 4)
+		{
+			boundMeshRenderer->SetMaterial(brickParallaxMaterial);
+		}
+		else if (i == 3)
+		{
+			boundMeshRenderer->SetMaterial(woodParallaxMaterial);
+		}
+		else
+		{
+			boundMeshRenderer->SetMaterial(brickwallMaterial);
+		}
+
 		boundObject->AddComponent(boundMeshRenderer);
 		std::string name = "bound_";
 		name.append(std::to_string(i));
 		boundObject->SetName(name);
 		boundObject->GetTransform()->SetPosition(boundsPositions[i]);
 		boundObject->GetTransform()->SetRotationEulerDegrees(boundsRotations[i]);
-		boundObject->GetTransform()->SetScale(glm::vec3(8.0f));
+
+		if (i == 0 || i == 1)
+		{
+			boundObject->GetTransform()->SetScale(glm::vec3(8.0f));
+		}
+		else
+		{
+			
+		}
+		
 		scene->AddGameObject(boundObject);
 	}
 
