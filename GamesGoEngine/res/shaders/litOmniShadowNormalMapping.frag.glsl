@@ -8,9 +8,9 @@ in VS_OUT {
     vec3 TangentFragPos;
 } fs_in;
 
-uniform sampler2D diffuseTexture;
-uniform samplerCube depthMap;
-uniform sampler2D normalTexture;
+layout(binding = 0) uniform sampler2D diffuseTexture;
+layout(binding = 1) uniform samplerCube depthMap;
+layout(binding = 2)uniform sampler2D normalTexture;
 
 uniform float far_plane;
 
