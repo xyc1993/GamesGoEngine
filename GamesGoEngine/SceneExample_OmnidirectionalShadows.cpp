@@ -78,6 +78,9 @@ SceneExample_OmnidirectionalShadows::SceneExample_OmnidirectionalShadows()
 		boundObject->GetTransform()->SetPosition(boundsPositions[i]);
 		boundObject->GetTransform()->SetRotationEulerDegrees(boundsRotations[i]);
 
+		/* Currently there are issue with shadow mapping when meshes are scaled
+		 * TODO: investigate the issue mentioned above
+		 * */
 		if (i == 0 || i == 1)
 		{
 			boundObject->GetTransform()->SetScale(glm::vec3(8.0f));

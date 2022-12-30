@@ -670,5 +670,8 @@
     <None Include="res\shaders\litOmniShadowParallaxMapping.vert.glsl">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="res\shaders\PostProcess\hdrToneMappingGammaCorrection.frag.glsl">
+      <Filter>Resource Files\Shaders\PostProcess</Filter>
+    </None>
   </ItemGroup>
 </Project>

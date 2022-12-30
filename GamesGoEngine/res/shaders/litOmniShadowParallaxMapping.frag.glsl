@@ -109,9 +109,9 @@ void main()
     // transform normal vector to range [-1,1]
     normal = normalize(normal * 2.0 - 1.0);
 
-    vec3 lightColor = vec3(0.3);
+    vec3 lightColor = vec3(10.0);
     // ambient
-    vec3 ambient = 0.1 * color;
+    vec3 ambient = 0.05 * color;
     // diffuse
     vec3 lightDir = normalize(fs_in.TangentLightPos - fs_in.TangentFragPos);
     float diff = max(dot(lightDir, normal), 0.0);
@@ -125,7 +125,14 @@ void main()
 
     // calculate shadow    
     float shadow = ShadowCalculation(fs_in.TangentFragPos);
-    vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular)) * color;
+    vec3 lighting = ((1.0 - shadow) * (diffuse + specular)) * color;
+
+    // limit light effect based on distance
+    float distance = length(fs_in.TangentLightPos - fs_in.TangentFragPos);
+    lighting *= 1.0 / (distance * distance);
+
+    // add ambient
+    lighting += ambient;
     
     FragColor = vec4(lighting, 1.0);
 }  

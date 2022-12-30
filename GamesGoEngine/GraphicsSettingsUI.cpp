@@ -35,6 +35,12 @@ void GraphicsSettingsUI::Draw()
 		RenderingManager::SetGamma(gamma);
 	}
 
+	float exposure = RenderingManager::GetExposure();
+	if (ImGui::SliderFloat("exposure", &exposure, 0.0f, 5.0f))
+	{
+		RenderingManager::SetExposure(exposure);
+	}
+
 	constexpr size_t shadowMapResolutionsNumber = 5;
 	const char* shadowMaps[shadowMapResolutionsNumber] = { "256", "512", "1024", "2048", "4096"};
 	static const char* currentShadowMap = shadowMaps[2];

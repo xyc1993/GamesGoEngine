@@ -18,7 +18,7 @@ RenderingManager::RenderingManager()
 {
 	lightsManager = new LightsManager();
 	normalDebugMaterial = new Material("res/shaders/debugNormals.vert.glsl", "res/shaders/debugNormals.frag.glsl", "res/shaders/debugNormals.geom.glsl");
-	gammaCorrectionMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/gammaCorrection.frag.glsl");
+	hdrToneMappingGammaCorrectionMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/hdrToneMappingGammaCorrection.frag.glsl");
 	editorOutlineMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/editorOutline.frag.glsl");
 	depthMapMaterial = new Material("res/shaders/RenderPipeline/depthMap.vert.glsl", "res/shaders/RenderPipeline/depthMap.frag.glsl");
 	omniDepthMapMaterial = new Material("res/shaders/RenderPipeline/omniDepthMap.vert.glsl", "res/shaders/RenderPipeline/omniDepthMap.frag.glsl", "res/shaders/RenderPipeline/omniDepthMap.geom.glsl");
@@ -65,11 +65,12 @@ void RenderingManager::Init(GLint screenWidth, GLint screenHeight)
 
 void RenderingManager::InitGammaCorrection()
 {
-	// make sure that the default gamma value is set in the material
+	// make sure that the default gamma value & exposure is set in the material
 	SetGamma(GetGamma());
+	SetExposure(GetExposure());
 	// always use gamma correction last
-	gammaCorrectionMaterial->SetPostProcessOrder(9999);
-	AddPostProcessMaterial(gammaCorrectionMaterial);
+	hdrToneMappingGammaCorrectionMaterial->SetPostProcessOrder(9999);
+	AddPostProcessMaterial(hdrToneMappingGammaCorrectionMaterial);
 }
 
 void RenderingManager::InitEditorOutline()
@@ -101,7 +102,7 @@ void RenderingManager::ConfigureFramebuffer(GLint screenWidth, GLint screenHeigh
 	// create a color attachment texture
 	glGenTextures(1, &textureColorBuffer);
 	glBindTexture(GL_TEXTURE_2D, textureColorBuffer);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screenWidth, screenHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, screenWidth, screenHeight, 0, GL_RGBA, GL_FLOAT, NULL);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -762,9 +763,28 @@ float RenderingManager::GetGamma()
 void RenderingManager::SetGammaInternal(float gammaVal)
 {
 	gamma = gammaVal;
-	if (gammaCorrectionMaterial != nullptr)
+	if (hdrToneMappingGammaCorrectionMaterial != nullptr)
 	{
-		gammaCorrectionMaterial->SetFloat("gamma", gamma);
+		hdrToneMappingGammaCorrectionMaterial->SetFloat("gamma", gamma);
+	}
+}
+
+void RenderingManager::SetExposure(float exposureVal)
+{
+	GetInstance()->SetExposureInternal(exposureVal);
+}
+
+float RenderingManager::GetExposure()
+{
+	return GetInstance()->exposure;
+}
+
+void RenderingManager::SetExposureInternal(float exposureVal)
+{
+	exposure = exposureVal;
+	if (hdrToneMappingGammaCorrectionMaterial != nullptr)
+	{
+		hdrToneMappingGammaCorrectionMaterial->SetFloat("exposure", exposure);
 	}
 }
 

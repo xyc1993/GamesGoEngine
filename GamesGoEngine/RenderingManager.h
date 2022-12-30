@@ -105,6 +105,11 @@ public:
 private:
 	void SetGammaInternal(float gammaVal);
 public:
+	static void SetExposure(float exposureVal);
+	static float GetExposure();
+private:
+	void SetExposureInternal(float exposureVal);
+public:
 	// assume square textures
 	static void SetShadowMapResolution(unsigned int shadowMapRes);
 	static unsigned int GetShadowMapResolution();
@@ -133,6 +138,7 @@ private:
 	bool msaaEnabled = false;
 	int msaaSamplesNumber = 1;
 	float gamma = 2.2f;
+	float exposure = 1.0f;
 	unsigned int shadowWidth = 1024;
 	unsigned int shadowHeight = 1024;
 
@@ -168,7 +174,7 @@ private:
 	Material* orientationDebugMaterial;
 
 	// special post process materials
-	std::shared_ptr<PostProcessMaterial> gammaCorrectionMaterial;
+	std::shared_ptr<PostProcessMaterial> hdrToneMappingGammaCorrectionMaterial;
 	std::shared_ptr<PostProcessMaterial> editorOutlineMaterial;
 
 	// render pipeline materials
