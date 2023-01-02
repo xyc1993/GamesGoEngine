@@ -68,9 +68,6 @@ void RenderingManager::InitGammaCorrection()
 	// make sure that the default gamma value & exposure is set in the material
 	SetGamma(GetGamma());
 	SetExposure(GetExposure());
-	// always use gamma correction last
-	hdrToneMappingGammaCorrectionMaterial->SetPostProcessOrder(9999);
-	AddPostProcessMaterial(hdrToneMappingGammaCorrectionMaterial);
 }
 
 void RenderingManager::InitEditorOutline()
@@ -145,7 +142,7 @@ void RenderingManager::ConfigureMultisampledFramebuffer(GLint screenWidth, GLint
 	// create a color attachment texture
 	glGenTextures(1, &textureColorBuffer);
 	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, textureColorBuffer);
-	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGB, screenWidth, screenHeight, GL_TRUE);
+	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGBA16F, screenWidth, screenHeight, GL_TRUE);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -332,6 +329,7 @@ void RenderingManager::Update()
 
 	if (IsPostProcessingEnabled())
 	{
+		// pass the image from MSAA framebuffer to first framebuffer
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, GetInstance()->msFramebuffer);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, GetInstance()->framebuffer1);
 
@@ -344,19 +342,12 @@ void RenderingManager::Update()
 
 		glDisable(GL_DEPTH_TEST);
 		glDisable(GL_STENCIL_TEST);
-		
+
+		// post processing via ping pong rendering
 		const size_t postProcessEffects = GetInstance()->usedPostProcessMaterials.size();
 		for (size_t i = 0; i < postProcessEffects; i++)
 		{
-			if (i == (postProcessEffects - 1))
-			{
-				glBindFramebuffer(GL_FRAMEBUFFER, 0);
-			}
-			else
-			{
-				glBindFramebuffer(GL_FRAMEBUFFER, i % 2 == 0 ? GetInstance()->framebuffer2 : GetInstance()->framebuffer1);
-			}
-
+			glBindFramebuffer(GL_FRAMEBUFFER, i % 2 == 0 ? GetInstance()->framebuffer2 : GetInstance()->framebuffer1);
 			glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 
@@ -367,6 +358,18 @@ void RenderingManager::Update()
 			ppMaterial->Draw(glm::mat4());
 			MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
 		}
+
+		// finally apply hdr tone mapping and gamma correction
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		const int lastPostProcessMaterialIndex = postProcessEffects;
+		GetInstance()->hdrToneMappingGammaCorrectionMaterial->SetTexture("screenTexture", 0, lastPostProcessMaterialIndex % 2 == 0 ? GetInstance()->textureColorBuffer1 : GetInstance()->textureColorBuffer2);
+		GetInstance()->hdrToneMappingGammaCorrectionMaterial->SetTexture("depthStencilTexture", 1, lastPostProcessMaterialIndex % 2 == 0 ? GetInstance()->depthStencilBuffer1 : GetInstance()->depthStencilBuffer2);
+		GetInstance()->hdrToneMappingGammaCorrectionMaterial->SetTexture("stencilView", 2, lastPostProcessMaterialIndex % 2 == 0 ? GetInstance()->stencilView1 : GetInstance()->stencilView2);
+		GetInstance()->hdrToneMappingGammaCorrectionMaterial->Draw(glm::mat4());
+		MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
 	}
 }
 
