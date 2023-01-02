@@ -39,6 +39,9 @@ public:
 	float GetFloat(const GLchar* floatName) const;
 	float GetFloat(const GLint floatID) const;
 
+	void SetInt(const GLchar* intName, int value) const;
+	void SetInt(const GLint intID, int value) const;
+
 	void SetVector4(const GLchar* vectorName, glm::vec4 value) const;
 	void SetVector4(const GLint vectorID, glm::vec4 value) const;
 

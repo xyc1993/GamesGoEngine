@@ -57,7 +57,7 @@ void main()
     // transform normal vector to range [-1,1]
     normal = normalize(normal * 2.0 - 1.0);
 
-    vec3 lightColor = vec3(10.0);
+    vec3 lightColor = vec3(50.0);
     // ambient
     vec3 ambient = 0.05 * color;
     // diffuse

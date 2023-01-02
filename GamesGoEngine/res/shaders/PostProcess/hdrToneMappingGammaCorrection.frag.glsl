@@ -6,6 +6,7 @@ in vec2 TexCoords;
 layout(binding = 0) uniform sampler2D screenTexture;
 layout(binding = 1) uniform sampler2D depthStencilTexture;
 layout(binding = 2) uniform usampler2D stencilView;
+layout(binding = 3) uniform sampler2D bloomBlur;
 
 uniform float blendWeight;
 uniform float gamma;
@@ -14,6 +15,10 @@ uniform float exposure = 1.0f;
 void main()
 {
     vec3 hdrColor  = texture(screenTexture, TexCoords).rgb;
+    vec3 bloomColor = texture(bloomBlur, TexCoords).rgb;
+
+    // additive blending
+    hdrColor += bloomColor;
 
     // exposure tone mapping
     vec3 mapped = vec3(1.0) - exp(-hdrColor * exposure);

@@ -145,6 +145,21 @@ float Material::GetFloat(const GLint floatID) const
 	return *value;
 }
 
+void Material::SetInt(const GLchar* intName, int value) const
+{
+	const GLint intID = glGetUniformLocation(shader->GetProgram(), intName);
+	SetInt(intID, value);
+}
+
+void Material::SetInt(const GLint intID, int value) const
+{
+	if (shader != nullptr)
+	{
+		shader->Use();
+		glUniform1i(intID, value);
+	}
+}
+
 void Material::SetVector4(const GLchar* vectorName, glm::vec4 value) const
 {
 	const GLint vectorID = glGetUniformLocation(shader->GetProgram(), vectorName);

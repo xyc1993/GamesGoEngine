@@ -290,6 +290,7 @@
     <None Include="res\shaders\litShadowSimple.frag.glsl" />
     <None Include="res\shaders\litShadowSimple.vert.glsl" />
     <None Include="res\shaders\PostProcess\blur.frag.glsl" />
+    <None Include="res\shaders\PostProcess\blurGaussian.frag.glsl" />
     <None Include="res\shaders\PostProcess\depth.frag.glsl" />
     <None Include="res\shaders\PostProcess\editorOutline.frag.glsl" />
     <None Include="res\shaders\PostProcess\gammaCorrection.frag.glsl" />
@@ -299,6 +300,7 @@
     <None Include="res\shaders\PostProcess\screenShader.vert.glsl" />
     <None Include="res\shaders\RenderPipeline\depthMap.frag.glsl" />
     <None Include="res\shaders\RenderPipeline\depthMap.vert.glsl" />
+    <None Include="res\shaders\RenderPipeline\extractBrightColor.frag.glsl" />
     <None Include="res\shaders\RenderPipeline\omniDepthMap.frag.glsl" />
     <None Include="res\shaders\RenderPipeline\omniDepthMap.geom.glsl" />
     <None Include="res\shaders\RenderPipeline\omniDepthMap.vert.glsl" />

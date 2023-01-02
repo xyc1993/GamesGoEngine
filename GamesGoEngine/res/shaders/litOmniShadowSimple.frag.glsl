@@ -59,7 +59,7 @@ void main()
 {
     vec3 color = texture(diffuseTexture, fs_in.TexCoords).rgb;
     vec3 normal = normalize(fs_in.Normal);
-    vec3 lightColor = vec3(10.0);
+    vec3 lightColor = vec3(50.0);
     // ambient
     vec3 ambient = 0.05 * color;
     // diffuse

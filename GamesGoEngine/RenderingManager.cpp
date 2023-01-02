@@ -18,6 +18,8 @@ RenderingManager::RenderingManager()
 {
 	lightsManager = new LightsManager();
 	normalDebugMaterial = new Material("res/shaders/debugNormals.vert.glsl", "res/shaders/debugNormals.frag.glsl", "res/shaders/debugNormals.geom.glsl");
+	brightPixelsExtractionMaterial = std::make_shared<PostProcessMaterial>("res/shaders/RenderPipeline/extractBrightColor.frag.glsl");
+	bloomBlurMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/blurGaussian.frag.glsl");
 	hdrToneMappingGammaCorrectionMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/hdrToneMappingGammaCorrection.frag.glsl");
 	editorOutlineMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/editorOutline.frag.glsl");
 	depthMapMaterial = new Material("res/shaders/RenderPipeline/depthMap.vert.glsl", "res/shaders/RenderPipeline/depthMap.frag.glsl");
@@ -80,6 +82,8 @@ void RenderingManager::ConfigureFramebuffers(GLint screenWidth, GLint screenHeig
 {
 	ConfigureFramebuffer(screenWidth, screenHeight, framebuffer1, textureColorBuffer1, depthStencilBuffer1, stencilView1, shouldGenerateFramebuffer);
 	ConfigureFramebuffer(screenWidth, screenHeight, framebuffer2, textureColorBuffer2, depthStencilBuffer2, stencilView2, shouldGenerateFramebuffer);
+	ConfigureFramebuffer(screenWidth, screenHeight, bloomFBO1, bloomColorBuffer1, bloomDepthStencilBuffer1, bloomStencilView1, shouldGenerateFramebuffer);
+	ConfigureFramebuffer(screenWidth, screenHeight, bloomFBO2, bloomColorBuffer2, bloomDepthStencilBuffer2, bloomStencilView2, shouldGenerateFramebuffer);
 	ConfigureFramebuffer(screenWidth, screenHeight, msFramebuffer, msTextureColorBuffer, msDepthStencilBuffer, msStencilView, shouldGenerateFramebuffer);
 	ConfigureShadowMapFramebuffer(shadowWidth, shadowHeight, depthMapFBO, depthMap, shouldGenerateFramebuffer);
 	ConfigureShadowCubeMapFramebuffer(shadowWidth, shadowHeight, omniDepthMapFBO, omniDepthMap, shouldGenerateFramebuffer);
@@ -238,13 +242,22 @@ void RenderingManager::ResizeBuffersInternal(GLint screenWidth, GLint screenHeig
 	// not the most lightweight approach since we need to recreate textures but it is required due to how we write data from stencil buffer into texture
 	glDeleteTextures(1, &textureColorBuffer1);
 	glDeleteTextures(1, &textureColorBuffer2);
+	glDeleteTextures(1, &bloomColorBuffer1);
+	glDeleteTextures(1, &bloomColorBuffer2);
 	glDeleteTextures(1, &msTextureColorBuffer);
+
 	glDeleteTextures(1, &depthStencilBuffer1);
 	glDeleteTextures(1, &depthStencilBuffer2);
+	glDeleteTextures(1, &bloomDepthStencilBuffer1);
+	glDeleteTextures(1, &bloomDepthStencilBuffer2);
 	glDeleteTextures(1, &msDepthStencilBuffer);
+
 	glDeleteTextures(1, &stencilView1);
 	glDeleteTextures(1, &stencilView2);
+	glDeleteTextures(1, &bloomStencilView1);
+	glDeleteTextures(1, &bloomStencilView2);
 	glDeleteTextures(1, &msStencilView);
+
 	glDeleteTextures(1, &depthMap);
 	glDeleteTextures(1, &omniDepthMap);
 
@@ -359,15 +372,57 @@ void RenderingManager::Update()
 			MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
 		}
 
+		// extract pixels over bloom's brightness threshold
+		int lastPostProcessMaterialIndex = postProcessEffects;
+		glBindFramebuffer(GL_FRAMEBUFFER, lastPostProcessMaterialIndex % 2 == 0 ? GetInstance()->framebuffer2 : GetInstance()->framebuffer1);
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		GetInstance()->brightPixelsExtractionMaterial->SetTexture("screenTexture", 0, lastPostProcessMaterialIndex % 2 == 0 ? GetInstance()->textureColorBuffer1 : GetInstance()->textureColorBuffer2);
+		GetInstance()->brightPixelsExtractionMaterial->SetTexture("depthStencilTexture", 1, lastPostProcessMaterialIndex % 2 == 0 ? GetInstance()->depthStencilBuffer1 : GetInstance()->depthStencilBuffer2);
+		GetInstance()->brightPixelsExtractionMaterial->SetTexture("stencilView", 2, lastPostProcessMaterialIndex % 2 == 0 ? GetInstance()->stencilView1 : GetInstance()->stencilView2);
+		GetInstance()->brightPixelsExtractionMaterial->Draw(glm::mat4());
+		MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
+
+		// blur pixels meant for blur
+		bool horizontal = true;
+		bool firstIteration = true;
+		// get texture after bright pixels extraction
+		lastPostProcessMaterialIndex++;
+		for (unsigned int i = 0; i < GetInstance()->bloomBlurAmount; i++)
+		{
+			glBindFramebuffer(GL_FRAMEBUFFER, horizontal ? GetInstance()->bloomFBO1 : GetInstance()->bloomFBO2);
+			glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT);
+			
+			GetInstance()->bloomBlurMaterial->SetInt("horizontal", horizontal);
+			if (firstIteration)
+			{
+				GetInstance()->bloomBlurMaterial->SetTexture("screenTexture", 0, lastPostProcessMaterialIndex % 2 == 0 ? GetInstance()->textureColorBuffer1 : GetInstance()->textureColorBuffer2);
+			}
+			else
+			{
+				GetInstance()->bloomBlurMaterial->SetTexture("screenTexture", 0, i % 2 == 1 ? GetInstance()->bloomColorBuffer1 : GetInstance()->bloomColorBuffer2);
+			}
+			GetInstance()->bloomBlurMaterial->Draw(glm::mat4());
+			MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
+			horizontal = !horizontal;
+			if (firstIteration)
+			{
+				firstIteration = false;
+			}
+		}
+
 		// finally apply hdr tone mapping and gamma correction
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-
-		const int lastPostProcessMaterialIndex = postProcessEffects;
+		// get texture before bright pixels extraction
+		lastPostProcessMaterialIndex--;
 		GetInstance()->hdrToneMappingGammaCorrectionMaterial->SetTexture("screenTexture", 0, lastPostProcessMaterialIndex % 2 == 0 ? GetInstance()->textureColorBuffer1 : GetInstance()->textureColorBuffer2);
 		GetInstance()->hdrToneMappingGammaCorrectionMaterial->SetTexture("depthStencilTexture", 1, lastPostProcessMaterialIndex % 2 == 0 ? GetInstance()->depthStencilBuffer1 : GetInstance()->depthStencilBuffer2);
 		GetInstance()->hdrToneMappingGammaCorrectionMaterial->SetTexture("stencilView", 2, lastPostProcessMaterialIndex % 2 == 0 ? GetInstance()->stencilView1 : GetInstance()->stencilView2);
+		GetInstance()->hdrToneMappingGammaCorrectionMaterial->SetTexture("bloomBlur", 3, (GetInstance()->bloomBlurAmount - 1) % 2 == 1 ? GetInstance()->bloomColorBuffer1 : GetInstance()->bloomColorBuffer2);
 		GetInstance()->hdrToneMappingGammaCorrectionMaterial->Draw(glm::mat4());
 		MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
 	}
@@ -789,6 +844,16 @@ void RenderingManager::SetExposureInternal(float exposureVal)
 	{
 		hdrToneMappingGammaCorrectionMaterial->SetFloat("exposure", exposure);
 	}
+}
+
+void RenderingManager::SetBloomBlurAmount(int amount)
+{
+	GetInstance()->bloomBlurAmount = amount;
+}
+
+int RenderingManager::GetBloomBlurAmount()
+{
+	return GetInstance()->bloomBlurAmount;
 }
 
 void RenderingManager::SetShadowMapResolution(unsigned shadowMapRes)

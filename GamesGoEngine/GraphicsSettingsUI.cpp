@@ -47,6 +47,12 @@ void GraphicsSettingsUI::Draw()
 		RenderingManager::SetExposure(exposure);
 	}
 
+	int bloomBlurAmount = RenderingManager::GetBloomBlurAmount();
+	if (ImGui::SliderInt("bloom blur amount", &bloomBlurAmount, 5, 50))
+	{
+		RenderingManager::SetBloomBlurAmount(bloomBlurAmount);
+	}
+
 	constexpr size_t shadowMapResolutionsNumber = 5;
 	const char* shadowMaps[shadowMapResolutionsNumber] = { "256", "512", "1024", "2048", "4096"};
 	static const char* currentShadowMap = shadowMaps[2];

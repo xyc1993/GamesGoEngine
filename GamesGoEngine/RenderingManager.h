@@ -110,6 +110,8 @@ public:
 private:
 	void SetExposureInternal(float exposureVal);
 public:
+	static void SetBloomBlurAmount(int amount);
+	static int GetBloomBlurAmount();
 	// assume square textures
 	static void SetShadowMapResolution(unsigned int shadowMapRes);
 	static unsigned int GetShadowMapResolution();
@@ -139,6 +141,7 @@ private:
 	int msaaSamplesNumber = 1;
 	float gamma = 2.2f;
 	float exposure = 1.0f;
+	int bloomBlurAmount = 10;
 	unsigned int shadowWidth = 1024;
 	unsigned int shadowHeight = 1024;
 
@@ -150,20 +153,28 @@ private:
 	// sets of 2 since we use ping pong rendering
 	unsigned int framebuffer1;
 	unsigned int framebuffer2;
+	unsigned int bloomFBO1;
+	unsigned int bloomFBO2;
 	unsigned int msFramebuffer;
 	unsigned int depthMapFBO;
 	unsigned int omniDepthMapFBO;
 	
 	unsigned int textureColorBuffer1;
 	unsigned int textureColorBuffer2;
+	unsigned int bloomColorBuffer1;
+	unsigned int bloomColorBuffer2;
 	unsigned int msTextureColorBuffer;
 
 	unsigned int depthStencilBuffer1;
 	unsigned int depthStencilBuffer2;
+	unsigned int bloomDepthStencilBuffer1;
+	unsigned int bloomDepthStencilBuffer2;
 	unsigned int msDepthStencilBuffer;
 
 	unsigned int stencilView1;
 	unsigned int stencilView2;
+	unsigned int bloomStencilView1;
+	unsigned int bloomStencilView2;
 	unsigned int msStencilView;
 
 	unsigned int depthMap;
@@ -174,6 +185,8 @@ private:
 	Material* orientationDebugMaterial;
 
 	// special post process materials
+	std::shared_ptr<PostProcessMaterial> brightPixelsExtractionMaterial; // used for bloom, gets the texture with pixels with brightness over bloom threshold
+	std::shared_ptr<PostProcessMaterial> bloomBlurMaterial;
 	std::shared_ptr<PostProcessMaterial> hdrToneMappingGammaCorrectionMaterial;
 	std::shared_ptr<PostProcessMaterial> editorOutlineMaterial;
 
