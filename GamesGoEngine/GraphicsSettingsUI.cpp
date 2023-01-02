@@ -8,6 +8,12 @@ void GraphicsSettingsUI::Draw()
 {
 	ImGui::Begin("Graphics Settings");
 
+	bool postProcessingEnabled = RenderingManager::IsPostProcessingEnabled();
+	if (ImGui::Checkbox("Post Processing Enabled", &postProcessingEnabled))
+	{
+		RenderingManager::EnablePostProcessing(postProcessingEnabled);
+	}
+
 	bool vsyncEnabled = WindowManager::IsVSyncEnabled();
 	if (ImGui::Checkbox("V-Sync Enabled", &vsyncEnabled))
 	{
