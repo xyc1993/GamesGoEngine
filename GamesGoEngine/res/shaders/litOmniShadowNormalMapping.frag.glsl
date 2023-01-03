@@ -47,7 +47,25 @@ float ShadowCalculation(vec3 fragPos)
     shadow /= float(samples);
 
     return shadow;
-}  
+}
+
+#define NUMBER_OF_POINT_LIGHTS 4
+
+struct PointLight
+{
+	vec3 position;
+
+	vec3 ambient;
+	vec3 diffuse;
+	vec3 specular;
+
+	float constant;
+	float linear;
+	float quadratic;
+};
+
+uniform int pointLightsNumber;
+uniform PointLight pointLights[NUMBER_OF_POINT_LIGHTS];
 
 void main()
 {
@@ -57,31 +75,33 @@ void main()
     // transform normal vector to range [-1,1]
     normal = normalize(normal * 2.0 - 1.0);
 
-    vec3 lightColor = vec3(50.0);
-    // ambient
-    vec3 ambient = 0.05 * color;
     // diffuse
     vec3 lightDir = normalize(fs_in.TangentLightPos - fs_in.TangentFragPos);
     float diff = max(dot(lightDir, normal), 0.0);
-    vec3 diffuse = diff * lightColor;
 
     // specular
     vec3 viewDir = normalize(fs_in.TangentViewPos - fs_in.TangentFragPos);
-    vec3 reflectDir = reflect(-lightDir, normal);
     vec3 halfwayDir = normalize(lightDir + viewDir);  
     float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
-    vec3 specular = spec * lightColor;
 
     // calculate shadow    
     float shadow = ShadowCalculation(fs_in.TangentFragPos);
-    vec3 lighting = ((1.0 - shadow) * (diffuse + specular)) * color;
 
-    // limit light effect based on distance
-    float distance = length(fs_in.TangentLightPos - fs_in.TangentFragPos);
-    lighting *= 1.0 / (distance * distance);
+    // calculate final color with provided point light
+    vec3 finalColor = vec3(0.0);
+    if (pointLightsNumber > 0)
+    {
+        // calculate lighting based on provided light data
+        vec3 ambient = pointLights[0].ambient * color;
+	    vec3 diffuse = pointLights[0].diffuse * diff * color;
+	    vec3 specular = pointLights[0].specular * spec * color;
+        finalColor = ambient + (1.0 - shadow) * (diffuse + specular);
 
-    // add ambient
-    lighting += ambient;
-    
-    FragColor = vec4(lighting, 1.0);
+        // limit light effect based on distance
+        float distance = length(fs_in.TangentLightPos - fs_in.TangentFragPos);
+        float attenuation = 1.0 / (pointLights[0].constant + pointLights[0].linear * distance + pointLights[0].quadratic * distance * distance);
+        finalColor *= attenuation;
+    }
+
+    FragColor = vec4(finalColor, 1.0);
 }  

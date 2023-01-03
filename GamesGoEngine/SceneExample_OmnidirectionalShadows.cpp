@@ -180,14 +180,15 @@ SceneExample_OmnidirectionalShadows::SceneExample_OmnidirectionalShadows()
 	pointLightObject->GetTransform()->SetScale(glm::vec3(0.2f));
 	// Add debug renderer
 	std::shared_ptr<Material> lampMaterial = std::make_shared<Material>("res/shaders/unlit.vert.glsl", "res/shaders/unlit.frag.glsl");
-	lampMaterial->SetVector3((GLchar*)"unlitColor", glm::vec3(15.0f));
+	glm::vec3 lightColor = glm::vec3(10.0f, 8.0f, 6.0f);
+	lampMaterial->SetVector3((GLchar*)"unlitColor", lightColor);
 	MeshRenderer* lampMeshRenderer = new MeshRenderer();
 	lampMeshRenderer->SetMesh(sphereMesh);
 	lampMeshRenderer->SetMaterial(lampMaterial);
 	lampMeshRenderer->SetIsCastingShadow(false);
 	pointLightObject->AddComponent(lampMeshRenderer);
 	// Add point light component
-	PointLight* pointLight = new PointLight(glm::vec3(0.05f), glm::vec3(0.8f), glm::vec3(1.0f), 1.0f, 0.09f, 0.032f);
+	PointLight* pointLight = new PointLight(0.02f * lightColor, 0.8f * lightColor, lightColor, 1.0f, 0.09f, 0.032f);
 	pointLightObject->AddComponent(pointLight);
 	// Name and add to scene
 	pointLightObject->SetName("point_light");
