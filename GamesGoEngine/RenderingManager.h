@@ -188,7 +188,8 @@ private:
 	unsigned int gBuffer;
 	unsigned int gPosition;
 	unsigned int gNormal;
-	unsigned int gAlbedoSpec;
+	unsigned int gAlbedo;
+	unsigned int gSpecular;
 	unsigned int gDepth;
 	unsigned int gStencil;
 

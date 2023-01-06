@@ -262,16 +262,23 @@ void RenderingManager::ConfigureGBuffer(GLint screenWidth, GLint screenHeight, b
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, gNormal, 0);
-	// color + specular color buffer
-	glGenTextures(1, &gAlbedoSpec);
-	glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
+	// color color buffer
+	glGenTextures(1, &gAlbedo);
+	glBindTexture(GL_TEXTURE_2D, gAlbedo);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screenWidth, screenHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gAlbedoSpec, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gAlbedo, 0);
+	// specular color buffer
+	glGenTextures(1, &gSpecular);
+	glBindTexture(GL_TEXTURE_2D, gSpecular);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screenWidth, screenHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, gSpecular, 0);
 	// tell OpenGL which color attachments we'll use (of this framebuffer) for rendering 
-	unsigned int attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
-	glDrawBuffers(3, attachments);
+	unsigned int attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
+	glDrawBuffers(4, attachments);
 
 	// create a depth & stencil attachment texture
 	glGenTextures(1, &gDepth);
@@ -325,7 +332,8 @@ void RenderingManager::ResizeBuffersInternal(GLint screenWidth, GLint screenHeig
 
 	glDeleteTextures(1, &gPosition);
 	glDeleteTextures(1, &gNormal);
-	glDeleteTextures(1, &gAlbedoSpec);
+	glDeleteTextures(1, &gAlbedo);
+	glDeleteTextures(1, &gSpecular);
 	glDeleteTextures(1, &gDepth);
 	glDeleteTextures(1, &gStencil);
 
@@ -430,7 +438,8 @@ void RenderingManager::Update()
 		// deferred shading
 		GetInstance()->deferredShadingMaterial->SetTexture("gPosition", 0, GetInstance()->gPosition);
 		GetInstance()->deferredShadingMaterial->SetTexture("gNormal", 1, GetInstance()->gNormal);
-		GetInstance()->deferredShadingMaterial->SetTexture("gAlbedoSpec", 2, GetInstance()->gAlbedoSpec);
+		GetInstance()->deferredShadingMaterial->SetTexture("gAlbedo", 2, GetInstance()->gAlbedo);
+		GetInstance()->deferredShadingMaterial->SetTexture("gSpecular", 3, GetInstance()->gSpecular);
 		GetInstance()->UpdateDeferredShading();
 		GetInstance()->deferredShadingMaterial->Draw(glm::mat4());
 		MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
@@ -530,11 +539,8 @@ void RenderingManager::UpdateUniformBufferObjects()
 void RenderingManager::UpdateGBuffer()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
-
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glm::mat4 model = glm::mat4(1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
 	for (size_t i = 0; i < meshRenderers.size(); i++)
 	{
 		if (meshRenderers[i]->IncludesDeferredMaterials())

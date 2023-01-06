@@ -7,7 +7,8 @@ in vec2 TexCoords;
 
 layout(binding = 0) uniform sampler2D gPosition;
 layout(binding = 1) uniform sampler2D gNormal;
-layout(binding = 2) uniform sampler2D gAlbedoSpec;
+layout(binding = 2) uniform sampler2D gAlbedo;
+layout(binding = 3) uniform sampler2D gSpecular;
 
 struct PointLight
 {
@@ -36,8 +37,8 @@ void main()
     // retrieve data from gbuffer
     vec3 FragPos = texture(gPosition, TexCoords).rgb;
     vec3 Normal = texture(gNormal, TexCoords).rgb;
-    vec3 Color = texture(gAlbedoSpec, TexCoords).rgb;
-    float Specular = texture(gAlbedoSpec, TexCoords).a;
+    vec3 Color = texture(gAlbedo, TexCoords).rgb;
+    float Specular = texture(gSpecular, TexCoords).r;
     
     // then calculate lighting as usual
     vec3 lighting  = vec3(0.0);
