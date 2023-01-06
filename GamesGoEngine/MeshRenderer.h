@@ -29,6 +29,8 @@ public:
 	int GetRenderQueuePosition() const;
 	void SetIsCastingShadow(bool shadowCastingEnabled);
 	bool IsCastingShadow() const;
+	// currently for simplicity we treat renderers with deferred materials as deferred renderers
+	bool IncludesDeferredMaterials() const;
 
 private:
 	// used to determine position in the render queue

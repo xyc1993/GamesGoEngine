@@ -189,6 +189,7 @@
     <ClCompile Include="ScaleOscillator.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneExample.cpp" />
+    <ClCompile Include="SceneExample_DeferredRendering.cpp" />
     <ClCompile Include="SceneExample_DepthTest.cpp" />
     <ClCompile Include="SceneExample_DirectionalShadows.cpp" />
     <ClCompile Include="SceneExample_EnvironmentMapping.cpp" />
@@ -253,6 +254,7 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneExample.h" />
     <ClInclude Include="SceneExamples.h" />
+    <ClInclude Include="SceneExample_DeferredRendering.h" />
     <ClInclude Include="SceneExample_DepthTest.h" />
     <ClInclude Include="SceneExample_DirectionalShadows.h" />
     <ClInclude Include="SceneExample_EnvironmentMapping.h" />
@@ -291,6 +293,7 @@
     <None Include="res\shaders\litShadowSimple.vert.glsl" />
     <None Include="res\shaders\PostProcess\blur.frag.glsl" />
     <None Include="res\shaders\PostProcess\blurGaussian.frag.glsl" />
+    <None Include="res\shaders\PostProcess\deferredShadingSimple.frag.glsl" />
     <None Include="res\shaders\PostProcess\depth.frag.glsl" />
     <None Include="res\shaders\PostProcess\editorOutline.frag.glsl" />
     <None Include="res\shaders\PostProcess\gammaCorrection.frag.glsl" />
@@ -301,6 +304,8 @@
     <None Include="res\shaders\RenderPipeline\depthMap.frag.glsl" />
     <None Include="res\shaders\RenderPipeline\depthMap.vert.glsl" />
     <None Include="res\shaders\RenderPipeline\extractBrightColor.frag.glsl" />
+    <None Include="res\shaders\RenderPipeline\gBuffer.frag.glsl" />
+    <None Include="res\shaders\RenderPipeline\gBuffer.vert.glsl" />
     <None Include="res\shaders\RenderPipeline\omniDepthMap.frag.glsl" />
     <None Include="res\shaders\RenderPipeline\omniDepthMap.geom.glsl" />
     <None Include="res\shaders\RenderPipeline\omniDepthMap.vert.glsl" />

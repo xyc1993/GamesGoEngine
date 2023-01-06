@@ -1,5 +1,6 @@
 #pragma once
 
+#include "SceneExample_DeferredRendering.h"
 #include "SceneExample_DepthTest.h"
 #include "SceneExample_DirectionalShadows.h"
 #include "SceneExample_EnvironmentMapping.h"

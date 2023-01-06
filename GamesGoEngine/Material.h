@@ -10,7 +10,8 @@
 enum class LightModelType
 {
 	Unlit,
-	LitForward
+	LitForward,
+	LitDeferred
 };
 
 /*
@@ -31,6 +32,8 @@ public:
 	
 	void SetTextureByPath(const GLchar* textureName, GLuint textureIndex, GLchar* path, bool transparencyEnabled = false);
 	void SetTexture(const GLchar* textureName, GLuint textureIndex, GLuint texture);
+	GLint GetTexture(const GLchar* textureName) const;
+
 	void SetCubeTextureByPath(const GLchar* textureName, GLuint textureIndex, const std::vector<const GLchar*>& paths);
 	void SetCubeTexture(const GLchar* textureName, GLuint textureIndex, GLuint texture);
 	
@@ -52,6 +55,9 @@ public:
 	void SetMat4(const GLint matrixID, glm::mat4 value) const;
 
 	void SetLightModel(LightModelType type);
+	LightModelType GetLightModel() const;
+
+	GLuint GetShaderProgram() const;
 	
 protected:
 	Shader* shader;

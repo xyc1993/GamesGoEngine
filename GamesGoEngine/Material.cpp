@@ -62,6 +62,8 @@ void Material::Draw(glm::mat4 model)
 	case LightModelType::LitForward:
 		RenderingManager::GetLightsManager()->SetLightsInShader(shader->GetProgram());
 		break;
+	case LightModelType::LitDeferred:
+		break;
 	}
 }
 
@@ -90,6 +92,19 @@ void Material::SetTexture(const GLchar* textureName, GLuint textureIndex, GLuint
 		shader->Use();
 		glUniform1i(textureID, textureIndex);
 	}
+}
+
+GLint Material::GetTexture(const GLchar* textureName) const
+{
+	GLint errValue = 0;
+	GLint* texture = &errValue;
+	if (shader != nullptr)
+	{		
+		const GLint textureID = glGetUniformLocation(shader->GetProgram(), textureName);
+		glGetUniformiv(shader->GetProgram(), textureID, texture);
+		return *texture;
+	}
+	return 0;
 }
 
 void Material::SetCubeTextureByPath(const GLchar* textureName, GLuint textureIndex, const std::vector<const GLchar*>& paths)
@@ -208,4 +223,14 @@ void Material::SetMat4(const GLint matrixID, glm::mat4 value) const
 void Material::SetLightModel(LightModelType type)
 {
 	lightModelType = type;
+}
+
+LightModelType Material::GetLightModel() const
+{
+	return lightModelType;
+}
+
+GLuint Material::GetShaderProgram() const
+{
+	return shader->GetProgram();
 }

@@ -351,6 +351,9 @@
     <ClCompile Include="SceneExample_OmnidirectionalShadows.cpp">
       <Filter>Source Files\GamesGo\Examples</Filter>
     </ClCompile>
+    <ClCompile Include="SceneExample_DeferredRendering.cpp">
+      <Filter>Source Files\GamesGo\Examples</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -539,6 +542,9 @@
     <ClInclude Include="SceneExample_OmnidirectionalShadows.h">
       <Filter>Header Files\GamesGo\Examples</Filter>
     </ClInclude>
+    <ClInclude Include="SceneExample_DeferredRendering.h">
+      <Filter>Header Files\GamesGo\Examples</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\PostProcess\blur.frag.glsl">
@@ -677,6 +683,15 @@
       <Filter>Resource Files\Shaders\RenderPipeline</Filter>
     </None>
     <None Include="res\shaders\PostProcess\blurGaussian.frag.glsl">
+      <Filter>Resource Files\Shaders\PostProcess</Filter>
+    </None>
+    <None Include="res\shaders\RenderPipeline\gBuffer.frag.glsl">
+      <Filter>Resource Files\Shaders\RenderPipeline</Filter>
+    </None>
+    <None Include="res\shaders\RenderPipeline\gBuffer.vert.glsl">
+      <Filter>Resource Files\Shaders\RenderPipeline</Filter>
+    </None>
+    <None Include="res\shaders\PostProcess\deferredShadingSimple.frag.glsl">
       <Filter>Resource Files\Shaders\PostProcess</Filter>
     </None>
   </ItemGroup>

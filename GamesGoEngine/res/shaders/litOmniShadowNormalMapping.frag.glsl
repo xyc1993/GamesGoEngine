@@ -10,7 +10,7 @@ in VS_OUT {
 
 layout(binding = 0) uniform sampler2D diffuseTexture;
 layout(binding = 1) uniform samplerCube depthMap;
-layout(binding = 2)uniform sampler2D normalTexture;
+layout(binding = 2) uniform sampler2D normalTexture;
 
 uniform float far_plane;
 

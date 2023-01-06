@@ -119,3 +119,17 @@ bool MeshRenderer::IsCastingShadow() const
 {
 	return isCastingShadow;
 }
+
+// TODO: implement more optimized method
+// not optimized, this could be cached, however it's ok for now
+bool MeshRenderer::IncludesDeferredMaterials() const
+{
+	for (size_t i = 0; i < materialList.size(); i++)
+	{
+		if (materialList[i]->GetLightModel() == LightModelType::LitDeferred)
+		{
+			return true;
+		}
+	}
+	return false;
+}

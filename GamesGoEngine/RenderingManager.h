@@ -47,6 +47,7 @@ private:
 	static void ConfigureShadowCubeMapFramebuffer(GLint shadowMapWidth, GLint shadowMapHeight,
 		unsigned int& framebuffer, unsigned int& shadowCubeMap,
 		bool shouldGenerateFramebuffer);
+	void ConfigureGBuffer(GLint screenWidth, GLint screenHeight, bool shouldGenerateFramebuffer);
 
 public:
 	static void ResizeBuffers(GLint screenWidth, GLint screenHeight);
@@ -61,12 +62,15 @@ public:
 
 private:
 	void UpdateUniformBufferObjects();
+	// Updates data such as positions, normals, albedo, specular
+	void UpdateGBuffer();
+	void UpdateDeferredShading();
 	void UpdateShadowMap();
 	void UpdateDirectionalShadowMap();
 	void UpdateOmnidirectionalShadowMap();
 	void DrawOrientationDebug() const;
 	static void DrawSkybox();
-	static void DrawRenderers(const std::vector<MeshRenderer*>& renderers);
+	static void DrawRenderers(const std::vector<MeshRenderer*>& renderers);	
 	static void DrawRenderers(const std::vector<MeshRenderer*>& renderers, Material* material);
 	static void DrawShadowCastingRenderers(const std::vector<MeshRenderer*>& renderers, Material* material);
 	static void DrawPostProcessEffects();
@@ -180,6 +184,14 @@ private:
 	unsigned int depthMap;
 	unsigned int omniDepthMap;
 
+	// g buffer & its textures
+	unsigned int gBuffer;
+	unsigned int gPosition;
+	unsigned int gNormal;
+	unsigned int gAlbedoSpec;
+	unsigned int gDepth;
+	unsigned int gStencil;
+
 	// debug materials
 	Material* normalDebugMaterial;
 	Material* orientationDebugMaterial;
@@ -189,6 +201,7 @@ private:
 	std::shared_ptr<PostProcessMaterial> bloomBlurMaterial;
 	std::shared_ptr<PostProcessMaterial> hdrToneMappingGammaCorrectionMaterial;
 	std::shared_ptr<PostProcessMaterial> editorOutlineMaterial;
+	std::shared_ptr<PostProcessMaterial> deferredShadingMaterial;
 
 	// render pipeline materials
 	Material* depthMapMaterial;

@@ -17,14 +17,21 @@ RenderingManager* RenderingManager::instance = nullptr;
 RenderingManager::RenderingManager()
 {
 	lightsManager = new LightsManager();
+
+	//debug materials
 	normalDebugMaterial = new Material("res/shaders/debugNormals.vert.glsl", "res/shaders/debugNormals.frag.glsl", "res/shaders/debugNormals.geom.glsl");
+	orientationDebugMaterial = new Material("res/shaders/DebugShaders/debugOrientation.vert.glsl", "res/shaders/DebugShaders/debugOrientation.frag.glsl", "res/shaders/DebugShaders/debugOrientation.geom.glsl");
+
+	//render pipeline materials
+	depthMapMaterial = new Material("res/shaders/RenderPipeline/depthMap.vert.glsl", "res/shaders/RenderPipeline/depthMap.frag.glsl");
+	omniDepthMapMaterial = new Material("res/shaders/RenderPipeline/omniDepthMap.vert.glsl", "res/shaders/RenderPipeline/omniDepthMap.frag.glsl", "res/shaders/RenderPipeline/omniDepthMap.geom.glsl");
+
+	// post process related materials
 	brightPixelsExtractionMaterial = std::make_shared<PostProcessMaterial>("res/shaders/RenderPipeline/extractBrightColor.frag.glsl");
 	bloomBlurMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/blurGaussian.frag.glsl");
 	hdrToneMappingGammaCorrectionMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/hdrToneMappingGammaCorrection.frag.glsl");
 	editorOutlineMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/editorOutline.frag.glsl");
-	depthMapMaterial = new Material("res/shaders/RenderPipeline/depthMap.vert.glsl", "res/shaders/RenderPipeline/depthMap.frag.glsl");
-	omniDepthMapMaterial = new Material("res/shaders/RenderPipeline/omniDepthMap.vert.glsl", "res/shaders/RenderPipeline/omniDepthMap.frag.glsl", "res/shaders/RenderPipeline/omniDepthMap.geom.glsl");
-	orientationDebugMaterial = new Material("res/shaders/DebugShaders/debugOrientation.vert.glsl", "res/shaders/DebugShaders/debugOrientation.frag.glsl", "res/shaders/DebugShaders/debugOrientation.geom.glsl");	
+	deferredShadingMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/deferredShadingSimple.frag.glsl");
 }
 
 RenderingManager::~RenderingManager()
@@ -87,6 +94,7 @@ void RenderingManager::ConfigureFramebuffers(GLint screenWidth, GLint screenHeig
 	ConfigureFramebuffer(screenWidth, screenHeight, msFramebuffer, msTextureColorBuffer, msDepthStencilBuffer, msStencilView, shouldGenerateFramebuffer);
 	ConfigureShadowMapFramebuffer(shadowWidth, shadowHeight, depthMapFBO, depthMap, shouldGenerateFramebuffer);
 	ConfigureShadowCubeMapFramebuffer(shadowWidth, shadowHeight, omniDepthMapFBO, omniDepthMap, shouldGenerateFramebuffer);
+	ConfigureGBuffer(screenWidth, screenHeight, shouldGenerateFramebuffer);
 }
 
 void RenderingManager::ConfigureFramebuffer(GLint screenWidth, GLint screenHeight,
@@ -232,6 +240,60 @@ void RenderingManager::ConfigureShadowCubeMapFramebuffer(GLint shadowMapWidth, G
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void RenderingManager::ConfigureGBuffer(GLint screenWidth, GLint screenHeight, bool shouldGenerateFramebuffer)
+{
+	if (shouldGenerateFramebuffer)
+	{
+		glGenFramebuffers(1, &gBuffer);
+	}
+	
+	glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
+	// position color buffer
+	glGenTextures(1, &gPosition);
+	glBindTexture(GL_TEXTURE_2D, gPosition);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, screenWidth, screenHeight, 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gPosition, 0);
+	// normal color buffer
+	glGenTextures(1, &gNormal);
+	glBindTexture(GL_TEXTURE_2D, gNormal);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, screenWidth, screenHeight, 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, gNormal, 0);
+	// color + specular color buffer
+	glGenTextures(1, &gAlbedoSpec);
+	glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screenWidth, screenHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gAlbedoSpec, 0);
+	// tell OpenGL which color attachments we'll use (of this framebuffer) for rendering 
+	unsigned int attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
+	glDrawBuffers(3, attachments);
+
+	// create a depth & stencil attachment texture
+	glGenTextures(1, &gDepth);
+	glBindTexture(GL_TEXTURE_2D, gDepth);
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, screenWidth, screenHeight, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, NULL);
+	glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, screenWidth, screenHeight);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, gDepth, 0);
+
+	glGenTextures(1, &gStencil);
+	glTextureView(gStencil, GL_TEXTURE_2D, gDepth, GL_DEPTH24_STENCIL8, 0, 1, 0, 1);
+
+	// finally check if framebuffer is complete
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "Framebuffer not complete!" << std::endl;
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 void RenderingManager::ResizeBuffers(GLint screenWidth, GLint screenHeight)
 {
 	GetInstance()->ResizeBuffersInternal(screenWidth, screenHeight);
@@ -260,6 +322,12 @@ void RenderingManager::ResizeBuffersInternal(GLint screenWidth, GLint screenHeig
 
 	glDeleteTextures(1, &depthMap);
 	glDeleteTextures(1, &omniDepthMap);
+
+	glDeleteTextures(1, &gPosition);
+	glDeleteTextures(1, &gNormal);
+	glDeleteTextures(1, &gAlbedoSpec);
+	glDeleteTextures(1, &gDepth);
+	glDeleteTextures(1, &gStencil);
 
 	GetInstance()->ConfigureFramebuffers(screenWidth, screenHeight, false);
 }
@@ -304,6 +372,8 @@ void RenderingManager::Update()
 	// reset viewport
 	glViewport(0, 0, WindowManager::GetCurrentWidth(), WindowManager::GetCurrentHeight());
 
+	GetInstance()->UpdateGBuffer();
+	
 	if (IsPostProcessingEnabled())
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, GetInstance()->msFramebuffer);
@@ -322,9 +392,10 @@ void RenderingManager::Update()
 	glStencilMask(~0);
 	glClearStencil(0);
 	glClear(GL_STENCIL_BUFFER_BIT);
-
-	DrawRenderers(GetInstance()->opaqueMeshRenderers);
-	DrawRenderers(GetInstance()->transparentMeshRenderers);
+	
+	// TODO: make it combatible with deferred rendering and so it won't double the rendering
+	//DrawRenderers(GetInstance()->opaqueMeshRenderers);
+	//DrawRenderers(GetInstance()->transparentMeshRenderers);
 	DrawSkybox();
 
 	if (IsNormalsDebugEnabled() && (GetInstance()->normalDebugMaterial != nullptr))
@@ -355,6 +426,14 @@ void RenderingManager::Update()
 
 		glDisable(GL_DEPTH_TEST);
 		glDisable(GL_STENCIL_TEST);
+
+		// deferred shading
+		GetInstance()->deferredShadingMaterial->SetTexture("gPosition", 0, GetInstance()->gPosition);
+		GetInstance()->deferredShadingMaterial->SetTexture("gNormal", 1, GetInstance()->gNormal);
+		GetInstance()->deferredShadingMaterial->SetTexture("gAlbedoSpec", 2, GetInstance()->gAlbedoSpec);
+		GetInstance()->UpdateDeferredShading();
+		GetInstance()->deferredShadingMaterial->Draw(glm::mat4());
+		MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
 
 		// post processing via ping pong rendering
 		const size_t postProcessEffects = GetInstance()->usedPostProcessMaterials.size();
@@ -446,6 +525,37 @@ void RenderingManager::UpdateUniformBufferObjects()
 	glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(float), &time);
 	glBufferSubData(GL_UNIFORM_BUFFER, sizeof(float), sizeof(float), &deltaTime);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+}
+
+void RenderingManager::UpdateGBuffer()
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
+
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glm::mat4 model = glm::mat4(1.0f);
+	for (size_t i = 0; i < meshRenderers.size(); i++)
+	{
+		if (meshRenderers[i]->IncludesDeferredMaterials())
+		{
+			meshRenderers[i]->Draw();
+		}
+	}
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+}
+
+void RenderingManager::UpdateDeferredShading()
+{
+	const size_t pointLightsNumber = GetLightsManager()->GetPointLightsNumber();
+	deferredShadingMaterial->SetInt("pointLightsNumber", pointLightsNumber);
+	for (size_t i = 0; i < pointLightsNumber; i++)
+	{
+		Light* light = GetLightsManager()->GetPointLight(i);
+		PointLight* pointLight = (PointLight*)light;
+		pointLight->SetLightInShader(deferredShadingMaterial->GetShaderProgram());
+	}
 }
 
 void RenderingManager::UpdateShadowMap()
