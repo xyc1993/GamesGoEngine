@@ -29,8 +29,9 @@ public:
 	int GetRenderQueuePosition() const;
 	void SetIsCastingShadow(bool shadowCastingEnabled);
 	bool IsCastingShadow() const;
-	// currently for simplicity we treat renderers with deferred materials as deferred renderers
-	bool IncludesDeferredMaterials() const;
+	// currently for simplicity we treat renderers with deferred materials as deferred renderers, renderers with forward materials as forward renderers and so on
+	// NO SUPPORT FOR MIXED MATERIALS LISTS YET!
+	LightModelType GetLightModelType() const;
 
 private:
 	// used to determine position in the render queue

@@ -120,16 +120,13 @@ bool MeshRenderer::IsCastingShadow() const
 	return isCastingShadow;
 }
 
-// TODO: implement more optimized method
-// not optimized, this could be cached, however it's ok for now
-bool MeshRenderer::IncludesDeferredMaterials() const
+// TODO: In the future the check should be per material, not renderer!
+// for simplicity let's assume that every material is of the same type, it's not obvious, but it's ok for current implementation of forward/deferred shading use
+LightModelType MeshRenderer::GetLightModelType() const
 {
-	for (size_t i = 0; i < materialList.size(); i++)
+	if (materialList.size() > 0)
 	{
-		if (materialList[i]->GetLightModel() == LightModelType::LitDeferred)
-		{
-			return true;
-		}
+		return materialList[0]->GetLightModel();
 	}
-	return false;
+	return LightModelType::Unlit;
 }

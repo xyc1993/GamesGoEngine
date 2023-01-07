@@ -381,10 +381,12 @@ void RenderingManager::Update()
 	glViewport(0, 0, WindowManager::GetCurrentWidth(), WindowManager::GetCurrentHeight());
 
 	GetInstance()->UpdateGBuffer();
-	
+		
 	if (IsPostProcessingEnabled())
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER, GetInstance()->msFramebuffer);
+		//this won't work with newly introduced deferred rendering
+		//glBindFramebuffer(GL_FRAMEBUFFER, GetInstance()->msFramebuffer);
+		glBindFramebuffer(GL_FRAMEBUFFER, GetInstance()->framebuffer2);
 	}
 	else
 	{
@@ -400,10 +402,58 @@ void RenderingManager::Update()
 	glStencilMask(~0);
 	glClearStencil(0);
 	glClear(GL_STENCIL_BUFFER_BIT);
+
+	// disable depth and buffer for deferred shading rendering since it's quad rendering over whole screen
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_STENCIL_TEST);
+
+	// deferred rendering
+	// TODO: check if there are any deferred renderers at all (otherwise skip this)
+	GetInstance()->deferredShadingMaterial->SetTexture("gPosition", 0, GetInstance()->gPosition);
+	GetInstance()->deferredShadingMaterial->SetTexture("gNormal", 1, GetInstance()->gNormal);
+	GetInstance()->deferredShadingMaterial->SetTexture("gAlbedo", 2, GetInstance()->gAlbedo);
+	GetInstance()->deferredShadingMaterial->SetTexture("gSpecular", 3, GetInstance()->gSpecular);
+	GetInstance()->UpdateDeferredShading();
+	GetInstance()->deferredShadingMaterial->Draw(glm::mat4());
+	MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
+
+	glEnable(GL_DEPTH_TEST); // enable depth testing (is disabled for rendering screen-space quad)
+	glEnable(GL_STENCIL_TEST);
 	
-	// TODO: make it combatible with deferred rendering and so it won't double the rendering
-	//DrawRenderers(GetInstance()->opaqueMeshRenderers);
-	//DrawRenderers(GetInstance()->transparentMeshRenderers);
+	// forward rendering
+	// TODO: check if there are any forward renderers at all (otherwise skip this)
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, GetInstance()->gBuffer);
+	if (IsPostProcessingEnabled())
+	{
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, GetInstance()->framebuffer2);
+	}
+	else
+	{
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); // write to default framebuffer	
+	}
+	
+	const int width = WindowManager::GetCurrentWidth();
+	const int height = WindowManager::GetCurrentHeight();
+
+	// blit to default framebuffer. Note that this may or may not work as the internal formats of both the FBO and default framebuffer have to match.
+	// the internal formats are implementation defined. This works on all of my systems, but if it doesn't on yours you'll likely have to write to the 		
+	// depth buffer in another shader stage (or somehow see to match the default framebuffer's internal format with the FBO's internal format).
+	// color texture is GL_COLOR_BUFFER_BIT + 2 (there are 4 buffers in the following order: positions, normals, color, specular)
+	glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT + 2, GL_NEAREST);
+	glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+	glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+	
+	if (IsPostProcessingEnabled())
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, GetInstance()->framebuffer2);
+	}
+	else
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+	
+	DrawRenderersExceptLightModel(GetInstance()->opaqueMeshRenderers, LightModelType::LitDeferred);
+	DrawRenderersExceptLightModel(GetInstance()->transparentMeshRenderers, LightModelType::LitDeferred);
 	DrawSkybox();
 
 	if (IsNormalsDebugEnabled() && (GetInstance()->normalDebugMaterial != nullptr))
@@ -418,11 +468,13 @@ void RenderingManager::Update()
 		GetInstance()->firstRenderedFrame = false;
 		SortPostProcessMaterials();
 	}
-
+	
 	if (IsPostProcessingEnabled())
 	{
 		// pass the image from MSAA framebuffer to first framebuffer
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, GetInstance()->msFramebuffer);
+		//glBindFramebuffer(GL_READ_FRAMEBUFFER, GetInstance()->msFramebuffer);
+		// since MSAA won't work with deferred rendering, we just blit default framebuffer
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, GetInstance()->framebuffer2);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, GetInstance()->framebuffer1);
 
 		const int width = WindowManager::GetCurrentWidth();
@@ -434,16 +486,7 @@ void RenderingManager::Update()
 
 		glDisable(GL_DEPTH_TEST);
 		glDisable(GL_STENCIL_TEST);
-
-		// deferred shading
-		GetInstance()->deferredShadingMaterial->SetTexture("gPosition", 0, GetInstance()->gPosition);
-		GetInstance()->deferredShadingMaterial->SetTexture("gNormal", 1, GetInstance()->gNormal);
-		GetInstance()->deferredShadingMaterial->SetTexture("gAlbedo", 2, GetInstance()->gAlbedo);
-		GetInstance()->deferredShadingMaterial->SetTexture("gSpecular", 3, GetInstance()->gSpecular);
-		GetInstance()->UpdateDeferredShading();
-		GetInstance()->deferredShadingMaterial->Draw(glm::mat4());
-		MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
-
+		
 		// post processing via ping pong rendering
 		const size_t postProcessEffects = GetInstance()->usedPostProcessMaterials.size();
 		for (size_t i = 0; i < postProcessEffects; i++)
@@ -540,14 +583,8 @@ void RenderingManager::UpdateGBuffer()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
-	for (size_t i = 0; i < meshRenderers.size(); i++)
-	{
-		if (meshRenderers[i]->IncludesDeferredMaterials())
-		{
-			meshRenderers[i]->Draw();
-		}
-	}
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	DrawRenderersOfLightModel(meshRenderers, LightModelType::LitDeferred);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 }
@@ -718,6 +755,31 @@ void RenderingManager::DrawRenderers(const std::vector<MeshRenderer*>& renderers
 	{
 		MeshRenderer* meshRenderer = renderers[i];
 		if (meshRenderer != nullptr)
+		{
+			meshRenderer->Draw();
+		}
+	}
+}
+
+void RenderingManager::DrawRenderersOfLightModel(const std::vector<MeshRenderer*>& renderers, LightModelType lightModel)
+{
+	for (size_t i = 0; i < renderers.size(); i++)
+	{
+		MeshRenderer* meshRenderer = renderers[i];
+		if (meshRenderer != nullptr && meshRenderer->GetLightModelType() == lightModel)
+		{
+			meshRenderer->Draw();
+		}
+	}
+}
+
+void RenderingManager::DrawRenderersExceptLightModel(const std::vector<MeshRenderer*>& renderers,
+	LightModelType lightModel)
+{
+	for (size_t i = 0; i < renderers.size(); i++)
+	{
+		MeshRenderer* meshRenderer = renderers[i];
+		if (meshRenderer != nullptr && meshRenderer->GetLightModelType() != lightModel)
 		{
 			meshRenderer->Draw();
 		}
