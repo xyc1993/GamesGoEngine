@@ -30,7 +30,9 @@ public:
 	static bool GetMouseButtonPressed(int button);
 	static bool GetMouseButtonReleased(int button);
 
+	// returns distance covered by mouse in x axis in a single frame
 	static GLfloat GetMouseXInput();
+	// returns distance covered by mouse in y axis in a single frame
 	static GLfloat GetMouseYInput();
 	static GLfloat GetMouseScrollInput();
 

@@ -7,7 +7,7 @@
 EditorMovement::EditorMovement()
 {
 	movementSpeed = 6.0f;
-	rotationSpeed = 30.0f;
+	rotationSpeed = 0.2f;
 	constrainPitch = true;
 }
 
@@ -93,8 +93,9 @@ void EditorMovement::UpdatePosition(const float deltaTime) const
 
 void EditorMovement::UpdateRotation(const float deltaTime)
 {
-	const GLfloat pitch = InputManager::GetMouseYInput() * rotationSpeed * deltaTime;
-	const GLfloat yaw = InputManager::GetMouseXInput() * rotationSpeed * deltaTime;
+	// for consistent movement in different frame rates DON'T multiply by deltaTime as it is already covered by GetMouseInput()
+	const GLfloat pitch = InputManager::GetMouseYInput() * rotationSpeed;// * deltaTime;
+	const GLfloat yaw = InputManager::GetMouseXInput() * rotationSpeed;// * deltaTime;
 	
 	currentRotation.x -= pitch;
 	currentRotation.y -= yaw;
