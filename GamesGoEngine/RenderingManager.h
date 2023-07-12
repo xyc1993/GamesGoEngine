@@ -31,7 +31,6 @@ public:
 
 private:
 	void InitGammaCorrection();
-	void InitEditorOutline();
 	void ConfigureFramebuffers(GLint screenWidth, GLint screenHeight, bool shouldGenerateFramebuffer);
 	static void ConfigureFramebuffer(GLint screenWidth, GLint screenHeight,
 		unsigned int& framebuffer, unsigned int& textureColorBuffer,
