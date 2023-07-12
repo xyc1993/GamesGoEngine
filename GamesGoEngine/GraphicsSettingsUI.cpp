@@ -14,6 +14,12 @@ void GraphicsSettingsUI::Draw()
 		RenderingManager::EnablePostProcessing(postProcessingEnabled);
 	}
 
+	bool hdrToneMappingAndGammaEnabled = RenderingManager::IsHDRToneMappingAndGammaEnabled();
+	if (ImGui::Checkbox("HDR tone mapping and gamma correction Enabled", &hdrToneMappingAndGammaEnabled))
+	{
+		RenderingManager::EnableHDRToneMappingAndGamma(hdrToneMappingAndGammaEnabled);
+	}
+
 	bool vsyncEnabled = WindowManager::IsVSyncEnabled();
 	if (ImGui::Checkbox("V-Sync Enabled", &vsyncEnabled))
 	{
@@ -35,16 +41,19 @@ void GraphicsSettingsUI::Draw()
 		}
 	}
 
-	float gamma = RenderingManager::GetGamma();
-	if (ImGui::SliderFloat("gamma", &gamma, 0.0f, 5.0f))
+	if (RenderingManager::IsHDRToneMappingAndGammaEnabled())
 	{
-		RenderingManager::SetGamma(gamma);
-	}
+		float gamma = RenderingManager::GetGamma();
+		if (ImGui::SliderFloat("gamma", &gamma, 0.0f, 5.0f))
+		{
+			RenderingManager::SetGamma(gamma);
+		}
 
-	float exposure = RenderingManager::GetExposure();
-	if (ImGui::SliderFloat("exposure", &exposure, 0.0f, 5.0f))
-	{
-		RenderingManager::SetExposure(exposure);
+		float exposure = RenderingManager::GetExposure();
+		if (ImGui::SliderFloat("exposure", &exposure, 0.0f, 5.0f))
+		{
+			RenderingManager::SetExposure(exposure);
+		}
 	}
 
 	int bloomBlurAmount = RenderingManager::GetBloomBlurAmount();
