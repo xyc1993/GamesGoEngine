@@ -640,15 +640,6 @@
     <None Include="res\shaders\PostProcess\depth.frag.glsl">
       <Filter>Resource Files\Shaders\PostProcess</Filter>
     </None>
-    <None Include="res\shaders\Debug\debugOrientation.frag.glsl">
-      <Filter>Resource Files\Shaders\DebugShaders</Filter>
-    </None>
-    <None Include="res\shaders\Debug\debugOrientation.geom.glsl">
-      <Filter>Resource Files\Shaders\DebugShaders</Filter>
-    </None>
-    <None Include="res\shaders\Debug\debugOrientation.vert.glsl">
-      <Filter>Resource Files\Shaders\DebugShaders</Filter>
-    </None>
     <None Include="res\shaders\RenderPipeline\omniDepthMap.frag.glsl">
       <Filter>Resource Files\Shaders\RenderPipeline</Filter>
     </None>
@@ -693,6 +684,15 @@
     </None>
     <None Include="res\shaders\PostProcess\deferredShadingSimple.frag.glsl">
       <Filter>Resource Files\Shaders\PostProcess</Filter>
+    </None>
+    <None Include="res\shaders\DebugShaders\debugOrientation.frag.glsl">
+      <Filter>Resource Files\Shaders\DebugShaders</Filter>
+    </None>
+    <None Include="res\shaders\DebugShaders\debugOrientation.geom.glsl">
+      <Filter>Resource Files\Shaders\DebugShaders</Filter>
+    </None>
+    <None Include="res\shaders\DebugShaders\debugOrientation.vert.glsl">
+      <Filter>Resource Files\Shaders\DebugShaders</Filter>
     </None>
   </ItemGroup>
 </Project>

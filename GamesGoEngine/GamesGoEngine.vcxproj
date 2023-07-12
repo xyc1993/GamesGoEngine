@@ -277,9 +277,9 @@
     <None Include="res\shaders\debugNormals.frag.glsl" />
     <None Include="res\shaders\debugNormals.geom.glsl" />
     <None Include="res\shaders\debugNormals.vert.glsl" />
-    <None Include="res\shaders\Debug\debugOrientation.frag.glsl" />
-    <None Include="res\shaders\Debug\debugOrientation.geom.glsl" />
-    <None Include="res\shaders\Debug\debugOrientation.vert.glsl" />
+    <None Include="res\shaders\DebugShaders\debugOrientation.frag.glsl" />
+    <None Include="res\shaders\DebugShaders\debugOrientation.geom.glsl" />
+    <None Include="res\shaders\DebugShaders\debugOrientation.vert.glsl" />
     <None Include="res\shaders\depth.frag.glsl" />
     <None Include="res\shaders\explode.geom.glsl" />
     <None Include="res\shaders\explode.vert.glsl" />
