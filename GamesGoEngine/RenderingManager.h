@@ -93,6 +93,8 @@ public:
 	static void SetSelectedGameObject(GameObject* selectedObject);
 	static void EnablePostProcessing(bool enable);
 	static bool IsPostProcessingEnabled();
+	static void EnableBloom(bool enable);
+	static bool IsBloomEnabled();
 	static void EnableHDRToneMappingAndGamma(bool enable);
 	static bool IsHDRToneMappingAndGammaEnabled();
 	static void SetWireframeOnly(bool wireframeOnly);
@@ -141,6 +143,7 @@ private:
 	// container holding all subscribed post process renderers
 	std::vector<std::shared_ptr<PostProcessMaterial>> postProcessMaterials;
 	bool postProcessingEnabled = true;
+	bool bloomEnabled = true;
 	bool hdrTonemappingAndGamma = true;
 	bool firstRenderedFrame = true;
 	bool renderWireframeOnly = false;

@@ -8,18 +8,6 @@ void GraphicsSettingsUI::Draw()
 {
 	ImGui::Begin("Graphics Settings");
 
-	bool postProcessingEnabled = RenderingManager::IsPostProcessingEnabled();
-	if (ImGui::Checkbox("Post Processing Enabled", &postProcessingEnabled))
-	{
-		RenderingManager::EnablePostProcessing(postProcessingEnabled);
-	}
-
-	bool hdrToneMappingAndGammaEnabled = RenderingManager::IsHDRToneMappingAndGammaEnabled();
-	if (ImGui::Checkbox("HDR tone mapping and gamma correction Enabled", &hdrToneMappingAndGammaEnabled))
-	{
-		RenderingManager::EnableHDRToneMappingAndGamma(hdrToneMappingAndGammaEnabled);
-	}
-
 	bool vsyncEnabled = WindowManager::IsVSyncEnabled();
 	if (ImGui::Checkbox("V-Sync Enabled", &vsyncEnabled))
 	{
@@ -31,7 +19,6 @@ void GraphicsSettingsUI::Draw()
 	{
 		RenderingManager::EnableMSAA(msaaEnabled);
 	}
-
 	if (msaaEnabled)
 	{
 		int msaaSamples = RenderingManager::GetMSAASamplesNumber();
@@ -41,7 +28,18 @@ void GraphicsSettingsUI::Draw()
 		}
 	}
 
-	if (RenderingManager::IsHDRToneMappingAndGammaEnabled())
+	bool postProcessingEnabled = RenderingManager::IsPostProcessingEnabled();
+	if (ImGui::Checkbox("Post Processing Enabled", &postProcessingEnabled))
+	{
+		RenderingManager::EnablePostProcessing(postProcessingEnabled);
+	}
+
+	bool hdrToneMappingAndGammaEnabled = RenderingManager::IsHDRToneMappingAndGammaEnabled();
+	if (ImGui::Checkbox("HDR tone mapping and gamma correction Enabled", &hdrToneMappingAndGammaEnabled))
+	{
+		RenderingManager::EnableHDRToneMappingAndGamma(hdrToneMappingAndGammaEnabled);
+	}
+	if (hdrToneMappingAndGammaEnabled)
 	{
 		float gamma = RenderingManager::GetGamma();
 		if (ImGui::SliderFloat("gamma", &gamma, 0.0f, 5.0f))
@@ -56,10 +54,18 @@ void GraphicsSettingsUI::Draw()
 		}
 	}
 
-	int bloomBlurAmount = RenderingManager::GetBloomBlurAmount();
-	if (ImGui::SliderInt("bloom blur amount", &bloomBlurAmount, 5, 50))
+	bool bloomEnabled = RenderingManager::IsBloomEnabled();
+	if (ImGui::Checkbox("Bloom Enabled", &bloomEnabled))
 	{
-		RenderingManager::SetBloomBlurAmount(bloomBlurAmount);
+		RenderingManager::EnableBloom(bloomEnabled);
+	}
+	if (bloomEnabled)
+	{
+		int bloomBlurAmount = RenderingManager::GetBloomBlurAmount();
+		if (ImGui::SliderInt("bloom blur amount", &bloomBlurAmount, 5, 50))
+		{
+			RenderingManager::SetBloomBlurAmount(bloomBlurAmount);
+		}
 	}
 
 	constexpr size_t shadowMapResolutionsNumber = 5;

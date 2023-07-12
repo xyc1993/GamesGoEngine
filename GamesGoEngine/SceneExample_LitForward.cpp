@@ -92,8 +92,10 @@ void SceneExample_LitForward::InitScene(bool shouldAddPostProcessEffects)
 	//std::shared_ptr<MeshPrimitiveQuad> quadMesh = std::make_shared<MeshPrimitiveQuad>();
 	std::shared_ptr<MeshPrimitiveSphere> sphereMesh = std::make_shared<MeshPrimitiveSphere>();
 
+	const glm::vec3 lightsColor = glm::vec3(10.0f);
+
 	std::shared_ptr<Material> lampMaterial = std::make_shared<Material>("res/shaders/unlit.vert.glsl", "res/shaders/unlit.frag.glsl");
-	lampMaterial->SetVector3((GLchar*)"unlitColor", glm::vec3(1.0f));
+	lampMaterial->SetVector3((GLchar*)"unlitColor", glm::vec3(lightsColor));
 
 	GameObject* lampParent = nullptr;
 	for (int i = 0; i < LAMPS_NUMBER; i++)
@@ -106,7 +108,7 @@ void SceneExample_LitForward::InitScene(bool shouldAddPostProcessEffects)
 		lampObject->GetTransform()->SetPosition(startPointLightPositions[i]);
 		lampObject->GetTransform()->SetScale(glm::vec3(0.2f));
 
-		PointLight* pointLight = new PointLight(glm::vec3(0.05f), glm::vec3(0.8f), glm::vec3(1.0f), 1.0f, 0.09f, 0.032f);
+		PointLight* pointLight = new PointLight(0.05f * lightsColor, 0.8f * lightsColor, 1.0f * lightsColor, 1.0f, 0.09f, 0.032f);
 		lampObject->AddComponent(pointLight);
 
 		PositionOscillator* oscillator = new PositionOscillator();
