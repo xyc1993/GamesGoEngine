@@ -75,7 +75,7 @@ void SceneExample_LitForward::InitScene(bool shouldAddPostProcessEffects)
 	skyboxTextures.push_back("res/textures/skybox/front.tga");
 
 	std::shared_ptr<Material> skyboxMaterial = std::make_shared<Material>("res/shaders/skybox.vert.glsl", "res/shaders/skybox.frag.glsl");
-	skyboxMaterial->SetCubeTextureByPath("skybox", 1, skyboxTextures);
+	skyboxMaterial->SetCubeTextureByPath("skybox", 0, skyboxTextures);
 
 	SkyboxRenderer* skyboxComponent = new SkyboxRenderer();
 	skyboxComponent->SetMaterial(skyboxMaterial);

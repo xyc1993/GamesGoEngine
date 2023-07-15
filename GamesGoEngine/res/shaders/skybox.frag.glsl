@@ -3,7 +3,7 @@ in vec3 TexCoords;
 
 out vec4 color;
 
-uniform samplerCube skybox;
+layout(binding = 0) uniform samplerCube skybox;
 
 void main()
 {

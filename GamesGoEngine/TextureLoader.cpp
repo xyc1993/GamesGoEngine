@@ -42,7 +42,7 @@ GLuint TextureLoader::LoadCubemap(std::vector<const GLchar*> faces, bool sRGB)
 
     const GLint internalFormat = sRGB ? GL_SRGB : GL_RGB;
 
-    glBindTexture(GL_TEXTURE_BINDING_CUBE_MAP, textureID);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
 
     for (GLuint i = 0; i < faces.size(); i++)
     {
