@@ -20,16 +20,30 @@ void main()
     {
         for(int i = 1; i < 5; ++i)
         {
-            result += texture(screenTexture, TexCoords + vec2(tex_offset.x * i, 0.0)).rgb * weight[i];
-            result += texture(screenTexture, TexCoords - vec2(tex_offset.x * i, 0.0)).rgb * weight[i];
+            if ((TexCoords.x + tex_offset.x * i) <= 1.0)
+            {
+                result += texture(screenTexture, TexCoords + vec2(tex_offset.x * i, 0.0)).rgb * weight[i];
+            }
+
+            if ((TexCoords.x - tex_offset.x * i) >= 0.0)
+            {
+                result += texture(screenTexture, TexCoords - vec2(tex_offset.x * i, 0.0)).rgb * weight[i];
+            }
         }
     }
     else
     {
         for(int i = 1; i < 5; ++i)
         {
-            result += texture(screenTexture, TexCoords + vec2(0.0, tex_offset.y * i)).rgb * weight[i];
-            result += texture(screenTexture, TexCoords - vec2(0.0, tex_offset.y * i)).rgb * weight[i];
+            if ((TexCoords.y + tex_offset.y * i) <= 1.0)
+            {
+                result += texture(screenTexture, TexCoords + vec2(0.0, tex_offset.y * i)).rgb * weight[i];
+            }
+            
+            if ((TexCoords.y - tex_offset.y * i) >= 0.0)
+            {
+                result += texture(screenTexture, TexCoords - vec2(0.0, tex_offset.y * i)).rgb * weight[i];
+            }
         }
     }
     FragColor = vec4(result, 1.0);
