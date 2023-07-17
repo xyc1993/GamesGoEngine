@@ -3,9 +3,14 @@ out vec4 FragColor;
 
 in VS_OUT {
     vec2 TexCoords;
+
     vec3 TangentLightPos;
     vec3 TangentViewPos;
     vec3 TangentFragPos;
+
+    vec3 LightPos;
+    vec3 ViewPos;
+    vec3 FragPos;
 } fs_in;
 
 layout(binding = 0) uniform sampler2D diffuseTexture;
@@ -25,17 +30,17 @@ vec3 gridSamplingDisk[20] = vec3[]
 );
 
 
-float ShadowCalculation(vec3 fragPos)
+float ShadowCalculation(vec3 fragPos, vec3 lightPos, vec3 viewPos)
 {
     // get vector between fragment position and light position
-    vec3 fragToLight = fragPos - fs_in.TangentLightPos;
+    vec3 fragToLight = fragPos - lightPos;
     float currentDepth = length(fragToLight);
 
     // use PCF for smoother shadow edges with less jagged pattern
     float shadow = 0.0;
     float bias = 0.15;
     int samples = 20;
-    float viewDistance = length(fs_in.TangentViewPos - fragPos);
+    float viewDistance = length(viewPos - fragPos);
     float diskRadius = (1.0 + (viewDistance / far_plane)) / 25.0;
     for(int i = 0; i < samples; ++i)
     {
@@ -84,8 +89,8 @@ void main()
     vec3 halfwayDir = normalize(lightDir + viewDir);  
     float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
 
-    // calculate shadow    
-    float shadow = ShadowCalculation(fs_in.TangentFragPos);
+    // calculate shadow, use world coordinates since depth/shadow map is based on world coordinates
+    float shadow = ShadowCalculation(fs_in.FragPos, fs_in.LightPos, fs_in.ViewPos);
 
     // calculate final color with provided point light
     vec3 finalColor = vec3(0.0);

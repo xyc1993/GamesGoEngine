@@ -659,7 +659,7 @@ void RenderingManager::UpdateOmnidirectionalShadowMap()
 	}
 
 	float aspect = (float)shadowWidth / (float)shadowHeight;
-	float near = 1.0f;
+	float near = 0.1f;
 	float far = 25.0f;
 	glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), aspect, near, far);
 

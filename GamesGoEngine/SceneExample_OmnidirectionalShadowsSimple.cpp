@@ -11,6 +11,7 @@ SceneExample_OmnidirectionalShadowsSimple::SceneExample_OmnidirectionalShadowsSi
 	std::shared_ptr<MeshPrimitiveSphere> sphereMesh = std::make_shared<MeshPrimitiveSphere>();
 
 	std::shared_ptr<Material> brickwallMaterial = std::make_shared<Material>("res/shaders/litOmniShadowNormalMapping.vert.glsl", "res/shaders/litOmniShadowNormalMapping.frag.glsl");
+	//std::shared_ptr<Material> brickwallMaterial = std::make_shared<Material>("res/shaders/litOmniShadowSimple.vert.glsl", "res/shaders/litOmniShadowSimple.frag.glsl");
 	brickwallMaterial->SetTextureByPath((GLchar*)"diffuseTexture", 0, (GLchar*)"res/textures/brickwall/brickwall.jpg");
 	brickwallMaterial->SetTextureByPath((GLchar*)"normalTexture", 2, (GLchar*)"res/textures/brickwall/brickwall_normal.jpg");
 	brickwallMaterial->SetLightModel(LightModelType::LitForward);
@@ -19,10 +20,10 @@ SceneExample_OmnidirectionalShadowsSimple::SceneExample_OmnidirectionalShadowsSi
 	std::vector<glm::vec3> boundsPositions;
 	boundsPositions.push_back(glm::vec3(0.0f, -2.0f, 0.0f));
 	boundsPositions.push_back(glm::vec3(0.0f, 6.0f, 0.0f));
-	boundsPositions.push_back(glm::vec3(-7.0f, 0.0f, 0.0f));
-	boundsPositions.push_back(glm::vec3(7.0f, 0.0f, 0.0f));
-	boundsPositions.push_back(glm::vec3(0.0f, 0.0f, -7.0f));
-	boundsPositions.push_back(glm::vec3(0.0f, 0.0f, 7.0f));
+	boundsPositions.push_back(glm::vec3(-7.0f, 2.0f, 0.0f));
+	boundsPositions.push_back(glm::vec3(7.0f, 2.0f, 0.0f));
+	boundsPositions.push_back(glm::vec3(0.0f, 2.0f, -7.0f));
+	boundsPositions.push_back(glm::vec3(0.0f, 2.0f, 7.0f));
 
 	std::vector<glm::vec3> boundsRotations;
 	boundsRotations.push_back(glm::vec3(-90.0f, 0.0f, 0.0f));
@@ -46,22 +47,14 @@ SceneExample_OmnidirectionalShadowsSimple::SceneExample_OmnidirectionalShadowsSi
 		boundObject->SetName(name);
 		boundObject->GetTransform()->SetPosition(boundsPositions[i]);
 		boundObject->GetTransform()->SetRotationEulerDegrees(boundsRotations[i]);
-
-		/* Currently there are issue with shadow mapping when meshes are scaled
-		 * TODO: investigate the issue mentioned above
-		 * */
-		/*
-		if (i == 0 || i == 1)
+		if (i <= 1) // floor & ceiling
 		{
-			boundObject->GetTransform()->SetScale(glm::vec3(8.0f));
+			boundObject->GetTransform()->SetScale(glm::vec3(7.0f));
 		}
-		else
+		else //rest of the walls
 		{
-
+			boundObject->GetTransform()->SetScale(glm::vec3(7.0f, 4.0f, 7.0f));
 		}
-		*/
-
-		boundObject->GetTransform()->SetScale(glm::vec3(8.0f));
 
 		scene->AddGameObject(boundObject);
 	}
@@ -114,7 +107,7 @@ SceneExample_OmnidirectionalShadowsSimple::SceneExample_OmnidirectionalShadowsSi
 
 	// Add source of light
 	GameObject* pointLightObject = new GameObject();
-	pointLightObject->GetTransform()->SetPosition(glm::vec3(1.0f, 0.0f, -2.0f));
+	pointLightObject->GetTransform()->SetPosition(glm::vec3(1.0f, 1.0f, -2.0f));
 	pointLightObject->GetTransform()->SetScale(glm::vec3(0.2f));
 	// Add debug renderer
 	std::shared_ptr<Material> lampMaterial = std::make_shared<Material>("res/shaders/unlit.vert.glsl", "res/shaders/unlit.frag.glsl");
@@ -126,7 +119,7 @@ SceneExample_OmnidirectionalShadowsSimple::SceneExample_OmnidirectionalShadowsSi
 	lampMeshRenderer->SetIsCastingShadow(false);
 	pointLightObject->AddComponent(lampMeshRenderer);
 	// Add point light component
-	PointLight* pointLight = new PointLight(0.02f * lightColor, 0.8f * lightColor, lightColor, 1.0f, 0.09f, 0.032f);
+	PointLight* pointLight = new PointLight(0.02f * lightColor, 0.8f * lightColor, lightColor, 5.0f, 3.2f, 1.2f);
 	pointLightObject->AddComponent(pointLight);
 	// Name and add to scene
 	pointLightObject->SetName("point_light");

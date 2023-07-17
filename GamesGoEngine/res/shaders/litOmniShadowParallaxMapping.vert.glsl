@@ -7,9 +7,14 @@ layout (location = 4) in vec3 aBitangent;
 
 out VS_OUT {
     vec2 TexCoords;
+
     vec3 TangentLightPos;
     vec3 TangentViewPos;
     vec3 TangentFragPos;
+
+    vec3 LightPos;
+    vec3 ViewPos;
+    vec3 FragPos;
 } vs_out;
 
 layout(std140, binding = 0) uniform Matrices
@@ -40,6 +45,10 @@ void main()
     vs_out.TangentLightPos = TBN * lightPos;
     vs_out.TangentViewPos  = TBN * cameraPos;
     vs_out.TangentFragPos  = TBN * fragPos;
+
+    vs_out.LightPos = lightPos;
+    vs_out.ViewPos  = cameraPos;
+    vs_out.FragPos  = fragPos;
         
     gl_Position = projection * view * model * vec4(aPos, 1.0);
 }

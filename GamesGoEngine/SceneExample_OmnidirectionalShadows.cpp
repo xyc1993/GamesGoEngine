@@ -39,10 +39,10 @@ SceneExample_OmnidirectionalShadows::SceneExample_OmnidirectionalShadows()
 	std::vector<glm::vec3> boundsPositions;
 	boundsPositions.push_back(glm::vec3(0.0f, -2.0f, 0.0f));
 	boundsPositions.push_back(glm::vec3(0.0f, 6.0f, 0.0f));
-	boundsPositions.push_back(glm::vec3(-7.0f, 0.0f, 0.0f));
-	boundsPositions.push_back(glm::vec3(7.0f, 0.0f, 0.0f));
-	boundsPositions.push_back(glm::vec3(0.0f, 0.0f, -7.0f));
-	boundsPositions.push_back(glm::vec3(0.0f, 0.0f, 7.0f));
+	boundsPositions.push_back(glm::vec3(-7.0f, 2.0f, 0.0f));
+	boundsPositions.push_back(glm::vec3(7.0f, 2.0f, 0.0f));
+	boundsPositions.push_back(glm::vec3(0.0f, 2.0f, -5.5f));
+	boundsPositions.push_back(glm::vec3(0.0f, 2.0f, 7.0f));
 
 	std::vector<glm::vec3> boundsRotations;
 	boundsRotations.push_back(glm::vec3(-90.0f, 0.0f, 0.0f));
@@ -77,17 +77,13 @@ SceneExample_OmnidirectionalShadows::SceneExample_OmnidirectionalShadows()
 		boundObject->SetName(name);
 		boundObject->GetTransform()->SetPosition(boundsPositions[i]);
 		boundObject->GetTransform()->SetRotationEulerDegrees(boundsRotations[i]);
-
-		/* Currently there are issue with shadow mapping when meshes are scaled
-		 * TODO: investigate the issue mentioned above
-		 * */
-		if (i == 0 || i == 1)
+		if (i <= 1) // floor & ceiling
 		{
-			boundObject->GetTransform()->SetScale(glm::vec3(8.0f));
+			boundObject->GetTransform()->SetScale(glm::vec3(7.0f));
 		}
-		else
+		else //rest of the walls
 		{
-			
+			boundObject->GetTransform()->SetScale(glm::vec3(7.0f, 4.0f, 7.0f));
 		}
 		
 		scene->AddGameObject(boundObject);
@@ -95,9 +91,9 @@ SceneExample_OmnidirectionalShadows::SceneExample_OmnidirectionalShadows()
 
 	// Add cubes & sphere
 	std::vector<glm::vec3> cubePositions;
-	cubePositions.push_back(glm::vec3(2.0f, -1.5f, -3.5f));
+	cubePositions.push_back(glm::vec3(2.0f, 3.0f, -3.5f));
 	cubePositions.push_back(glm::vec3(-3.0f, 1.0f, -2.0f));
-	cubePositions.push_back(glm::vec3(0.0f, -1.0f, -5.5f));
+	cubePositions.push_back(glm::vec3(-0.3f, -0.7f, -3.5f));
 
 	std::vector<glm::vec3> cubeRotations;
 	cubeRotations.push_back(glm::vec3(0.0f, 0.0f, 0.0f));
@@ -176,7 +172,7 @@ SceneExample_OmnidirectionalShadows::SceneExample_OmnidirectionalShadows()
 
 	// Add source of light
 	GameObject* pointLightObject = new GameObject();
-	pointLightObject->GetTransform()->SetPosition(glm::vec3(1.0f, 0.0f, -2.0f));
+	pointLightObject->GetTransform()->SetPosition(glm::vec3(-1.9f, 0.0f, 1.9f));
 	pointLightObject->GetTransform()->SetScale(glm::vec3(0.2f));
 	// Add debug renderer
 	std::shared_ptr<Material> lampMaterial = std::make_shared<Material>("res/shaders/unlit.vert.glsl", "res/shaders/unlit.frag.glsl");
