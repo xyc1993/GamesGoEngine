@@ -30,11 +30,11 @@ public:
 	virtual void Draw(glm::mat4 model);
 	void SetShader(const GLchar* vertexPath, const GLchar* fragmentPath);
 	
-	void SetTextureByPath(const GLchar* textureName, GLuint textureIndex, GLchar* path, bool transparencyEnabled = false);
+	void SetTextureByPath(const GLchar* textureName, GLuint textureIndex, GLchar* path, bool transparencyEnabled = false, bool sRGB = true);
 	void SetTexture(const GLchar* textureName, GLuint textureIndex, GLuint texture);
 	GLint GetTexture(const GLchar* textureName) const;
 
-	void SetCubeTextureByPath(const GLchar* textureName, GLuint textureIndex, const std::vector<const GLchar*>& paths);
+	void SetCubeTextureByPath(const GLchar* textureName, GLuint textureIndex, const std::vector<const GLchar*>& paths, bool transparencyEnabled = false, bool sRGB = true);
 	void SetCubeTexture(const GLchar* textureName, GLuint textureIndex, GLuint texture);
 	
 	void SetFloat(const GLchar* floatName, float value) const;

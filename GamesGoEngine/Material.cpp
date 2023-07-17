@@ -73,11 +73,11 @@ void Material::SetShader(const GLchar* vertexPath, const GLchar* fragmentPath)
 	shader = new Shader(vertexPath, fragmentPath);	
 }
 
-void Material::SetTextureByPath(const GLchar* textureName, GLuint textureIndex, GLchar* path, bool transparencyEnabled)
+void Material::SetTextureByPath(const GLchar* textureName, GLuint textureIndex, GLchar* path, bool transparencyEnabled, bool sRGB)
 {
 	if (shader != nullptr)
 	{
-		const GLuint texture = TextureLoader::LoadTexture(path, transparencyEnabled);
+		const GLuint texture = TextureLoader::LoadTexture(path, transparencyEnabled, sRGB);
 		SetTexture(textureName, textureIndex, texture);
 	}
 }
@@ -107,11 +107,11 @@ GLint Material::GetTexture(const GLchar* textureName) const
 	return 0;
 }
 
-void Material::SetCubeTextureByPath(const GLchar* textureName, GLuint textureIndex, const std::vector<const GLchar*>& paths)
+void Material::SetCubeTextureByPath(const GLchar* textureName, GLuint textureIndex, const std::vector<const GLchar*>& paths, bool transparencyEnabled, bool sRGB)
 {
 	if (shader != nullptr)
 	{
-		const GLuint texture = TextureLoader::LoadCubemap(paths);
+		const GLuint texture = TextureLoader::LoadCubemap(paths, transparencyEnabled, sRGB);
 		SetCubeTexture(textureName, textureIndex, texture);
 	}
 }

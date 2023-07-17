@@ -13,7 +13,7 @@ SceneExample_OmnidirectionalShadowsSimple::SceneExample_OmnidirectionalShadowsSi
 	std::shared_ptr<Material> brickwallMaterial = std::make_shared<Material>("res/shaders/litOmniShadowNormalMapping.vert.glsl", "res/shaders/litOmniShadowNormalMapping.frag.glsl");
 	//std::shared_ptr<Material> brickwallMaterial = std::make_shared<Material>("res/shaders/litOmniShadowSimple.vert.glsl", "res/shaders/litOmniShadowSimple.frag.glsl");
 	brickwallMaterial->SetTextureByPath((GLchar*)"diffuseTexture", 0, (GLchar*)"res/textures/brickwall/brickwall.jpg");
-	brickwallMaterial->SetTextureByPath((GLchar*)"normalTexture", 2, (GLchar*)"res/textures/brickwall/brickwall_normal.jpg");
+	brickwallMaterial->SetTextureByPath((GLchar*)"normalTexture", 2, (GLchar*)"res/textures/brickwall/brickwall_normal.jpg", false, false);
 	brickwallMaterial->SetLightModel(LightModelType::LitForward);
 
 	// Add walls, floor and ceiling
@@ -93,7 +93,7 @@ SceneExample_OmnidirectionalShadowsSimple::SceneExample_OmnidirectionalShadowsSi
 	{
 		nanoSuitMaterials[i] = std::make_shared<Material>("res/shaders/litOmniShadowNormalMapping.vert.glsl", "res/shaders/litOmniShadowNormalMapping.frag.glsl");
 		nanoSuitMaterials[i]->SetTextureByPath((GLchar*)"diffuseTexture", 0, nanoSuitTexturePaths[i]);
-		nanoSuitMaterials[i]->SetTextureByPath((GLchar*)"normalTexture", 2, nanoSuitNormalTexturePaths[i]);
+		nanoSuitMaterials[i]->SetTextureByPath((GLchar*)"normalTexture", 2, nanoSuitNormalTexturePaths[i], false, false);
 		nanoSuitMaterials[i]->SetLightModel(LightModelType::LitForward);
 		nanoSuitMeshRenderer->SetMaterial(nanoSuitMaterials[i], i);
 	}

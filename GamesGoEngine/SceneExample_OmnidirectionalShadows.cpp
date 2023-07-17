@@ -14,7 +14,7 @@ SceneExample_OmnidirectionalShadows::SceneExample_OmnidirectionalShadows()
 
 	std::shared_ptr<Material> brickwallMaterial = std::make_shared<Material>("res/shaders/litOmniShadowNormalMapping.vert.glsl", "res/shaders/litOmniShadowNormalMapping.frag.glsl");
 	brickwallMaterial->SetTextureByPath((GLchar*)"diffuseTexture", 0, (GLchar*)"res/textures/brickwall/brickwall.jpg");
-	brickwallMaterial->SetTextureByPath((GLchar*)"normalTexture", 2, (GLchar*)"res/textures/brickwall/brickwall_normal.jpg");
+	brickwallMaterial->SetTextureByPath((GLchar*)"normalTexture", 2, (GLchar*)"res/textures/brickwall/brickwall_normal.jpg", false, false);
 	brickwallMaterial->SetLightModel(LightModelType::LitForward);
 
 	std::shared_ptr<Material> woodMaterial = std::make_shared<Material>("res/shaders/litOmniShadowSimple.vert.glsl", "res/shaders/litOmniShadowSimple.frag.glsl");
@@ -23,15 +23,15 @@ SceneExample_OmnidirectionalShadows::SceneExample_OmnidirectionalShadows()
 	
 	std::shared_ptr<Material> brickParallaxMaterial = std::make_shared<Material>("res/shaders/litOmniShadowParallaxMapping.vert.glsl", "res/shaders/litOmniShadowParallaxMapping.frag.glsl");
 	brickParallaxMaterial->SetTextureByPath((GLchar*)"diffuseTexture", 0, (GLchar*)"res/textures/bricksParallax/bricks2.jpg");
-	brickParallaxMaterial->SetTextureByPath((GLchar*)"normalTexture", 2, (GLchar*)"res/textures/bricksParallax/bricks2_normal.jpg");
-	brickParallaxMaterial->SetTextureByPath((GLchar*)"parallaxTexture", 3, (GLchar*)"res/textures/bricksParallax/bricks2_disp.jpg");
+	brickParallaxMaterial->SetTextureByPath((GLchar*)"normalTexture", 2, (GLchar*)"res/textures/bricksParallax/bricks2_normal.jpg", false, false);
+	brickParallaxMaterial->SetTextureByPath((GLchar*)"parallaxTexture", 3, (GLchar*)"res/textures/bricksParallax/bricks2_disp.jpg", false, false);
 	brickParallaxMaterial->SetLightModel(LightModelType::LitForward);
 	brickParallaxMaterial->SetFloat("height_scale", 0.1f);
 
 	std::shared_ptr<Material> woodParallaxMaterial = std::make_shared<Material>("res/shaders/litOmniShadowParallaxMapping.vert.glsl", "res/shaders/litOmniShadowParallaxMapping.frag.glsl");
 	woodParallaxMaterial->SetTextureByPath((GLchar*)"diffuseTexture", 0, (GLchar*)"res/textures/woodParallax/wood.png");
-	woodParallaxMaterial->SetTextureByPath((GLchar*)"normalTexture", 2, (GLchar*)"res/textures/woodParallax/toy_box_normal.png");
-	woodParallaxMaterial->SetTextureByPath((GLchar*)"parallaxTexture", 3, (GLchar*)"res/textures/woodParallax/toy_box_disp.png");
+	woodParallaxMaterial->SetTextureByPath((GLchar*)"normalTexture", 2, (GLchar*)"res/textures/woodParallax/toy_box_normal.png", false, false);
+	woodParallaxMaterial->SetTextureByPath((GLchar*)"parallaxTexture", 3, (GLchar*)"res/textures/woodParallax/toy_box_disp.png", false, false);
 	woodParallaxMaterial->SetLightModel(LightModelType::LitForward);
 	woodParallaxMaterial->SetFloat("height_scale", 0.1f);
 
@@ -158,7 +158,7 @@ SceneExample_OmnidirectionalShadows::SceneExample_OmnidirectionalShadows()
 	{
 		nanoSuitMaterials[i] = std::make_shared<Material>("res/shaders/litOmniShadowNormalMapping.vert.glsl", "res/shaders/litOmniShadowNormalMapping.frag.glsl");
 		nanoSuitMaterials[i]->SetTextureByPath((GLchar*)"diffuseTexture", 0, nanoSuitTexturePaths[i]);
-		nanoSuitMaterials[i]->SetTextureByPath((GLchar*)"normalTexture", 2, nanoSuitNormalTexturePaths[i]);
+		nanoSuitMaterials[i]->SetTextureByPath((GLchar*)"normalTexture", 2, nanoSuitNormalTexturePaths[i], false, false);
 		nanoSuitMaterials[i]->SetLightModel(LightModelType::LitForward);
 		nanoSuitMeshRenderer->SetMaterial(nanoSuitMaterials[i], i);
 	}
