@@ -79,6 +79,7 @@ private:
 public:
 	static void SetSkybox(SkyboxRenderer* skybox);
 	static void AddMeshRenderer(MeshRenderer* meshRenderer);
+	static void RemoveMeshRenderer(MeshRenderer* meshRenderer);
 	static void AddPostProcessMaterial(const std::shared_ptr<PostProcessMaterial>& ppMaterial);
 	static void RemovePostProcessMaterial(const std::shared_ptr<PostProcessMaterial>& ppMaterial);
 	static void SortMeshRenderers();

@@ -2,6 +2,7 @@
 
 #include "CamerasManager.h"
 #include "PostProcessRenderer.h"
+#include "RenderingManager.h"
 
 Scene::Scene()
 {
@@ -49,6 +50,7 @@ void Scene::RemoveGameObject(GameObject* gameObject)
 	{
 		delete *iterator;
 		sceneObjects.erase(iterator);
+		RenderingManager::SetSelectedGameObject(nullptr);
 	}
 }
 

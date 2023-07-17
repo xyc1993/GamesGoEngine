@@ -824,6 +824,19 @@ void RenderingManager::AddMeshRenderer(MeshRenderer* meshRenderer)
 	SortMeshRenderers();
 }
 
+void RenderingManager::RemoveMeshRenderer(MeshRenderer* meshRenderer)
+{
+	for (size_t i = 0; i < GetInstance()->meshRenderers.size(); i++)
+	{
+		if (GetInstance()->meshRenderers[i] == meshRenderer)
+		{
+			GetInstance()->meshRenderers.erase(GetInstance()->meshRenderers.begin() + i);
+			break;
+		}
+	}
+	SortMeshRenderers();
+}
+
 void RenderingManager::AddPostProcessMaterial(const std::shared_ptr<PostProcessMaterial>& ppMaterial)
 {
 	GetInstance()->postProcessMaterials.push_back(ppMaterial);

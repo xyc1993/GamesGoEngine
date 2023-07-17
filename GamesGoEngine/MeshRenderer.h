@@ -11,6 +11,7 @@ class MeshRenderer : public Renderer
 {
 public:
 	MeshRenderer();
+	~MeshRenderer() override;
 
 public:
 	virtual void OnSelected() override;

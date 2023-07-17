@@ -12,6 +12,11 @@ MeshRenderer::MeshRenderer()
 	RenderingManager::AddMeshRenderer(this);
 }
 
+MeshRenderer::~MeshRenderer()
+{
+	RenderingManager::RemoveMeshRenderer(this);
+}
+
 void MeshRenderer::OnSelected()
 {
 	SetRenderQueuePosition(RenderQueuePosition::EditorOutline, true);
