@@ -8,4 +8,5 @@
 #include "SceneExample_Instancing.h"
 #include "SceneExample_LitForward.h"
 #include "SceneExample_OmnidirectionalShadows.h"
+#include "SceneExample_OmnidirectionalShadowsSimple.h"
 #include "SceneExample_Transparency.h"

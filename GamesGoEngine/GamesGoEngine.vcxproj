@@ -197,6 +197,7 @@
     <ClCompile Include="SceneExample_Instancing.cpp" />
     <ClCompile Include="SceneExample_LitForward.cpp" />
     <ClCompile Include="SceneExample_OmnidirectionalShadows.cpp" />
+    <ClCompile Include="SceneExample_OmnidirectionalShadowsSimple.cpp" />
     <ClCompile Include="SceneExample_Transparency.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SkyboxRenderer.cpp" />
@@ -262,6 +263,7 @@
     <ClInclude Include="SceneExample_Instancing.h" />
     <ClInclude Include="SceneExample_LitForward.h" />
     <ClInclude Include="SceneExample_OmnidirectionalShadows.h" />
+    <ClInclude Include="SceneExample_OmnidirectionalShadowsSimple.h" />
     <ClInclude Include="SceneExample_Transparency.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SkyboxRenderer.h" />
