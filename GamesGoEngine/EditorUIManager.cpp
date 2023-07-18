@@ -29,31 +29,32 @@ void EditorUIManager::Draw(Scene* activeScene)
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
 
-	//ImGuiIO& io = ImGui::GetIO();
-	//io.FontGlobalScale = 3.0f;
+	const float uiScale = GetUIScale();
+
+	ImGui::GetIO().FontGlobalScale = uiScale;
 
 	ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
-	ImGui::SetNextWindowSize(ImVec2(200.0f, 300.0f));
+	ImGui::SetNextWindowSize(ImVec2(0.125f * windowWidth, 0.33f * windowHeight));
 
 	GameObject* selectedSceneObject = WorldOutlinerUI::Draw(activeScene);
 
-	ImGui::SetNextWindowPos(ImVec2(windowWidth - 300.0f, 0.0f));
-	ImGui::SetNextWindowSize(ImVec2(300.0f, 300.0f));
+	ImGui::SetNextWindowPos(ImVec2(0.8125f * windowWidth, 0.0f));
+	ImGui::SetNextWindowSize(ImVec2(0.1875f * windowWidth, 0.33f * windowHeight));
 
 	PropertiesUI::Draw(selectedSceneObject);
 	
-	ImGui::SetNextWindowPos(ImVec2(0.0f, windowHeight - 300.0f));
-	ImGui::SetNextWindowSize(ImVec2(400.0f, 300.0f));
+	ImGui::SetNextWindowPos(ImVec2(0.0f, 0.67f * windowHeight));
+	ImGui::SetNextWindowSize(ImVec2(0.25f * windowWidth, 0.33f * windowHeight));
 
 	GraphicsSettingsUI::Draw();
 
-	ImGui::SetNextWindowPos(ImVec2(0.5f * windowWidth - 400.0f, windowHeight - 300.0f));
-	ImGui::SetNextWindowSize(ImVec2(800.0f, 300.0f));
+	ImGui::SetNextWindowPos(ImVec2(0.25f * windowWidth, 0.67f * windowHeight));
+	ImGui::SetNextWindowSize(ImVec2(0.5f * windowWidth, 0.33f * windowHeight));
 
 	LoggerUI::Draw();
 
-	ImGui::SetNextWindowPos(ImVec2(windowWidth - 400.0f, windowHeight - 300.0f));
-	ImGui::SetNextWindowSize(ImVec2(400.0f, 300.0f));
+	ImGui::SetNextWindowPos(ImVec2(0.75f * windowWidth, 0.67f * windowHeight));
+	ImGui::SetNextWindowSize(ImVec2(0.25f * windowWidth, 0.33f * windowHeight));
 
 	DebugToolsUI::Draw();
 
@@ -72,4 +73,19 @@ void EditorUIManager::UpdateWindowSize(float width, float height)
 {
 	windowWidth = width;
 	windowHeight = height;
+}
+
+float EditorUIManager::GetUIScale()
+{
+	// Calculate scale factor based on the following values with assuming linear scaling (based on trial and error)
+	// 3840 x 2160 :: 3.0
+
+	if (windowWidth / 16.0f > windowHeight / 9.0f) // aspect ratio wider than 16:9, scale to lower density value of height
+	{
+		return 3.0f * windowHeight / 2160.0f;
+	}
+	else // aspect ratio narrower than 16:9, scale to lower density value of width
+	{
+		return 3.0f * windowWidth / 3840.0f;
+	}
 }
