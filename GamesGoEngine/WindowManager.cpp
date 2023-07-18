@@ -1,5 +1,6 @@
 #include "WindowManager.h"
 
+#include "EditorUIManager.h"
 #include "InputManager.h"
 #include "RenderingManager.h"
 
@@ -23,6 +24,8 @@ WindowManager::WindowManager()
 
 	currentScreenWidth = startWindowWidth;
 	currentScreenHeight = startWindowHeight;
+
+	EditorUIManager::UpdateWindowSize(static_cast<float>(currentScreenWidth), static_cast<float>(currentScreenHeight));
 }
 
 WindowManager* WindowManager::GetInstance()
@@ -109,4 +112,5 @@ void WindowManager::FramebufferSizeCallback(GLFWwindow* window, int width, int h
 	RenderingManager::ResizeBuffers(width, height);
 	GetInstance()->currentScreenWidth = width;
 	GetInstance()->currentScreenHeight = height;
+	EditorUIManager::UpdateWindowSize(static_cast<float>(width), static_cast<float>(height));
 }

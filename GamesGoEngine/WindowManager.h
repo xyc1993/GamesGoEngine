@@ -27,8 +27,8 @@ private:
 
 	GLFWwindow* window;
 
-	const GLint startWindowWidth = 1200;
-	const GLint startWindowHeight = 675;
+	const GLint startWindowWidth = 1600;
+	const GLint startWindowHeight = 900;
 
 	int currentScreenWidth;
 	int currentScreenHeight;
