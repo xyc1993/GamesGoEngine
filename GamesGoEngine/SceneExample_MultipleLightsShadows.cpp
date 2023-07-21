@@ -1,0 +1,84 @@
+#include "SceneExample_MultipleLightsShadows.h"
+
+#include "Material.h"
+#include "MeshPrimitivesPool.h"
+#include "MeshRenderer.h"
+
+SceneExample_MultipleLightsShadows::SceneExample_MultipleLightsShadows()
+{
+	std::shared_ptr<MeshPrimitiveQuad> quadMesh = MeshPrimitivesPool::GetQuadPrimitive();
+	std::shared_ptr<MeshPrimitiveCube> cubeMesh = MeshPrimitivesPool::GetCubePrimitive();
+	std::shared_ptr<MeshPrimitiveSphere> sphereMesh = MeshPrimitivesPool::GetSpherePrimitive();
+
+	std::shared_ptr<Material> objectsMaterial = std::make_shared<Material>("res/shaders/unlit.vert.glsl", "res/shaders/unlit.frag.glsl");
+	objectsMaterial->SetVector3("unlitColor", glm::vec3(1.0f, 0.0f, 0.0f));
+
+	// Create floor
+	GameObject* floorObject = new GameObject();
+	MeshRenderer* floorMeshRenderer = new MeshRenderer();
+	floorMeshRenderer->SetMesh(quadMesh);
+	floorMeshRenderer->SetMaterial(objectsMaterial);
+	floorObject->AddComponent(floorMeshRenderer);
+	std::string name = "floor";
+	floorObject->SetName(name);
+	floorObject->GetTransform()->SetPosition(glm::vec3(0.0f, -4.0f, 0.0f));
+	floorObject->GetTransform()->SetRotationEulerDegrees(glm::vec3(-90.0f, 0.0f, 0.0f));
+	floorObject->GetTransform()->SetScale(glm::vec3(15.0f));
+	scene->AddGameObject(floorObject);
+
+
+	// Create boxes
+	const int BOXES_NUMBER = 3;
+
+	glm::vec3 boxesPositions[BOXES_NUMBER] = {
+		glm::vec3(3.0f, 0.0f, 0.0f),
+		glm::vec3(2.0f, 5.0f, -15.0f),
+		glm::vec3(-1.5f, -2.2f, -2.5f)
+	};
+
+	glm::vec3 boxesRotations[BOXES_NUMBER] = {
+		glm::vec3(90.0f, 45.0f, 0.0f),
+		glm::vec3(120.0f,60.0f, 0.0f),
+		glm::vec3(150.0f,75.0f, 0.0f)
+	};
+
+	for (int i = 0; i < BOXES_NUMBER; i++)
+	{
+		GameObject* boxObject = new GameObject();
+		MeshRenderer* boxMeshRenderer = new MeshRenderer();
+		boxMeshRenderer->SetMesh(cubeMesh);
+		boxMeshRenderer->SetMaterial(objectsMaterial);
+		boxObject->AddComponent(boxMeshRenderer);
+		std::string name = "box_";
+		name.append(std::to_string(i));
+		boxObject->SetName(name);
+		boxObject->GetTransform()->SetPosition(boxesPositions[i]);
+		boxObject->GetTransform()->SetRotationEulerDegrees(boxesRotations[i]);
+		scene->AddGameObject(boxObject);
+	}
+
+	// Create spheres
+	const int SPHERES_NUMBER = 3;
+
+	glm::vec3 spheresPositions[SPHERES_NUMBER] = {
+		glm::vec3(-3.8f, -2.0f, -12.3f),
+		glm::vec3(2.4f, -0.4f, -3.5f),
+		glm::vec3(-1.7f, 3.0f, -7.5f)
+	};
+
+	for (int i = 0; i < SPHERES_NUMBER; i++)
+	{
+		GameObject* sphereObject = new GameObject();
+		MeshRenderer* sphereMeshRenderer = new MeshRenderer();
+		sphereMeshRenderer->SetMesh(sphereMesh);
+		sphereMeshRenderer->SetMaterial(objectsMaterial);
+		sphereObject->AddComponent(sphereMeshRenderer);
+		std::string name = "sphere_";
+		name.append(std::to_string(i));
+		sphereObject->SetName(name);
+		sphereObject->GetTransform()->SetPosition(spheresPositions[i]);
+		scene->AddGameObject(sphereObject);
+	}
+
+	AddEditorSpectator();
+}
