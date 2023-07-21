@@ -10,8 +10,9 @@ SceneExample_MultipleLightsShadows::SceneExample_MultipleLightsShadows()
 	std::shared_ptr<MeshPrimitiveCube> cubeMesh = MeshPrimitivesPool::GetCubePrimitive();
 	std::shared_ptr<MeshPrimitiveSphere> sphereMesh = MeshPrimitivesPool::GetSpherePrimitive();
 
-	std::shared_ptr<Material> objectsMaterial = std::make_shared<Material>("res/shaders/unlit.vert.glsl", "res/shaders/unlit.frag.glsl");
-	objectsMaterial->SetVector3("unlitColor", glm::vec3(1.0f, 0.0f, 0.0f));
+	std::shared_ptr<Material> objectsMaterial = std::make_shared<Material>("res/shaders/litMultiShadowSimple.vert.glsl", "res/shaders/litMultiShadowSimple.frag.glsl");
+	objectsMaterial->SetVector3("objectColor", glm::vec3(1.0f, 0.0f, 0.0f));
+	objectsMaterial->SetLightModel(LightModelType::LitForward);
 
 	// Create floor
 	GameObject* floorObject = new GameObject();
@@ -78,6 +79,45 @@ SceneExample_MultipleLightsShadows::SceneExample_MultipleLightsShadows()
 		sphereObject->SetName(name);
 		sphereObject->GetTransform()->SetPosition(spheresPositions[i]);
 		scene->AddGameObject(sphereObject);
+	}
+
+	// Create point lights
+	const int POINT_LIGHTS_NUMBER = 3;
+
+	glm::vec3 pointLightsPositions[POINT_LIGHTS_NUMBER] = {
+		glm::vec3(1.0f, 1.0f, -2.0f),
+		glm::vec3(3.6f, 0.9f, -0.8f),
+		glm::vec3(-1.7f, 4.0f, -7.5f)
+	};
+
+	glm::vec3 pointLightsColors[POINT_LIGHTS_NUMBER] = {
+		glm::vec3(10.0f, 8.0f, 6.0f),
+		glm::vec3(10.0f, 8.0f, 6.0f),
+		glm::vec3(10.0f, 8.0f, 6.0f)
+	};
+
+	for (int i = 0; i < POINT_LIGHTS_NUMBER; i++)
+	{
+		GameObject* pointLightObject = new GameObject();
+		pointLightObject->GetTransform()->SetPosition(pointLightsPositions[i]);
+		pointLightObject->GetTransform()->SetScale(glm::vec3(0.2f));
+		// Add debug renderer
+		std::shared_ptr<Material> lampMaterial = std::make_shared<Material>("res/shaders/unlit.vert.glsl", "res/shaders/unlit.frag.glsl");
+		glm::vec3 lightColor = pointLightsColors[i];
+		lampMaterial->SetVector3((GLchar*)"unlitColor", lightColor);
+		MeshRenderer* lampMeshRenderer = new MeshRenderer();
+		lampMeshRenderer->SetMesh(sphereMesh);
+		lampMeshRenderer->SetMaterial(lampMaterial);
+		lampMeshRenderer->SetIsCastingShadow(false);
+		pointLightObject->AddComponent(lampMeshRenderer);
+		// Add point light component
+		PointLight* pointLight = new PointLight(0.02f * lightColor, 0.8f * lightColor, lightColor, 5.0f, 3.2f, 1.2f);
+		pointLightObject->AddComponent(pointLight);
+		// Name and add to scene
+		std::string name = "point_light_";
+		name.append(std::to_string(i));
+		pointLightObject->SetName(name);
+		scene->AddGameObject(pointLightObject);
 	}
 
 	AddEditorSpectator();

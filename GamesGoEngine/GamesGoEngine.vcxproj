@@ -287,6 +287,8 @@
     <None Include="res\shaders\depth.frag.glsl" />
     <None Include="res\shaders\explode.geom.glsl" />
     <None Include="res\shaders\explode.vert.glsl" />
+    <None Include="res\shaders\litMultiShadowSimple.frag.glsl" />
+    <None Include="res\shaders\litMultiShadowSimple.vert.glsl" />
     <None Include="res\shaders\litOmniShadowNormalMapping.frag.glsl" />
     <None Include="res\shaders\litOmniShadowNormalMapping.vert.glsl" />
     <None Include="res\shaders\litOmniShadowParallaxMapping.frag.glsl" />

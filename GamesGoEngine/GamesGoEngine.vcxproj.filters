@@ -706,5 +706,11 @@
     <None Include="res\shaders\DebugShaders\debugOrientation.vert.glsl">
       <Filter>Resource Files\Shaders\DebugShaders</Filter>
     </None>
+    <None Include="res\shaders\litMultiShadowSimple.frag.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\litMultiShadowSimple.vert.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
