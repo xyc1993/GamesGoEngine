@@ -55,7 +55,11 @@ float ShadowCalculation(vec3 fragPos)
     return shadow;
 }
 
-#define NUMBER_OF_POINT_LIGHTS 4
+// ambient light is going to be separate from other light sources
+uniform vec3 ambientLightColor;
+
+// the idea behind this shader is going to be using 1 light source at a time and adding the results
+#define NUMBER_OF_POINT_LIGHTS 1
 
 struct PointLight
 {
@@ -87,20 +91,30 @@ void main()
     // calculate shadow
     float shadow = ShadowCalculation(fs_in.FragPos);
 
-    // calculate final color with provided point light
+    // calculate final color
     vec3 finalColor = vec3(0.0);
+
+    // add ambient light
+    finalColor += ambientLightColor * color;
+
+    // add point light influence
     if (pointLightsNumber > 0)
     {
+        vec3 pointLightColor = vec3(0.0);
+
         // calculate lighting based on provided light data
-        vec3 ambient = pointLights[0].ambient * color;
+        //vec3 ambient = pointLights[0].ambient * color;
 	    vec3 diffuse = pointLights[0].diffuse * diff * color;
 	    vec3 specular = pointLights[0].specular * spec * color;
-        finalColor = ambient + (1.0 - shadow) * (diffuse + specular);
+        //finalColor = ambient + (1.0 - shadow) * (diffuse + specular);
+        pointLightColor = (1.0 - shadow) * (diffuse + specular);
 
         // limit light effect based on distance
         float distance = length(lightPos - fs_in.FragPos);
         float attenuation = 1.0 / (pointLights[0].constant + pointLights[0].linear * distance + pointLights[0].quadratic * distance * distance);
-        finalColor *= attenuation;
+        pointLightColor *= attenuation;
+
+        finalColor += pointLightColor;
     }
     
     FragColor = vec4(finalColor, 1.0);

@@ -12,6 +12,7 @@ SceneExample_MultipleLightsShadows::SceneExample_MultipleLightsShadows()
 
 	std::shared_ptr<Material> objectsMaterial = std::make_shared<Material>("res/shaders/litMultiShadowSimple.vert.glsl", "res/shaders/litMultiShadowSimple.frag.glsl");
 	objectsMaterial->SetVector3("objectColor", glm::vec3(1.0f, 0.0f, 0.0f));
+	objectsMaterial->SetVector3("ambientLightColor", glm::vec3(0.01f, 0.01f, 0.01f));
 	objectsMaterial->SetLightModel(LightModelType::LitForward);
 
 	// Create floor
