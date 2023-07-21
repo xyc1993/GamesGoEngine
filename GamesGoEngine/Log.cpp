@@ -18,3 +18,8 @@ void Log::PrintMsg(MsgType type, std::string msg)
 
 	LoggerUI::AddMsg(type, logMsg);
 }
+
+void Log::ClearLogs()
+{
+	LoggerUI::ClearLogs();
+}
