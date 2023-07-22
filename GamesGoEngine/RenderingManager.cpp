@@ -32,6 +32,7 @@ RenderingManager::RenderingManager()
 	hdrToneMappingGammaCorrectionMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/hdrToneMappingGammaCorrection.frag.glsl");
 	editorOutlineMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/editorOutline.frag.glsl");
 	deferredShadingMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/deferredShadingSimple.frag.glsl");
+	textureMergerMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/textureMerger.frag.glsl");
 }
 
 RenderingManager::~RenderingManager()
@@ -82,6 +83,8 @@ void RenderingManager::ConfigureFramebuffers(GLint screenWidth, GLint screenHeig
 {
 	ConfigureFramebuffer(screenWidth, screenHeight, framebuffer1, textureColorBuffer1, depthStencilBuffer1, stencilView1, shouldGenerateFramebuffer);
 	ConfigureFramebuffer(screenWidth, screenHeight, framebuffer2, textureColorBuffer2, depthStencilBuffer2, stencilView2, shouldGenerateFramebuffer);
+	ConfigureFramebuffer(screenWidth, screenHeight, shadowFBO1, shadowColorBuffer1, shadowDepthStencilBuffer1, shadowStencilView1, shouldGenerateFramebuffer);
+	ConfigureFramebuffer(screenWidth, screenHeight, shadowFBO2, shadowColorBuffer2, shadowDepthStencilBuffer2, shadowStencilView2, shouldGenerateFramebuffer);
 	ConfigureFramebuffer(screenWidth, screenHeight, bloomFBO1, bloomColorBuffer1, bloomDepthStencilBuffer1, bloomStencilView1, shouldGenerateFramebuffer);
 	ConfigureFramebuffer(screenWidth, screenHeight, bloomFBO2, bloomColorBuffer2, bloomDepthStencilBuffer2, bloomStencilView2, shouldGenerateFramebuffer);
 	ConfigureFramebuffer(screenWidth, screenHeight, msFramebuffer, msTextureColorBuffer, msDepthStencilBuffer, msStencilView, shouldGenerateFramebuffer);
@@ -304,18 +307,24 @@ void RenderingManager::ResizeBuffersInternal(GLint screenWidth, GLint screenHeig
 	// not the most lightweight approach since we need to recreate textures but it is required due to how we write data from stencil buffer into texture
 	glDeleteTextures(1, &textureColorBuffer1);
 	glDeleteTextures(1, &textureColorBuffer2);
+	glDeleteTextures(1, &shadowColorBuffer1);
+	glDeleteTextures(1, &shadowColorBuffer2);
 	glDeleteTextures(1, &bloomColorBuffer1);
 	glDeleteTextures(1, &bloomColorBuffer2);
 	glDeleteTextures(1, &msTextureColorBuffer);
 
 	glDeleteTextures(1, &depthStencilBuffer1);
 	glDeleteTextures(1, &depthStencilBuffer2);
+	glDeleteTextures(1, &shadowDepthStencilBuffer1);
+	glDeleteTextures(1, &shadowDepthStencilBuffer2);
 	glDeleteTextures(1, &bloomDepthStencilBuffer1);
 	glDeleteTextures(1, &bloomDepthStencilBuffer2);
 	glDeleteTextures(1, &msDepthStencilBuffer);
 
 	glDeleteTextures(1, &stencilView1);
 	glDeleteTextures(1, &stencilView2);
+	glDeleteTextures(1, &shadowStencilView1);
+	glDeleteTextures(1, &shadowStencilView2);
 	glDeleteTextures(1, &bloomStencilView1);
 	glDeleteTextures(1, &bloomStencilView2);
 	glDeleteTextures(1, &msStencilView);
@@ -367,7 +376,7 @@ void RenderingManager::Update()
 	// TODO: more optimal sorting, it could sort on camera view change, not on every draw frame
 	SortTransparentMeshRenderers();
 
-	GetInstance()->UpdateShadowMap();
+	//GetInstance()->UpdateShadowMap();
 	
 	// Rendering the scene
 	// reset viewport
@@ -392,6 +401,9 @@ void RenderingManager::Update()
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_STENCIL_TEST);
 
+	const int width = WindowManager::GetCurrentWidth();
+	const int height = WindowManager::GetCurrentHeight();
+
 	// deferred rendering
 	// TODO: check if there are any deferred renderers at all (otherwise skip this)
 	GetInstance()->deferredShadingMaterial->SetTexture("gPosition", 0, GetInstance()->gPosition);
@@ -405,26 +417,96 @@ void RenderingManager::Update()
 	glEnable(GL_DEPTH_TEST); // enable depth testing (is disabled for rendering screen-space quad)
 	glEnable(GL_STENCIL_TEST);
 	
-	// forward rendering
-	// TODO: check if there are any forward renderers at all (otherwise skip this)
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, GetInstance()->gBuffer);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, GetInstance()->framebuffer2);
 	
-	const int width = WindowManager::GetCurrentWidth();
-	const int height = WindowManager::GetCurrentHeight();
-
 	// blit to default framebuffer. Note that this may or may not work as the internal formats of both the FBO and default framebuffer have to match.
 	// the internal formats are implementation defined. This works on all of my systems, but if it doesn't on yours you'll likely have to write to the 		
 	// depth buffer in another shader stage (or somehow see to match the default framebuffer's internal format with the FBO's internal format).
 	// color texture is GL_COLOR_BUFFER_BIT + 2 (there are 4 buffers in the following order: positions, normals, color, specular)
 	glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT + 2, GL_NEAREST);
-	glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
-	glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+	// TODO: make it work with shadowmapping, currently causes weird artifacts, perhaps due to no data written in gBuffer in tested map
+	// TODO: make sure deferred rendering will work before commiting, right now it's BROKEN!
+	//glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+	//glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 	
 	glBindFramebuffer(GL_FRAMEBUFFER, GetInstance()->framebuffer2);
-	
-	DrawRenderersExceptLightModel(GetInstance()->opaqueMeshRenderers, LightModelType::LitDeferred);
-	DrawRenderersExceptLightModel(GetInstance()->transparentMeshRenderers, LightModelType::LitDeferred);
+
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, GetInstance()->framebuffer2);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, GetInstance()->framebuffer1);
+
+	glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+	glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+	glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+
+	// forward rendering with shadows
+	// TODO: check if there are any forward renderers at all (otherwise skip this)
+	const int pointLightsNumber = GetLightsManager()->GetPointLightsNumber();
+	if (pointLightsNumber > 0)
+	{
+		for (int i = 0; i < pointLightsNumber; i++)
+		{
+			glEnable(GL_DEPTH_TEST);
+			glEnable(GL_STENCIL_TEST);
+
+			Light* pointLight = GetLightsManager()->GetPointLight(i);
+			GetInstance()->UpdateOmnidirectionalShadowMap(pointLight);
+			// reset viewport
+			glViewport(0, 0, WindowManager::GetCurrentWidth(), WindowManager::GetCurrentHeight());
+			glBindFramebuffer(GL_FRAMEBUFFER, i % 2 == 0 ? GetInstance()->framebuffer2 : GetInstance()->framebuffer1);
+			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			DrawRenderersExceptLightModel(GetInstance()->opaqueMeshRenderers, LightModelType::LitDeferred);
+			DrawRenderersExceptLightModel(GetInstance()->transparentMeshRenderers, LightModelType::LitDeferred);
+
+			if (i > 0)
+			{
+				glDisable(GL_DEPTH_TEST);
+				glDisable(GL_STENCIL_TEST);
+
+				glBindFramebuffer(GL_FRAMEBUFFER, i % 2 == 0 ? GetInstance()->shadowFBO2 : GetInstance()->shadowFBO1);
+				glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+				// merge last texture and sum of previous textures
+				// set latest texture
+				GetInstance()->textureMergerMaterial->SetTexture("screenTexture1", 0, i % 2 == 0 ? GetInstance()->textureColorBuffer2 : GetInstance()->textureColorBuffer1);
+				// set sum of textures
+				if (i == 1) // for i equal 1 we use the first texture to sum first and second texture
+				{
+					GetInstance()->textureMergerMaterial->SetTexture("screenTexture2", 1, GetInstance()->textureColorBuffer2);
+				}
+				else // otherwise we use sum
+				{
+					GetInstance()->textureMergerMaterial->SetTexture("screenTexture2", 1, i % 2 == 0 ? GetInstance()->shadowColorBuffer1 : GetInstance()->shadowColorBuffer2);
+				}
+				
+				GetInstance()->textureMergerMaterial->Draw(glm::mat4());
+				MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
+			}
+		}
+
+		if (pointLightsNumber > 1)
+		{
+			// after rendering the last shadow pass, blit data to the framebuffer that's used later for the rest of rendering process
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, pointLightsNumber % 2 == 0 ? GetInstance()->shadowFBO1 : GetInstance()->shadowFBO2);
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, GetInstance()->framebuffer2);
+
+			// blit only color
+			glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+			//glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+			//glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+
+			glEnable(GL_DEPTH_TEST);
+			glEnable(GL_STENCIL_TEST);
+		}
+		glBindFramebuffer(GL_FRAMEBUFFER, GetInstance()->framebuffer2);
+	}
+	else
+	{
+		DrawRenderersExceptLightModel(GetInstance()->opaqueMeshRenderers, LightModelType::LitDeferred);
+		DrawRenderersExceptLightModel(GetInstance()->transparentMeshRenderers, LightModelType::LitDeferred);
+	}
 	DrawSkybox();
 
 	if (IsNormalsDebugEnabled() && (GetInstance()->normalDebugMaterial != nullptr))
@@ -595,12 +677,6 @@ void RenderingManager::UpdateDeferredShading()
 	}
 }
 
-void RenderingManager::UpdateShadowMap()
-{
-	//UpdateDirectionalShadowMap();
-	UpdateOmnidirectionalShadowMap();
-}
-
 void RenderingManager::UpdateDirectionalShadowMap()
 {
 	glEnable(GL_DEPTH_TEST);
@@ -646,13 +722,8 @@ void RenderingManager::UpdateDirectionalShadowMap()
 	}
 }
 
-void RenderingManager::UpdateOmnidirectionalShadowMap()
+void RenderingManager::UpdateOmnidirectionalShadowMap(Light* pointLight)
 {
-	glEnable(GL_DEPTH_TEST);
-	glClearColor(0.1f, 0.15f, 0.15f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	Light* pointLight = lightsManager->GetPointLight(0);
 	if (!Component::IsValid(pointLight))
 	{
 		return;
@@ -675,7 +746,12 @@ void RenderingManager::UpdateOmnidirectionalShadowMap()
 
 	glViewport(0, 0, shadowWidth, shadowHeight);
 	glBindFramebuffer(GL_FRAMEBUFFER, omniDepthMapFBO);
+
+	glEnable(GL_DEPTH_TEST);
+	glClearColor(0.1f, 0.15f, 0.15f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClear(GL_DEPTH_BUFFER_BIT);
+
 	//glCullFace(GL_FRONT);
 	for (unsigned int i = 0; i < 6; ++i)
 	{

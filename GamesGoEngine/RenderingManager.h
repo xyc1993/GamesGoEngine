@@ -64,9 +64,8 @@ private:
 	// Updates data such as positions, normals, albedo, specular
 	void UpdateGBuffer();
 	void UpdateDeferredShading();
-	void UpdateShadowMap();
 	void UpdateDirectionalShadowMap();
-	void UpdateOmnidirectionalShadowMap();
+	void UpdateOmnidirectionalShadowMap(Light* pointLight);
 	void DrawOrientationDebug() const;
 	static void DrawSkybox();
 	static void DrawRenderers(const std::vector<MeshRenderer*>& renderers);
@@ -165,6 +164,8 @@ private:
 	// sets of 2 since we use ping pong rendering
 	unsigned int framebuffer1;
 	unsigned int framebuffer2;
+	unsigned int shadowFBO1;
+	unsigned int shadowFBO2;
 	unsigned int bloomFBO1;
 	unsigned int bloomFBO2;
 	unsigned int msFramebuffer;
@@ -173,18 +174,24 @@ private:
 	
 	unsigned int textureColorBuffer1;
 	unsigned int textureColorBuffer2;
+	unsigned int shadowColorBuffer1;
+	unsigned int shadowColorBuffer2;
 	unsigned int bloomColorBuffer1;
 	unsigned int bloomColorBuffer2;
 	unsigned int msTextureColorBuffer;
 
 	unsigned int depthStencilBuffer1;
 	unsigned int depthStencilBuffer2;
+	unsigned int shadowDepthStencilBuffer1;
+	unsigned int shadowDepthStencilBuffer2;
 	unsigned int bloomDepthStencilBuffer1;
 	unsigned int bloomDepthStencilBuffer2;
 	unsigned int msDepthStencilBuffer;
 
 	unsigned int stencilView1;
 	unsigned int stencilView2;
+	unsigned int shadowStencilView1;
+	unsigned int shadowStencilView2;
 	unsigned int bloomStencilView1;
 	unsigned int bloomStencilView2;
 	unsigned int msStencilView;
@@ -211,6 +218,7 @@ private:
 	std::shared_ptr<PostProcessMaterial> hdrToneMappingGammaCorrectionMaterial;
 	std::shared_ptr<PostProcessMaterial> editorOutlineMaterial;
 	std::shared_ptr<PostProcessMaterial> deferredShadingMaterial;
+	std::shared_ptr<PostProcessMaterial> textureMergerMaterial;
 
 	// render pipeline materials
 	Material* depthMapMaterial;

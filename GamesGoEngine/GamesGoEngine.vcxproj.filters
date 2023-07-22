@@ -712,5 +712,8 @@
     <None Include="res\shaders\litMultiShadowSimple.vert.glsl">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="res\shaders\PostProcess\textureMerger.frag.glsl">
+      <Filter>Resource Files\Shaders\PostProcess</Filter>
+    </None>
   </ItemGroup>
 </Project>
