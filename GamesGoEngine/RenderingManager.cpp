@@ -87,7 +87,6 @@ void RenderingManager::ConfigureFramebuffers(GLint screenWidth, GLint screenHeig
 	ConfigureFramebuffer(screenWidth, screenHeight, shadowFBO2, shadowColorBuffer2, shadowDepthStencilBuffer2, shadowStencilView2, shouldGenerateFramebuffer);
 	ConfigureFramebuffer(screenWidth, screenHeight, bloomFBO1, bloomColorBuffer1, bloomDepthStencilBuffer1, bloomStencilView1, shouldGenerateFramebuffer);
 	ConfigureFramebuffer(screenWidth, screenHeight, bloomFBO2, bloomColorBuffer2, bloomDepthStencilBuffer2, bloomStencilView2, shouldGenerateFramebuffer);
-	ConfigureFramebuffer(screenWidth, screenHeight, msFramebuffer, msTextureColorBuffer, msDepthStencilBuffer, msStencilView, shouldGenerateFramebuffer);
 	ConfigureShadowMapFramebuffer(shadowWidth, shadowHeight, depthMapFBO, depthMap, shouldGenerateFramebuffer);
 	ConfigureShadowCubeMapFramebuffer(shadowWidth, shadowHeight, omniDepthMapFBO, omniDepthMap, shouldGenerateFramebuffer);
 	ConfigureGBuffer(screenWidth, screenHeight, shouldGenerateFramebuffer);
@@ -127,49 +126,6 @@ void RenderingManager::ConfigureFramebuffer(GLint screenWidth, GLint screenHeigh
 	
 	glGenTextures(1, &stencilView);
 	glTextureView(stencilView, GL_TEXTURE_2D, depthStencilBuffer, GL_DEPTH24_STENCIL8, 0, 1, 0, 1);
-
-	// now that we actually created the framebuffer and added all attachments we want to check if it is actually complete now
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-	{
-		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
-	}
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
-
-void RenderingManager::ConfigureMultisampledFramebuffer(GLint screenWidth, GLint screenHeight, 
-	unsigned& framebuffer, unsigned& textureColorBuffer,
-	unsigned& depthStencilBuffer, unsigned& stencilView,
-	bool shouldGenerateFramebuffer, int samples)
-{
-	if (shouldGenerateFramebuffer)
-	{
-		glGenFramebuffers(1, &framebuffer);
-	}
-	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-
-	// create a color attachment texture
-	glGenTextures(1, &textureColorBuffer);
-	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, textureColorBuffer);
-	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGBA16F, screenWidth, screenHeight, GL_TRUE);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, textureColorBuffer, 0);
-
-	// create a depth & stencil attachment texture
-	glGenTextures(1, &depthStencilBuffer);
-	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, depthStencilBuffer);
-	//glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, screenWidth, screenHeight, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, NULL);
-	glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_DEPTH24_STENCIL8, screenWidth, screenHeight, GL_TRUE);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, depthStencilBuffer, 0);
-
-	glGenTextures(1, &stencilView);
-	glTextureView(stencilView, GL_TEXTURE_2D_MULTISAMPLE, depthStencilBuffer, GL_DEPTH24_STENCIL8, 0, 1, 0, 1);
 
 	// now that we actually created the framebuffer and added all attachments we want to check if it is actually complete now
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
@@ -311,7 +267,6 @@ void RenderingManager::ResizeBuffersInternal(GLint screenWidth, GLint screenHeig
 	glDeleteTextures(1, &shadowColorBuffer2);
 	glDeleteTextures(1, &bloomColorBuffer1);
 	glDeleteTextures(1, &bloomColorBuffer2);
-	glDeleteTextures(1, &msTextureColorBuffer);
 
 	glDeleteTextures(1, &depthStencilBuffer1);
 	glDeleteTextures(1, &depthStencilBuffer2);
@@ -319,7 +274,6 @@ void RenderingManager::ResizeBuffersInternal(GLint screenWidth, GLint screenHeig
 	glDeleteTextures(1, &shadowDepthStencilBuffer2);
 	glDeleteTextures(1, &bloomDepthStencilBuffer1);
 	glDeleteTextures(1, &bloomDepthStencilBuffer2);
-	glDeleteTextures(1, &msDepthStencilBuffer);
 
 	glDeleteTextures(1, &stencilView1);
 	glDeleteTextures(1, &stencilView2);
@@ -327,7 +281,6 @@ void RenderingManager::ResizeBuffersInternal(GLint screenWidth, GLint screenHeig
 	glDeleteTextures(1, &shadowStencilView2);
 	glDeleteTextures(1, &bloomStencilView1);
 	glDeleteTextures(1, &bloomStencilView2);
-	glDeleteTextures(1, &msStencilView);
 
 	glDeleteTextures(1, &depthMap);
 	glDeleteTextures(1, &omniDepthMap);
@@ -375,16 +328,13 @@ void RenderingManager::Update()
 
 	// TODO: more optimal sorting, it could sort on camera view change, not on every draw frame
 	SortTransparentMeshRenderers();
-
-	//GetInstance()->UpdateShadowMap();
 	
 	// Rendering the scene
-	// reset viewport
+	// set viewport
 	glViewport(0, 0, WindowManager::GetCurrentWidth(), WindowManager::GetCurrentHeight());
 
 	GetInstance()->UpdateGBuffer();
-		
-	//glBindFramebuffer(GL_FRAMEBUFFER, GetInstance()->msFramebuffer);
+
 	glBindFramebuffer(GL_FRAMEBUFFER, GetInstance()->framebuffer2);
 	
 	glEnable(GL_DEPTH_TEST); // enable depth testing (is disabled for rendering screen-space quad)
@@ -522,9 +472,7 @@ void RenderingManager::Update()
 		SortPostProcessMaterials();
 	}
 
-	// pass the image from MSAA framebuffer to first framebuffer
-	// glBindFramebuffer(GL_READ_FRAMEBUFFER, GetInstance()->msFramebuffer);
-	// since MSAA won't work with deferred rendering, we just blit default framebuffer
+	// pass the framebuffer2 (the one we worked on so far) to framebuffer1 so both have same stencil and depth data (used by some screen effects)
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, GetInstance()->framebuffer2);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, GetInstance()->framebuffer1);
 
@@ -1038,55 +986,6 @@ void RenderingManager::EnableNormalsDebug(bool enable)
 bool RenderingManager::IsNormalsDebugEnabled()
 {
 	return GetInstance()->normalsDebugEnabled;
-}
-
-void RenderingManager::EnableMSAA(bool enable)
-{
-	GetInstance()->SetMSAAInternal(enable, GetMSAASamplesNumber());
-}
-
-bool RenderingManager::IsMSAAEnabled()
-{
-	return GetInstance()->msaaEnabled;
-}
-
-void RenderingManager::SetMSAASamplesNumber(int samples)
-{
-	GetInstance()->SetMSAAInternal(IsMSAAEnabled(), samples);
-}
-
-int RenderingManager::GetMSAASamplesNumber()
-{
-	return GetInstance()->msaaSamplesNumber;
-}
-
-int RenderingManager::GetMaxMSAASamplesNumber()
-{
-	int maxSamples;
-	glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
-	return maxSamples;
-}
-
-void RenderingManager::SetMSAAInternal(bool enable, int samples)
-{
-	glDeleteTextures(1, &msTextureColorBuffer);
-	glDeleteTextures(1, &msDepthStencilBuffer);
-	glDeleteTextures(1, &msStencilView);
-
-	const GLint width = WindowManager::GetCurrentWidth();
-	const GLint height = WindowManager::GetCurrentHeight();
-
-	if (enable)
-	{
-		ConfigureMultisampledFramebuffer(width, height, msFramebuffer, msTextureColorBuffer, msDepthStencilBuffer, msStencilView, false, samples);
-	}
-	else
-	{
-		ConfigureFramebuffer(width, height, msFramebuffer, msTextureColorBuffer, msDepthStencilBuffer, msStencilView, false);
-	}
-
-	msaaEnabled = enable;
-	msaaSamplesNumber = samples;
 }
 
 void RenderingManager::SetGamma(float gammaVal)

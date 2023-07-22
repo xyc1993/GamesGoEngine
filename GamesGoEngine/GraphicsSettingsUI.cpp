@@ -14,20 +14,6 @@ void GraphicsSettingsUI::Draw()
 		WindowManager::EnableVSync(vsyncEnabled);
 	}
 
-	bool msaaEnabled = RenderingManager::IsMSAAEnabled();
-	if (ImGui::Checkbox("MSAA Enabled", &msaaEnabled))
-	{
-		RenderingManager::EnableMSAA(msaaEnabled);
-	}
-	if (msaaEnabled)
-	{
-		int msaaSamples = RenderingManager::GetMSAASamplesNumber();
-		if (ImGui::SliderInt("MSAA samples number", &msaaSamples, 1, RenderingManager::GetMaxMSAASamplesNumber()))
-		{
-			RenderingManager::SetMSAASamplesNumber(msaaSamples);
-		}
-	}
-
 	bool postProcessingEnabled = RenderingManager::IsPostProcessingEnabled();
 	if (ImGui::Checkbox("Post Processing Enabled", &postProcessingEnabled))
 	{

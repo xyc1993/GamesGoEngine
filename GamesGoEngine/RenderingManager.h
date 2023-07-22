@@ -36,10 +36,6 @@ private:
 		unsigned int& framebuffer, unsigned int& textureColorBuffer,
 		unsigned int& depthStencilBuffer, unsigned int& stencilView,
 		bool shouldGenerateFramebuffer);
-	static void ConfigureMultisampledFramebuffer(GLint screenWidth, GLint screenHeight,
-		unsigned int& framebuffer, unsigned int& textureColorBuffer,
-		unsigned int& depthStencilBuffer, unsigned int& stencilView,
-		bool shouldGenerateFramebuffer, int samples);
 	static void ConfigureShadowMapFramebuffer(GLint shadowMapWidth, GLint shadowMapHeight,
 		unsigned int& framebuffer, unsigned int& shadowMap,
 		bool shouldGenerateFramebuffer);
@@ -101,14 +97,6 @@ public:
 	static bool IsWireframeOnly();
 	static void EnableNormalsDebug(bool enable);
 	static bool IsNormalsDebugEnabled();
-	static void EnableMSAA(bool enable);
-	static bool IsMSAAEnabled();
-	static void SetMSAASamplesNumber(int samples);
-	static int GetMSAASamplesNumber();
-	static int GetMaxMSAASamplesNumber();
-private:
-	void SetMSAAInternal(bool enable, int samples);
-public:
 	static void SetGamma(float gammaVal);
 	static float GetGamma();
 private:
@@ -148,8 +136,6 @@ private:
 	bool firstRenderedFrame = true;
 	bool renderWireframeOnly = false;
 	bool normalsDebugEnabled = false;
-	bool msaaEnabled = false;
-	int msaaSamplesNumber = 1;
 	float gamma = 2.2f;
 	float exposure = 1.0f;
 	int bloomBlurAmount = 10;
@@ -168,7 +154,6 @@ private:
 	unsigned int shadowFBO2;
 	unsigned int bloomFBO1;
 	unsigned int bloomFBO2;
-	unsigned int msFramebuffer;
 	unsigned int depthMapFBO;
 	unsigned int omniDepthMapFBO;
 	
@@ -178,7 +163,6 @@ private:
 	unsigned int shadowColorBuffer2;
 	unsigned int bloomColorBuffer1;
 	unsigned int bloomColorBuffer2;
-	unsigned int msTextureColorBuffer;
 
 	unsigned int depthStencilBuffer1;
 	unsigned int depthStencilBuffer2;
@@ -186,7 +170,6 @@ private:
 	unsigned int shadowDepthStencilBuffer2;
 	unsigned int bloomDepthStencilBuffer1;
 	unsigned int bloomDepthStencilBuffer2;
-	unsigned int msDepthStencilBuffer;
 
 	unsigned int stencilView1;
 	unsigned int stencilView2;
@@ -194,7 +177,6 @@ private:
 	unsigned int shadowStencilView2;
 	unsigned int bloomStencilView1;
 	unsigned int bloomStencilView2;
-	unsigned int msStencilView;
 
 	unsigned int depthMap;
 	unsigned int omniDepthMap;
