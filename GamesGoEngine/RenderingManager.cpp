@@ -87,7 +87,8 @@ void RenderingManager::ConfigureFramebuffers(GLint screenWidth, GLint screenHeig
 	ConfigureFramebuffer(screenWidth, screenHeight, shadowFBO2, shadowColorBuffer2, shadowDepthStencilBuffer2, shadowStencilView2, shouldGenerateFramebuffer);
 	ConfigureFramebuffer(screenWidth, screenHeight, bloomFBO1, bloomColorBuffer1, bloomDepthStencilBuffer1, bloomStencilView1, shouldGenerateFramebuffer);
 	ConfigureFramebuffer(screenWidth, screenHeight, bloomFBO2, bloomColorBuffer2, bloomDepthStencilBuffer2, bloomStencilView2, shouldGenerateFramebuffer);
-	ConfigureShadowMapFramebuffer(shadowWidth, shadowHeight, depthMapFBO, depthMap, shouldGenerateFramebuffer);
+	ConfigureShadowMapFramebuffer(shadowWidth, shadowHeight, directionalDepthMapFBO, directionalDepthMap, shouldGenerateFramebuffer);
+	ConfigureShadowMapFramebuffer(shadowWidth, shadowHeight, spotLightDepthMapFBO, spotLightDepthMap, shouldGenerateFramebuffer);
 	ConfigureShadowCubeMapFramebuffer(shadowWidth, shadowHeight, omniDepthMapFBO, omniDepthMap, shouldGenerateFramebuffer);
 	ConfigureGBuffer(screenWidth, screenHeight, shouldGenerateFramebuffer);
 }
@@ -282,7 +283,8 @@ void RenderingManager::ResizeBuffersInternal(GLint screenWidth, GLint screenHeig
 	glDeleteTextures(1, &bloomStencilView1);
 	glDeleteTextures(1, &bloomStencilView2);
 
-	glDeleteTextures(1, &depthMap);
+	glDeleteTextures(1, &directionalDepthMap);
+	glDeleteTextures(1, &spotLightDepthMap);
 	glDeleteTextures(1, &omniDepthMap);
 
 	glDeleteTextures(1, &gPosition);
@@ -669,7 +671,7 @@ void RenderingManager::UpdateDirectionalShadowMap(Light* directionalLight)
 	depthMapMaterial->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
 
 	glViewport(0, 0, shadowWidth, shadowHeight);
-	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, directionalDepthMapFBO);
 
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(0.1f, 0.15f, 0.15f, 1.0f);
@@ -687,8 +689,8 @@ void RenderingManager::UpdateDirectionalShadowMap(Light* directionalLight)
 		std::shared_ptr<Material> outMaterial;
 		if (meshRenderers[i]->TryGetMaterial(outMaterial, 0))
 		{
-			outMaterial->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
-			outMaterial->SetTexture("directionalLightShadowMap", 1, depthMap);
+			outMaterial->SetMat4("directionalLightSpaceMatrix", lightSpaceMatrix);
+			outMaterial->SetTexture("directionalLightShadowMap", 1, directionalDepthMap);
 		}
 	}
 }
@@ -701,8 +703,8 @@ void RenderingManager::UpdateSpotLightShadowMap(Light* spotLight)
 	}
 
 	float near_plane = 0.1f, far_plane = 30.0f;
-	// TODO: calculate fov and aspect properly
-	glm::mat4 lightProjection = glm::perspective(10.0f, 16.0f/9.0f, near_plane, far_plane);
+	// TODO: calculate fov and aspect properly to adjust to the value of spot light
+	glm::mat4 lightProjection = glm::perspective(40.0f, 1.0f, near_plane, far_plane);
 
 	glm::mat4 lightSpaceMatrix;
 	Transform* lightTransform = spotLight->GetOwner()->GetTransform();
@@ -713,16 +715,16 @@ void RenderingManager::UpdateSpotLightShadowMap(Light* spotLight)
 	depthMapMaterial->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
 
 	glViewport(0, 0, shadowWidth, shadowHeight);
-	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, spotLightDepthMapFBO);
 
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(0.1f, 0.15f, 0.15f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClear(GL_DEPTH_BUFFER_BIT);
 
-	//glCullFace(GL_FRONT);
+	glCullFace(GL_FRONT);
 	DrawShadowCastingRenderers(meshRenderers, depthMapMaterial);
-	//glCullFace(GL_BACK);
+	glCullFace(GL_BACK);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	// TODO: remove and implement more elegant solution, this is not universal solution, just one for specific example scene
@@ -731,8 +733,8 @@ void RenderingManager::UpdateSpotLightShadowMap(Light* spotLight)
 		std::shared_ptr<Material> outMaterial;
 		if (meshRenderers[i]->TryGetMaterial(outMaterial, 0))
 		{
-			outMaterial->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
-			outMaterial->SetTexture("spotLightShadowMap", 1, depthMap);
+			outMaterial->SetMat4("spotLightSpaceMatrix", lightSpaceMatrix);
+			outMaterial->SetTexture("spotLightShadowMap", 1, spotLightDepthMap);
 		}
 	}
 }
@@ -788,7 +790,7 @@ void RenderingManager::UpdateOmnidirectionalShadowMap(Light* pointLight)
 		std::shared_ptr<Material> outMaterial;
 		if (meshRenderers[i]->TryGetMaterial(outMaterial, 0))
 		{
-			outMaterial->SetCubeTexture("pointLightShadowMap", 0, omniDepthMap);
+			outMaterial->SetCubeTexture("pointLightShadowMap", 2, omniDepthMap);
 			outMaterial->SetFloat("far_plane", far);
 		}
 	}
@@ -923,8 +925,8 @@ void RenderingManager::ClearLightsForRenderers(const std::vector<MeshRenderer*>&
 			glUniform1i(glGetUniformLocation(shaderProgram, "pointLightsNumber"), 0);
 
 			// alwyas make sure that textures are set, even when they're not used; textures must be bound and complete
-			renderers[i]->materialList[j]->SetTexture("directionalLightShadowMap", 1, GetInstance()->depthMap);
-			renderers[i]->materialList[j]->SetTexture("spotLightShadowMap", 1, GetInstance()->depthMap);
+			renderers[i]->materialList[j]->SetTexture("directionalLightShadowMap", 1, GetInstance()->directionalDepthMap);
+			renderers[i]->materialList[j]->SetTexture("spotLightShadowMap", 1, GetInstance()->directionalDepthMap);
 			renderers[i]->materialList[j]->SetCubeTexture("pointLightShadowMap", 0, GetInstance()->omniDepthMap);
 		}
 	}
@@ -1146,13 +1148,13 @@ unsigned int RenderingManager::GetShadowMapResolution()
 
 void RenderingManager::SetShadowMapResolutionInternal(unsigned shadowMapRes)
 {
-	glDeleteTextures(1, &depthMap);
+	glDeleteTextures(1, &directionalDepthMap);
 	glDeleteTextures(1, &omniDepthMap);
 
 	shadowWidth = shadowMapRes;
 	shadowHeight = shadowMapRes;
 
-	ConfigureShadowMapFramebuffer(shadowWidth, shadowHeight, depthMapFBO, depthMap, false);
+	ConfigureShadowMapFramebuffer(shadowWidth, shadowHeight, directionalDepthMapFBO, directionalDepthMap, false);
 	ConfigureShadowCubeMapFramebuffer(shadowWidth, shadowHeight, omniDepthMapFBO, omniDepthMap, false);
 }
 

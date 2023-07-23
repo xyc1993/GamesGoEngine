@@ -157,7 +157,8 @@ private:
 	unsigned int shadowFBO2;
 	unsigned int bloomFBO1;
 	unsigned int bloomFBO2;
-	unsigned int depthMapFBO;
+	unsigned int directionalDepthMapFBO;
+	unsigned int spotLightDepthMapFBO;
 	unsigned int omniDepthMapFBO;
 	
 	unsigned int textureColorBuffer1;
@@ -181,7 +182,8 @@ private:
 	unsigned int bloomStencilView1;
 	unsigned int bloomStencilView2;
 
-	unsigned int depthMap;
+	unsigned int directionalDepthMap;
+	unsigned int spotLightDepthMap;
 	unsigned int omniDepthMap;
 
 	// g buffer & its textures

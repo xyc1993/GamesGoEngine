@@ -7,8 +7,9 @@ out VS_OUT {
     vec3 FragPos;
     vec3 Normal;
     vec2 TexCoords;
-    // used for directional light shadows calculation
-    vec4 FragPosLightSpace;
+    // used for shadow mapping
+    vec4 FragPosDirectionalLightSpace;
+    vec4 FragPosSpotLightSpace;
 } vs_out;
 
 layout(std140, binding = 0) uniform Matrices
@@ -18,13 +19,15 @@ layout(std140, binding = 0) uniform Matrices
 };
 
 uniform mat4 model;
-uniform mat4 lightSpaceMatrix;
+uniform mat4 directionalLightSpaceMatrix;
+uniform mat4 spotLightSpaceMatrix;
 
 void main()
 {           
     vs_out.FragPos = vec3(model * vec4(aPos, 1.0));
     vs_out.Normal = transpose(inverse(mat3(model))) * aNormal;
     vs_out.TexCoords = aTexCoords;
-    vs_out.FragPosLightSpace = lightSpaceMatrix * vec4(vs_out.FragPos, 1.0);
+    vs_out.FragPosDirectionalLightSpace = directionalLightSpaceMatrix * vec4(vs_out.FragPos, 1.0);
+    vs_out.FragPosSpotLightSpace = spotLightSpaceMatrix * vec4(vs_out.FragPos, 1.0);
     gl_Position = projection * view * model * vec4(aPos, 1.0);
 }

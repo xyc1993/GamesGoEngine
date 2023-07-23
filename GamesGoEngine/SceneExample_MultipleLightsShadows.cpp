@@ -87,8 +87,8 @@ SceneExample_MultipleLightsShadows::SceneExample_MultipleLightsShadows()
 	ambientLightObject->AddComponent(ambientLight);
 	ambientLightObject->SetName("ambient_light");
 	scene->AddGameObject(ambientLightObject);
-
-	// Create directional light
+	
+	// Create directional light	
 	GameObject* directionalLightObject = new GameObject();
 	directionalLightObject->GetTransform()->SetRotationEulerDegrees(glm::vec3(135.0f, -45.0f, 0.0f));
 	DirectionalLight* directionalLight = new DirectionalLight(glm::vec3(0.0f, 0.0f, 0.01f), glm::vec3(0.0f, 0.0f, 0.05f), glm::vec3(0.0f, 0.0f, 0.1f));
@@ -135,18 +135,18 @@ SceneExample_MultipleLightsShadows::SceneExample_MultipleLightsShadows()
 		pointLightObject->SetName(name);
 		scene->AddGameObject(pointLightObject);
 	}
-
+	
 	// Create spot lights
 	const int SPOT_LIGHTS_NUMBER = 2;
 
 	glm::vec3 spotLightsPositions[SPOT_LIGHTS_NUMBER] = {
-		glm::vec3(1.0f, 1.0f, -2.0f),
-		glm::vec3(3.6f, 0.9f, -0.8f)
+		glm::vec3(1.0f, 0.1f, -2.0f),
+		glm::vec3(4.2f, 0.1f, -0.5f)
 	};
 
 	glm::vec3 spotLightsRotations[SPOT_LIGHTS_NUMBER] = {
-		glm::vec3(135.0f, -40.0f, 0.0f),
-		glm::vec3(140.0f,10.0f, 0.0f)
+		glm::vec3(158.0f, -30.0f, 0.0f),
+		glm::vec3(-34.0f,48.5f, 180.0f)
 	};
 
 	glm::vec3 spotLightsColors[SPOT_LIGHTS_NUMBER] = {

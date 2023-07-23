@@ -9,14 +9,15 @@ in VS_OUT {
     vec3 FragPos;
     vec3 Normal;
     vec2 TexCoords;
-    // used for directional light shadows calculation
-    vec4 FragPosLightSpace;
+    // used for shadow mapping
+    vec4 FragPosDirectionalLightSpace;
+    vec4 FragPosSpotLightSpace;
 } fs_in;
 
 uniform vec3 objectColor;
-uniform sampler2D directionalLightShadowMap;
-uniform sampler2D spotLightShadowMap;
-uniform samplerCube pointLightShadowMap;
+layout(binding = 0) uniform sampler2D directionalLightShadowMap;
+layout(binding = 1) uniform sampler2D spotLightShadowMap;
+layout(binding = 2) uniform samplerCube pointLightShadowMap;
 
 uniform float far_plane;
 
@@ -26,7 +27,8 @@ layout(std140, binding = 1) uniform CameraData
     vec3 cameraDir;
 };
 
-float DirectionalLightShadowCalculation(vec4 fragPosLightSpace, float bias)
+// used for directional light and spot lights
+float BasicShadowCalculation(sampler2D sampledTexture, vec4 fragPosLightSpace, float bias)
 {
     // perform perspective divide
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
@@ -37,7 +39,7 @@ float DirectionalLightShadowCalculation(vec4 fragPosLightSpace, float bias)
     
     // shadow smoothing via PCF (percentage-closer filtering)
     float shadow = 0.0;
-    vec2 texelSize = 1.0 / textureSize(directionalLightShadowMap, 0);
+    vec2 texelSize = 1.0 / textureSize(sampledTexture, 0);
     for(int x = -1; x <= 1; ++x)
     {
         for(int y = -1; y <= 1; ++y)
@@ -49,7 +51,7 @@ float DirectionalLightShadowCalculation(vec4 fragPosLightSpace, float bias)
             }
             else
             {
-                float pcfDepth = texture(directionalLightShadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
+                float pcfDepth = texture(sampledTexture, projCoords.xy + vec2(x, y) * texelSize).r;
                 // check whether current frag pos is in shadow
                 shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
             }      
@@ -170,7 +172,7 @@ void main()
 	    vec3 diffuse = dirLight[0].diffuse * diff * color;
 	    vec3 specular = dirLight[0].specular * spec * color;
 
-        float shadow = DirectionalLightShadowCalculation(fs_in.FragPosLightSpace, 0.005);
+        float shadow = BasicShadowCalculation(directionalLightShadowMap, fs_in.FragPosDirectionalLightSpace, 0.005);
         vec3 dirLightColor = (1.0 - shadow) * (diffuse + specular); 
 
         finalColor += dirLightColor;
@@ -186,20 +188,19 @@ void main()
         vec3 halfwayDir = normalize(lightDir + viewDir);  
         float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);    
 
-        vec3 pointLightColor = vec3(0.0);
-
         // calculate lighting based on provided light data
 	    vec3 diffuse = pointLights[0].diffuse * diff * color;
 	    vec3 specular = pointLights[0].specular * spec * color;
-
-        // calculate and apply shadow
-        float shadow = PointLightShadowCalculation(fs_in.FragPos, pointLights[0].position);
-        pointLightColor = (1.0 - shadow) * (diffuse + specular);
+        vec3 pointLightColor = diffuse + specular;
 
         // limit light effect based on distance
         float distance = length(pointLights[0].position - fs_in.FragPos);
         float attenuation = 1.0 / (pointLights[0].constant + pointLights[0].linear * distance + pointLights[0].quadratic * distance * distance);
         pointLightColor *= attenuation;
+
+        // calculate and apply shadow
+        float shadow = PointLightShadowCalculation(fs_in.FragPos, pointLights[0].position);
+        pointLightColor = (1.0 - shadow) * pointLightColor;
 
         finalColor += pointLightColor;
     }
@@ -227,7 +228,7 @@ void main()
         float attenuation = 1.0 / (spotLight[0].constant + spotLight[0].linear * distance + spotLight[0].quadratic * distance * distance);
 	    vec3 spotLightColor = attenuation * intensity * (diffuse + specular);
 
-        float shadow = DirectionalLightShadowCalculation(fs_in.FragPosLightSpace, 0.004);
+        float shadow = BasicShadowCalculation(spotLightShadowMap, fs_in.FragPosSpotLightSpace, 0.004);
         spotLightColor = (1.0f - shadow) * spotLightColor;
 
         finalColor += spotLightColor;
