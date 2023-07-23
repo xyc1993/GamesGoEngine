@@ -1149,12 +1149,14 @@ unsigned int RenderingManager::GetShadowMapResolution()
 void RenderingManager::SetShadowMapResolutionInternal(unsigned shadowMapRes)
 {
 	glDeleteTextures(1, &directionalDepthMap);
+	glDeleteTextures(1, &spotLightDepthMap);
 	glDeleteTextures(1, &omniDepthMap);
 
 	shadowWidth = shadowMapRes;
 	shadowHeight = shadowMapRes;
 
 	ConfigureShadowMapFramebuffer(shadowWidth, shadowHeight, directionalDepthMapFBO, directionalDepthMap, false);
+	ConfigureShadowMapFramebuffer(shadowWidth, shadowHeight, spotLightDepthMapFBO, spotLightDepthMap, false);
 	ConfigureShadowCubeMapFramebuffer(shadowWidth, shadowHeight, omniDepthMapFBO, omniDepthMap, false);
 }
 
