@@ -12,7 +12,6 @@ SceneExample_MultipleLightsShadows::SceneExample_MultipleLightsShadows()
 
 	std::shared_ptr<Material> objectsMaterial = std::make_shared<Material>("res/shaders/litMultiShadowSimple.vert.glsl", "res/shaders/litMultiShadowSimple.frag.glsl");
 	objectsMaterial->SetVector3("objectColor", glm::vec3(1.0f, 0.0f, 0.0f));
-	objectsMaterial->SetVector3("ambientLightColor", glm::vec3(0.01f, 0.01f, 0.01f));
 	objectsMaterial->SetLightModel(LightModelType::LitForward);
 
 	// Create floor
@@ -81,6 +80,13 @@ SceneExample_MultipleLightsShadows::SceneExample_MultipleLightsShadows()
 		sphereObject->GetTransform()->SetPosition(spheresPositions[i]);
 		scene->AddGameObject(sphereObject);
 	}
+
+	// Create ambient light
+	GameObject* ambientLightObject = new GameObject();
+	AmbientLight* ambientLight = new AmbientLight(glm::vec3(0.01f, 0.01f, 0.01f));
+	ambientLightObject->AddComponent(ambientLight);
+	ambientLightObject->SetName("ambient_light");
+	scene->AddGameObject(ambientLightObject);
 
 	// Create point lights
 	const int POINT_LIGHTS_NUMBER = 3;

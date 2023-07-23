@@ -30,7 +30,6 @@ vec3 gridSamplingDisk[20] = vec3[]
    vec3(0, 1,  1), vec3( 0, -1,  1), vec3( 0, -1, -1), vec3( 0, 1, -1)
 );
 
-
 float ShadowCalculation(vec3 fragPos)
 {
     // get vector between fragment position and light position
@@ -56,6 +55,7 @@ float ShadowCalculation(vec3 fragPos)
 }
 
 // ambient light is going to be separate from other light sources
+uniform float ambientLightActive = 0.0;
 uniform vec3 ambientLightColor;
 
 // the idea behind this shader is going to be using 1 light source at a time and adding the results
@@ -95,7 +95,8 @@ void main()
     vec3 finalColor = vec3(0.0);
 
     // add ambient light
-    finalColor += ambientLightColor * color;
+    vec3 ambient = step(0.5, ambientLightActive) * ambientLightColor;
+    finalColor += ambient * color;
 
     // add point light influence
     if (pointLightsNumber > 0)

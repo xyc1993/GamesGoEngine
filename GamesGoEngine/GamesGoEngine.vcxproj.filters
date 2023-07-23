@@ -360,6 +360,9 @@
     <ClCompile Include="SceneExample_MultipleLightsShadows.cpp">
       <Filter>Source Files\GamesGo\Examples</Filter>
     </ClCompile>
+    <ClCompile Include="AmbientLight.cpp">
+      <Filter>Source Files\GamesGo\Light</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -556,6 +559,9 @@
     </ClInclude>
     <ClInclude Include="SceneExample_MultipleLightsShadows.h">
       <Filter>Header Files\GamesGo\Examples</Filter>
+    </ClInclude>
+    <ClInclude Include="AmbientLight.h">
+      <Filter>Header Files\GamesGo\Light</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

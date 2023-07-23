@@ -1,5 +1,19 @@
 #include "LightsManager.h"
 
+GLuint LightsManager::AddAmbientLight(AmbientLight* ambientLight)
+{
+	if (this->ambientLight != nullptr)
+	{
+		this->ambientLight->CopyData(*ambientLight);
+		return Light::INITIALIZATION_ERROR;
+	}
+	else
+	{
+		this->ambientLight = ambientLight;
+		return 0;
+	}
+}
+
 GLuint LightsManager::AddDirectionalLight(DirectionalLight* directionalLight)
 {
 	return AddLight(directionalLights, directionalLight, MAX_NUMBER_OF_DIR_LIGHTS);
@@ -20,6 +34,15 @@ GLuint LightsManager::AddLight(std::vector<Light*>& lightsVector, Light* light, 
 	if (lightsVector.size() >= maxContainerSize) return Light::INITIALIZATION_ERROR;
 	lightsVector.push_back(light);
 	return (lightsVector.size() - 1);
+}
+
+void LightsManager::RemoveAmbientLight(AmbientLight* ambientLight)
+{
+	if (this->ambientLight == ambientLight)
+	{
+		delete this->ambientLight;
+		this->ambientLight = nullptr;
+	}
 }
 
 void LightsManager::RemoveDirectionalLight(DirectionalLight* directionalLight)
@@ -78,6 +101,11 @@ void LightsManager::SetLightsInShader(const GLuint& shaderProgram)
 	}
 }
 
+Light* LightsManager::GetAmbientLight() const
+{
+	return ambientLight;
+}
+
 Light* LightsManager::GetDirectionalLight(int lightIndex) const
 {
 	return GetLight(directionalLights, lightIndex);
@@ -103,6 +131,11 @@ Light* LightsManager::GetLight(std::vector<Light*> lightsVector, int lightIndex)
 		}
 	}
 	return nullptr;
+}
+
+size_t LightsManager::GetAmbientLightsNumber() const
+{
+	return ambientLight != nullptr ? 1 : 0;
 }
 
 size_t LightsManager::GetDirectionalLightsNumber() const
