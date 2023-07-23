@@ -8,4 +8,4 @@ HDR tonemapping, gamma correction and bloom are effects available in the UI. (MS
 ![1](https://github.com/xyc1993/GamesGoEngine/assets/20773439/657e2e8f-da8f-4171-8f63-550b9b29d059)
 
 Basic shadow mapping is implemented. It supports directional lights, point lights and spot lights. Several lights of each type can be handled.
-![image](https://github.com/xyc1993/GamesGoEngine/assets/20773439/cd4b0409-4335-4cab-b232-5bfcc0d0871e)
+![image](https://github.com/xyc1993/GamesGoEngine/assets/20773439/116dd584-f655-4640-aa1f-0c80e7e7ddc6)
