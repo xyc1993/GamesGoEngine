@@ -152,3 +152,31 @@ size_t LightsManager::GetSpotLightsNumber() const
 {
 	return spotLights.size();
 }
+
+// TODO: generating this everytime is wasteful, cache it
+std::vector<Light*> LightsManager::GetAllLights() const
+{
+	std::vector<Light*> allLights;
+
+	if (ambientLight != nullptr)
+	{
+		allLights.push_back(ambientLight);
+	}	
+
+	for (size_t i = 0; i < directionalLights.size(); i++)
+	{
+		allLights.push_back(directionalLights[i]);
+	}
+
+	for (size_t i = 0; i < pointLights.size(); i++)
+	{
+		allLights.push_back(pointLights[i]);
+	}
+
+	for (size_t i = 0; i < spotLights.size(); i++)
+	{
+		allLights.push_back(spotLights[i]);
+	}
+
+	return allLights;
+}

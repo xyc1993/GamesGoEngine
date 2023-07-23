@@ -11,7 +11,7 @@ SceneExample_MultipleLightsShadows::SceneExample_MultipleLightsShadows()
 	std::shared_ptr<MeshPrimitiveSphere> sphereMesh = MeshPrimitivesPool::GetSpherePrimitive();
 
 	std::shared_ptr<Material> objectsMaterial = std::make_shared<Material>("res/shaders/litMultiShadowSimple.vert.glsl", "res/shaders/litMultiShadowSimple.frag.glsl");
-	objectsMaterial->SetVector3("objectColor", glm::vec3(1.0f, 0.0f, 0.0f));
+	objectsMaterial->SetVector3("objectColor", glm::vec3(0.4f, 0.4f, 0.4f));
 	objectsMaterial->SetLightModel(LightModelType::LitForward);
 
 	// Create floor
@@ -82,11 +82,13 @@ SceneExample_MultipleLightsShadows::SceneExample_MultipleLightsShadows()
 	}
 
 	// Create ambient light
+	/*
 	GameObject* ambientLightObject = new GameObject();
 	AmbientLight* ambientLight = new AmbientLight(glm::vec3(0.01f, 0.01f, 0.01f));
 	ambientLightObject->AddComponent(ambientLight);
 	ambientLightObject->SetName("ambient_light");
 	scene->AddGameObject(ambientLightObject);
+	*/
 
 	// Create point lights
 	const int POINT_LIGHTS_NUMBER = 3;
@@ -98,9 +100,9 @@ SceneExample_MultipleLightsShadows::SceneExample_MultipleLightsShadows()
 	};
 
 	glm::vec3 pointLightsColors[POINT_LIGHTS_NUMBER] = {
-		glm::vec3(10.0f, 8.0f, 6.0f),
-		glm::vec3(10.0f, 8.0f, 6.0f),
-		glm::vec3(10.0f, 8.0f, 6.0f)
+		glm::vec3(10.0f, 0.0f, 0.0f),
+		glm::vec3(0.0f, 10.0f, 0.0f),
+		glm::vec3(0.0f, 0.0f, 10.0f)
 	};
 
 	for (int i = 0; i < POINT_LIGHTS_NUMBER; i++)

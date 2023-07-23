@@ -70,6 +70,7 @@ private:
 	static void DrawRenderers(const std::vector<MeshRenderer*>& renderers, Material* material);
 	static void DrawShadowCastingRenderers(const std::vector<MeshRenderer*>& renderers, Material* material);
 	static void DrawPostProcessEffects();
+	static void ApplyLightForRenderers(Light* light, const std::vector<MeshRenderer*>& renderers);
 
 public:
 	static void SetSkybox(SkyboxRenderer* skybox);

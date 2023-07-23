@@ -57,6 +57,7 @@ public:
 	void SetLightModel(LightModelType type);
 	LightModelType GetLightModel() const;
 
+	Shader* GetShader() const;
 	GLuint GetShaderProgram() const;
 	
 protected:

@@ -53,6 +53,7 @@ public:
 	size_t GetDirectionalLightsNumber() const;
 	size_t GetPointLightsNumber() const;
 	size_t GetSpotLightsNumber() const;
+	std::vector<Light*> GetAllLights() const;
 
 private:
 	AmbientLight* ambientLight;

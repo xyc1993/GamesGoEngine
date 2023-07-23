@@ -10,10 +10,14 @@ public:
 	~PointLight();
 
 	void Update() override;
+	void SetThisLightInShader(const GLuint& shaderProgram) override;
 	void SetLightInShader(const GLuint& shaderProgram) override;
 
+private:
+	void SetLightInShader(const GLuint& shaderProgram, int lightNumber);
+
 protected:
-	std::string GetNumberedShaderProperty() override;
+	std::string GetNumberedShaderProperty(int lightNumber) override;
 
 private:
 	glm::vec3 position;

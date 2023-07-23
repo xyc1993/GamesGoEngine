@@ -10,8 +10,9 @@ public:
 	~AmbientLight();
 
 	void CopyData(const AmbientLight& other);
+	void SetThisLightInShader(const GLuint& shaderProgram) override;
 	void SetLightInShader(const GLuint& shaderProgram) override;
 
 protected:
-	virtual std::string GetNumberedShaderProperty() override;
+	virtual std::string GetNumberedShaderProperty(int lightNumber) override;
 };

@@ -391,21 +391,25 @@ void RenderingManager::Update()
 
 	// forward rendering with shadows
 	// TODO: check if there are any forward renderers at all (otherwise skip this)
-	const int pointLightsNumber = GetLightsManager()->GetPointLightsNumber();
-	if (pointLightsNumber > 0)
+	std::vector<Light*> lights = GetLightsManager()->GetAllLights();
+	if (!lights.empty())
 	{
-		for (int i = 0; i < pointLightsNumber; i++)
+		for (size_t i = 0; i < lights.size(); i++)
 		{
 			glEnable(GL_DEPTH_TEST);
 			glEnable(GL_STENCIL_TEST);
 
-			Light* pointLight = GetLightsManager()->GetPointLight(i);
-			GetInstance()->UpdateOmnidirectionalShadowMap(pointLight);
+			//Light* pointLight = GetLightsManager()->GetPointLight(i);
+			GetInstance()->UpdateOmnidirectionalShadowMap(lights[i]);
 			// reset viewport
 			glViewport(0, 0, WindowManager::GetCurrentWidth(), WindowManager::GetCurrentHeight());
 			glBindFramebuffer(GL_FRAMEBUFFER, i % 2 == 0 ? GetInstance()->framebuffer2 : GetInstance()->framebuffer1);
 			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+			ApplyLightForRenderers(lights[i], GetInstance()->opaqueMeshRenderers);
+			ApplyLightForRenderers(lights[i], GetInstance()->transparentMeshRenderers);
+
 			DrawRenderersExceptLightModel(GetInstance()->opaqueMeshRenderers, LightModelType::LitDeferred);
 			DrawRenderersExceptLightModel(GetInstance()->transparentMeshRenderers, LightModelType::LitDeferred);
 
@@ -436,10 +440,10 @@ void RenderingManager::Update()
 			}
 		}
 
-		if (pointLightsNumber > 1)
+		if (lights.size() > 1)
 		{
 			// after rendering the last shadow pass, blit data to the framebuffer that's used later for the rest of rendering process
-			glBindFramebuffer(GL_READ_FRAMEBUFFER, pointLightsNumber % 2 == 0 ? GetInstance()->shadowFBO1 : GetInstance()->shadowFBO2);
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, lights.size() % 2 == 0 ? GetInstance()->shadowFBO1 : GetInstance()->shadowFBO2);
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, GetInstance()->framebuffer2);
 
 			// blit only color
@@ -834,6 +838,17 @@ void RenderingManager::DrawShadowCastingRenderers(const std::vector<MeshRenderer
 void RenderingManager::DrawPostProcessEffects()
 {
 
+}
+
+void RenderingManager::ApplyLightForRenderers(Light* light, const std::vector<MeshRenderer*>& renderers)
+{
+	for (size_t i = 0; i < renderers.size(); i++)
+	{
+		for (size_t j = 0; j < renderers[i]->materialList.size(); j++)
+		{
+			light->SetThisLightInShader(renderers[i]->materialList[j]->GetShaderProgram());
+		}
+	}
 }
 
 void RenderingManager::SetSkybox(SkyboxRenderer* skybox)

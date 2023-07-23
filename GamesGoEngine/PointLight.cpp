@@ -40,19 +40,31 @@ void PointLight::Update()
 	}
 }
 
-void PointLight::SetLightInShader(const GLuint& shaderProgram)
+void PointLight::SetThisLightInShader(const GLuint& shaderProgram)
 {
-	glUniform3f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty() + ".ambient").c_str()), ambient.x, ambient.y, ambient.z);
-	glUniform3f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty() + ".diffuse").c_str()), diffuse.x, diffuse.y, diffuse.z);
-	glUniform3f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty() + ".specular").c_str()), specular.x, specular.y, specular.z);
-
-	glUniform3f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty() + ".position").c_str()), position.x, position.y, position.z);
-	glUniform1f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty() + ".constant").c_str()), constant);
-	glUniform1f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty() + ".linear").c_str()), linear);
-	glUniform1f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty() + ".quadratic").c_str()), quadratic);
+	glUseProgram(shaderProgram);
+	glUniform1i(glGetUniformLocation(shaderProgram, "pointLightsNumber"), 1);
+	SetLightInShader(shaderProgram, 0);
 }
 
-std::string PointLight::GetNumberedShaderProperty()
+void PointLight::SetLightInShader(const GLuint& shaderProgram)
+{
+	SetLightInShader(shaderProgram, lightNumber);
+}
+
+void PointLight::SetLightInShader(const GLuint& shaderProgram, int lightNumber)
+{
+	glUniform3f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty(lightNumber) + ".ambient").c_str()), ambient.x, ambient.y, ambient.z);
+	glUniform3f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty(lightNumber) + ".diffuse").c_str()), diffuse.x, diffuse.y, diffuse.z);
+	glUniform3f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty(lightNumber) + ".specular").c_str()), specular.x, specular.y, specular.z);
+
+	glUniform3f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty(lightNumber) + ".position").c_str()), position.x, position.y, position.z);
+	glUniform1f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty(lightNumber) + ".constant").c_str()), constant);
+	glUniform1f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty(lightNumber) + ".linear").c_str()), linear);
+	glUniform1f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty(lightNumber) + ".quadratic").c_str()), quadratic);
+}
+
+std::string PointLight::GetNumberedShaderProperty(int lightNumber)
 {
 	std::string number = std::to_string(lightNumber);
 	return ("pointLights[" + number + "]").c_str();

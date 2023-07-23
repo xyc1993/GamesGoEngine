@@ -24,12 +24,17 @@ void AmbientLight::CopyData(const AmbientLight& other)
 	this->ambient = other.ambient;
 }
 
-void AmbientLight::SetLightInShader(const GLuint& shaderProgram)
+void AmbientLight::SetThisLightInShader(const GLuint& shaderProgram)
 {
-	// In new iteration of light system this will be handled differently so ambient light doesn't get support for this
+	// In new iteration of light system this will be handled differently so currently ambient light doesn't get support for this
 }
 
-std::string AmbientLight::GetNumberedShaderProperty()
+void AmbientLight::SetLightInShader(const GLuint& shaderProgram)
+{
+	// In new iteration of light system this will be handled differently so currently ambient light doesn't get support for this
+}
+
+std::string AmbientLight::GetNumberedShaderProperty(int lightNumber)
 {
 	return "";
 }
