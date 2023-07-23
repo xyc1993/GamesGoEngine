@@ -136,5 +136,48 @@ SceneExample_MultipleLightsShadows::SceneExample_MultipleLightsShadows()
 		scene->AddGameObject(pointLightObject);
 	}
 
+	// Create spot lights
+	const int SPOT_LIGHTS_NUMBER = 2;
+
+	glm::vec3 spotLightsPositions[SPOT_LIGHTS_NUMBER] = {
+		glm::vec3(1.0f, 1.0f, -2.0f),
+		glm::vec3(3.6f, 0.9f, -0.8f)
+	};
+
+	glm::vec3 spotLightsRotations[SPOT_LIGHTS_NUMBER] = {
+		glm::vec3(135.0f, -40.0f, 0.0f),
+		glm::vec3(140.0f,10.0f, 0.0f)
+	};
+
+	glm::vec3 spotLightsColors[SPOT_LIGHTS_NUMBER] = {
+		glm::vec3(10.0f, 0.0f, 0.0f),
+		glm::vec3(0.0f, 10.0f, 0.0f)
+	};
+
+	for (int i = 0; i < SPOT_LIGHTS_NUMBER; i++)
+	{
+		GameObject* spotLightObject = new GameObject();
+		spotLightObject->GetTransform()->SetPosition(spotLightsPositions[i]);
+		spotLightObject->GetTransform()->SetRotationEulerDegrees(spotLightsRotations[i]);
+		spotLightObject->GetTransform()->SetScale(glm::vec3(0.2f));
+		// Add debug renderer
+		std::shared_ptr<Material> lampMaterial = std::make_shared<Material>("res/shaders/unlit.vert.glsl", "res/shaders/unlit.frag.glsl");
+		glm::vec3 lightColor = spotLightsColors[i];
+		lampMaterial->SetVector3((GLchar*)"unlitColor", lightColor);
+		MeshRenderer* lampMeshRenderer = new MeshRenderer();
+		lampMeshRenderer->SetMesh(cubeMesh);
+		lampMeshRenderer->SetMaterial(lampMaterial);
+		lampMeshRenderer->SetIsCastingShadow(false);
+		spotLightObject->AddComponent(lampMeshRenderer);
+		// Add point light component
+		SpotLight* spotLight = new SpotLight(0.02f * lightColor, 0.8f * lightColor, lightColor, 5.0f, 3.2f, 1.2f, glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(15.0f)));
+		spotLightObject->AddComponent(spotLight);
+		// Name and add to scene
+		std::string name = "spot_light_";
+		name.append(std::to_string(i));
+		spotLightObject->SetName(name);
+		scene->AddGameObject(spotLightObject);
+	}
+
 	AddEditorSpectator();
 }

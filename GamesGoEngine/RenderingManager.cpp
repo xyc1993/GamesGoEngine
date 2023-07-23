@@ -409,6 +409,11 @@ void RenderingManager::Update()
 			{
 				GetInstance()->UpdateOmnidirectionalShadowMap(pointLight);
 			}
+			SpotLight* spotLight = dynamic_cast<SpotLight*>(lights[i]);
+			if (spotLight != nullptr)
+			{
+				GetInstance()->UpdateSpotLightShadowMap(spotLight);
+			}
 			
 			// reset viewport
 			glViewport(0, 0, WindowManager::GetCurrentWidth(), WindowManager::GetCurrentHeight());
@@ -688,6 +693,50 @@ void RenderingManager::UpdateDirectionalShadowMap(Light* directionalLight)
 	}
 }
 
+void RenderingManager::UpdateSpotLightShadowMap(Light* spotLight)
+{
+	if (!Component::IsValid(spotLight))
+	{
+		return;
+	}
+
+	float near_plane = 0.1f, far_plane = 30.0f;
+	// TODO: calculate fov and aspect properly
+	glm::mat4 lightProjection = glm::perspective(10.0f, 16.0f/9.0f, near_plane, far_plane);
+
+	glm::mat4 lightSpaceMatrix;
+	Transform* lightTransform = spotLight->GetOwner()->GetTransform();
+	glm::vec3 lightPosition = lightTransform->GetPosition();
+	glm::vec3 lightLookAtTarget = lightPosition + 10.0f * lightTransform->GetForward();
+	glm::mat4 lightView = glm::lookAt(lightPosition, lightLookAtTarget, glm::vec3(0.0f, 1.0f, 0.0f));
+	lightSpaceMatrix = lightProjection * lightView;
+	depthMapMaterial->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
+
+	glViewport(0, 0, shadowWidth, shadowHeight);
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+
+	glEnable(GL_DEPTH_TEST);
+	glClearColor(0.1f, 0.15f, 0.15f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+	//glCullFace(GL_FRONT);
+	DrawShadowCastingRenderers(meshRenderers, depthMapMaterial);
+	//glCullFace(GL_BACK);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	// TODO: remove and implement more elegant solution, this is not universal solution, just one for specific example scene
+	for (size_t i = 0; i < meshRenderers.size(); i++)
+	{
+		std::shared_ptr<Material> outMaterial;
+		if (meshRenderers[i]->TryGetMaterial(outMaterial, 0))
+		{
+			outMaterial->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
+			outMaterial->SetTexture("spotLightShadowMap", 1, depthMap);
+		}
+	}
+}
+
 void RenderingManager::UpdateOmnidirectionalShadowMap(Light* pointLight)
 {
 	if (!Component::IsValid(pointLight))
@@ -870,7 +919,13 @@ void RenderingManager::ClearLightsForRenderers(const std::vector<MeshRenderer*>&
 			const GLuint shaderProgram = renderers[i]->materialList[j]->GetShaderProgram();
 			glUseProgram(shaderProgram);
 			glUniform1f(glGetUniformLocation(shaderProgram, "ambientLightActive"), 0.0f);
+			glUniform1i(glGetUniformLocation(shaderProgram, "dirLightsNumber"), 0);
 			glUniform1i(glGetUniformLocation(shaderProgram, "pointLightsNumber"), 0);
+
+			// alwyas make sure that textures are set, even when they're not used; textures must be bound and complete
+			renderers[i]->materialList[j]->SetTexture("directionalLightShadowMap", 1, GetInstance()->depthMap);
+			renderers[i]->materialList[j]->SetTexture("spotLightShadowMap", 1, GetInstance()->depthMap);
+			renderers[i]->materialList[j]->SetCubeTexture("pointLightShadowMap", 0, GetInstance()->omniDepthMap);
 		}
 	}
 }

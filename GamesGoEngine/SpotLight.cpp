@@ -47,6 +47,8 @@ void SpotLight::Update()
 
 void SpotLight::SetThisLightInShader(const GLuint& shaderProgram)
 {
+	glUseProgram(shaderProgram);
+	glUniform1i(glGetUniformLocation(shaderProgram, "spotLightsNumber"), 1);
 	SetLightInShader(shaderProgram, 0);
 }
 

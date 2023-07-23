@@ -61,6 +61,7 @@ private:
 	void UpdateGBuffer();
 	void UpdateDeferredShading();
 	void UpdateDirectionalShadowMap(Light* directionalLight);
+	void UpdateSpotLightShadowMap(Light* spotLight);
 	void UpdateOmnidirectionalShadowMap(Light* pointLight);
 	void DrawOrientationDebug() const;
 	static void DrawSkybox();

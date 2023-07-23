@@ -15,6 +15,7 @@ in VS_OUT {
 
 uniform vec3 objectColor;
 uniform sampler2D directionalLightShadowMap;
+uniform sampler2D spotLightShadowMap;
 uniform samplerCube pointLightShadowMap;
 
 uniform float far_plane;
@@ -25,7 +26,7 @@ layout(std140, binding = 1) uniform CameraData
     vec3 cameraDir;
 };
 
-float DirectionalLightShadowCalculation(vec4 fragPosLightSpace)
+float DirectionalLightShadowCalculation(vec4 fragPosLightSpace, float bias)
 {
     // perform perspective divide
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
@@ -36,7 +37,6 @@ float DirectionalLightShadowCalculation(vec4 fragPosLightSpace)
     
     // shadow smoothing via PCF (percentage-closer filtering)
     float shadow = 0.0;
-    float bias = 0.005;
     vec2 texelSize = 1.0 / textureSize(directionalLightShadowMap, 0);
     for(int x = -1; x <= 1; ++x)
     {
@@ -126,6 +126,25 @@ struct PointLight
 uniform int pointLightsNumber;
 uniform PointLight pointLights[NUMBER_OF_POINT_LIGHTS];
 
+struct SpotLight
+{
+	vec3 direction;
+	vec3 position;
+	float cutOff;
+	float outerCutOff;
+
+	vec3 ambient;
+	vec3 diffuse;
+	vec3 specular;
+
+	float constant;
+	float linear;
+	float quadratic;
+};
+
+uniform int spotLightsNumber;
+uniform SpotLight spotLight[NUMBER_OF_SPOT_LIGHTS];
+
 void main()
 {
     vec3 color = objectColor;
@@ -141,20 +160,17 @@ void main()
 
     if (dirLightsNumber > 0)
     {
+        // diffuse
         vec3 lightDir = normalize(-dirLight[0].direction);
-	    vec3 halfwayDir = normalize(lightDir + viewDir);
-
 	    float diff = max(dot(normal, lightDir), 0.0);
-
+        // specular
+        vec3 halfwayDir = normalize(lightDir + viewDir);
 	    float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
-
-	    // multiply by diff to ensure specular will be 0 if the pixel is facing light 'backwards'
-	    //spec *= step(SPEC_THRESHOLD, diff);
 
 	    vec3 diffuse = dirLight[0].diffuse * diff * color;
 	    vec3 specular = dirLight[0].specular * spec * color;
 
-        float shadow = DirectionalLightShadowCalculation(fs_in.FragPosLightSpace);
+        float shadow = DirectionalLightShadowCalculation(fs_in.FragPosLightSpace, 0.005);
         vec3 dirLightColor = (1.0 - shadow) * (diffuse + specular); 
 
         finalColor += dirLightColor;
@@ -166,7 +182,7 @@ void main()
         // diffuse
         vec3 lightDir = normalize(pointLights[0].position - fs_in.FragPos);
         float diff = max(dot(lightDir, normal), 0.0);
-        // specular        
+        // specular
         vec3 halfwayDir = normalize(lightDir + viewDir);  
         float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);    
 
@@ -188,5 +204,34 @@ void main()
         finalColor += pointLightColor;
     }
     
+    // add spot light influence
+    if (spotLightsNumber > 0)
+    {
+        // diffuse
+        vec3 lightDir = normalize(spotLight[0].position - fs_in.FragPos);
+	    float diff = max(dot(normal, lightDir), 0.0);
+        // specular
+        vec3 halfwayDir = normalize(lightDir + viewDir);
+	    float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
+
+	    float distance = length(spotLight[0].position - fs_in.FragPos);
+	    
+	    //spotlight
+	    float theta = dot(lightDir, normalize(-spotLight[0].direction));
+	    float epsilon = spotLight[0].cutOff - spotLight[0].outerCutOff;
+	    float intensity = clamp((theta - spotLight[0].outerCutOff) / epsilon, 0.0, 1.0);
+
+	    vec3 diffuse = spotLight[0].diffuse * diff * color;
+	    vec3 specular = spotLight[0].specular * spec * color;
+
+        float attenuation = 1.0 / (spotLight[0].constant + spotLight[0].linear * distance + spotLight[0].quadratic * distance * distance);
+	    vec3 spotLightColor = attenuation * intensity * (diffuse + specular);
+
+        float shadow = DirectionalLightShadowCalculation(fs_in.FragPosLightSpace, 0.004);
+        spotLightColor = (1.0f - shadow) * spotLightColor;
+
+        finalColor += spotLightColor;
+    }
+
     FragColor = vec4(finalColor, 1.0);
 }  
