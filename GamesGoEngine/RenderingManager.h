@@ -60,7 +60,7 @@ private:
 	// Updates data such as positions, normals, albedo, specular
 	void UpdateGBuffer();
 	void UpdateDeferredShading();
-	void UpdateDirectionalShadowMap();
+	void UpdateDirectionalShadowMap(Light* directionalLight);
 	void UpdateOmnidirectionalShadowMap(Light* pointLight);
 	void DrawOrientationDebug() const;
 	static void DrawSkybox();

@@ -398,7 +398,12 @@ void RenderingManager::Update()
 		{
 			glEnable(GL_DEPTH_TEST);
 			glEnable(GL_STENCIL_TEST);
-			
+
+			DirectionalLight* directionalLight = dynamic_cast<DirectionalLight*>(lights[i]);
+			if (directionalLight != nullptr)
+			{
+				GetInstance()->UpdateDirectionalShadowMap(directionalLight);
+			}
 			PointLight* pointLight = dynamic_cast<PointLight*>(lights[i]);
 			if (pointLight != nullptr)
 			{
@@ -640,18 +645,13 @@ void RenderingManager::UpdateDeferredShading()
 	}
 }
 
-void RenderingManager::UpdateDirectionalShadowMap()
+void RenderingManager::UpdateDirectionalShadowMap(Light* directionalLight)
 {
-	glEnable(GL_DEPTH_TEST);
-	glClearColor(0.1f, 0.15f, 0.15f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	Light* directionalLight = lightsManager->GetDirectionalLight(0);
 	if (!Component::IsValid(directionalLight))
 	{
 		return;
 	}
-
+	
 	float near_plane = 1.0f, far_plane = 30.0f;
 	glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, 10.0f, -10.0f, near_plane, far_plane);
 
@@ -665,7 +665,12 @@ void RenderingManager::UpdateDirectionalShadowMap()
 
 	glViewport(0, 0, shadowWidth, shadowHeight);
 	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+
+	glEnable(GL_DEPTH_TEST);
+	glClearColor(0.1f, 0.15f, 0.15f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClear(GL_DEPTH_BUFFER_BIT);
+
 	glCullFace(GL_FRONT);
 	DrawShadowCastingRenderers(meshRenderers, depthMapMaterial);
 	glCullFace(GL_BACK);
@@ -678,9 +683,7 @@ void RenderingManager::UpdateDirectionalShadowMap()
 		if (meshRenderers[i]->TryGetMaterial(outMaterial, 0))
 		{
 			outMaterial->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
-			outMaterial->SetTexture("shadowMap", 1, depthMap);
-			// We want direction from fragment to light position
-			outMaterial->SetVector3("lightDir", -directionalLight->GetOwner()->GetTransform()->GetForward());
+			outMaterial->SetTexture("directionalLightShadowMap", 1, depthMap);
 		}
 	}
 }
@@ -736,9 +739,8 @@ void RenderingManager::UpdateOmnidirectionalShadowMap(Light* pointLight)
 		std::shared_ptr<Material> outMaterial;
 		if (meshRenderers[i]->TryGetMaterial(outMaterial, 0))
 		{
-			outMaterial->SetCubeTexture("depthMap", 1, omniDepthMap);
+			outMaterial->SetCubeTexture("pointLightShadowMap", 0, omniDepthMap);
 			outMaterial->SetFloat("far_plane", far);
-			outMaterial->SetVector3("lightPos", lightPos);
 		}
 	}
 }

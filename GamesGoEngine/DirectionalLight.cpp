@@ -40,6 +40,8 @@ void DirectionalLight::Update()
 
 void DirectionalLight::SetThisLightInShader(const GLuint& shaderProgram)
 {
+	glUseProgram(shaderProgram);
+	glUniform1i(glGetUniformLocation(shaderProgram, "dirLightsNumber"), 1);
 	SetLightInShader(shaderProgram, 0);
 }
 

@@ -88,6 +88,15 @@ SceneExample_MultipleLightsShadows::SceneExample_MultipleLightsShadows()
 	ambientLightObject->SetName("ambient_light");
 	scene->AddGameObject(ambientLightObject);
 
+	// Create directional light
+	GameObject* directionalLightObject = new GameObject();
+	directionalLightObject->GetTransform()->SetRotationEulerDegrees(glm::vec3(135.0f, -45.0f, 0.0f));
+	DirectionalLight* directionalLight = new DirectionalLight(glm::vec3(0.0f, 0.0f, 0.01f), glm::vec3(0.0f, 0.0f, 0.05f), glm::vec3(0.0f, 0.0f, 0.1f));
+	directionalLightObject->AddComponent(directionalLight);
+	std::string directionalLightName = "directional_light";
+	directionalLightObject->SetName(directionalLightName);
+	scene->AddGameObject(directionalLightObject);
+
 	// Create point lights
 	const int POINT_LIGHTS_NUMBER = 3;
 
