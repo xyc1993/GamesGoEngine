@@ -7,5 +7,5 @@ So far both forward and deferred rendering is implemented. Materials used by mes
 HDR tonemapping, gamma correction and bloom are effects available in the UI. (MSAA is currently not working after deferred rendering implementation)
 ![1](https://github.com/xyc1993/GamesGoEngine/assets/20773439/657e2e8f-da8f-4171-8f63-550b9b29d059)
 
-Basic shadow mapping is implemented but will need more work to be usable.
-![2](https://github.com/xyc1993/GamesGoEngine/assets/20773439/3756d583-a145-4281-8dcb-5cfae6867894)
+Basic shadow mapping is implemented. It supports directional lights, point lights and spot lights. Several lights of each type can be handled.
+![image](https://github.com/xyc1993/GamesGoEngine/assets/20773439/cd4b0409-4335-4cab-b232-5bfcc0d0871e)
