@@ -398,9 +398,13 @@ void RenderingManager::Update()
 		{
 			glEnable(GL_DEPTH_TEST);
 			glEnable(GL_STENCIL_TEST);
-
-			//Light* pointLight = GetLightsManager()->GetPointLight(i);
-			GetInstance()->UpdateOmnidirectionalShadowMap(lights[i]);
+			
+			PointLight* pointLight = dynamic_cast<PointLight*>(lights[i]);
+			if (pointLight != nullptr)
+			{
+				GetInstance()->UpdateOmnidirectionalShadowMap(pointLight);
+			}
+			
 			// reset viewport
 			glViewport(0, 0, WindowManager::GetCurrentWidth(), WindowManager::GetCurrentHeight());
 			glBindFramebuffer(GL_FRAMEBUFFER, i % 2 == 0 ? GetInstance()->framebuffer2 : GetInstance()->framebuffer1);
@@ -438,6 +442,10 @@ void RenderingManager::Update()
 				GetInstance()->textureMergerMaterial->Draw(glm::mat4());
 				MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
 			}
+
+			// clear lights so the next light pass won't be affected by previous one
+			ClearLightsForRenderers(GetInstance()->opaqueMeshRenderers);
+			ClearLightsForRenderers(GetInstance()->transparentMeshRenderers);
 		}
 
 		if (lights.size() > 1)
@@ -847,6 +855,20 @@ void RenderingManager::ApplyLightForRenderers(Light* light, const std::vector<Me
 		for (size_t j = 0; j < renderers[i]->materialList.size(); j++)
 		{
 			light->SetThisLightInShader(renderers[i]->materialList[j]->GetShaderProgram());
+		}
+	}
+}
+
+void RenderingManager::ClearLightsForRenderers(const std::vector<MeshRenderer*>& renderers)
+{
+	for (size_t i = 0; i < renderers.size(); i++)
+	{
+		for (size_t j = 0; j < renderers[i]->materialList.size(); j++)
+		{
+			const GLuint shaderProgram = renderers[i]->materialList[j]->GetShaderProgram();
+			glUseProgram(shaderProgram);
+			glUniform1f(glGetUniformLocation(shaderProgram, "ambientLightActive"), 0.0f);
+			glUniform1i(glGetUniformLocation(shaderProgram, "pointLightsNumber"), 0);
 		}
 	}
 }

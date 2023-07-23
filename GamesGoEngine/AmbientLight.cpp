@@ -13,6 +13,9 @@ AmbientLight::AmbientLight()
 AmbientLight::AmbientLight(glm::vec3 ambientColor)
 {
 	this->ambient = ambientColor;
+
+	this->lightNumber = RenderingManager::GetLightsManager()->AddAmbientLight(this);
+	if (this->lightNumber == INITIALIZATION_ERROR) delete this;
 }
 
 AmbientLight::~AmbientLight()
@@ -26,12 +29,15 @@ void AmbientLight::CopyData(const AmbientLight& other)
 
 void AmbientLight::SetThisLightInShader(const GLuint& shaderProgram)
 {
-	// In new iteration of light system this will be handled differently so currently ambient light doesn't get support for this
+	glUseProgram(shaderProgram);
+	glUniform1f(glGetUniformLocation(shaderProgram, "ambientLightActive"), 1.0f);
+	glUniform3f(glGetUniformLocation(shaderProgram, "ambientLightColor"), ambient.x, ambient.y, ambient.z);	
 }
 
 void AmbientLight::SetLightInShader(const GLuint& shaderProgram)
 {
-	// In new iteration of light system this will be handled differently so currently ambient light doesn't get support for this
+	glUniform1f(glGetUniformLocation(shaderProgram, "ambientLightActive"), 1.0f);
+	glUniform3f(glGetUniformLocation(shaderProgram, "ambientLightColor"), ambient.x, ambient.y, ambient.z);
 }
 
 std::string AmbientLight::GetNumberedShaderProperty(int lightNumber)

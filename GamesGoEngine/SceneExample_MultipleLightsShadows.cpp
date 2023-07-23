@@ -82,13 +82,11 @@ SceneExample_MultipleLightsShadows::SceneExample_MultipleLightsShadows()
 	}
 
 	// Create ambient light
-	/*
 	GameObject* ambientLightObject = new GameObject();
-	AmbientLight* ambientLight = new AmbientLight(glm::vec3(0.01f, 0.01f, 0.01f));
+	AmbientLight* ambientLight = new AmbientLight(glm::vec3(0.03f, 0.03f, 0.005f));
 	ambientLightObject->AddComponent(ambientLight);
 	ambientLightObject->SetName("ambient_light");
 	scene->AddGameObject(ambientLightObject);
-	*/
 
 	// Create point lights
 	const int POINT_LIGHTS_NUMBER = 3;
