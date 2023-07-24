@@ -60,8 +60,6 @@ void Material::Draw(glm::mat4 model)
 	case LightModelType::Unlit:
 		break;
 	case LightModelType::LitForward:
-		// TODO: rethink lights application, perhaps rendering manager should control this directly in its update
-		//RenderingManager::GetLightsManager()->SetLightsInShader(shader->GetProgram());
 		break;
 	case LightModelType::LitDeferred:
 		break;

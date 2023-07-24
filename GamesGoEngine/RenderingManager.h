@@ -63,6 +63,7 @@ private:
 	void UpdateDirectionalShadowMap(Light* directionalLight);
 	void UpdateSpotLightShadowMap(Light* spotLight);
 	void UpdateOmnidirectionalShadowMap(Light* pointLight);
+	bool AreThereAnyShadowCasters() const;
 	void DrawOrientationDebug() const;
 	static void DrawSkybox();
 	static void DrawRenderers(const std::vector<MeshRenderer*>& renderers);
@@ -72,6 +73,7 @@ private:
 	static void DrawShadowCastingRenderers(const std::vector<MeshRenderer*>& renderers, Material* material);
 	static void DrawPostProcessEffects();
 	static void ApplyLightForRenderers(Light* light, const std::vector<MeshRenderer*>& renderers);
+	void ApplyAllLightDataForForwardRenderers();
 	static void ClearLightsForRenderers(const std::vector<MeshRenderer*>& renderers);
 
 public:

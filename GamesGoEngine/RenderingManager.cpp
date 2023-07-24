@@ -394,7 +394,8 @@ void RenderingManager::Update()
 	// forward rendering with shadows
 	// TODO: check if there are any forward renderers at all (otherwise skip this)
 	std::vector<Light*> lights = GetLightsManager()->GetAllLights();
-	if (!lights.empty())
+	const bool areThereAnyShadowCasters = GetInstance()->AreThereAnyShadowCasters();
+	if (!lights.empty() && areThereAnyShadowCasters)
 	{
 		for (size_t i = 0; i < lights.size(); i++)
 		{
@@ -481,6 +482,7 @@ void RenderingManager::Update()
 		glBindFramebuffer(GL_FRAMEBUFFER, GetInstance()->framebuffer2);
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		GetInstance()->ApplyAllLightDataForForwardRenderers();
 		DrawRenderersExceptLightModel(GetInstance()->opaqueMeshRenderers, LightModelType::LitDeferred);
 		DrawRenderersExceptLightModel(GetInstance()->transparentMeshRenderers, LightModelType::LitDeferred);
 	}
@@ -798,6 +800,19 @@ void RenderingManager::UpdateOmnidirectionalShadowMap(Light* pointLight)
 	}
 }
 
+// TODO: since it's not optimal to do this every frame, it should be cached, values can be updated on "SetIsCastinShadow(...)" call
+bool RenderingManager::AreThereAnyShadowCasters() const
+{
+	for (size_t i = 0; i < meshRenderers.size(); i++)
+	{
+		if (meshRenderers[i]->IsCastingShadow())
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 void RenderingManager::DrawOrientationDebug() const
 {
 	if (selectedGameObject != nullptr)
@@ -910,6 +925,22 @@ void RenderingManager::ApplyLightForRenderers(Light* light, const std::vector<Me
 		for (size_t j = 0; j < renderers[i]->materialList.size(); j++)
 		{
 			light->SetThisLightInShader(renderers[i]->materialList[j]->GetShaderProgram());
+		}
+	}
+}
+
+void RenderingManager::ApplyAllLightDataForForwardRenderers()
+{
+	for (size_t i = 0; i < meshRenderers.size(); i++)
+	{
+		if (meshRenderers[i]->GetLightModelType() == LightModelType::LitForward)
+		{
+			for (size_t j = 0; j < meshRenderers[i]->materialList.size(); j++)
+			{
+				const GLuint shaderProgram = meshRenderers[i]->materialList[j]->GetShaderProgram();
+				glUseProgram(shaderProgram);
+				GetLightsManager()->SetLightsInShader(shaderProgram);
+			}
 		}
 	}
 }
