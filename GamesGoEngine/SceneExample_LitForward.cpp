@@ -102,6 +102,7 @@ void SceneExample_LitForward::InitScene(bool shouldAddPostProcessEffects)
 	{
 		GameObject* lampObject = new GameObject();
 		MeshRenderer* lampMeshRenderer = new MeshRenderer();
+		lampMeshRenderer->SetIsCastingShadow(false);
 		lampMeshRenderer->SetMesh(sphereMesh);
 		lampMeshRenderer->SetMaterial(lampMaterial);
 		lampObject->AddComponent(lampMeshRenderer);
@@ -137,6 +138,7 @@ void SceneExample_LitForward::InitScene(bool shouldAddPostProcessEffects)
 	{
 		GameObject* litBoxesObject = new GameObject();
 		MeshRenderer* litBoxesMeshRenderer = new MeshRenderer();
+		litBoxesMeshRenderer->SetIsCastingShadow(false);
 		litBoxesMeshRenderer->SetMesh(cubeMesh);
 		litBoxesMeshRenderer->SetMaterial(cubeLitMaterial);
 		litBoxesObject->AddComponent(litBoxesMeshRenderer);
@@ -207,9 +209,10 @@ void SceneExample_LitForward::InitScene(bool shouldAddPostProcessEffects)
 		nanoSuitMaterials[i]->SetTextureByPath((GLchar*)"material.diffuse", 0, nanoSuitTexturePaths[i]);
 		nanoSuitMaterials[i]->SetFloat((GLchar*)"material.shininess", 32.0f);
 		nanoSuitMaterials[i]->SetLightModel(LightModelType::LitForward);
-		nanoSuitMeshRenderer->SetMaterial(nanoSuitMaterials[i], i);
+		nanoSuitMeshRenderer->SetMaterial(nanoSuitMaterials[i], i);		
 	}
 
+	nanoSuitMeshRenderer->SetIsCastingShadow(false);
 	nanoSuitObject->AddComponent(nanoSuitMeshRenderer);
 
 	std::string nanoSuitName = "nanosuit";
