@@ -690,7 +690,7 @@ void RenderingManager::UpdateDirectionalShadowMap(Light* directionalLight)
 		if (meshRenderers[i]->TryGetMaterial(outMaterial, 0))
 		{
 			outMaterial->SetMat4("directionalLightSpaceMatrix", lightSpaceMatrix);
-			outMaterial->SetTexture("directionalLightShadowMap", 1, directionalDepthMap);
+			outMaterial->SetTexture("directionalLightShadowMap", 0, directionalDepthMap);
 		}
 	}
 }
@@ -792,6 +792,8 @@ void RenderingManager::UpdateOmnidirectionalShadowMap(Light* pointLight)
 		{
 			outMaterial->SetCubeTexture("pointLightShadowMap", 2, omniDepthMap);
 			outMaterial->SetFloat("far_plane", far);
+			// Legacy feature for the normal/parallax mapping shaders
+			outMaterial->SetVector3("lightPos", lightPos);
 		}
 	}
 }
@@ -924,10 +926,11 @@ void RenderingManager::ClearLightsForRenderers(const std::vector<MeshRenderer*>&
 			glUniform1i(glGetUniformLocation(shaderProgram, "dirLightsNumber"), 0);
 			glUniform1i(glGetUniformLocation(shaderProgram, "pointLightsNumber"), 0);
 
-			// alwyas make sure that textures are set, even when they're not used; textures must be bound and complete
-			renderers[i]->materialList[j]->SetTexture("directionalLightShadowMap", 1, GetInstance()->directionalDepthMap);
-			renderers[i]->materialList[j]->SetTexture("spotLightShadowMap", 1, GetInstance()->directionalDepthMap);
-			renderers[i]->materialList[j]->SetCubeTexture("pointLightShadowMap", 0, GetInstance()->omniDepthMap);
+			// TODO: think how to make it more generic since some shaders have different texture indices and this could overwrite their textures
+			// always make sure that textures are set, even when they're not used; textures must be bound and complete			
+			renderers[i]->materialList[j]->SetTexture("directionalLightShadowMap", 0, GetInstance()->directionalDepthMap);
+			renderers[i]->materialList[j]->SetTexture("spotLightShadowMap", 1, GetInstance()->spotLightDepthMap);
+			renderers[i]->materialList[j]->SetCubeTexture("pointLightShadowMap", 2, GetInstance()->omniDepthMap);
 		}
 	}
 }

@@ -14,8 +14,8 @@ in VS_OUT {
 } fs_in;
 
 layout(binding = 0) uniform sampler2D diffuseTexture;
-layout(binding = 1) uniform samplerCube depthMap;
-layout(binding = 2) uniform sampler2D normalTexture;
+layout(binding = 1) uniform sampler2D normalTexture;
+layout(binding = 2) uniform samplerCube pointLightShadowMap;
 
 uniform float far_plane;
 
@@ -44,7 +44,7 @@ float ShadowCalculation(vec3 fragPos, vec3 lightPos, vec3 viewPos)
     float diskRadius = (1.0 + (viewDistance / far_plane)) / 25.0;
     for(int i = 0; i < samples; ++i)
     {
-        float closestDepth = texture(depthMap, fragToLight + gridSamplingDisk[i] * diskRadius).r;
+        float closestDepth = texture(pointLightShadowMap, fragToLight + gridSamplingDisk[i] * diskRadius).r;
         closestDepth *= far_plane;   // undo mapping [0;1]
         if(currentDepth - bias > closestDepth)
             shadow += 1.0;
@@ -107,6 +107,8 @@ void main()
         float attenuation = 1.0 / (pointLights[0].constant + pointLights[0].linear * distance + pointLights[0].quadratic * distance * distance);
         finalColor *= attenuation;
     }
+
+    //finalColor = vec3(color);
 
     FragColor = vec4(finalColor, 1.0);
 }  

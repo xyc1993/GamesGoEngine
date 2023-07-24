@@ -46,7 +46,7 @@ void Material::Draw(glm::mat4 model)
 
 	for (auto it = cubeTexturesMap.begin(); it != cubeTexturesMap.end(); ++it)
 	{
-		glActiveTexture(GL_TEXTURE0 + std::get<0>(it->second) + texturesMap.size());
+		glActiveTexture(GL_TEXTURE0 + std::get<0>(it->second));
 		glBindTexture(GL_TEXTURE_CUBE_MAP, std::get<1>(it->second));
 	}
 

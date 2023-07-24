@@ -8,9 +8,7 @@ in VS_OUT {
 } fs_in;
 
 uniform sampler2D diffuseTexture;
-uniform samplerCube depthMap;
-
-uniform vec3 lightPos;
+uniform samplerCube pointLightShadowMap;
 
 uniform float far_plane;
 
@@ -31,7 +29,7 @@ vec3 gridSamplingDisk[20] = vec3[]
 );
 
 
-float ShadowCalculation(vec3 fragPos)
+float ShadowCalculation(vec3 fragPos, vec3 lightPos)
 {
     // get vector between fragment position and light position
     vec3 fragToLight = fragPos - lightPos;
@@ -45,7 +43,7 @@ float ShadowCalculation(vec3 fragPos)
     float diskRadius = (1.0 + (viewDistance / far_plane)) / 25.0;
     for(int i = 0; i < samples; ++i)
     {
-        float closestDepth = texture(depthMap, fragToLight + gridSamplingDisk[i] * diskRadius).r;
+        float closestDepth = texture(pointLightShadowMap, fragToLight + gridSamplingDisk[i] * diskRadius).r;
         closestDepth *= far_plane;   // undo mapping [0;1]
         if(currentDepth - bias > closestDepth)
             shadow += 1.0;
@@ -77,20 +75,22 @@ void main()
 {
     vec3 color = texture(diffuseTexture, fs_in.TexCoords).rgb;
     vec3 normal = normalize(fs_in.Normal);
-    // diffuse
-    vec3 lightDir = normalize(lightPos - fs_in.FragPos);
-    float diff = max(dot(lightDir, normal), 0.0);
-    // specular
-    vec3 viewDir = normalize(cameraPos - fs_in.FragPos);
-    vec3 halfwayDir = normalize(lightDir + viewDir);  
-    float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
-    // calculate shadow
-    float shadow = ShadowCalculation(fs_in.FragPos);
-
+    
     // calculate final color with provided point light
     vec3 finalColor = vec3(0.0);
     if (pointLightsNumber > 0)
     {
+        // diffuse
+        vec3 lightDir = normalize(pointLights[0].position - fs_in.FragPos);
+        float diff = max(dot(lightDir, normal), 0.0);
+
+        // specular
+        vec3 viewDir = normalize(cameraPos - fs_in.FragPos);
+        vec3 halfwayDir = normalize(lightDir + viewDir);  
+        float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
+        // calculate shadow
+        float shadow = ShadowCalculation(fs_in.FragPos, pointLights[0].position);
+
         // calculate lighting based on provided light data
         vec3 ambient = pointLights[0].ambient * color;
 	    vec3 diffuse = pointLights[0].diffuse * diff * color;
@@ -98,7 +98,7 @@ void main()
         finalColor = ambient + (1.0 - shadow) * (diffuse + specular);
 
         // limit light effect based on distance
-        float distance = length(lightPos - fs_in.FragPos);
+        float distance = length(pointLights[0].position - fs_in.FragPos);
         float attenuation = 1.0 / (pointLights[0].constant + pointLights[0].linear * distance + pointLights[0].quadratic * distance * distance);
         finalColor *= attenuation;
     }
