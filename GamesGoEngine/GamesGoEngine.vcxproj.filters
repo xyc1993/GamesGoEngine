@@ -721,5 +721,8 @@
     <None Include="res\shaders\PostProcess\textureMerger.frag.glsl">
       <Filter>Resource Files\Shaders\PostProcess</Filter>
     </None>
+    <None Include="res\shaders\RenderPipeline\gBufferNoTexture.frag.glsl">
+      <Filter>Resource Files\Shaders\RenderPipeline</Filter>
+    </None>
   </ItemGroup>
 </Project>

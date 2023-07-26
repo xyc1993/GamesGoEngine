@@ -9,8 +9,7 @@ in vec2 TexCoords;
 in vec3 FragPos;
 in vec3 Normal;
 
-uniform sampler2D texture_diffuse1;
-uniform sampler2D texture_specular1;
+uniform vec3 albedo;
 uniform float enableLight;
 
 void main()
@@ -20,9 +19,9 @@ void main()
     // also store the per-fragment normals into the gbuffer
     gNormal = vec4(normalize(Normal), 1.0);
     // diffuse per-fragment color
-    gAlbedo = texture(texture_diffuse1, TexCoords);
+    gAlbedo = vec4(albedo, 1.0);
     // specular per-fragment color
-    gSpecular = texture(texture_specular1, TexCoords);
+    gSpecular = vec4(1.0);
     // enable light for object
     gLightEnabled = vec4(enableLight, 1.0 - enableLight, 0.0, 1.0);
 }

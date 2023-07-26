@@ -194,6 +194,7 @@ private:
 	unsigned int gNormal;
 	unsigned int gAlbedo;
 	unsigned int gSpecular;
+	unsigned int gLightEnabled;
 	unsigned int gDepth;
 	unsigned int gStencil;
 

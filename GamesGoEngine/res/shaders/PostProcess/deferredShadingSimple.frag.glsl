@@ -9,6 +9,7 @@ layout(binding = 0) uniform sampler2D gPosition;
 layout(binding = 1) uniform sampler2D gNormal;
 layout(binding = 2) uniform sampler2D gAlbedo;
 layout(binding = 3) uniform sampler2D gSpecular;
+layout(binding = 4) uniform sampler2D gLightEnabled;
 
 struct PointLight
 {
@@ -39,35 +40,46 @@ void main()
     vec3 Normal = texture(gNormal, TexCoords).rgb;
     vec3 Color = texture(gAlbedo, TexCoords).rgb;
     float Specular = texture(gSpecular, TexCoords).r;
+    float LightEnabled = texture(gLightEnabled, TexCoords).r;
     
-    // then calculate lighting as usual
-    vec3 lighting  = vec3(0.0);
-    vec3 viewDir  = normalize(cameraPos - FragPos);
-    for(int i = 0; i < pointLightsNumber; ++i)
+    vec3 finalColor = Color;
+    if (LightEnabled > 0.5)
     {
-        // ambient
-        vec3 ambient = pointLights[i].ambient * Color;
+        //reset color for light calculation
+        finalColor = vec3(0.0);
 
-        // diffuse
-        vec3 lightDir = normalize(pointLights[i].position - FragPos);
-        vec3 diffuse = max(dot(Normal, lightDir), 0.0) * Color * pointLights[i].diffuse;
+        // then calculate lighting as usual
+        vec3 lighting  = vec3(0.0);
+        vec3 viewDir  = normalize(cameraPos - FragPos);
 
-        // specular
-        vec3 halfwayDir = normalize(lightDir + viewDir);  
-        float spec = pow(max(dot(Normal, halfwayDir), 0.0), 32.0);
-        vec3 specular = pointLights[i].specular * spec * Specular;
+        for(int i = 0; i < pointLightsNumber; ++i)
+        {
+            // ambient
+            vec3 ambient = pointLights[i].ambient * Color;
 
-        // attenuation
-        float distance = length(pointLights[i].position - FragPos);
-        float attenuation = 1.0 / (pointLights[i].constant + pointLights[i].linear * distance + pointLights[i].quadratic * distance * distance);
-        diffuse *= attenuation;
-        specular *= attenuation;
+            // diffuse
+            vec3 lightDir = normalize(pointLights[i].position - FragPos);
+            vec3 diffuse = max(dot(Normal, lightDir), 0.0) * Color * pointLights[i].diffuse;
 
-        // sum of lights
-        lighting += ambient;
-        lighting += diffuse;
-        lighting += specular;
+            // specular
+            vec3 halfwayDir = normalize(lightDir + viewDir);  
+            float spec = pow(max(dot(Normal, halfwayDir), 0.0), 32.0);
+            vec3 specular = pointLights[i].specular * spec * Specular;
+
+            // attenuation
+            float distance = length(pointLights[i].position - FragPos);
+            float attenuation = 1.0 / (pointLights[i].constant + pointLights[i].linear * distance + pointLights[i].quadratic * distance * distance);
+            diffuse *= attenuation;
+            specular *= attenuation;
+
+            // sum of lights
+            lighting += ambient;
+            lighting += diffuse;
+            lighting += specular;
+        }
+
+        finalColor = lighting;
     }
 
-    FragColor = vec4(lighting, 1.0);
+    FragColor = vec4(finalColor, 1.0);
 }

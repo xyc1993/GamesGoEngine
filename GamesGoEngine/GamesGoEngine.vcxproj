@@ -315,6 +315,7 @@
     <None Include="res\shaders\RenderPipeline\extractBrightColor.frag.glsl" />
     <None Include="res\shaders\RenderPipeline\gBuffer.frag.glsl" />
     <None Include="res\shaders\RenderPipeline\gBuffer.vert.glsl" />
+    <None Include="res\shaders\RenderPipeline\gBufferNoTexture.frag.glsl" />
     <None Include="res\shaders\RenderPipeline\omniDepthMap.frag.glsl" />
     <None Include="res\shaders\RenderPipeline\omniDepthMap.geom.glsl" />
     <None Include="res\shaders\RenderPipeline\omniDepthMap.vert.glsl" />

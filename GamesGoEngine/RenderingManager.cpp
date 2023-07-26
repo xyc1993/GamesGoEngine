@@ -218,20 +218,27 @@ void RenderingManager::ConfigureGBuffer(GLint screenWidth, GLint screenHeight, b
 	// color color buffer
 	glGenTextures(1, &gAlbedo);
 	glBindTexture(GL_TEXTURE_2D, gAlbedo);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screenWidth, screenHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, screenWidth, screenHeight, 0, GL_RGBA, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gAlbedo, 0);
 	// specular color buffer
 	glGenTextures(1, &gSpecular);
 	glBindTexture(GL_TEXTURE_2D, gSpecular);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screenWidth, screenHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screenWidth, screenHeight, 0, GL_RGBA, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, gSpecular, 0);
+	// light enabled color buffer
+	glGenTextures(1, &gLightEnabled);
+	glBindTexture(GL_TEXTURE_2D, gLightEnabled);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screenWidth, screenHeight, 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT4, GL_TEXTURE_2D, gLightEnabled, 0);
 	// tell OpenGL which color attachments we'll use (of this framebuffer) for rendering 
-	unsigned int attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
-	glDrawBuffers(4, attachments);
+	unsigned int attachments[5] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4 };
+	glDrawBuffers(5, attachments);
 
 	// create a depth & stencil attachment texture
 	glGenTextures(1, &gDepth);
@@ -291,6 +298,7 @@ void RenderingManager::ResizeBuffersInternal(GLint screenWidth, GLint screenHeig
 	glDeleteTextures(1, &gNormal);
 	glDeleteTextures(1, &gAlbedo);
 	glDeleteTextures(1, &gSpecular);
+	glDeleteTextures(1, &gLightEnabled);
 	glDeleteTextures(1, &gDepth);
 	glDeleteTextures(1, &gStencil);
 
@@ -335,12 +343,12 @@ void RenderingManager::Update()
 	// set viewport
 	glViewport(0, 0, WindowManager::GetCurrentWidth(), WindowManager::GetCurrentHeight());
 
+	glEnable(GL_DEPTH_TEST); // enable depth testing (is disabled for rendering screen-space quad)
+	glEnable(GL_STENCIL_TEST);
+
 	GetInstance()->UpdateGBuffer();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, GetInstance()->framebuffer2);
-	
-	glEnable(GL_DEPTH_TEST); // enable depth testing (is disabled for rendering screen-space quad)
-	glEnable(GL_STENCIL_TEST);
 
 	glClearColor(0.1f, 0.15f, 0.15f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -362,6 +370,7 @@ void RenderingManager::Update()
 	GetInstance()->deferredShadingMaterial->SetTexture("gNormal", 1, GetInstance()->gNormal);
 	GetInstance()->deferredShadingMaterial->SetTexture("gAlbedo", 2, GetInstance()->gAlbedo);
 	GetInstance()->deferredShadingMaterial->SetTexture("gSpecular", 3, GetInstance()->gSpecular);
+	GetInstance()->deferredShadingMaterial->SetTexture("gLightEnabled", 4, GetInstance()->gLightEnabled);
 	GetInstance()->UpdateDeferredShading();
 	GetInstance()->deferredShadingMaterial->Draw(glm::mat4());
 	MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
@@ -379,11 +388,12 @@ void RenderingManager::Update()
 	glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT + 2, GL_NEAREST);
 	// TODO: make it work with shadowmapping, currently causes weird artifacts, perhaps due to no data written in gBuffer in tested map
 	// TODO: make sure deferred rendering will work before commiting, right now it's BROKEN!
-	//glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
-	//glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+	glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+	glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 	
 	glBindFramebuffer(GL_FRAMEBUFFER, GetInstance()->framebuffer2);
 
+	/* TEMPORARILY DISABLED WHILE WORKING ON DEFERRED RENDERING
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, GetInstance()->framebuffer2);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, GetInstance()->framebuffer1);
 
@@ -486,6 +496,7 @@ void RenderingManager::Update()
 		DrawRenderersExceptLightModel(GetInstance()->opaqueMeshRenderers, LightModelType::LitDeferred);
 		DrawRenderersExceptLightModel(GetInstance()->transparentMeshRenderers, LightModelType::LitDeferred);
 	}
+	*/
 	DrawSkybox();
 
 	if (IsNormalsDebugEnabled() && (GetInstance()->normalDebugMaterial != nullptr))
