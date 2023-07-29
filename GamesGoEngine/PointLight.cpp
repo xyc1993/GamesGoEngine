@@ -40,6 +40,18 @@ void PointLight::Update()
 	}
 }
 
+void PointLight::SetThisNonNumberedLightInShader(const GLuint& shaderProgram)
+{
+	glUniform3f(glGetUniformLocation(shaderProgram, "pointLight.ambient"), ambient.x, ambient.y, ambient.z);
+	glUniform3f(glGetUniformLocation(shaderProgram, "pointLight.diffuse"), diffuse.x, diffuse.y, diffuse.z);
+	glUniform3f(glGetUniformLocation(shaderProgram, "pointLight.specular"), specular.x, specular.y, specular.z);
+
+	glUniform3f(glGetUniformLocation(shaderProgram, "pointLight.position"), position.x, position.y, position.z);
+	glUniform1f(glGetUniformLocation(shaderProgram, "pointLight.constant"), constant);
+	glUniform1f(glGetUniformLocation(shaderProgram, "pointLight.linear"), linear);
+	glUniform1f(glGetUniformLocation(shaderProgram, "pointLight.quadratic"), quadratic);
+}
+
 void PointLight::SetThisLightInShader(const GLuint& shaderProgram)
 {
 	glUseProgram(shaderProgram);

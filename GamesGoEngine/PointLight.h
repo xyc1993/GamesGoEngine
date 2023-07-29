@@ -10,6 +10,7 @@ public:
 	~PointLight();
 
 	void Update() override;
+	void SetThisNonNumberedLightInShader(const GLuint& shaderProgram);
 	void SetThisLightInShader(const GLuint& shaderProgram) override;
 	void SetLightInShader(const GLuint& shaderProgram) override;
 

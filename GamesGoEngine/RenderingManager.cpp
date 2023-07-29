@@ -32,6 +32,7 @@ RenderingManager::RenderingManager()
 	hdrToneMappingGammaCorrectionMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/hdrToneMappingGammaCorrection.frag.glsl");
 	editorOutlineMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/editorOutline.frag.glsl");
 	deferredShadingMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/deferredShadingSimple.frag.glsl");
+	deferredPointLightShadowedAdditiveMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/deferredShadingPointLightShadowAdd.frag.glsl");
 	textureMergerMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/textureMerger.frag.glsl");
 }
 
@@ -364,8 +365,76 @@ void RenderingManager::Update()
 	const int width = WindowManager::GetCurrentWidth();
 	const int height = WindowManager::GetCurrentHeight();
 
+	// clear both buffers to ensure no unwanted data
+	glBindFramebuffer(GL_FRAMEBUFFER, GetInstance()->framebuffer1);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glBindFramebuffer(GL_FRAMEBUFFER, GetInstance()->framebuffer2);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	std::vector<Light*> lights = GetLightsManager()->GetAllLights();
+	for (size_t i = 0; i < lights.size(); i++)
+	{
+		const unsigned int currentFramebuffer = i % 2 == 0 ? GetInstance()->framebuffer2 : GetInstance()->framebuffer1;
+		glBindFramebuffer(GL_FRAMEBUFFER, currentFramebuffer);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		GetInstance()->deferredPointLightShadowedAdditiveMaterial->SetTexture("screenTexture", 0, i % 2 == 0 ? GetInstance()->textureColorBuffer1 : GetInstance()->textureColorBuffer2);
+		GetInstance()->deferredPointLightShadowedAdditiveMaterial->SetTexture("gPosition", 2, GetInstance()->gPosition);
+		GetInstance()->deferredPointLightShadowedAdditiveMaterial->SetTexture("gNormal", 3, GetInstance()->gNormal);
+		GetInstance()->deferredPointLightShadowedAdditiveMaterial->SetTexture("gAlbedo", 4, GetInstance()->gAlbedo);
+		GetInstance()->deferredPointLightShadowedAdditiveMaterial->SetTexture("gSpecular", 5, GetInstance()->gSpecular);
+		GetInstance()->deferredPointLightShadowedAdditiveMaterial->SetTexture("gLightEnabled", 6, GetInstance()->gLightEnabled);
+
+		// set light data
+		PointLight* pointLight = dynamic_cast<PointLight*>(lights[i]);
+		if (pointLight != nullptr)
+		{
+			// update light data
+			const GLuint shaderProgram = GetInstance()->deferredPointLightShadowedAdditiveMaterial->GetShaderProgram();
+			pointLight->SetThisNonNumberedLightInShader(shaderProgram);
+			// update shadow map
+			GetInstance()->UpdateOmnidirectionalShadowMap(pointLight);
+
+			glBindFramebuffer(GL_FRAMEBUFFER, currentFramebuffer);
+			glDisable(GL_DEPTH_TEST);
+			glDisable(GL_STENCIL_TEST);
+			glViewport(0, 0, WindowManager::GetCurrentWidth(), WindowManager::GetCurrentHeight());
+			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT);
+
+			GetInstance()->deferredPointLightShadowedAdditiveMaterial->SetCubeTexture("pointLightShadowMap", 1, GetInstance()->omniDepthMap);
+			GetInstance()->deferredPointLightShadowedAdditiveMaterial->SetFloat("far_plane", 25.0f);
+		}
+		else
+		{
+			std::cout << "This type of light is not supported yet!" << std::endl;
+		}
+
+		GetInstance()->deferredPointLightShadowedAdditiveMaterial->Draw(glm::mat4());
+		MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
+	}
+
+	// blitting so framebuffer2 has the most recent data
+	if ((lights.size() - 1) % 2 == 1)
+	{
+		// after rendering the last shadow pass, blit data to the framebuffer that's used later for the rest of rendering process
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, GetInstance()->framebuffer1);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, GetInstance()->framebuffer2);
+
+		// blit only color
+		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+		//glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+		//glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, GetInstance()->framebuffer2);
+
 	// deferred rendering
 	// TODO: check if there are any deferred renderers at all (otherwise skip this)
+	/*
 	GetInstance()->deferredShadingMaterial->SetTexture("gPosition", 0, GetInstance()->gPosition);
 	GetInstance()->deferredShadingMaterial->SetTexture("gNormal", 1, GetInstance()->gNormal);
 	GetInstance()->deferredShadingMaterial->SetTexture("gAlbedo", 2, GetInstance()->gAlbedo);
@@ -374,6 +443,7 @@ void RenderingManager::Update()
 	GetInstance()->UpdateDeferredShading();
 	GetInstance()->deferredShadingMaterial->Draw(glm::mat4());
 	MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
+	*/
 
 	glEnable(GL_DEPTH_TEST); // enable depth testing (is disabled for rendering screen-space quad)
 	glEnable(GL_STENCIL_TEST);

@@ -30,19 +30,29 @@ SceneExample_DeferredRendering::SceneExample_DeferredRendering()
 	boxPositions.push_back(glm::vec3(0.0f, 1.5f, -5.0f));
 	boxPositions.push_back(glm::vec3(0.0f, 1.5f, 5.0f));
 
+	glm::vec3 boxRotations[7] = {
+		glm::vec3(0.0f, 0.0f, 0.0f),
+		glm::vec3(30.0f, 15.0f, 0.0f),
+		glm::vec3(60.0f, 30.0f, 0.0f),
+		glm::vec3(90.0f, 45.0f, 0.0f),
+		glm::vec3(120.0f,60.0f, 0.0f),
+		glm::vec3(150.0f,75.0f, 0.0f),
+		glm::vec3(180.0f,90.0f, 0.0f),
+	};
+
 	for (size_t i = 0; i < boxPositions.size(); i++)
 	{
 		GameObject* boxObject = new GameObject();
 		MeshRenderer* boxMeshRenderer = new MeshRenderer();
 		boxMeshRenderer->SetMesh(cubeMesh);
 		boxMeshRenderer->SetMaterial(boxDeferredMaterial);
-		boxMeshRenderer->SetIsCastingShadow(false);
 
 		boxObject->AddComponent(boxMeshRenderer);
 		std::string name = "box_";
 		name.append(std::to_string(i));
 		boxObject->SetName(name);
 		boxObject->GetTransform()->SetPosition(boxPositions[i]);
+		boxObject->GetTransform()->SetRotationEulerDegrees(boxRotations[i]);
 
 		scene->AddGameObject(boxObject);
 	}
@@ -95,10 +105,10 @@ SceneExample_DeferredRendering::SceneExample_DeferredRendering()
 	constexpr int lightsNumber = 4;
 
 	std::vector<glm::vec3> lightPositions;
-	lightPositions.push_back(glm::vec3(0.9f, 1.5f, 0.9f));
-	lightPositions.push_back(glm::vec3(0.0f, 0.5f, 0.0f));
-	lightPositions.push_back(glm::vec3(-1.2f, 3.0f, -0.3f));
-	lightPositions.push_back(glm::vec3(-0.8f, 0.7f, 0.4f));
+	lightPositions.push_back(glm::vec3(2.9f, 1.5f, -2.9f));
+	lightPositions.push_back(glm::vec3(2.8f, 0.5f, 2.9f));
+	lightPositions.push_back(glm::vec3(-3.2f, 3.0f, -2.8f));
+	lightPositions.push_back(glm::vec3(-2.8f, 0.7f, 3.1f));
 
 	std::vector<glm::vec3> lightColors;
 	lightColors.push_back(glm::vec3(9.0f, 0.0f, 0.0f));

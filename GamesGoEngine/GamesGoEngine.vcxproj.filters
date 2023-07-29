@@ -724,5 +724,8 @@
     <None Include="res\shaders\RenderPipeline\gBufferNoTexture.frag.glsl">
       <Filter>Resource Files\Shaders\RenderPipeline</Filter>
     </None>
+    <None Include="res\shaders\PostProcess\deferredShadingPointLightShadowAdd.frag.glsl">
+      <Filter>Resource Files\Shaders\PostProcess</Filter>
+    </None>
   </ItemGroup>
 </Project>
