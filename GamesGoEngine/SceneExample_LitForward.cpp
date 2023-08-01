@@ -109,7 +109,7 @@ void SceneExample_LitForward::InitScene(bool shouldAddPostProcessEffects)
 		lampObject->GetTransform()->SetPosition(startPointLightPositions[i]);
 		lampObject->GetTransform()->SetScale(glm::vec3(0.2f));
 
-		PointLight* pointLight = new PointLight(0.05f * lightsColor, 0.8f * lightsColor, 1.0f * lightsColor, 1.0f, 0.09f, 0.032f);
+		PointLight* pointLight = new PointLight(0.05f * lightsColor, 0.8f * lightsColor, 1.0f * lightsColor, 1.0f, 0.09f, 0.032f, 10.0f, 8.0f);
 		lampObject->AddComponent(pointLight);
 
 		PositionOscillator* oscillator = new PositionOscillator();

@@ -119,7 +119,7 @@ SceneExample_OmnidirectionalShadowsSimple::SceneExample_OmnidirectionalShadowsSi
 	lampMeshRenderer->SetIsCastingShadow(false);
 	pointLightObject->AddComponent(lampMeshRenderer);
 	// Add point light component
-	PointLight* pointLight = new PointLight(0.02f * lightColor, 0.8f * lightColor, lightColor, 5.0f, 3.2f, 1.2f);
+	PointLight* pointLight = new PointLight(0.02f * lightColor, 0.8f * lightColor, lightColor, 5.0f, 3.2f, 1.2f, 10.0f, 8.0f);
 	pointLightObject->AddComponent(pointLight);
 	// Name and add to scene
 	pointLightObject->SetName("point_light");

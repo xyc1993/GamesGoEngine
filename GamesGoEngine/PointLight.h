@@ -6,7 +6,7 @@ class PointLight : public Light
 {
 public:
 	PointLight();
-	PointLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float constant, float linear, float quadratic);
+	PointLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float constant, float linear, float quadratic, float maxRadius, float maxRadiusFallOffStart);
 	~PointLight();
 
 	void Update() override;
@@ -23,4 +23,8 @@ private:
 	float constant;
 	float linear;
 	float quadratic;
+	// max radius of influence for the point light
+	float maxRadius;
+	// distance at which smooth step towards no light starts
+	float maxRadiusFallOffStart;
 };

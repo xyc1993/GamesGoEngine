@@ -105,7 +105,7 @@ SceneExample_DeferredRendering::SceneExample_DeferredRendering()
 	constexpr int pointLightsNumber = 2;
 
 	std::vector<glm::vec3> pointLightPositions;
-	pointLightPositions.push_back(glm::vec3(2.9f, 1.5f, -2.9f));
+	pointLightPositions.push_back(glm::vec3(-5.0f, 1.5f, -2.9f));
 	pointLightPositions.push_back(glm::vec3(2.8f, 0.5f, 2.9f));
 
 	std::vector<glm::vec3> pointLightColors;
@@ -130,7 +130,7 @@ SceneExample_DeferredRendering::SceneExample_DeferredRendering()
 		pointLightObject->AddComponent(lampMeshRenderer);
 
 		// Add point light component
-		PointLight* pointLight = new PointLight(0.02f * pointLightColors[i], 0.2f * pointLightColors[i], pointLightColors[i], 3.1f, 0.9f, 0.32f);
+		PointLight* pointLight = new PointLight(0.02f * pointLightColors[i], 0.2f * pointLightColors[i], pointLightColors[i], 3.1f, 0.9f, 0.32f, 10.0f, 8.0f);
 		pointLightObject->AddComponent(pointLight);
 
 		// Name and add to scene
@@ -146,11 +146,11 @@ SceneExample_DeferredRendering::SceneExample_DeferredRendering()
 
 	std::vector<glm::vec3> spotLightPositions;
 	spotLightPositions.push_back(glm::vec3(-3.2f, 3.0f, -2.8f));
-	spotLightPositions.push_back(glm::vec3(-2.8f, 0.7f, 3.1f));
+	spotLightPositions.push_back(glm::vec3(-2.8f, 0.0f, 3.1f));
 
 	std::vector<glm::vec3> spotLightRotations;
 	spotLightRotations.push_back(glm::vec3(-13.0f, 48.0f, 0.0f));
-	spotLightRotations.push_back(glm::vec3(25.0f, 141.0f, 0.0f));
+	spotLightRotations.push_back(glm::vec3(10.0f, 139.0f, 0.0f));
 
 	std::vector<glm::vec3> spotLightColors;
 	spotLightColors.push_back(glm::vec3(0.0f, 0.0f, 25.0f));
@@ -185,6 +185,5 @@ SceneExample_DeferredRendering::SceneExample_DeferredRendering()
 
 		scene->AddGameObject(spotLightObject);
 	}
-
 	AddEditorSpectator();
 }

@@ -127,7 +127,7 @@ SceneExample_MultipleLightsShadows::SceneExample_MultipleLightsShadows()
 		lampMeshRenderer->SetIsCastingShadow(false);
 		pointLightObject->AddComponent(lampMeshRenderer);
 		// Add point light component
-		PointLight* pointLight = new PointLight(0.02f * lightColor, 0.8f * lightColor, lightColor, 5.0f, 3.2f, 1.2f);
+		PointLight* pointLight = new PointLight(0.02f * lightColor, 0.8f * lightColor, lightColor, 5.0f, 3.2f, 1.2f, 10.0f, 8.0f);
 		pointLightObject->AddComponent(pointLight);
 		// Name and add to scene
 		std::string name = "point_light_";

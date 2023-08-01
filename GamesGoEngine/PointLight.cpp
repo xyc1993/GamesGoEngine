@@ -9,7 +9,7 @@ PointLight::PointLight()
 	if (this->lightNumber == INITIALIZATION_ERROR) delete this;
 }
 
-PointLight::PointLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float constant, float linear, float quadratic)
+PointLight::PointLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float constant, float linear, float quadratic, float maxRadius, float maxRadiusFallOffStart)
 {
 	this->ambient = ambient;
 	this->diffuse = diffuse;
@@ -20,6 +20,9 @@ PointLight::PointLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular,
 	this->constant = constant;
 	this->linear = linear;
 	this->quadratic = quadratic;
+
+	this->maxRadius = maxRadius;
+	this->maxRadiusFallOffStart = maxRadiusFallOffStart;
 
 	this->lightNumber = RenderingManager::GetLightsManager()->AddPointLight(this);
 	if (this->lightNumber == INITIALIZATION_ERROR) delete this;
@@ -59,6 +62,9 @@ void PointLight::SetLightInShader(const GLuint& shaderProgram, bool isNumberedLi
 	glUniform1f(glGetUniformLocation(shaderProgram, (lightName + ".constant").c_str()), constant);
 	glUniform1f(glGetUniformLocation(shaderProgram, (lightName + ".linear").c_str()), linear);
 	glUniform1f(glGetUniformLocation(shaderProgram, (lightName + ".quadratic").c_str()), quadratic);
+
+	glUniform1f(glGetUniformLocation(shaderProgram, (lightName + ".maxRadius").c_str()), maxRadius);
+	glUniform1f(glGetUniformLocation(shaderProgram, (lightName + ".maxRadiusFallOffStart").c_str()), maxRadiusFallOffStart);
 }
 
 std::string PointLight::GetNumberedShaderProperty(int lightNumber)

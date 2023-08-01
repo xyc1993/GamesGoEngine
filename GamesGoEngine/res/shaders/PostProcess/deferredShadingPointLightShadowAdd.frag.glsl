@@ -25,6 +25,9 @@ struct PointLight
 	float constant;
 	float linear;
 	float quadratic;
+
+    float maxRadius;
+    float maxRadiusFallOffStart;
 };
 
 uniform PointLight pointLight;
@@ -105,6 +108,9 @@ void main()
         // sum of lights
         lighting += diffuse;
         lighting += specular;
+
+        // hard distance limit
+        lighting *= (1.0 - smoothstep(pointLight.maxRadiusFallOffStart, pointLight.maxRadius, distance));
 
         // calculate and apply shadow
         float shadow = ShadowCalculation(fragPos, pointLight.position);
