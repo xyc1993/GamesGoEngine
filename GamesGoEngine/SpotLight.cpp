@@ -36,8 +36,6 @@ SpotLight::~SpotLight()
 
 void SpotLight::Update()
 {
-	Light::Update();
-
 	if (owner != nullptr)
 	{
 		direction = owner->GetTransform()->GetForward();
@@ -45,33 +43,29 @@ void SpotLight::Update()
 	}
 }
 
-void SpotLight::SetThisLightInShader(const GLuint& shaderProgram)
+void SpotLight::SetLightInShader(const GLuint& shaderProgram, bool isNumberedLight, bool overrideThisLightNumber,
+	int thisLightNumberOverride, bool overrideLightsNumber, int lightsNumberOverride)
 {
+	const int lightNumber = overrideThisLightNumber ? thisLightNumberOverride : this->lightNumber;
+	const std::string lightName = isNumberedLight ? GetNumberedShaderProperty(lightNumber) : "spotLight";
+
 	glUseProgram(shaderProgram);
-	glUniform1i(glGetUniformLocation(shaderProgram, "spotLightsNumber"), 1);
-	SetLightInShader(shaderProgram, 0);
-}
+	if (overrideLightsNumber)
+	{
+		glUniform1i(glGetUniformLocation(shaderProgram, "spotLightsNumber"), lightsNumberOverride);
+	}
 
-void SpotLight::SetLightInShader(const GLuint& shaderProgram)
-{
-	SetLightInShader(shaderProgram, lightNumber);
-}
+	glUniform3f(glGetUniformLocation(shaderProgram, (lightName + ".ambient").c_str()), ambient.x, ambient.y, ambient.z);
+	glUniform3f(glGetUniformLocation(shaderProgram, (lightName + ".diffuse").c_str()), diffuse.x, diffuse.y, diffuse.z);
+	glUniform3f(glGetUniformLocation(shaderProgram, (lightName + ".specular").c_str()), specular.x, specular.y, specular.z);
 
-void SpotLight::SetLightInShader(const GLuint& shaderProgram, int lightNumber)
-{
-	glUniform3f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty(lightNumber) + ".ambient").c_str()), ambient.x, ambient.y, ambient.z);
-	glUniform3f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty(lightNumber) + ".diffuse").c_str()), diffuse.x, diffuse.y, diffuse.z);
-	glUniform3f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty(lightNumber) + ".specular").c_str()), specular.x, specular.y, specular.z);
+	glUniform3f(glGetUniformLocation(shaderProgram, (lightName + ".position").c_str()), position.x, position.y, position.z);
+	glUniform1f(glGetUniformLocation(shaderProgram, (lightName + ".constant").c_str()), constant);
+	glUniform1f(glGetUniformLocation(shaderProgram, (lightName + ".linear").c_str()), linear);
+	glUniform1f(glGetUniformLocation(shaderProgram, (lightName + ".quadratic").c_str()), quadratic);
 
-	glUniform3f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty(lightNumber) + ".position").c_str()), position.x, position.y, position.z);
-	glUniform3f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty(lightNumber) + ".direction").c_str()), direction.x, direction.y, direction.z);
-
-	glUniform1f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty(lightNumber) + ".constant").c_str()), constant);
-	glUniform1f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty(lightNumber) + ".linear").c_str()), linear);
-	glUniform1f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty(lightNumber) + ".quadratic").c_str()), quadratic);
-
-	glUniform1f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty(lightNumber) + ".cutOff").c_str()), cutOff);
-	glUniform1f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty(lightNumber) + ".outerCutOff").c_str()), outerCutOff);
+	glUniform1f(glGetUniformLocation(shaderProgram, (lightName + ".cutOff").c_str()), cutOff);
+	glUniform1f(glGetUniformLocation(shaderProgram, (lightName + ".outerCutOff").c_str()), outerCutOff);
 }
 
 std::string SpotLight::GetNumberedShaderProperty(int lightNumber)

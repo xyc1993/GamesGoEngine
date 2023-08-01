@@ -10,12 +10,9 @@ public:
 	~PointLight();
 
 	void Update() override;
-	void SetThisNonNumberedLightInShader(const GLuint& shaderProgram);
-	void SetThisLightInShader(const GLuint& shaderProgram) override;
-	void SetLightInShader(const GLuint& shaderProgram) override;
-
-private:
-	void SetLightInShader(const GLuint& shaderProgram, int lightNumber);
+	void SetLightInShader(const GLuint& shaderProgram, bool isNumberedLight = true, 
+		bool overrideThisLightNumber = false, int thisLightNumberOverride = 0, 
+		bool overrideLightsNumber = false, int lightsNumberOverride = 0) override;
 
 protected:
 	std::string GetNumberedShaderProperty(int lightNumber) override;

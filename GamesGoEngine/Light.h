@@ -10,11 +10,19 @@
 class Light : public Component
 {
 public:
-	// used when setting only this light in shader
-	virtual void SetThisLightInShader(const GLuint& shaderProgram) = 0;
-	// used when setting several lights in shader at once
-	virtual void SetLightInShader(const GLuint& shaderProgram) = 0;
-	virtual void Update() override {}
+	/*
+	 * Method used to set light in shader
+	 * Arguments:
+	 * shaderProgram - shader that will receive light data
+	 * isNumberedLight - should light be parsed as an element of the array in the shader
+	 * overrideThisLightNumber - should light index in shader array be overriden
+	 * thisLightNumberOverride - array index override
+	 * overrideLightsNumber - should light array size in shader be overriden
+	 * lightsNumberOverride - array size override
+	 */
+	virtual void SetLightInShader(const GLuint& shaderProgram, bool isNumberedLight = true,
+		bool overrideThisLightNumber = false, int thisLightNumberOverride = 0,
+		bool overrideLightsNumber = false, int lightsNumberOverride = 0) = 0;
 
 	static constexpr GLuint INITIALIZATION_ERROR = -1;
 

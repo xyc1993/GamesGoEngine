@@ -27,20 +27,29 @@ void AmbientLight::CopyData(const AmbientLight& other)
 	this->ambient = other.ambient;
 }
 
-void AmbientLight::SetThisLightInShader(const GLuint& shaderProgram)
+void AmbientLight::Update()
 {
-	glUseProgram(shaderProgram);
-	glUniform1f(glGetUniformLocation(shaderProgram, "ambientLightActive"), 1.0f);
-	glUniform3f(glGetUniformLocation(shaderProgram, "ambientLightColor"), ambient.x, ambient.y, ambient.z);	
+
 }
 
-void AmbientLight::SetLightInShader(const GLuint& shaderProgram)
+void AmbientLight::SetLightInShader(const GLuint& shaderProgram, bool isNumberedLight, bool overrideThisLightNumber,
+                                    int thisLightNumberOverride, bool overrideLightsNumber, int lightsNumberOverride)
 {
+	/*
+	 * Currently ambient light is implemented in a way that only 1 ambient light is supported so this method is much simpler than for other light classes
+	 * Most likely more than 1 ambient light will never be needed as it's just ambient light to give some color to the darkest shadows
+	 */
+
 	glUniform1f(glGetUniformLocation(shaderProgram, "ambientLightActive"), 1.0f);
 	glUniform3f(glGetUniformLocation(shaderProgram, "ambientLightColor"), ambient.x, ambient.y, ambient.z);
 }
 
 std::string AmbientLight::GetNumberedShaderProperty(int lightNumber)
 {
+	/*
+	 * Currently ambient light is implemented in a way that only 1 ambient light is supported so this method is much simpler than for other light classes
+	 * Most likely more than 1 ambient light will never be needed as it's just ambient light to give some color to the darkest shadows
+	 */
+
 	return "";
 }

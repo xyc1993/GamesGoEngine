@@ -30,33 +30,29 @@ DirectionalLight::~DirectionalLight()
 
 void DirectionalLight::Update()
 {
-	Light::Update();
-
 	if (owner != nullptr)
 	{
 		direction = owner->GetTransform()->GetForward();
 	}
 }
 
-void DirectionalLight::SetThisLightInShader(const GLuint& shaderProgram)
+void DirectionalLight::SetLightInShader(const GLuint& shaderProgram, bool isNumberedLight, bool overrideThisLightNumber,
+	int thisLightNumberOverride, bool overrideLightsNumber, int lightsNumberOverride)
 {
+	const int lightNumber = overrideThisLightNumber ? thisLightNumberOverride : this->lightNumber;
+	const std::string lightName = isNumberedLight ? GetNumberedShaderProperty(lightNumber) : "dirLight";
+
 	glUseProgram(shaderProgram);
-	glUniform1i(glGetUniformLocation(shaderProgram, "dirLightsNumber"), 1);
-	SetLightInShader(shaderProgram, 0);
-}
+	if (overrideLightsNumber)
+	{
+		glUniform1i(glGetUniformLocation(shaderProgram, "dirLightsNumber"), lightsNumberOverride);
+	}
 
-void DirectionalLight::SetLightInShader(const GLuint& shaderProgram)
-{
-	SetLightInShader(shaderProgram, lightNumber);
-}
+	glUniform3f(glGetUniformLocation(shaderProgram, (lightName + ".ambient").c_str()), ambient.x, ambient.y, ambient.z);
+	glUniform3f(glGetUniformLocation(shaderProgram, (lightName + ".diffuse").c_str()), diffuse.x, diffuse.y, diffuse.z);
+	glUniform3f(glGetUniformLocation(shaderProgram, (lightName + ".specular").c_str()), specular.x, specular.y, specular.z);
 
-void DirectionalLight::SetLightInShader(const GLuint& shaderProgram, int lightNumber)
-{
-	glUniform3f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty(lightNumber) + ".ambient").c_str()), ambient.x, ambient.y, ambient.z);
-	glUniform3f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty(lightNumber) + ".diffuse").c_str()), diffuse.x, diffuse.y, diffuse.z);
-	glUniform3f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty(lightNumber) + ".specular").c_str()), specular.x, specular.y, specular.z);
-
-	glUniform3f(glGetUniformLocation(shaderProgram, (GetNumberedShaderProperty(lightNumber) + ".direction").c_str()), direction.x, direction.y, direction.z);
+	glUniform3f(glGetUniformLocation(shaderProgram, (lightName + ".direction").c_str()), direction.x, direction.y, direction.z);
 }
 
 std::string DirectionalLight::GetNumberedShaderProperty(int lightNumber)

@@ -394,7 +394,7 @@ void RenderingManager::Update()
 		{
 			// update light data
 			const GLuint shaderProgram = GetInstance()->deferredPointLightShadowedAdditiveMaterial->GetShaderProgram();
-			pointLight->SetThisNonNumberedLightInShader(shaderProgram);
+			pointLight->SetLightInShader(shaderProgram, false);
 			// update shadow map
 			GetInstance()->UpdateOmnidirectionalShadowMap(pointLight);
 
@@ -1005,7 +1005,7 @@ void RenderingManager::ApplyLightForRenderers(Light* light, const std::vector<Me
 	{
 		for (size_t j = 0; j < renderers[i]->materialList.size(); j++)
 		{
-			light->SetThisLightInShader(renderers[i]->materialList[j]->GetShaderProgram());
+			light->SetLightInShader(renderers[i]->materialList[j]->GetShaderProgram(), true, true, 0, true, 1);
 		}
 	}
 }
