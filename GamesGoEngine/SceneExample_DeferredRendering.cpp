@@ -101,30 +101,26 @@ SceneExample_DeferredRendering::SceneExample_DeferredRendering()
 		scene->AddGameObject(boundObject);
 	}
 
-	// Add sources of light
-	constexpr int lightsNumber = 4;
+	// Add point lights
+	constexpr int pointLightsNumber = 2;
 
-	std::vector<glm::vec3> lightPositions;
-	lightPositions.push_back(glm::vec3(2.9f, 1.5f, -2.9f));
-	lightPositions.push_back(glm::vec3(2.8f, 0.5f, 2.9f));
-	lightPositions.push_back(glm::vec3(-3.2f, 3.0f, -2.8f));
-	lightPositions.push_back(glm::vec3(-2.8f, 0.7f, 3.1f));
+	std::vector<glm::vec3> pointLightPositions;
+	pointLightPositions.push_back(glm::vec3(2.9f, 1.5f, -2.9f));
+	pointLightPositions.push_back(glm::vec3(2.8f, 0.5f, 2.9f));
 
-	std::vector<glm::vec3> lightColors;
-	lightColors.push_back(glm::vec3(9.0f, 0.0f, 0.0f));
-	lightColors.push_back(glm::vec3(0.0f, 9.0f, 0.0f));
-	lightColors.push_back(glm::vec3(0.0f, 0.0f, 15.0f));
-	lightColors.push_back(glm::vec3(6.0f, 0.0f, 6.0f));
-
-	for (int i = 0; i < lightsNumber; i++)
+	std::vector<glm::vec3> pointLightColors;
+	pointLightColors.push_back(glm::vec3(9.0f, 0.0f, 0.0f));
+	pointLightColors.push_back(glm::vec3(0.0f, 9.0f, 0.0f));
+	
+	for (int i = 0; i < pointLightsNumber; i++)
 	{
 		GameObject* pointLightObject = new GameObject();
-		pointLightObject->GetTransform()->SetPosition(lightPositions[i]);
+		pointLightObject->GetTransform()->SetPosition(pointLightPositions[i]);
 		pointLightObject->GetTransform()->SetScale(glm::vec3(0.2f));
 
 		// Add debug renderer
 		std::shared_ptr<Material> lampMaterial = std::make_shared<Material>("res/shaders/RenderPipeline/gBuffer.vert.glsl", "res/shaders/RenderPipeline/gBufferNoTexture.frag.glsl");		
-		lampMaterial->SetVector3((GLchar*)"albedo", lightColors[i]);
+		lampMaterial->SetVector3((GLchar*)"albedo", pointLightColors[i]);
 		lampMaterial->SetFloat("enableLight", 0.0f);
 		lampMaterial->SetLightModel(LightModelType::LitDeferred);
 		MeshRenderer* lampMeshRenderer = new MeshRenderer();
@@ -134,7 +130,7 @@ SceneExample_DeferredRendering::SceneExample_DeferredRendering()
 		pointLightObject->AddComponent(lampMeshRenderer);
 
 		// Add point light component
-		PointLight* pointLight = new PointLight(0.02f * lightColors[i], 0.2f * lightColors[i], lightColors[i], 1.0f, 0.09f, 0.032f);
+		PointLight* pointLight = new PointLight(0.02f * pointLightColors[i], 0.2f * pointLightColors[i], pointLightColors[i], 3.1f, 0.9f, 0.32f);
 		pointLightObject->AddComponent(pointLight);
 
 		// Name and add to scene
@@ -145,5 +141,50 @@ SceneExample_DeferredRendering::SceneExample_DeferredRendering()
 		scene->AddGameObject(pointLightObject);
 	}
 	
+	// Add spotlights
+	constexpr int spotLightsNumber = 2;
+
+	std::vector<glm::vec3> spotLightPositions;
+	spotLightPositions.push_back(glm::vec3(-3.2f, 3.0f, -2.8f));
+	spotLightPositions.push_back(glm::vec3(-2.8f, 0.7f, 3.1f));
+
+	std::vector<glm::vec3> spotLightRotations;
+	spotLightRotations.push_back(glm::vec3(-13.0f, 48.0f, 0.0f));
+	spotLightRotations.push_back(glm::vec3(25.0f, 141.0f, 0.0f));
+
+	std::vector<glm::vec3> spotLightColors;
+	spotLightColors.push_back(glm::vec3(0.0f, 0.0f, 25.0f));
+	spotLightColors.push_back(glm::vec3(11.0f, 0.0f, 11.0f));
+
+	for (int i = 0; i < spotLightsNumber; i++)
+	{
+		GameObject* spotLightObject = new GameObject();
+		spotLightObject->GetTransform()->SetPosition(spotLightPositions[i]);
+		spotLightObject->GetTransform()->SetRotationEulerDegrees(spotLightRotations[i]);
+		spotLightObject->GetTransform()->SetScale(glm::vec3(0.2f));
+
+		// Add debug renderer
+		std::shared_ptr<Material> lampMaterial = std::make_shared<Material>("res/shaders/RenderPipeline/gBuffer.vert.glsl", "res/shaders/RenderPipeline/gBufferNoTexture.frag.glsl");
+		lampMaterial->SetVector3((GLchar*)"albedo", spotLightColors[i]);
+		lampMaterial->SetFloat("enableLight", 0.0f);
+		lampMaterial->SetLightModel(LightModelType::LitDeferred);
+		MeshRenderer* lampMeshRenderer = new MeshRenderer();
+		lampMeshRenderer->SetMesh(cubeMesh);
+		lampMeshRenderer->SetMaterial(lampMaterial);
+		lampMeshRenderer->SetIsCastingShadow(false);
+		spotLightObject->AddComponent(lampMeshRenderer);
+
+		// Add point light component
+		SpotLight* spotLight = new SpotLight(0.02f * spotLightColors[i], 0.2f * spotLightColors[i], spotLightColors[i], 2.0f, 1.2f, 0.8f, glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(15.0f)));
+		spotLightObject->AddComponent(spotLight);
+
+		// Name and add to scene
+		std::string name = "spot_light_";
+		name.append(std::to_string(i));
+		spotLightObject->SetName(name);
+
+		scene->AddGameObject(spotLightObject);
+	}
+
 	AddEditorSpectator();
 }

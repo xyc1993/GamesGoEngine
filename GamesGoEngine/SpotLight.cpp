@@ -60,6 +60,8 @@ void SpotLight::SetLightInShader(const GLuint& shaderProgram, bool isNumberedLig
 	glUniform3f(glGetUniformLocation(shaderProgram, (lightName + ".specular").c_str()), specular.x, specular.y, specular.z);
 
 	glUniform3f(glGetUniformLocation(shaderProgram, (lightName + ".position").c_str()), position.x, position.y, position.z);
+	glUniform3f(glGetUniformLocation(shaderProgram, (lightName + ".direction").c_str()), direction.x, direction.y, direction.z);
+
 	glUniform1f(glGetUniformLocation(shaderProgram, (lightName + ".constant").c_str()), constant);
 	glUniform1f(glGetUniformLocation(shaderProgram, (lightName + ".linear").c_str()), linear);
 	glUniform1f(glGetUniformLocation(shaderProgram, (lightName + ".quadratic").c_str()), quadratic);

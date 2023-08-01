@@ -61,7 +61,7 @@ private:
 	void UpdateGBuffer();
 	void UpdateDeferredShading();
 	void UpdateDirectionalShadowMap(Light* directionalLight);
-	void UpdateSpotLightShadowMap(Light* spotLight);
+	void UpdateSpotLightShadowMap(Light* spotLight, glm::mat4& lightSpaceMatrix);
 	void UpdateOmnidirectionalShadowMap(Light* pointLight);
 	bool AreThereAnyShadowCasters() const;
 	void DrawOrientationDebug() const;
@@ -209,6 +209,7 @@ private:
 	std::shared_ptr<PostProcessMaterial> editorOutlineMaterial;
 	std::shared_ptr<PostProcessMaterial> deferredShadingMaterial;
 	std::shared_ptr<PostProcessMaterial> deferredPointLightShadowedAdditiveMaterial;
+	std::shared_ptr<PostProcessMaterial> deferredSpotLightShadowedAdditiveMaterial;
 	std::shared_ptr<PostProcessMaterial> textureMergerMaterial;
 
 	// render pipeline materials

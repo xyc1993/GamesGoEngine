@@ -1,5 +1,4 @@
 #version 420 core
-#define NUMBER_OF_POINT_LIGHTS 4
 
 out vec4 FragColor;
 
@@ -46,7 +45,7 @@ vec3 gridSamplingDisk[20] = vec3[]
    vec3(0, 1,  1), vec3( 0, -1,  1), vec3( 0, -1, -1), vec3( 0, 1, -1)
 );
 
-float PointLightShadowCalculation(vec3 fragPos, vec3 lightPos)
+float ShadowCalculation(vec3 fragPos, vec3 lightPos)
 {
     // get vector between fragment position and light position
     vec3 fragToLight = fragPos - lightPos;
@@ -75,44 +74,40 @@ void main()
     // retrieve existing color in case current pixel was already lit in the previous pass
     vec3 screenColor = texture(screenTexture, TexCoords).rgb;;
     // retrieve data from gbuffer
-    vec3 FragPos = texture(gPosition, TexCoords).rgb;
-    vec3 Normal = texture(gNormal, TexCoords).rgb;
-    vec3 Color = texture(gAlbedo, TexCoords).rgb;
-    float Specular = texture(gSpecular, TexCoords).r;
-    float LightEnabled = texture(gLightEnabled, TexCoords).r;
+    vec3 fragPos = texture(gPosition, TexCoords).rgb;
+    vec3 normal = texture(gNormal, TexCoords).rgb;
+    vec3 color = texture(gAlbedo, TexCoords).rgb;
+    float specular = texture(gSpecular, TexCoords).r;
+    float lightEnabled = texture(gLightEnabled, TexCoords).r;
     
     vec3 finalColor = screenColor;
-    if (LightEnabled > 0.5)
+    if (lightEnabled > 0.5)
     {
         // then calculate lighting as usual
         vec3 lighting  = vec3(0.0);
-        vec3 viewDir  = normalize(cameraPos - FragPos);
-
-        // ambient
-        vec3 ambient = pointLight.ambient * Color;
+        vec3 viewDir  = normalize(cameraPos - fragPos);
 
         // diffuse
-        vec3 lightDir = normalize(pointLight.position - FragPos);
-        vec3 diffuse = max(dot(Normal, lightDir), 0.0) * Color * pointLight.diffuse;
+        vec3 lightDir = normalize(pointLight.position - fragPos);
+        vec3 diffuse = max(dot(normal, lightDir), 0.0) * color * pointLight.diffuse;
 
         // specular
         vec3 halfwayDir = normalize(lightDir + viewDir);  
-        float spec = pow(max(dot(Normal, halfwayDir), 0.0), 32.0);
-        vec3 specular = pointLight.specular * spec * Specular;
+        float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
+        vec3 specular = pointLight.specular * spec * specular;
 
         // attenuation
-        float distance = length(pointLight.position - FragPos);
+        float distance = length(pointLight.position - fragPos);
         float attenuation = 1.0 / (pointLight.constant + pointLight.linear * distance + pointLight.quadratic * distance * distance);
         diffuse *= attenuation;
         specular *= attenuation;
 
         // sum of lights
-        lighting += ambient;
         lighting += diffuse;
         lighting += specular;
 
         // calculate and apply shadow
-        float shadow = PointLightShadowCalculation(FragPos, pointLight.position);
+        float shadow = ShadowCalculation(fragPos, pointLight.position);
         lighting = (1.0 - shadow) * lighting;
 
         finalColor += lighting;
@@ -121,7 +116,7 @@ void main()
     {
         // in case pixel is unlit, set it to its albedo
         // override because only lighting is additive, not base color
-        finalColor = Color;
+        finalColor = color;
     }
 
     FragColor = vec4(finalColor, 1.0);

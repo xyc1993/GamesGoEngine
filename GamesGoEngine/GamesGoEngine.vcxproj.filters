@@ -727,5 +727,8 @@
     <None Include="res\shaders\PostProcess\deferredShadingPointLightShadowAdd.frag.glsl">
       <Filter>Resource Files\Shaders\PostProcess</Filter>
     </None>
+    <None Include="res\shaders\PostProcess\deferredShadingSpotLightShadowAdd.frag.glsl">
+      <Filter>Resource Files\Shaders\PostProcess</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -33,6 +33,7 @@ RenderingManager::RenderingManager()
 	editorOutlineMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/editorOutline.frag.glsl");
 	deferredShadingMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/deferredShadingSimple.frag.glsl");
 	deferredPointLightShadowedAdditiveMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/deferredShadingPointLightShadowAdd.frag.glsl");
+	deferredSpotLightShadowedAdditiveMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/deferredShadingSpotLightShadowAdd.frag.glsl");
 	textureMergerMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/textureMerger.frag.glsl");
 }
 
@@ -374,30 +375,47 @@ void RenderingManager::Update()
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	std::vector<Light*> lights = GetLightsManager()->GetAllLights();
+	size_t lastReachedLightIndex = 0;
 	for (size_t i = 0; i < lights.size(); i++)
 	{
 		const unsigned int currentFramebuffer = i % 2 == 0 ? GetInstance()->framebuffer2 : GetInstance()->framebuffer1;
 		glBindFramebuffer(GL_FRAMEBUFFER, currentFramebuffer);
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-
-		GetInstance()->deferredPointLightShadowedAdditiveMaterial->SetTexture("screenTexture", 0, i % 2 == 0 ? GetInstance()->textureColorBuffer1 : GetInstance()->textureColorBuffer2);
-		GetInstance()->deferredPointLightShadowedAdditiveMaterial->SetTexture("gPosition", 2, GetInstance()->gPosition);
-		GetInstance()->deferredPointLightShadowedAdditiveMaterial->SetTexture("gNormal", 3, GetInstance()->gNormal);
-		GetInstance()->deferredPointLightShadowedAdditiveMaterial->SetTexture("gAlbedo", 4, GetInstance()->gAlbedo);
-		GetInstance()->deferredPointLightShadowedAdditiveMaterial->SetTexture("gSpecular", 5, GetInstance()->gSpecular);
-		GetInstance()->deferredPointLightShadowedAdditiveMaterial->SetTexture("gLightEnabled", 6, GetInstance()->gLightEnabled);
+		
+		std::shared_ptr<PostProcessMaterial> deferredLightMaterial = nullptr;
+		Light* currentLight = nullptr;
 
 		// set light data
-		PointLight* pointLight = dynamic_cast<PointLight*>(lights[i]);
-		if (pointLight != nullptr)
+		if (PointLight* pointLight = dynamic_cast<PointLight*>(lights[i]))
 		{
-			// update light data
-			const GLuint shaderProgram = GetInstance()->deferredPointLightShadowedAdditiveMaterial->GetShaderProgram();
-			pointLight->SetLightInShader(shaderProgram, false);
+			deferredLightMaterial = GetInstance()->deferredPointLightShadowedAdditiveMaterial;
+			currentLight = pointLight;
+			
 			// update shadow map
 			GetInstance()->UpdateOmnidirectionalShadowMap(pointLight);
+			deferredLightMaterial->SetCubeTexture("pointLightShadowMap", 1, GetInstance()->omniDepthMap);
+			deferredLightMaterial->SetFloat("far_plane", 25.0f);
+		}
+		else if (SpotLight* spotLight = dynamic_cast<SpotLight*>(lights[i]))
+		{
+			deferredLightMaterial = GetInstance()->deferredSpotLightShadowedAdditiveMaterial;
+			currentLight = spotLight;
 
+			// update shadow map
+			glm::mat4 lightSpaceMatrix;
+			GetInstance()->UpdateSpotLightShadowMap(spotLight, lightSpaceMatrix);
+			deferredLightMaterial->SetTexture("spotLightShadowMap", 1, GetInstance()->spotLightDepthMap);
+			deferredLightMaterial->SetMat4("spotLightSpaceMatrix", lightSpaceMatrix);
+		}
+		else
+		{
+			std::cout << "This type of light is not supported yet!" << std::endl;
+			break;
+		}
+
+		if (deferredLightMaterial != nullptr && currentLight != nullptr)
+		{
 			glBindFramebuffer(GL_FRAMEBUFFER, currentFramebuffer);
 			glDisable(GL_DEPTH_TEST);
 			glDisable(GL_STENCIL_TEST);
@@ -405,20 +423,26 @@ void RenderingManager::Update()
 			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 
-			GetInstance()->deferredPointLightShadowedAdditiveMaterial->SetCubeTexture("pointLightShadowMap", 1, GetInstance()->omniDepthMap);
-			GetInstance()->deferredPointLightShadowedAdditiveMaterial->SetFloat("far_plane", 25.0f);
-		}
-		else
-		{
-			std::cout << "This type of light is not supported yet!" << std::endl;
+			// update light data
+			const GLuint shaderProgram = deferredLightMaterial->GetShaderProgram();
+			currentLight->SetLightInShader(shaderProgram, false);
+
+			// update general texture data
+			deferredLightMaterial->SetTexture("screenTexture", 0, i % 2 == 0 ? GetInstance()->textureColorBuffer1 : GetInstance()->textureColorBuffer2);
+			deferredLightMaterial->SetTexture("gPosition", 2, GetInstance()->gPosition);
+			deferredLightMaterial->SetTexture("gNormal", 3, GetInstance()->gNormal);
+			deferredLightMaterial->SetTexture("gAlbedo", 4, GetInstance()->gAlbedo);
+			deferredLightMaterial->SetTexture("gSpecular", 5, GetInstance()->gSpecular);
+			deferredLightMaterial->SetTexture("gLightEnabled", 6, GetInstance()->gLightEnabled);
+			deferredLightMaterial->Draw(glm::mat4());
+			MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
 		}
 
-		GetInstance()->deferredPointLightShadowedAdditiveMaterial->Draw(glm::mat4());
-		MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
+		lastReachedLightIndex++;
 	}
 
 	// blitting so framebuffer2 has the most recent data
-	if ((lights.size() - 1) % 2 == 1)
+	if ((lastReachedLightIndex - 1) % 2 == 1)
 	{
 		// after rendering the last shadow pass, blit data to the framebuffer that's used later for the rest of rendering process
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, GetInstance()->framebuffer1);
@@ -778,7 +802,7 @@ void RenderingManager::UpdateDirectionalShadowMap(Light* directionalLight)
 	}
 }
 
-void RenderingManager::UpdateSpotLightShadowMap(Light* spotLight)
+void RenderingManager::UpdateSpotLightShadowMap(Light* spotLight, glm::mat4& lightSpaceMatrix)
 {
 	if (!Component::IsValid(spotLight))
 	{
@@ -788,8 +812,7 @@ void RenderingManager::UpdateSpotLightShadowMap(Light* spotLight)
 	float near_plane = 0.1f, far_plane = 30.0f;
 	// TODO: calculate fov and aspect properly to adjust to the value of spot light
 	glm::mat4 lightProjection = glm::perspective(40.0f, 1.0f, near_plane, far_plane);
-
-	glm::mat4 lightSpaceMatrix;
+	
 	Transform* lightTransform = spotLight->GetOwner()->GetTransform();
 	glm::vec3 lightPosition = lightTransform->GetPosition();
 	glm::vec3 lightLookAtTarget = lightPosition + 10.0f * lightTransform->GetForward();
