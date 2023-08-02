@@ -40,6 +40,7 @@ void AmbientLight::SetLightInShader(const GLuint& shaderProgram, bool isNumbered
 	 * Most likely more than 1 ambient light will never be needed as it's just ambient light to give some color to the darkest shadows
 	 */
 
+	glUseProgram(shaderProgram);
 	glUniform1f(glGetUniformLocation(shaderProgram, "ambientLightActive"), 1.0f);
 	glUniform3f(glGetUniformLocation(shaderProgram, "ambientLightColor"), ambient.x, ambient.y, ambient.z);
 }

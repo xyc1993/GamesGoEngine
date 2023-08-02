@@ -733,5 +733,8 @@
     <None Include="res\shaders\PostProcess\deferredShadingAddDirectionalLightShadow.frag.glsl">
       <Filter>Resource Files\Shaders\PostProcess</Filter>
     </None>
+    <None Include="res\shaders\PostProcess\deferredShadingAddAmbientLightShadow.frag.glsl">
+      <Filter>Resource Files\Shaders\PostProcess</Filter>
+    </None>
   </ItemGroup>
 </Project>

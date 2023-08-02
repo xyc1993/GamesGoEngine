@@ -99,6 +99,14 @@ SceneExample_DeferredRendering::SceneExample_DeferredRendering()
 		scene->AddGameObject(boundObject);
 	}
 
+	// Add ambient light
+	glm::vec3 ambientLightColor = glm::vec3(0.0f, 0.008f, 0.008f);
+	GameObject* ambientLightObject = new GameObject();
+	AmbientLight* ambientLight = new AmbientLight(ambientLightColor);
+	ambientLightObject->AddComponent(ambientLight);
+	ambientLightObject->SetName("ambient_light");
+	scene->AddGameObject(ambientLightObject);
+	
 	// Add directional light
 	glm::vec3 directionalLightColor = glm::vec3(0.0f, 0.0f, 3.0f);
 	GameObject* directionalLightObject = new GameObject();

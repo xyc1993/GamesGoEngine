@@ -32,6 +32,7 @@ RenderingManager::RenderingManager()
 	hdrToneMappingGammaCorrectionMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/hdrToneMappingGammaCorrection.frag.glsl");
 	editorOutlineMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/editorOutline.frag.glsl");
 	deferredShadingMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/deferredShadingSimple.frag.glsl");
+	deferredAmbientLightShadowedAdditiveMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/deferredShadingAddAmbientLightShadow.frag.glsl");
 	deferredDirectionalLightShadowedAdditiveMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/deferredShadingAddDirectionalLightShadow.frag.glsl");
 	deferredPointLightShadowedAdditiveMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/deferredShadingAddPointLightShadow.frag.glsl");
 	deferredSpotLightShadowedAdditiveMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/deferredShadingAddSpotLightShadow.frag.glsl");
@@ -386,9 +387,16 @@ void RenderingManager::Update()
 		
 		std::shared_ptr<PostProcessMaterial> deferredLightMaterial = nullptr;
 		Light* currentLight = nullptr;
+		bool isCurrentLightAmbient = false;
 
 		// set light data
-		if (DirectionalLight* directionalLight = dynamic_cast<DirectionalLight*>(lights[i]))
+		if (AmbientLight* ambientLight = dynamic_cast<AmbientLight*>(lights[i]))
+		{
+			isCurrentLightAmbient = true;
+			deferredLightMaterial = GetInstance()->deferredAmbientLightShadowedAdditiveMaterial;
+			currentLight = ambientLight;
+		}
+		else if (DirectionalLight* directionalLight = dynamic_cast<DirectionalLight*>(lights[i]))
 		{
 			deferredLightMaterial = GetInstance()->deferredDirectionalLightShadowedAdditiveMaterial;
 			currentLight = directionalLight;
@@ -440,12 +448,21 @@ void RenderingManager::Update()
 			currentLight->SetLightInShader(shaderProgram, false);
 
 			// update general texture data
-			deferredLightMaterial->SetTexture("screenTexture", 0, i % 2 == 0 ? GetInstance()->textureColorBuffer1 : GetInstance()->textureColorBuffer2);
-			deferredLightMaterial->SetTexture("gPosition", 2, GetInstance()->gPosition);
-			deferredLightMaterial->SetTexture("gNormal", 3, GetInstance()->gNormal);
-			deferredLightMaterial->SetTexture("gAlbedo", 4, GetInstance()->gAlbedo);
-			deferredLightMaterial->SetTexture("gSpecular", 5, GetInstance()->gSpecular);
-			deferredLightMaterial->SetTexture("gLightEnabled", 6, GetInstance()->gLightEnabled);
+			if (isCurrentLightAmbient)
+			{
+				deferredLightMaterial->SetTexture("screenTexture", 0, i % 2 == 0 ? GetInstance()->textureColorBuffer1 : GetInstance()->textureColorBuffer2);
+				deferredLightMaterial->SetTexture("gAlbedo", 1, GetInstance()->gAlbedo);
+				deferredLightMaterial->SetTexture("gLightEnabled", 2, GetInstance()->gLightEnabled);
+			}
+			else
+			{
+				deferredLightMaterial->SetTexture("screenTexture", 0, i % 2 == 0 ? GetInstance()->textureColorBuffer1 : GetInstance()->textureColorBuffer2);
+				deferredLightMaterial->SetTexture("gPosition", 2, GetInstance()->gPosition);
+				deferredLightMaterial->SetTexture("gNormal", 3, GetInstance()->gNormal);
+				deferredLightMaterial->SetTexture("gAlbedo", 4, GetInstance()->gAlbedo);
+				deferredLightMaterial->SetTexture("gSpecular", 5, GetInstance()->gSpecular);
+				deferredLightMaterial->SetTexture("gLightEnabled", 6, GetInstance()->gLightEnabled);
+			}
 			deferredLightMaterial->Draw(glm::mat4());
 			MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
 		}

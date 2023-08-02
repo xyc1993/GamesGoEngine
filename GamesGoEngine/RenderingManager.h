@@ -208,6 +208,7 @@ private:
 	std::shared_ptr<PostProcessMaterial> hdrToneMappingGammaCorrectionMaterial;
 	std::shared_ptr<PostProcessMaterial> editorOutlineMaterial;
 	std::shared_ptr<PostProcessMaterial> deferredShadingMaterial;
+	std::shared_ptr<PostProcessMaterial> deferredAmbientLightShadowedAdditiveMaterial;
 	std::shared_ptr<PostProcessMaterial> deferredDirectionalLightShadowedAdditiveMaterial;
 	std::shared_ptr<PostProcessMaterial> deferredPointLightShadowedAdditiveMaterial;
 	std::shared_ptr<PostProcessMaterial> deferredSpotLightShadowedAdditiveMaterial;
