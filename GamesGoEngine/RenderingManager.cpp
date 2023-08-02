@@ -404,7 +404,7 @@ void RenderingManager::Update()
 			// update shadow map
 			glm::mat4 lightSpaceMatrix;
 			GetInstance()->UpdateDirectionalShadowMap(directionalLight, lightSpaceMatrix);
-			deferredLightMaterial->SetTexture("directionalLightShadowMap", 1, GetInstance()->spotLightDepthMap);
+			deferredLightMaterial->SetTexture("directionalLightShadowMap", 1, GetInstance()->directionalDepthMap);
 			deferredLightMaterial->SetMat4("directionalLightSpaceMatrix", lightSpaceMatrix);
 		}
 		else if (PointLight* pointLight = dynamic_cast<PointLight*>(lights[i]))

@@ -23,7 +23,6 @@ struct DirLight
 	vec3 specular;
 };
 
-uniform int dirLightsNumber;
 uniform DirLight dirLight;
 
 layout(std140, binding = 1) uniform CameraData
