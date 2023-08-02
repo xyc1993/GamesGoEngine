@@ -301,9 +301,10 @@
     <None Include="res\shaders\litShadowSimple.vert.glsl" />
     <None Include="res\shaders\PostProcess\blur.frag.glsl" />
     <None Include="res\shaders\PostProcess\blurGaussian.frag.glsl" />
-    <None Include="res\shaders\PostProcess\deferredShadingPointLightShadowAdd.frag.glsl" />
+    <None Include="res\shaders\PostProcess\deferredShadingAddDirectionalLightShadow.frag.glsl" />
+    <None Include="res\shaders\PostProcess\deferredShadingAddPointLightShadow.frag.glsl" />
     <None Include="res\shaders\PostProcess\deferredShadingSimple.frag.glsl" />
-    <None Include="res\shaders\PostProcess\deferredShadingSpotLightShadowAdd.frag.glsl" />
+    <None Include="res\shaders\PostProcess\deferredShadingAddSpotLightShadow.frag.glsl" />
     <None Include="res\shaders\PostProcess\depth.frag.glsl" />
     <None Include="res\shaders\PostProcess\editorOutline.frag.glsl" />
     <None Include="res\shaders\PostProcess\gammaCorrection.frag.glsl" />

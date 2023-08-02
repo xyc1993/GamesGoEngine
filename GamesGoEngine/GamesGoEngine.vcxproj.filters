@@ -700,9 +700,6 @@
     <None Include="res\shaders\RenderPipeline\gBuffer.vert.glsl">
       <Filter>Resource Files\Shaders\RenderPipeline</Filter>
     </None>
-    <None Include="res\shaders\PostProcess\deferredShadingSimple.frag.glsl">
-      <Filter>Resource Files\Shaders\PostProcess</Filter>
-    </None>
     <None Include="res\shaders\DebugShaders\debugOrientation.frag.glsl">
       <Filter>Resource Files\Shaders\DebugShaders</Filter>
     </None>
@@ -724,10 +721,16 @@
     <None Include="res\shaders\RenderPipeline\gBufferNoTexture.frag.glsl">
       <Filter>Resource Files\Shaders\RenderPipeline</Filter>
     </None>
-    <None Include="res\shaders\PostProcess\deferredShadingPointLightShadowAdd.frag.glsl">
+    <None Include="res\shaders\PostProcess\deferredShadingAddPointLightShadow.frag.glsl">
       <Filter>Resource Files\Shaders\PostProcess</Filter>
     </None>
-    <None Include="res\shaders\PostProcess\deferredShadingSpotLightShadowAdd.frag.glsl">
+    <None Include="res\shaders\PostProcess\deferredShadingAddSpotLightShadow.frag.glsl">
+      <Filter>Resource Files\Shaders\PostProcess</Filter>
+    </None>
+    <None Include="res\shaders\PostProcess\deferredShadingSimple.frag.glsl">
+      <Filter>Resource Files\Shaders\PostProcess</Filter>
+    </None>
+    <None Include="res\shaders\PostProcess\deferredShadingAddDirectionalLightShadow.frag.glsl">
       <Filter>Resource Files\Shaders\PostProcess</Filter>
     </None>
   </ItemGroup>

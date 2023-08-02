@@ -60,7 +60,7 @@ private:
 	// Updates data such as positions, normals, albedo, specular
 	void UpdateGBuffer();
 	void UpdateDeferredShading();
-	void UpdateDirectionalShadowMap(Light* directionalLight);
+	void UpdateDirectionalShadowMap(Light* directionalLight, glm::mat4& lightSpaceMatrix);
 	void UpdateSpotLightShadowMap(Light* spotLight, glm::mat4& lightSpaceMatrix);
 	void UpdateOmnidirectionalShadowMap(Light* pointLight);
 	bool AreThereAnyShadowCasters() const;
@@ -208,6 +208,7 @@ private:
 	std::shared_ptr<PostProcessMaterial> hdrToneMappingGammaCorrectionMaterial;
 	std::shared_ptr<PostProcessMaterial> editorOutlineMaterial;
 	std::shared_ptr<PostProcessMaterial> deferredShadingMaterial;
+	std::shared_ptr<PostProcessMaterial> deferredDirectionalLightShadowedAdditiveMaterial;
 	std::shared_ptr<PostProcessMaterial> deferredPointLightShadowedAdditiveMaterial;
 	std::shared_ptr<PostProcessMaterial> deferredSpotLightShadowedAdditiveMaterial;
 	std::shared_ptr<PostProcessMaterial> textureMergerMaterial;

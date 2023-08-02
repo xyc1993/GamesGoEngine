@@ -32,8 +32,9 @@ RenderingManager::RenderingManager()
 	hdrToneMappingGammaCorrectionMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/hdrToneMappingGammaCorrection.frag.glsl");
 	editorOutlineMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/editorOutline.frag.glsl");
 	deferredShadingMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/deferredShadingSimple.frag.glsl");
-	deferredPointLightShadowedAdditiveMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/deferredShadingPointLightShadowAdd.frag.glsl");
-	deferredSpotLightShadowedAdditiveMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/deferredShadingSpotLightShadowAdd.frag.glsl");
+	deferredDirectionalLightShadowedAdditiveMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/deferredShadingAddDirectionalLightShadow.frag.glsl");
+	deferredPointLightShadowedAdditiveMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/deferredShadingAddPointLightShadow.frag.glsl");
+	deferredSpotLightShadowedAdditiveMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/deferredShadingAddSpotLightShadow.frag.glsl");
 	textureMergerMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/textureMerger.frag.glsl");
 }
 
@@ -387,7 +388,18 @@ void RenderingManager::Update()
 		Light* currentLight = nullptr;
 
 		// set light data
-		if (PointLight* pointLight = dynamic_cast<PointLight*>(lights[i]))
+		if (DirectionalLight* directionalLight = dynamic_cast<DirectionalLight*>(lights[i]))
+		{
+			deferredLightMaterial = GetInstance()->deferredDirectionalLightShadowedAdditiveMaterial;
+			currentLight = directionalLight;
+
+			// update shadow map
+			glm::mat4 lightSpaceMatrix;
+			GetInstance()->UpdateDirectionalShadowMap(directionalLight, lightSpaceMatrix);
+			deferredLightMaterial->SetTexture("directionalLightShadowMap", 1, GetInstance()->spotLightDepthMap);
+			deferredLightMaterial->SetMat4("directionalLightSpaceMatrix", lightSpaceMatrix);
+		}
+		else if (PointLight* pointLight = dynamic_cast<PointLight*>(lights[i]))
 		{
 			deferredLightMaterial = GetInstance()->deferredPointLightShadowedAdditiveMaterial;
 			currentLight = pointLight;
@@ -759,7 +771,7 @@ void RenderingManager::UpdateDeferredShading()
 	}
 }
 
-void RenderingManager::UpdateDirectionalShadowMap(Light* directionalLight)
+void RenderingManager::UpdateDirectionalShadowMap(Light* directionalLight, glm::mat4& lightSpaceMatrix)
 {
 	if (!Component::IsValid(directionalLight))
 	{
@@ -768,8 +780,7 @@ void RenderingManager::UpdateDirectionalShadowMap(Light* directionalLight)
 	
 	float near_plane = 1.0f, far_plane = 30.0f;
 	glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, 10.0f, -10.0f, near_plane, far_plane);
-
-	glm::mat4 lightSpaceMatrix;
+	
 	Transform* lightTransform = directionalLight->GetOwner()->GetTransform();
 	glm::vec3 lightPosition = lightTransform->GetPosition() - 10.0f * lightTransform->GetForward();
 	glm::vec3 lightLookAtTarget = lightTransform->GetPosition() + 10.0f * lightTransform->GetForward();

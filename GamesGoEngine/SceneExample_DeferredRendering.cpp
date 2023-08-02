@@ -60,7 +60,6 @@ SceneExample_DeferredRendering::SceneExample_DeferredRendering()
 	// Add walls, floor and ceiling
 	std::vector<glm::vec3> boundsPositions;
 	boundsPositions.push_back(glm::vec3(0.0f, -2.0f, 0.0f));
-	boundsPositions.push_back(glm::vec3(0.0f, 6.0f, 0.0f));
 	boundsPositions.push_back(glm::vec3(-7.0f, 2.0f, 0.0f));
 	boundsPositions.push_back(glm::vec3(7.0f, 2.0f, 0.0f));
 	boundsPositions.push_back(glm::vec3(0.0f, 2.0f, -7.0f));
@@ -68,7 +67,6 @@ SceneExample_DeferredRendering::SceneExample_DeferredRendering()
 
 	std::vector<glm::vec3> boundsRotations;
 	boundsRotations.push_back(glm::vec3(-90.0f, 0.0f, 0.0f));
-	boundsRotations.push_back(glm::vec3(90.0f, 0.0f, 0.0f));
 	boundsRotations.push_back(glm::vec3(0.0f, 90.0f, 0.0f));
 	boundsRotations.push_back(glm::vec3(0.0f, -90.0f, 0.0f));
 	boundsRotations.push_back(glm::vec3(0.0f, 0.0f, 0.0f));
@@ -86,7 +84,7 @@ SceneExample_DeferredRendering::SceneExample_DeferredRendering()
 		boundObject->AddComponent(boundMeshRenderer);
 		boundObject->GetTransform()->SetPosition(boundsPositions[i]);
 		boundObject->GetTransform()->SetRotationEulerDegrees(boundsRotations[i]);
-		if (i <= 1) // floor & ceiling
+		if (i < 1) // floor & ceiling
 		{
 			boundObject->GetTransform()->SetScale(glm::vec3(7.0f));
 		}
@@ -100,6 +98,16 @@ SceneExample_DeferredRendering::SceneExample_DeferredRendering()
 
 		scene->AddGameObject(boundObject);
 	}
+
+	// Add directional light
+	glm::vec3 directionalLightColor = glm::vec3(0.0f, 0.0f, 3.0f);
+	GameObject* directionalLightObject = new GameObject();
+	directionalLightObject->GetTransform()->SetRotationEulerDegrees(glm::vec3(135.0f, -45.0f, 0.0f));
+	DirectionalLight* directionalLight = new DirectionalLight(0.02f * directionalLightColor, 0.05f * directionalLightColor, 0.08f * directionalLightColor);
+	directionalLightObject->AddComponent(directionalLight);
+	std::string directionalLightName = "directional_light";
+	directionalLightObject->SetName(directionalLightName);
+	scene->AddGameObject(directionalLightObject);
 
 	// Add point lights
 	constexpr int pointLightsNumber = 2;
@@ -185,5 +193,6 @@ SceneExample_DeferredRendering::SceneExample_DeferredRendering()
 
 		scene->AddGameObject(spotLightObject);
 	}
+
 	AddEditorSpectator();
 }
