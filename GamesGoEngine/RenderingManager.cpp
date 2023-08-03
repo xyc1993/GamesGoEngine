@@ -627,6 +627,8 @@ void RenderingManager::Update()
 		DrawRenderers(GetInstance()->meshRenderers, GetInstance()->normalDebugMaterial);
 	}
 
+	// Disable stencil drawing for debug orientation lines so they wouldn't have an outline
+	glDisable(GL_STENCIL_TEST);
 	GetInstance()->DrawOrientationDebug();
 
 	if (GetInstance()->firstRenderedFrame)
