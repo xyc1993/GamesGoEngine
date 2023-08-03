@@ -770,10 +770,12 @@ void RenderingManager::UpdateGBuffer()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glStencilMask(~0);
+	glClearStencil(0);
+	glClear(GL_STENCIL_BUFFER_BIT);
 	DrawRenderersOfLightModel(meshRenderers, LightModelType::LitDeferred);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
 }
 
 void RenderingManager::UpdateDeferredShading()
