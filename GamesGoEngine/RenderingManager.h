@@ -63,6 +63,7 @@ private:
 	void UpdateSpotLightShadowMap(Light* spotLight, glm::mat4& lightSpaceMatrix);
 	void UpdateOmnidirectionalShadowMap(Light* pointLight);
 	bool AreThereAnyShadowCasters() const;
+	void DrawDeferredShadedObjects();
 	void DrawOrientationDebug() const;
 	void DrawSkybox();
 	void DrawDebug();

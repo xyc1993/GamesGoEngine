@@ -366,137 +366,9 @@ void RenderingManager::Update()
 	// enable depth testing & stencil testing
 	glEnable(GL_DEPTH_TEST); 
 	glEnable(GL_STENCIL_TEST);
-
-	// DEFERRED RENDERING
-	if (GetInstance()->AreThereAnyDeferredRendereredMeshes())
-	{
-		GetInstance()->UpdateGBuffer();
-		
-		// disable depth and buffer for deferred shading rendering since it's quad rendering over whole screen
-		glDisable(GL_DEPTH_TEST);
-		glDisable(GL_STENCIL_TEST);
-
-		std::vector<Light*> lights = GetLightsManager()->GetAllLights();
-		size_t lastReachedLightIndex = 0;
-		for (size_t i = 0; i < lights.size(); i++)
-		{
-			const unsigned int currentFramebuffer = i % 2 == 0 ? GetInstance()->framebuffer2 : GetInstance()->framebuffer1;
-			glBindFramebuffer(GL_FRAMEBUFFER, currentFramebuffer);
-			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
-
-			std::shared_ptr<PostProcessMaterial> deferredLightMaterial = nullptr;
-			Light* currentLight = nullptr;
-			bool isCurrentLightAmbient = false;
-
-			// set light data
-			if (AmbientLight* ambientLight = dynamic_cast<AmbientLight*>(lights[i]))
-			{
-				isCurrentLightAmbient = true;
-				deferredLightMaterial = GetInstance()->deferredAmbientLightShadowedAdditiveMaterial;
-				currentLight = ambientLight;
-			}
-			else if (DirectionalLight* directionalLight = dynamic_cast<DirectionalLight*>(lights[i]))
-			{
-				deferredLightMaterial = GetInstance()->deferredDirectionalLightShadowedAdditiveMaterial;
-				currentLight = directionalLight;
-
-				// update shadow map
-				glm::mat4 lightSpaceMatrix;
-				GetInstance()->UpdateDirectionalShadowMap(directionalLight, lightSpaceMatrix);
-				deferredLightMaterial->SetTexture("directionalLightShadowMap", 1, GetInstance()->directionalDepthMap);
-				deferredLightMaterial->SetMat4("directionalLightSpaceMatrix", lightSpaceMatrix);
-			}
-			else if (PointLight* pointLight = dynamic_cast<PointLight*>(lights[i]))
-			{
-				deferredLightMaterial = GetInstance()->deferredPointLightShadowedAdditiveMaterial;
-				currentLight = pointLight;
-
-				// update shadow map
-				GetInstance()->UpdateOmnidirectionalShadowMap(pointLight);
-				deferredLightMaterial->SetCubeTexture("pointLightShadowMap", 1, GetInstance()->omniDepthMap);
-				deferredLightMaterial->SetFloat("far_plane", 25.0f);
-			}
-			else if (SpotLight* spotLight = dynamic_cast<SpotLight*>(lights[i]))
-			{
-				deferredLightMaterial = GetInstance()->deferredSpotLightShadowedAdditiveMaterial;
-				currentLight = spotLight;
-
-				// update shadow map
-				glm::mat4 lightSpaceMatrix;
-				GetInstance()->UpdateSpotLightShadowMap(spotLight, lightSpaceMatrix);
-				deferredLightMaterial->SetTexture("spotLightShadowMap", 1, GetInstance()->spotLightDepthMap);
-				deferredLightMaterial->SetMat4("spotLightSpaceMatrix", lightSpaceMatrix);
-			}
-			else
-			{
-				std::cout << "This type of light is not supported yet!" << std::endl;
-				break;
-			}
-
-			if (deferredLightMaterial != nullptr && currentLight != nullptr)
-			{
-				glBindFramebuffer(GL_FRAMEBUFFER, currentFramebuffer);
-				glDisable(GL_DEPTH_TEST);
-				glDisable(GL_STENCIL_TEST);
-				glViewport(0, 0, WindowManager::GetCurrentWidth(), WindowManager::GetCurrentHeight());
-				glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-				glClear(GL_COLOR_BUFFER_BIT);
-
-				// update light data
-				const GLuint shaderProgram = deferredLightMaterial->GetShaderProgram();
-				currentLight->SetLightInShader(shaderProgram, false);
-
-				// update general texture data
-				if (isCurrentLightAmbient)
-				{
-					deferredLightMaterial->SetTexture("screenTexture", 0, i % 2 == 0 ? GetInstance()->textureColorBuffer1 : GetInstance()->textureColorBuffer2);
-					deferredLightMaterial->SetTexture("gAlbedo", 1, GetInstance()->gAlbedo);
-					deferredLightMaterial->SetTexture("gLightEnabled", 2, GetInstance()->gLightEnabled);
-				}
-				else
-				{
-					deferredLightMaterial->SetTexture("screenTexture", 0, i % 2 == 0 ? GetInstance()->textureColorBuffer1 : GetInstance()->textureColorBuffer2);
-					deferredLightMaterial->SetTexture("gPosition", 2, GetInstance()->gPosition);
-					deferredLightMaterial->SetTexture("gNormal", 3, GetInstance()->gNormal);
-					deferredLightMaterial->SetTexture("gAlbedo", 4, GetInstance()->gAlbedo);
-					deferredLightMaterial->SetTexture("gSpecular", 5, GetInstance()->gSpecular);
-					deferredLightMaterial->SetTexture("gLightEnabled", 6, GetInstance()->gLightEnabled);
-				}
-				deferredLightMaterial->Draw(glm::mat4());
-				MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
-			}
-
-			lastReachedLightIndex++;
-		}
-
-		// blitting if necessary so framebuffer2 has the most recent data
-		if ((lastReachedLightIndex - 1) % 2 == 1)
-		{
-			// after rendering the last shadow pass, blit data to the framebuffer that's used later for the rest of rendering process
-			glBindFramebuffer(GL_READ_FRAMEBUFFER, GetInstance()->framebuffer1);
-			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, GetInstance()->framebuffer2);
-
-			// blit only color
-			glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-		}
-
-		// make sure both main framebuffers have correct depth & stencil data from the gBuffer
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, GetInstance()->gBuffer);
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, GetInstance()->framebuffer1);
-
-		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
-		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
-
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, GetInstance()->gBuffer);
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, GetInstance()->framebuffer2);
-
-		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
-		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
-
-		glBindFramebuffer(GL_FRAMEBUFFER, GetInstance()->framebuffer2);
-	}
 	
+	GetInstance()->DrawDeferredShadedObjects();
+
 	glBindFramebuffer(GL_FRAMEBUFFER, GetInstance()->framebuffer2);
 	
 	glEnable(GL_DEPTH_TEST); // enable depth testing (is disabled for rendering screen-space quad)
@@ -821,6 +693,141 @@ bool RenderingManager::AreThereAnyShadowCasters() const
 		}
 	}
 	return false;
+}
+
+void RenderingManager::DrawDeferredShadedObjects()
+{
+	if (AreThereAnyDeferredRendereredMeshes())
+	{
+		const int width = WindowManager::GetCurrentWidth();
+		const int height = WindowManager::GetCurrentHeight();
+
+		UpdateGBuffer();
+
+		// disable depth and buffer for deferred shading rendering since it's quad rendering over whole screen
+		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_STENCIL_TEST);
+
+		std::vector<Light*> lights = GetLightsManager()->GetAllLights();
+		size_t lastReachedLightIndex = 0;
+		for (size_t i = 0; i < lights.size(); i++)
+		{
+			const unsigned int currentFramebuffer = i % 2 == 0 ? framebuffer2 : framebuffer1;
+			glBindFramebuffer(GL_FRAMEBUFFER, currentFramebuffer);
+			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT);
+
+			std::shared_ptr<PostProcessMaterial> deferredLightMaterial = nullptr;
+			Light* currentLight = nullptr;
+			bool isCurrentLightAmbient = false;
+
+			// set light data
+			if (AmbientLight* ambientLight = dynamic_cast<AmbientLight*>(lights[i]))
+			{
+				isCurrentLightAmbient = true;
+				deferredLightMaterial = deferredAmbientLightShadowedAdditiveMaterial;
+				currentLight = ambientLight;
+			}
+			else if (DirectionalLight* directionalLight = dynamic_cast<DirectionalLight*>(lights[i]))
+			{
+				deferredLightMaterial = deferredDirectionalLightShadowedAdditiveMaterial;
+				currentLight = directionalLight;
+
+				// update shadow map
+				glm::mat4 lightSpaceMatrix;
+				UpdateDirectionalShadowMap(directionalLight, lightSpaceMatrix);
+				deferredLightMaterial->SetTexture("directionalLightShadowMap", 1, directionalDepthMap);
+				deferredLightMaterial->SetMat4("directionalLightSpaceMatrix", lightSpaceMatrix);
+			}
+			else if (PointLight* pointLight = dynamic_cast<PointLight*>(lights[i]))
+			{
+				deferredLightMaterial = deferredPointLightShadowedAdditiveMaterial;
+				currentLight = pointLight;
+
+				// update shadow map
+				UpdateOmnidirectionalShadowMap(pointLight);
+				deferredLightMaterial->SetCubeTexture("pointLightShadowMap", 1, omniDepthMap);
+				deferredLightMaterial->SetFloat("far_plane", 25.0f);
+			}
+			else if (SpotLight* spotLight = dynamic_cast<SpotLight*>(lights[i]))
+			{
+				deferredLightMaterial = deferredSpotLightShadowedAdditiveMaterial;
+				currentLight = spotLight;
+
+				// update shadow map
+				glm::mat4 lightSpaceMatrix;
+				UpdateSpotLightShadowMap(spotLight, lightSpaceMatrix);
+				deferredLightMaterial->SetTexture("spotLightShadowMap", 1, spotLightDepthMap);
+				deferredLightMaterial->SetMat4("spotLightSpaceMatrix", lightSpaceMatrix);
+			}
+			else
+			{
+				std::cout << "This type of light is not supported yet!" << std::endl;
+				break;
+			}
+
+			if (deferredLightMaterial != nullptr && currentLight != nullptr)
+			{
+				glBindFramebuffer(GL_FRAMEBUFFER, currentFramebuffer);
+				glDisable(GL_DEPTH_TEST);
+				glDisable(GL_STENCIL_TEST);
+				glViewport(0, 0, WindowManager::GetCurrentWidth(), WindowManager::GetCurrentHeight());
+				glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+				glClear(GL_COLOR_BUFFER_BIT);
+
+				// update light data
+				const GLuint shaderProgram = deferredLightMaterial->GetShaderProgram();
+				currentLight->SetLightInShader(shaderProgram, false);
+
+				// update general texture data
+				if (isCurrentLightAmbient)
+				{
+					deferredLightMaterial->SetTexture("screenTexture", 0, i % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
+					deferredLightMaterial->SetTexture("gAlbedo", 1, gAlbedo);
+					deferredLightMaterial->SetTexture("gLightEnabled", 2, gLightEnabled);
+				}
+				else
+				{
+					deferredLightMaterial->SetTexture("screenTexture", 0, i % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
+					deferredLightMaterial->SetTexture("gPosition", 2, gPosition);
+					deferredLightMaterial->SetTexture("gNormal", 3, gNormal);
+					deferredLightMaterial->SetTexture("gAlbedo", 4, gAlbedo);
+					deferredLightMaterial->SetTexture("gSpecular", 5, gSpecular);
+					deferredLightMaterial->SetTexture("gLightEnabled", 6, gLightEnabled);
+				}
+				deferredLightMaterial->Draw(glm::mat4());
+				MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
+			}
+
+			lastReachedLightIndex++;
+		}
+
+		// blitting if necessary so framebuffer2 has the most recent data
+		if ((lastReachedLightIndex - 1) % 2 == 1)
+		{
+			// after rendering the last shadow pass, blit data to the framebuffer that's used later for the rest of rendering process
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer1);
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuffer2);
+
+			// blit only color
+			glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+		}
+
+		// make sure both main framebuffers have correct depth & stencil data from the gBuffer
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, gBuffer);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuffer1);
+
+		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, gBuffer);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuffer2);
+
+		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer2);
+	}
 }
 
 void RenderingManager::DrawOrientationDebug() const
