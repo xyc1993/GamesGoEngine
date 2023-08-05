@@ -374,123 +374,7 @@ void RenderingManager::Update()
 	glEnable(GL_DEPTH_TEST); // enable depth testing (is disabled for rendering screen-space quad)
 	glEnable(GL_STENCIL_TEST);
 	
-	// FORWARD RENDERING
-	if (GetInstance()->AreThereAnyForwardRendereredMeshes())
-	{
-		std::vector<Light*> lights = GetLightsManager()->GetAllLights();
-		const bool areThereAnyShadowCasters = GetInstance()->AreThereAnyShadowCasters();
-		if (!lights.empty() && areThereAnyShadowCasters)
-		{
-			for (size_t i = 0; i < lights.size(); i++)
-			{
-				glEnable(GL_DEPTH_TEST);
-				glEnable(GL_STENCIL_TEST);
-
-				DirectionalLight* directionalLight = dynamic_cast<DirectionalLight*>(lights[i]);
-				if (directionalLight != nullptr)
-				{
-					glm::mat4 lightSpaceMatrix;
-					GetInstance()->UpdateDirectionalShadowMap(directionalLight, lightSpaceMatrix);
-				}
-				PointLight* pointLight = dynamic_cast<PointLight*>(lights[i]);
-				if (pointLight != nullptr)
-				{
-					GetInstance()->UpdateOmnidirectionalShadowMap(pointLight);
-				}
-				SpotLight* spotLight = dynamic_cast<SpotLight*>(lights[i]);
-				if (spotLight != nullptr)
-				{
-					glm::mat4 lightSpaceMatrix;
-					GetInstance()->UpdateSpotLightShadowMap(spotLight, lightSpaceMatrix);
-				}
-
-				// reset viewport
-				glViewport(0, 0, WindowManager::GetCurrentWidth(), WindowManager::GetCurrentHeight());
-				const unsigned int currentFramebuffer = i % 2 == 0 ? GetInstance()->framebuffer2 : GetInstance()->framebuffer1;
-				glBindFramebuffer(GL_FRAMEBUFFER, currentFramebuffer);
-				// clear color and depth buffer for next rendering steps so that new pass can be rendered on top of the previous one
-				// i > 1 since we have 2 separate framebuffers, no need to clean buffer is nothing is written yet
-				if (i > 1)
-				{
-					glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-					// before drawing new meshes, make sure that gBuffer data is copied if needed
-					if (GetInstance()->AreThereAnyDeferredRendereredMeshes())
-					{
-						glBindFramebuffer(GL_READ_FRAMEBUFFER, GetInstance()->gBuffer);
-						glBindFramebuffer(GL_DRAW_FRAMEBUFFER, currentFramebuffer);
-
-						glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
-						glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
-
-						glBindFramebuffer(GL_FRAMEBUFFER, currentFramebuffer);
-					}
-				}
-
-				ApplyLightForRenderers(lights[i], GetInstance()->opaqueMeshRenderers);
-				ApplyLightForRenderers(lights[i], GetInstance()->transparentMeshRenderers);
-
-				DrawRenderersExceptLightModel(GetInstance()->opaqueMeshRenderers, LightModelType::LitDeferred);
-				DrawRenderersExceptLightModel(GetInstance()->transparentMeshRenderers, LightModelType::LitDeferred);
-
-				if (i > 0)
-				{
-					glDisable(GL_DEPTH_TEST);
-					glDisable(GL_STENCIL_TEST);
-
-					glBindFramebuffer(GL_FRAMEBUFFER, i % 2 == 0 ? GetInstance()->shadowFBO2 : GetInstance()->shadowFBO1);
-					glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-					// merge last texture and sum of previous textures
-					// set latest texture
-					GetInstance()->textureMergerMaterial->SetTexture("screenTexture1", 0, i % 2 == 0 ? GetInstance()->textureColorBuffer2 : GetInstance()->textureColorBuffer1);
-					// set sum of textures
-					if (i == 1) // for i equal 1 we use the first texture to sum first and second texture
-					{
-						GetInstance()->textureMergerMaterial->SetTexture("screenTexture2", 1, GetInstance()->textureColorBuffer2);
-					}
-					else // otherwise we use sum
-					{
-						GetInstance()->textureMergerMaterial->SetTexture("screenTexture2", 1, i % 2 == 0 ? GetInstance()->shadowColorBuffer1 : GetInstance()->shadowColorBuffer2);
-					}
-
-					GetInstance()->textureMergerMaterial->Draw(glm::mat4());
-					MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
-				}
-
-				// clear lights so the next light pass won't be affected by previous one
-				ClearLightsForRenderers(GetInstance()->opaqueMeshRenderers);
-				ClearLightsForRenderers(GetInstance()->transparentMeshRenderers);
-			}
-
-			if (lights.size() > 1)
-			{
-				// after rendering the last shadow pass, blit data to the framebuffer that's used later for the rest of rendering process
-				glBindFramebuffer(GL_READ_FRAMEBUFFER, lights.size() % 2 == 0 ? GetInstance()->shadowFBO1 : GetInstance()->shadowFBO2);
-				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, GetInstance()->framebuffer2);
-
-				// blit only color
-				glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-				//glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
-				//glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
-
-				glEnable(GL_DEPTH_TEST);
-				glEnable(GL_STENCIL_TEST);
-			}
-			glBindFramebuffer(GL_FRAMEBUFFER, GetInstance()->framebuffer2);
-		}
-		else
-		{
-			glBindFramebuffer(GL_FRAMEBUFFER, GetInstance()->framebuffer2);
-			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			GetInstance()->ApplyAllLightDataForForwardRenderers();
-			DrawRenderersExceptLightModel(GetInstance()->opaqueMeshRenderers, LightModelType::LitDeferred);
-			DrawRenderersExceptLightModel(GetInstance()->transparentMeshRenderers, LightModelType::LitDeferred);
-		}
-	}
+	GetInstance()->DrawForwardShadedObjects();
 
 	GetInstance()->DrawSkybox();
 	GetInstance()->DrawDebug();
@@ -827,6 +711,127 @@ void RenderingManager::DrawDeferredShadedObjects()
 		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer2);
+	}
+}
+
+void RenderingManager::DrawForwardShadedObjects()
+{
+	if (AreThereAnyForwardRendereredMeshes())
+	{
+		const int width = WindowManager::GetCurrentWidth();
+		const int height = WindowManager::GetCurrentHeight();
+
+		std::vector<Light*> lights = GetLightsManager()->GetAllLights();
+		const bool areThereAnyShadowCasters = AreThereAnyShadowCasters();
+		if (!lights.empty() && areThereAnyShadowCasters)
+		{
+			for (size_t i = 0; i < lights.size(); i++)
+			{
+				glEnable(GL_DEPTH_TEST);
+				glEnable(GL_STENCIL_TEST);
+
+				DirectionalLight* directionalLight = dynamic_cast<DirectionalLight*>(lights[i]);
+				if (directionalLight != nullptr)
+				{
+					glm::mat4 lightSpaceMatrix;
+					UpdateDirectionalShadowMap(directionalLight, lightSpaceMatrix);
+				}
+				PointLight* pointLight = dynamic_cast<PointLight*>(lights[i]);
+				if (pointLight != nullptr)
+				{
+					UpdateOmnidirectionalShadowMap(pointLight);
+				}
+				SpotLight* spotLight = dynamic_cast<SpotLight*>(lights[i]);
+				if (spotLight != nullptr)
+				{
+					glm::mat4 lightSpaceMatrix;
+					UpdateSpotLightShadowMap(spotLight, lightSpaceMatrix);
+				}
+
+				// reset viewport
+				glViewport(0, 0, WindowManager::GetCurrentWidth(), WindowManager::GetCurrentHeight());
+				const unsigned int currentFramebuffer = i % 2 == 0 ? framebuffer2 : framebuffer1;
+				glBindFramebuffer(GL_FRAMEBUFFER, currentFramebuffer);
+				// clear color and depth buffer for next rendering steps so that new pass can be rendered on top of the previous one
+				// i > 1 since we have 2 separate framebuffers, no need to clean buffer is nothing is written yet
+				if (i > 1)
+				{
+					glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+					// before drawing new meshes, make sure that gBuffer data is copied if needed
+					if (AreThereAnyDeferredRendereredMeshes())
+					{
+						glBindFramebuffer(GL_READ_FRAMEBUFFER, gBuffer);
+						glBindFramebuffer(GL_DRAW_FRAMEBUFFER, currentFramebuffer);
+
+						glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+						glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+
+						glBindFramebuffer(GL_FRAMEBUFFER, currentFramebuffer);
+					}
+				}
+
+				ApplyLightForRenderers(lights[i], opaqueMeshRenderers);
+				ApplyLightForRenderers(lights[i], transparentMeshRenderers);
+
+				DrawRenderersExceptLightModel(opaqueMeshRenderers, LightModelType::LitDeferred);
+				DrawRenderersExceptLightModel(transparentMeshRenderers, LightModelType::LitDeferred);
+
+				if (i > 0)
+				{
+					glDisable(GL_DEPTH_TEST);
+					glDisable(GL_STENCIL_TEST);
+
+					glBindFramebuffer(GL_FRAMEBUFFER, i % 2 == 0 ? shadowFBO2 : shadowFBO1);
+					glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+					// merge last texture and sum of previous textures
+					// set latest texture
+					textureMergerMaterial->SetTexture("screenTexture1", 0, i % 2 == 0 ? textureColorBuffer2 : textureColorBuffer1);
+					// set sum of textures
+					if (i == 1) // for i equal 1 we use the first texture to sum first and second texture
+					{
+						textureMergerMaterial->SetTexture("screenTexture2", 1, textureColorBuffer2);
+					}
+					else // otherwise we use sum
+					{
+						textureMergerMaterial->SetTexture("screenTexture2", 1, i % 2 == 0 ? shadowColorBuffer1 : shadowColorBuffer2);
+					}
+
+					textureMergerMaterial->Draw(glm::mat4());
+					MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
+				}
+
+				// clear lights so the next light pass won't be affected by previous one
+				ClearLightsForRenderers(opaqueMeshRenderers);
+				ClearLightsForRenderers(transparentMeshRenderers);
+			}
+
+			if (lights.size() > 1)
+			{
+				// after rendering the last shadow pass, blit data to the framebuffer that's used later for the rest of rendering process
+				glBindFramebuffer(GL_READ_FRAMEBUFFER, lights.size() % 2 == 0 ? shadowFBO1 : shadowFBO2);
+				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuffer2);
+
+				// blit only color
+				glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+				glEnable(GL_DEPTH_TEST);
+				glEnable(GL_STENCIL_TEST);
+			}
+			glBindFramebuffer(GL_FRAMEBUFFER, framebuffer2);
+		}
+		else
+		{
+			glBindFramebuffer(GL_FRAMEBUFFER, framebuffer2);
+			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			ApplyAllLightDataForForwardRenderers();
+			DrawRenderersExceptLightModel(opaqueMeshRenderers, LightModelType::LitDeferred);
+			DrawRenderersExceptLightModel(transparentMeshRenderers, LightModelType::LitDeferred);
+		}
 	}
 }
 

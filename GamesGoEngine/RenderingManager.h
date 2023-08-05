@@ -64,6 +64,7 @@ private:
 	void UpdateOmnidirectionalShadowMap(Light* pointLight);
 	bool AreThereAnyShadowCasters() const;
 	void DrawDeferredShadedObjects();
+	void DrawForwardShadedObjects();
 	void DrawOrientationDebug() const;
 	void DrawSkybox();
 	void DrawDebug();
