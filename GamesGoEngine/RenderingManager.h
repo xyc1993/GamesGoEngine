@@ -64,7 +64,9 @@ private:
 	void UpdateOmnidirectionalShadowMap(Light* pointLight);
 	bool AreThereAnyShadowCasters() const;
 	void DrawOrientationDebug() const;
-	static void DrawSkybox();
+	void DrawSkybox();
+	void DrawDebug();
+	void DrawScreenEffects();
 	static void DrawRenderers(const std::vector<MeshRenderer*>& renderers);
 	static void DrawRenderersOfLightModel(const std::vector<MeshRenderer*>& renderers, LightModelType lightModel);
 	static void DrawRenderersExceptLightModel(const std::vector<MeshRenderer*>& renderers, LightModelType lightModel);

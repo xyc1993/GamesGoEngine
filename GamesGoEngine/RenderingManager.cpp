@@ -600,22 +600,8 @@ void RenderingManager::Update()
 		}
 	}
 
-	DrawSkybox();
-
-	if (IsNormalsDebugEnabled() && (GetInstance()->normalDebugMaterial != nullptr))
-	{
-		DrawRenderers(GetInstance()->meshRenderers, GetInstance()->normalDebugMaterial);
-	}
-
-	// Disable stencil drawing for debug orientation lines so they wouldn't have an outline
-	glDisable(GL_STENCIL_TEST);
-	GetInstance()->DrawOrientationDebug();
-
-	if (GetInstance()->firstRenderedFrame)
-	{
-		GetInstance()->firstRenderedFrame = false;
-		SortPostProcessMaterials();
-	}
+	GetInstance()->DrawSkybox();
+	GetInstance()->DrawDebug();
 
 	// pass the framebuffer2 (the one we worked on so far) to framebuffer1 so both have same stencil and depth data (used by some screen effects)
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, GetInstance()->framebuffer2);
@@ -625,107 +611,7 @@ void RenderingManager::Update()
 	glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
 	glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 
-	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_STENCIL_TEST);
-
-	// Post process effects
-	const size_t postProcessEffects = GetInstance()->usedPostProcessMaterials.size();
-	if (IsPostProcessingEnabled())
-	{
-		// post processing via ping pong rendering
-		for (size_t i = 0; i < postProcessEffects; i++)
-		{
-			glBindFramebuffer(GL_FRAMEBUFFER, i % 2 == 0 ? GetInstance()->framebuffer2 : GetInstance()->framebuffer1);
-			glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
-
-			const std::shared_ptr<Material> ppMaterial = GetInstance()->usedPostProcessMaterials[i];
-			ppMaterial->SetTexture("screenTexture", 0, i % 2 == 0 ? GetInstance()->textureColorBuffer1 : GetInstance()->textureColorBuffer2);
-			ppMaterial->SetTexture("depthStencilTexture", 1, i % 2 == 0 ? GetInstance()->depthStencilBuffer1 : GetInstance()->depthStencilBuffer2);
-			ppMaterial->SetTexture("stencilView", 2, i % 2 == 0 ? GetInstance()->stencilView1 : GetInstance()->stencilView2);
-			ppMaterial->Draw(glm::mat4());
-			MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
-		}
-	}
-	int lastPostProcessMaterialIndex = postProcessEffects;
-
-	// Bloom
-	if (IsBloomEnabled())
-	{
-		// extract pixels over bloom's brightness threshold	
-		glBindFramebuffer(GL_FRAMEBUFFER, lastPostProcessMaterialIndex % 2 == 0 ? GetInstance()->framebuffer2 : GetInstance()->framebuffer1);
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		GetInstance()->brightPixelsExtractionMaterial->SetTexture("screenTexture", 0, lastPostProcessMaterialIndex % 2 == 0 ? GetInstance()->textureColorBuffer1 : GetInstance()->textureColorBuffer2);
-		GetInstance()->brightPixelsExtractionMaterial->SetTexture("depthStencilTexture", 1, lastPostProcessMaterialIndex % 2 == 0 ? GetInstance()->depthStencilBuffer1 : GetInstance()->depthStencilBuffer2);
-		GetInstance()->brightPixelsExtractionMaterial->SetTexture("stencilView", 2, lastPostProcessMaterialIndex % 2 == 0 ? GetInstance()->stencilView1 : GetInstance()->stencilView2);
-		GetInstance()->brightPixelsExtractionMaterial->Draw(glm::mat4());
-		MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
-
-		// blur pixels meant for blur
-		bool horizontal = true;
-		bool firstIteration = true;
-		// get texture after bright pixels extraction
-		lastPostProcessMaterialIndex++;
-		for (unsigned int i = 0; i < GetInstance()->bloomBlurAmount; i++)
-		{
-			glBindFramebuffer(GL_FRAMEBUFFER, horizontal ? GetInstance()->bloomFBO1 : GetInstance()->bloomFBO2);
-			glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
-
-			GetInstance()->bloomBlurMaterial->SetInt("horizontal", horizontal);
-			if (firstIteration)
-			{
-				GetInstance()->bloomBlurMaterial->SetTexture("screenTexture", 0, lastPostProcessMaterialIndex % 2 == 0 ? GetInstance()->textureColorBuffer1 : GetInstance()->textureColorBuffer2);
-			}
-			else
-			{
-				GetInstance()->bloomBlurMaterial->SetTexture("screenTexture", 0, i % 2 == 1 ? GetInstance()->bloomColorBuffer1 : GetInstance()->bloomColorBuffer2);
-			}
-			GetInstance()->bloomBlurMaterial->Draw(glm::mat4());
-			MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
-			horizontal = !horizontal;
-			if (firstIteration)
-			{
-				firstIteration = false;
-			}
-		}
-	}
-	
-	// HDR tone mapping and gamma correction
-	if (IsBloomEnabled())
-	{
-		// get texture before bright pixels extraction
-		lastPostProcessMaterialIndex--;
-	}	
-	if (IsHDRToneMappingAndGammaEnabled())
-	{
-		glBindFramebuffer(GL_FRAMEBUFFER, lastPostProcessMaterialIndex % 2 == 0 ? GetInstance()->framebuffer2 : GetInstance()->framebuffer1);
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-		GetInstance()->hdrToneMappingGammaCorrectionMaterial->SetTexture("screenTexture", 0, lastPostProcessMaterialIndex % 2 == 0 ? GetInstance()->textureColorBuffer1 : GetInstance()->textureColorBuffer2);
-		GetInstance()->hdrToneMappingGammaCorrectionMaterial->SetTexture("depthStencilTexture", 1, lastPostProcessMaterialIndex % 2 == 0 ? GetInstance()->depthStencilBuffer1 : GetInstance()->depthStencilBuffer2);
-		GetInstance()->hdrToneMappingGammaCorrectionMaterial->SetTexture("stencilView", 2, lastPostProcessMaterialIndex % 2 == 0 ? GetInstance()->stencilView1 : GetInstance()->stencilView2);
-		GetInstance()->hdrToneMappingGammaCorrectionMaterial->SetTexture("bloomBlur", 3, (GetInstance()->bloomBlurAmount - 1) % 2 == 1 ? GetInstance()->bloomColorBuffer1 : GetInstance()->bloomColorBuffer2);
-		GetInstance()->hdrToneMappingGammaCorrectionMaterial->SetFloat("bloomEnabled", IsBloomEnabled() ? 1.0f : 0.0f);
-		GetInstance()->hdrToneMappingGammaCorrectionMaterial->Draw(glm::mat4());
-		MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
-	}
-
-	// lastly apply selection outline, saved for the last so it wouldn't be altered by post processing
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-	if (IsHDRToneMappingAndGammaEnabled())
-	{
-		lastPostProcessMaterialIndex++;
-	}
-	GetInstance()->editorOutlineMaterial->SetTexture("screenTexture", 0, lastPostProcessMaterialIndex % 2 == 0 ? GetInstance()->textureColorBuffer1 : GetInstance()->textureColorBuffer2);
-	GetInstance()->editorOutlineMaterial->SetTexture("depthStencilTexture", 1, lastPostProcessMaterialIndex % 2 == 0 ? GetInstance()->depthStencilBuffer1 : GetInstance()->depthStencilBuffer2);
-	GetInstance()->editorOutlineMaterial->SetTexture("stencilView", 2, lastPostProcessMaterialIndex % 2 == 0 ? GetInstance()->stencilView1 : GetInstance()->stencilView2);
-	GetInstance()->editorOutlineMaterial->Draw(glm::mat4());
-	MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
+	GetInstance()->DrawScreenEffects();
 }
 
 void RenderingManager::UpdateUniformBufferObjects()
@@ -950,10 +836,138 @@ void RenderingManager::DrawOrientationDebug() const
 
 void RenderingManager::DrawSkybox()
 {
-	if (GetInstance()->skybox != nullptr)
+	if (skybox != nullptr)
 	{
-		GetInstance()->skybox->Draw();
+		skybox->Draw();
 	}
+}
+
+void RenderingManager::DrawDebug()
+{
+	if (IsNormalsDebugEnabled() && (normalDebugMaterial != nullptr))
+	{
+		DrawRenderers(meshRenderers, normalDebugMaterial);
+	}
+
+	// disable stencil drawing for debug orientation lines so they wouldn't have an outline
+	glDisable(GL_STENCIL_TEST);
+	DrawOrientationDebug();
+	
+	// turn stencil drawing back again
+	glEnable(GL_STENCIL_TEST);
+}
+
+void RenderingManager::DrawScreenEffects()
+{
+	// disable depth and stencil test so we don't overwrite it for screen effects
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_STENCIL_TEST);
+
+	// sort post process materials if it's the first frame to make sure their container is properly initialized
+	if (firstRenderedFrame)
+	{
+		firstRenderedFrame = false;
+		SortPostProcessMaterials();
+	}
+
+	// Post process effects
+	const size_t postProcessEffects = usedPostProcessMaterials.size();
+	if (IsPostProcessingEnabled())
+	{
+		// post processing via ping pong rendering
+		for (size_t i = 0; i < postProcessEffects; i++)
+		{
+			glBindFramebuffer(GL_FRAMEBUFFER, i % 2 == 0 ? framebuffer2 : framebuffer1);
+			glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT);
+
+			const std::shared_ptr<Material> ppMaterial = usedPostProcessMaterials[i];
+			ppMaterial->SetTexture("screenTexture", 0, i % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
+			ppMaterial->SetTexture("depthStencilTexture", 1, i % 2 == 0 ? depthStencilBuffer1 : depthStencilBuffer2);
+			ppMaterial->SetTexture("stencilView", 2, i % 2 == 0 ? stencilView1 : stencilView2);
+			ppMaterial->Draw(glm::mat4());
+			MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
+		}
+	}
+	int lastPostProcessMaterialIndex = postProcessEffects;
+
+	// Bloom
+	if (IsBloomEnabled())
+	{
+		// extract pixels over bloom's brightness threshold	
+		glBindFramebuffer(GL_FRAMEBUFFER, lastPostProcessMaterialIndex % 2 == 0 ? framebuffer2 : framebuffer1);
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		brightPixelsExtractionMaterial->SetTexture("screenTexture", 0, lastPostProcessMaterialIndex % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
+		brightPixelsExtractionMaterial->SetTexture("depthStencilTexture", 1, lastPostProcessMaterialIndex % 2 == 0 ? depthStencilBuffer1 : depthStencilBuffer2);
+		brightPixelsExtractionMaterial->SetTexture("stencilView", 2, lastPostProcessMaterialIndex % 2 == 0 ? stencilView1 : stencilView2);
+		brightPixelsExtractionMaterial->Draw(glm::mat4());
+		MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
+
+		// blur pixels meant for blur
+		bool horizontal = true;
+		bool firstIteration = true;
+		// get texture after bright pixels extraction
+		lastPostProcessMaterialIndex++;
+		for (unsigned int i = 0; i < bloomBlurAmount; i++)
+		{
+			glBindFramebuffer(GL_FRAMEBUFFER, horizontal ? bloomFBO1 : bloomFBO2);
+			glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT);
+
+			bloomBlurMaterial->SetInt("horizontal", horizontal);
+			if (firstIteration)
+			{
+				bloomBlurMaterial->SetTexture("screenTexture", 0, lastPostProcessMaterialIndex % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
+			}
+			else
+			{
+				bloomBlurMaterial->SetTexture("screenTexture", 0, i % 2 == 1 ? bloomColorBuffer1 : bloomColorBuffer2);
+			}
+			bloomBlurMaterial->Draw(glm::mat4());
+			MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
+			horizontal = !horizontal;
+			if (firstIteration)
+			{
+				firstIteration = false;
+			}
+		}
+	}
+
+	// HDR tone mapping and gamma correction
+	if (IsBloomEnabled())
+	{
+		// get texture before bright pixels extraction
+		lastPostProcessMaterialIndex--;
+	}
+	if (IsHDRToneMappingAndGammaEnabled())
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, lastPostProcessMaterialIndex % 2 == 0 ? framebuffer2 : framebuffer1);
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+		hdrToneMappingGammaCorrectionMaterial->SetTexture("screenTexture", 0, lastPostProcessMaterialIndex % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
+		hdrToneMappingGammaCorrectionMaterial->SetTexture("depthStencilTexture", 1, lastPostProcessMaterialIndex % 2 == 0 ? depthStencilBuffer1 : depthStencilBuffer2);
+		hdrToneMappingGammaCorrectionMaterial->SetTexture("stencilView", 2, lastPostProcessMaterialIndex % 2 == 0 ? stencilView1 : stencilView2);
+		hdrToneMappingGammaCorrectionMaterial->SetTexture("bloomBlur", 3, (bloomBlurAmount - 1) % 2 == 1 ? bloomColorBuffer1 : bloomColorBuffer2);
+		hdrToneMappingGammaCorrectionMaterial->SetFloat("bloomEnabled", IsBloomEnabled() ? 1.0f : 0.0f);
+		hdrToneMappingGammaCorrectionMaterial->Draw(glm::mat4());
+		MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
+	}
+
+	// lastly apply selection outline, saved for the last so it wouldn't be altered by post processing
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	if (IsHDRToneMappingAndGammaEnabled())
+	{
+		lastPostProcessMaterialIndex++;
+	}
+	editorOutlineMaterial->SetTexture("screenTexture", 0, lastPostProcessMaterialIndex % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
+	editorOutlineMaterial->SetTexture("depthStencilTexture", 1, lastPostProcessMaterialIndex % 2 == 0 ? depthStencilBuffer1 : depthStencilBuffer2);
+	editorOutlineMaterial->SetTexture("stencilView", 2, lastPostProcessMaterialIndex % 2 == 0 ? stencilView1 : stencilView2);
+	editorOutlineMaterial->Draw(glm::mat4());
+	MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
 }
 
 void RenderingManager::DrawRenderers(const std::vector<MeshRenderer*>& renderers)
