@@ -14,6 +14,6 @@ protected:
 	// shared submesh among all of the sphere instances, generated just once
 	static SubMesh* sphereSubMesh;
 
-	const int latitudesNumber = 32;
-	const int longitudesNumber = 64;
+	const int latitudesNumber = 12;
+	const int longitudesNumber = 20;
 };
