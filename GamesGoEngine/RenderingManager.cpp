@@ -353,19 +353,19 @@ void RenderingManager::Update()
 	// clear both buffers to ensure no unwanted data
 	glBindFramebuffer(GL_FRAMEBUFFER, GetInstance()->framebuffer1);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-	glBindFramebuffer(GL_FRAMEBUFFER, GetInstance()->framebuffer2);
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-	
-	glEnable(GL_DEPTH_TEST); // enable depth testing (is disabled for rendering screen-space quad)
-	glEnable(GL_STENCIL_TEST);
-
-	/*
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glStencilMask(~0);
 	glClearStencil(0);
-	glClear(GL_STENCIL_BUFFER_BIT);
-	*/
+
+	glBindFramebuffer(GL_FRAMEBUFFER, GetInstance()->framebuffer2);	
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);	
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glStencilMask(~0);
+	glClearStencil(0);
+
+	// enable depth testing & stencil testing
+	glEnable(GL_DEPTH_TEST); 
+	glEnable(GL_STENCIL_TEST);
 
 	// DEFERRED RENDERING
 	if (GetInstance()->AreThereAnyDeferredRendereredMeshes())
@@ -470,7 +470,7 @@ void RenderingManager::Update()
 			lastReachedLightIndex++;
 		}
 
-		// blitting so framebuffer2 has the most recent data
+		// blitting if necessary so framebuffer2 has the most recent data
 		if ((lastReachedLightIndex - 1) % 2 == 1)
 		{
 			// after rendering the last shadow pass, blit data to the framebuffer that's used later for the rest of rendering process
@@ -534,7 +534,27 @@ void RenderingManager::Update()
 
 				// reset viewport
 				glViewport(0, 0, WindowManager::GetCurrentWidth(), WindowManager::GetCurrentHeight());
-				glBindFramebuffer(GL_FRAMEBUFFER, i % 2 == 0 ? GetInstance()->framebuffer2 : GetInstance()->framebuffer1);
+				const unsigned int currentFramebuffer = i % 2 == 0 ? GetInstance()->framebuffer2 : GetInstance()->framebuffer1;
+				glBindFramebuffer(GL_FRAMEBUFFER, currentFramebuffer);
+				// clear color and depth buffer for next rendering steps so that new pass can be rendered on top of the previous one
+				// i > 1 since we have 2 separate framebuffers, no need to clean buffer is nothing is written yet
+				if (i > 1)
+				{
+					glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+					// before drawing new meshes, make sure that gBuffer data is copied if needed
+					if (GetInstance()->AreThereAnyDeferredRendereredMeshes())
+					{
+						glBindFramebuffer(GL_READ_FRAMEBUFFER, GetInstance()->gBuffer);
+						glBindFramebuffer(GL_DRAW_FRAMEBUFFER, currentFramebuffer);
+
+						glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+						glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+
+						glBindFramebuffer(GL_FRAMEBUFFER, currentFramebuffer);
+					}
+				}
 
 				ApplyLightForRenderers(lights[i], GetInstance()->opaqueMeshRenderers);
 				ApplyLightForRenderers(lights[i], GetInstance()->transparentMeshRenderers);
@@ -1344,7 +1364,8 @@ bool RenderingManager::AreThereAnyDeferredRendereredMeshes() const
 
 bool RenderingManager::AreThereAnyForwardRendereredMeshes() const
 {
-	return GetRenderersNumberOfType(LightModelType::LitForward) > 0;
+	// By default unlit mesh renderers are rendered with forward rendering approach
+	return (GetRenderersNumberOfType(LightModelType::LitForward) > 0 || GetRenderersNumberOfType(LightModelType::Unlit) > 0);
 }
 
 // TODO: optimize this, this value could be cached since even if this property changes, it won't change often

@@ -123,6 +123,9 @@ struct PointLight
 	float constant;
 	float linear;
 	float quadratic;
+
+    float maxRadius;
+    float maxRadiusFallOffStart;
 };
 
 uniform int pointLightsNumber;
@@ -197,6 +200,9 @@ void main()
         float distance = length(pointLights[0].position - fs_in.FragPos);
         float attenuation = 1.0 / (pointLights[0].constant + pointLights[0].linear * distance + pointLights[0].quadratic * distance * distance);
         pointLightColor *= attenuation;
+
+        // hard distance limit
+        pointLightColor *= (1.0 - smoothstep(pointLights[0].maxRadiusFallOffStart, pointLights[0].maxRadius, distance));
 
         // calculate and apply shadow
         float shadow = PointLightShadowCalculation(fs_in.FragPos, pointLights[0].position);
