@@ -21,11 +21,13 @@ void DebugToolsUI::Draw()
 		Time::SetTimeScale(timeScale);
 	}
 
+	/* Currently in order to support this view, some changes would need to be applied in the rendering manager: disable all screen processing to quad
 	bool wireframeOnly = RenderingManager::IsWireframeOnly();
 	if (ImGui::Checkbox("Wireframe only", &wireframeOnly))
 	{
 		RenderingManager::SetWireframeOnly(wireframeOnly);
 	}
+	*/
 
 	bool normalsDebugEnabled = RenderingManager::IsNormalsDebugEnabled();
 	if (ImGui::Checkbox("Show normals", &normalsDebugEnabled))
