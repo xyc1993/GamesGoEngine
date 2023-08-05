@@ -59,7 +59,6 @@ private:
 	void UpdateUniformBufferObjects();
 	// Updates data such as positions, normals, albedo, specular
 	void UpdateGBuffer();
-	void UpdateDeferredShading();
 	void UpdateDirectionalShadowMap(Light* directionalLight, glm::mat4& lightSpaceMatrix);
 	void UpdateSpotLightShadowMap(Light* spotLight, glm::mat4& lightSpaceMatrix);
 	void UpdateOmnidirectionalShadowMap(Light* pointLight);
@@ -124,6 +123,10 @@ private:
 	static bool CompareRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2);
 	static bool CompareTransparentRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2);
 	static bool ComparePostProcessMaterialsPositions(const std::shared_ptr<PostProcessMaterial>& ppm1, const std::shared_ptr<PostProcessMaterial>& ppm2);
+
+	bool AreThereAnyDeferredRendereredMeshes() const;
+	bool AreThereAnyForwardRendereredMeshes() const;
+	size_t GetRenderersNumberOfType(LightModelType lightModel) const;
 
 	LightsManager* lightsManager;
 	SkyboxRenderer* skybox;
