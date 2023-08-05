@@ -22,7 +22,8 @@ void DebugToolsUI::Draw()
 	}
 
 	/* Currently in order to support this view, some changes would need to be applied in the rendering manager: disable all screen processing to quad
-	bool wireframeOnly = RenderingManager::IsWireframeOnly();
+	 * TODO: enable once wireframe is working again
+	bool wireframeOnly = RenderingManager::IsWireframeOnly();	
 	if (ImGui::Checkbox("Wireframe only", &wireframeOnly))
 	{
 		RenderingManager::SetWireframeOnly(wireframeOnly);
