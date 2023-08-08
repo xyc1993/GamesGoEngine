@@ -31,6 +31,7 @@ public:
 
 private:
 	void InitGammaCorrection();
+	void InitSSAOData();
 	void ConfigureFramebuffers(GLint screenWidth, GLint screenHeight, bool shouldGenerateFramebuffer);
 	static void ConfigureFramebuffer(GLint screenWidth, GLint screenHeight,
 		unsigned int& framebuffer, unsigned int& textureColorBuffer,
@@ -43,6 +44,7 @@ private:
 		unsigned int& framebuffer, unsigned int& shadowCubeMap,
 		bool shouldGenerateFramebuffer);
 	void ConfigureGBuffer(GLint screenWidth, GLint screenHeight, bool shouldGenerateFramebuffer);
+	void ConfigureSSAOBuffers(GLint screenWidth, GLint screenHeight, bool shouldGenerateFramebuffer);
 
 public:
 	static void ResizeBuffers(GLint screenWidth, GLint screenHeight);
@@ -59,6 +61,7 @@ private:
 	void UpdateUniformBufferObjects();
 	// Updates data such as positions, normals, albedo, specular
 	void UpdateGBuffer();
+	void UpdateSSAOBuffers();
 	void UpdateDirectionalShadowMap(Light* directionalLight, glm::mat4& lightSpaceMatrix);
 	void UpdateSpotLightShadowMap(Light* spotLight, glm::mat4& lightSpaceMatrix);
 	void UpdateOmnidirectionalShadowMap(Light* pointLight);
@@ -205,6 +208,15 @@ private:
 	unsigned int gDepth;
 	unsigned int gStencil;
 
+	// SSAO buffers, textures and other data
+	unsigned int ssaoFBO;
+	unsigned int ssaoBlurFBO;
+	unsigned int ssaoColorBuffer;
+	unsigned int ssaoColorBufferBlur;
+	unsigned int ssaoNoiseTexture;
+	std::vector<glm::vec3> ssaoKernel;
+	const unsigned int ssaoKernelSize = 64;
+
 	// debug materials
 	Material* normalDebugMaterial;
 	Material* orientationDebugMaterial;
@@ -220,6 +232,8 @@ private:
 	std::shared_ptr<PostProcessMaterial> deferredPointLightShadowedAdditiveMaterial;
 	std::shared_ptr<PostProcessMaterial> deferredSpotLightShadowedAdditiveMaterial;
 	std::shared_ptr<PostProcessMaterial> textureMergerMaterial;
+	std::shared_ptr<PostProcessMaterial> ssaoMaterial;
+	std::shared_ptr<PostProcessMaterial> ssaoBlurMaterial;
 
 	// render pipeline materials
 	Material* depthMapMaterial;

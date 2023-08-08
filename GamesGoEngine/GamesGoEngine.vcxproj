@@ -313,6 +313,8 @@
     <None Include="res\shaders\PostProcess\inverseColor.frag.glsl" />
     <None Include="res\shaders\PostProcess\screenShader.frag.glsl" />
     <None Include="res\shaders\PostProcess\screenShader.vert.glsl" />
+    <None Include="res\shaders\PostProcess\ssao.frag.glsl" />
+    <None Include="res\shaders\PostProcess\ssaoBlur.frag.glsl" />
     <None Include="res\shaders\PostProcess\textureMerger.frag.glsl" />
     <None Include="res\shaders\RenderPipeline\depthMap.frag.glsl" />
     <None Include="res\shaders\RenderPipeline\depthMap.vert.glsl" />

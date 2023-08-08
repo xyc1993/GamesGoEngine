@@ -736,5 +736,11 @@
     <None Include="res\shaders\PostProcess\deferredShadingAddAmbientLightShadow.frag.glsl">
       <Filter>Resource Files\Shaders\PostProcess</Filter>
     </None>
+    <None Include="res\shaders\PostProcess\ssao.frag.glsl">
+      <Filter>Resource Files\Shaders\PostProcess</Filter>
+    </None>
+    <None Include="res\shaders\PostProcess\ssaoBlur.frag.glsl">
+      <Filter>Resource Files\Shaders\PostProcess</Filter>
+    </None>
   </ItemGroup>
 </Project>

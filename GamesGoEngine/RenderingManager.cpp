@@ -1,6 +1,7 @@
 #include "RenderingManager.h"
 
 #include <algorithm>
+#include <random>
 
 #include "CamerasManager.h"
 #include "GameObject.h"
@@ -37,6 +38,8 @@ RenderingManager::RenderingManager()
 	deferredPointLightShadowedAdditiveMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/deferredShadingAddPointLightShadow.frag.glsl");
 	deferredSpotLightShadowedAdditiveMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/deferredShadingAddSpotLightShadow.frag.glsl");
 	textureMergerMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/textureMerger.frag.glsl");
+	ssaoMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/ssao.frag.glsl");
+	ssaoBlurMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/ssaoBlur.frag.glsl");
 }
 
 RenderingManager::~RenderingManager()
@@ -74,6 +77,7 @@ void RenderingManager::Init(GLint screenWidth, GLint screenHeight)
 	GetInstance()->ConfigureUniformBufferObjects();
 	GetInstance()->CreateDebugMaterials();
 	GetInstance()->InitGammaCorrection();
+	GetInstance()->InitSSAOData();
 }
 
 void RenderingManager::InitGammaCorrection()
@@ -81,6 +85,49 @@ void RenderingManager::InitGammaCorrection()
 	// make sure that the default gamma value & exposure is set in the material
 	SetGamma(GetGamma());
 	SetExposure(GetExposure());
+}
+
+float ourLerp(float a, float b, float f)
+{
+	return a + f * (b - a);
+}
+
+void RenderingManager::InitSSAOData()
+{
+	// generate sample kernel
+	std::uniform_real_distribution<GLfloat> randomFloats(0.0, 1.0); // generates random floats between 0.0 and 1.0
+	std::default_random_engine generator;
+	for (unsigned int i = 0; i < ssaoKernelSize; ++i)
+	{
+		glm::vec3 sample(randomFloats(generator) * 2.0 - 1.0, randomFloats(generator) * 2.0 - 1.0, randomFloats(generator));
+		sample = glm::normalize(sample);
+		sample *= randomFloats(generator);
+		float scale = float(i) / 64.0f;
+
+		// scale samples s.t. they're more aligned to center of kernel
+		float minDist = 0.1f;
+		float maxDist = 1.0f;
+		scale = minDist + scale * scale * (maxDist - minDist);
+		sample *= scale;
+		ssaoKernel.push_back(sample);
+	}
+
+	// generate noise texture
+	std::vector<glm::vec3> ssaoNoise;
+	for (unsigned int i = 0; i < 16; i++)
+	{
+		glm::vec3 noise(randomFloats(generator) * 2.0 - 1.0, randomFloats(generator) * 2.0 - 1.0, 0.0f); // rotate around z-axis (in tangent space)
+		ssaoNoise.push_back(noise);
+	}
+
+	ssaoNoiseTexture;
+	glGenTextures(1, &ssaoNoiseTexture);
+	glBindTexture(GL_TEXTURE_2D, ssaoNoiseTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, 4, 4, 0, GL_RGB, GL_FLOAT, &ssaoNoise[0]);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 }
 
 void RenderingManager::ConfigureFramebuffers(GLint screenWidth, GLint screenHeight, bool shouldGenerateFramebuffer)
@@ -95,6 +142,7 @@ void RenderingManager::ConfigureFramebuffers(GLint screenWidth, GLint screenHeig
 	ConfigureShadowMapFramebuffer(shadowWidth, shadowHeight, spotLightDepthMapFBO, spotLightDepthMap, shouldGenerateFramebuffer);
 	ConfigureShadowCubeMapFramebuffer(shadowWidth, shadowHeight, omniDepthMapFBO, omniDepthMap, shouldGenerateFramebuffer);
 	ConfigureGBuffer(screenWidth, screenHeight, shouldGenerateFramebuffer);
+	ConfigureSSAOBuffers(screenWidth, screenHeight, shouldGenerateFramebuffer);
 }
 
 void RenderingManager::ConfigureFramebuffer(GLint screenWidth, GLint screenHeight,
@@ -265,6 +313,40 @@ void RenderingManager::ConfigureGBuffer(GLint screenWidth, GLint screenHeight, b
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void RenderingManager::ConfigureSSAOBuffers(GLint screenWidth, GLint screenHeight, bool shouldGenerateFramebuffer)
+{
+	if (shouldGenerateFramebuffer)
+	{
+		glGenFramebuffers(1, &ssaoFBO);
+		glGenFramebuffers(1, &ssaoBlurFBO);
+	}
+
+	// SSAO color buffer
+	glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
+	glGenTextures(1, &ssaoColorBuffer);
+	glBindTexture(GL_TEXTURE_2D, ssaoColorBuffer);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screenWidth, screenHeight, 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ssaoColorBuffer, 0);
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "SSAO Framebuffer not complete!" << std::endl;
+
+	// SSAO blur stage
+	glBindFramebuffer(GL_FRAMEBUFFER, ssaoBlurFBO);
+	glGenTextures(1, &ssaoColorBufferBlur);
+	glBindTexture(GL_TEXTURE_2D, ssaoColorBufferBlur);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screenWidth, screenHeight, 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ssaoColorBufferBlur, 0);
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "SSAO Blur Framebuffer not complete!" << std::endl;
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 void RenderingManager::ResizeBuffers(GLint screenWidth, GLint screenHeight)
 {
 	GetInstance()->ResizeBuffersInternal(screenWidth, screenHeight);
@@ -305,6 +387,9 @@ void RenderingManager::ResizeBuffersInternal(GLint screenWidth, GLint screenHeig
 	glDeleteTextures(1, &gLightEnabled);
 	glDeleteTextures(1, &gDepth);
 	glDeleteTextures(1, &gStencil);
+
+	glDeleteTextures(1, &ssaoColorBuffer);
+	glDeleteTextures(1, &ssaoColorBufferBlur);
 
 	GetInstance()->ConfigureFramebuffers(screenWidth, screenHeight, false);
 }
@@ -419,6 +504,31 @@ void RenderingManager::UpdateGBuffer()
 	glClearStencil(0);
 	glClear(GL_STENCIL_BUFFER_BIT);
 	DrawRenderersOfLightModel(meshRenderers, LightModelType::LitDeferred);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void RenderingManager::UpdateSSAOBuffers()
+{
+	// generate SSAO texture
+	glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
+	glClear(GL_COLOR_BUFFER_BIT);
+	for (unsigned int i = 0; i < ssaoKernelSize; ++i)
+	{
+		ssaoMaterial->SetVector3(("samples[" + std::to_string(i) + "]").c_str(), ssaoKernel[i]);
+	}
+	ssaoMaterial->SetTexture("gPosition", 0, gPosition);
+	ssaoMaterial->SetTexture("gNormal", 1, gNormal);
+	ssaoMaterial->SetTexture("texNoise", 2, ssaoNoiseTexture);
+	ssaoMaterial->Draw(glm::mat4());
+	MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	// blur SSAO texture to remove noise
+	glBindFramebuffer(GL_FRAMEBUFFER, ssaoBlurFBO);
+	glClear(GL_COLOR_BUFFER_BIT);
+	ssaoBlurMaterial->SetTexture("ssaoInput", 0, ssaoColorBuffer);
+	ssaoBlurMaterial->Draw(glm::mat4());
+	MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -592,6 +702,8 @@ void RenderingManager::DrawDeferredShadedObjects()
 		glDisable(GL_DEPTH_TEST);
 		glDisable(GL_STENCIL_TEST);
 
+		UpdateSSAOBuffers();
+
 		std::vector<Light*> lights = GetLightsManager()->GetAllLights();
 		size_t lastReachedLightIndex = 0;
 		for (size_t i = 0; i < lights.size(); i++)
@@ -669,6 +781,7 @@ void RenderingManager::DrawDeferredShadedObjects()
 					deferredLightMaterial->SetTexture("screenTexture", 0, i % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
 					deferredLightMaterial->SetTexture("gAlbedo", 1, gAlbedo);
 					deferredLightMaterial->SetTexture("gLightEnabled", 2, gLightEnabled);
+					deferredLightMaterial->SetTexture("ssao", 3, ssaoColorBufferBlur);
 				}
 				else
 				{
