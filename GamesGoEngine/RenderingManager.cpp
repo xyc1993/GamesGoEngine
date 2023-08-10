@@ -509,27 +509,30 @@ void RenderingManager::UpdateGBuffer()
 
 void RenderingManager::UpdateSSAOBuffers()
 {
-	// generate SSAO texture
-	glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
-	glClear(GL_COLOR_BUFFER_BIT);
-	for (unsigned int i = 0; i < ssaoKernelSize; ++i)
+	if (ssaoEnabled)
 	{
-		ssaoMaterial->SetVector3(("samples[" + std::to_string(i) + "]").c_str(), ssaoKernel[i]);
-	}
-	ssaoMaterial->SetTexture("gPosition", 0, gPosition);
-	ssaoMaterial->SetTexture("gNormal", 1, gNormal);
-	ssaoMaterial->SetTexture("texNoise", 2, ssaoNoiseTexture);
-	ssaoMaterial->Draw(glm::mat4());
-	MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		// generate SSAO texture
+		glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
+		glClear(GL_COLOR_BUFFER_BIT);
+		for (unsigned int i = 0; i < ssaoKernelSize; ++i)
+		{
+			ssaoMaterial->SetVector3(("samples[" + std::to_string(i) + "]").c_str(), ssaoKernel[i]);
+		}
+		ssaoMaterial->SetTexture("gPosition", 0, gPosition);
+		ssaoMaterial->SetTexture("gNormal", 1, gNormal);
+		ssaoMaterial->SetTexture("texNoise", 2, ssaoNoiseTexture);
+		ssaoMaterial->Draw(glm::mat4());
+		MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	// blur SSAO texture to remove noise
-	glBindFramebuffer(GL_FRAMEBUFFER, ssaoBlurFBO);
-	glClear(GL_COLOR_BUFFER_BIT);
-	ssaoBlurMaterial->SetTexture("ssaoInput", 0, ssaoColorBuffer);
-	ssaoBlurMaterial->Draw(glm::mat4());
-	MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		// blur SSAO texture to remove noise
+		glBindFramebuffer(GL_FRAMEBUFFER, ssaoBlurFBO);
+		glClear(GL_COLOR_BUFFER_BIT);
+		ssaoBlurMaterial->SetTexture("ssaoInput", 0, ssaoColorBuffer);
+		ssaoBlurMaterial->Draw(glm::mat4());
+		MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
 }
 
 void RenderingManager::UpdateDirectionalShadowMap(Light* directionalLight, glm::mat4& lightSpaceMatrix)
@@ -1455,6 +1458,29 @@ void RenderingManager::SetShadowMapResolutionInternal(unsigned shadowMapRes)
 	ConfigureShadowMapFramebuffer(shadowWidth, shadowHeight, directionalDepthMapFBO, directionalDepthMap, false);
 	ConfigureShadowMapFramebuffer(shadowWidth, shadowHeight, spotLightDepthMapFBO, spotLightDepthMap, false);
 	ConfigureShadowCubeMapFramebuffer(shadowWidth, shadowHeight, omniDepthMapFBO, omniDepthMap, false);
+}
+
+void RenderingManager::EnableSSAO(bool enable)
+{
+	GetInstance()->EnableSSAOInternal(enable);
+}
+
+bool RenderingManager::IsSSAOEnabled()
+{
+	return GetInstance()->ssaoEnabled;
+}
+
+void RenderingManager::EnableSSAOInternal(bool enable)
+{
+	ssaoEnabled = enable;
+	if (!ssaoEnabled)
+	{
+		// clear ssaoBlurFBO color so that there's no ambient occlusion data in the ssao texture
+		// to this only on disable since on enable ssaoBlurFBO is updated every frame anyway
+		glBindFramebuffer(GL_FRAMEBUFFER, ssaoBlurFBO);
+		glClear(GL_COLOR_BUFFER_BIT);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
 }
 
 bool RenderingManager::CompareRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2)

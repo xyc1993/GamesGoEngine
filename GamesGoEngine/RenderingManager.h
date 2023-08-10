@@ -125,6 +125,11 @@ public:
 	static unsigned int GetShadowMapResolution();
 private:
 	void SetShadowMapResolutionInternal(unsigned int shadowMapRes);
+public:
+	static void EnableSSAO(bool enable);
+	static bool IsSSAOEnabled();
+private:
+	void EnableSSAOInternal(bool enable);
 	
 private:
 	static bool CompareRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2);
@@ -156,6 +161,7 @@ private:
 	int bloomBlurAmount = 10;
 	unsigned int shadowWidth = 1024;
 	unsigned int shadowHeight = 1024;
+	bool ssaoEnabled = true;
 
 	// uniform buffers used globally by shaders
 	unsigned int uboMatrices;

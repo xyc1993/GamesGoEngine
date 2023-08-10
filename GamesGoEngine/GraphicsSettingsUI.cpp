@@ -54,6 +54,12 @@ void GraphicsSettingsUI::Draw()
 		}
 	}
 
+	bool ssaoEnabled = RenderingManager::IsSSAOEnabled();
+	if (ImGui::Checkbox("SSAO Enabled", &ssaoEnabled))
+	{
+		RenderingManager::EnableSSAO(ssaoEnabled);
+	}
+
 	constexpr size_t shadowMapResolutionsNumber = 5;
 	const char* shadowMaps[shadowMapResolutionsNumber] = { "256", "512", "1024", "2048", "4096"};
 	static const char* currentShadowMap = shadowMaps[2];
