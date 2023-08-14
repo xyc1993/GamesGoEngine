@@ -195,6 +195,7 @@
     <ClCompile Include="SceneExample_DirectionalShadows.cpp" />
     <ClCompile Include="SceneExample_EnvironmentMapping.cpp" />
     <ClCompile Include="SceneExample_GeometryShader.cpp" />
+    <ClCompile Include="SceneExample_Hangar.cpp" />
     <ClCompile Include="SceneExample_Instancing.cpp" />
     <ClCompile Include="SceneExample_LitForward.cpp" />
     <ClCompile Include="SceneExample_MultipleLightsShadows.cpp" />
@@ -263,6 +264,7 @@
     <ClInclude Include="SceneExample_DirectionalShadows.h" />
     <ClInclude Include="SceneExample_EnvironmentMapping.h" />
     <ClInclude Include="SceneExample_GeometryShader.h" />
+    <ClInclude Include="SceneExample_Hangar.h" />
     <ClInclude Include="SceneExample_Instancing.h" />
     <ClInclude Include="SceneExample_LitForward.h" />
     <ClInclude Include="SceneExample_MultipleLightsShadows.h" />
