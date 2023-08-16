@@ -1476,7 +1476,7 @@ void RenderingManager::EnableSSAOInternal(bool enable)
 	if (!ssaoEnabled)
 	{
 		// clear ssaoBlurFBO color so that there's no ambient occlusion data in the ssao texture
-		// to this only on disable since on enable ssaoBlurFBO is updated every frame anyway
+		// do this only on disable since on enable ssaoBlurFBO is updated every frame anyway
 		glBindFramebuffer(GL_FRAMEBUFFER, ssaoBlurFBO);
 		glClear(GL_COLOR_BUFFER_BIT);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
