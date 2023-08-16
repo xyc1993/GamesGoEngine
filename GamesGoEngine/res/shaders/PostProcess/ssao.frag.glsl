@@ -15,8 +15,7 @@ float radius = 0.5;
 float bias = 0.025;
 
 // tile noise texture over screen based on screen dimensions divided by noise size
-// TODO make this uniform since we changing size of the screen
-const vec2 noiseScale = vec2(1600.0/4.0, 900.0/4.0); 
+uniform vec2 noiseScale;
 
 layout(std140, binding = 0) uniform Matrices
 {
@@ -51,11 +50,11 @@ void main()
         offset.xyz = offset.xyz * 0.5 + 0.5; // transform to range 0.0 - 1.0
         
         // get sample depth
-        float sampleDepth = vec3(view * texture(gPosition, offset.xy)).z; // get depth value of kernel sample (remember to sue view space)
+        float sampleDepth = vec3(view * texture(gPosition, offset.xy)).z; // get depth value of kernel sample (remember to use view space)
         
         // range check & accumulate
         float rangeCheck = smoothstep(0.0, 1.0, radius / abs(fragPos.z - sampleDepth));
-        occlusion += (sampleDepth >= samplePos.z + bias ? 1.0 : 0.0) * rangeCheck;           
+        occlusion += (sampleDepth >= samplePos.z + bias ? 1.0 : 0.0) * rangeCheck;
     }
     occlusion = 1.0 - (occlusion / kernelSize);
 

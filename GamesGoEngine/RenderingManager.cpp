@@ -521,6 +521,8 @@ void RenderingManager::UpdateSSAOBuffers()
 		ssaoMaterial->SetTexture("gPosition", 0, gPosition);
 		ssaoMaterial->SetTexture("gNormal", 1, gNormal);
 		ssaoMaterial->SetTexture("texNoise", 2, ssaoNoiseTexture);
+		// tile noise texture over screen based on screen dimensions divided by noise size, noise size is constant 4x4
+		ssaoMaterial->SetVector2("noiseScale", glm::vec2((float)WindowManager::GetCurrentWidth() / 4.0f, (float)WindowManager::GetCurrentHeight() / 4.0f));
 		ssaoMaterial->Draw(glm::mat4());
 		MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);

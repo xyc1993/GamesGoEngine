@@ -204,6 +204,21 @@ void Material::SetVector3(const GLint vectorID, glm::vec3 value) const
 	}
 }
 
+void Material::SetVector2(const GLchar* vectorName, glm::vec2 value) const
+{
+	const GLint vectorID = glGetUniformLocation(shader->GetProgram(), vectorName);
+	SetVector2(vectorID, value);
+}
+
+void Material::SetVector2(const GLint vectorID, glm::vec2 value) const
+{
+	if (shader != nullptr)
+	{
+		shader->Use();
+		glUniform2f(vectorID, value.x, value.y);
+	}
+}
+
 void Material::SetMat4(const GLchar* matrixName, glm::mat4 value) const
 {
 	const GLint matrtixID = glGetUniformLocation(shader->GetProgram(), matrixName);

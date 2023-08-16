@@ -51,6 +51,9 @@ public:
 	void SetVector3(const GLchar* vectorName, glm::vec3 value) const;
 	void SetVector3(const GLint vectorID, glm::vec3 value) const;
 
+	void SetVector2(const GLchar* vectorName, glm::vec2 value) const;
+	void SetVector2(const GLint vectorID, glm::vec2 value) const;
+
 	void SetMat4(const GLchar* matrixName, glm::mat4 value) const;
 	void SetMat4(const GLint matrixID, glm::mat4 value) const;
 
