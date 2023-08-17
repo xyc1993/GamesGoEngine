@@ -19,10 +19,10 @@ SceneExample_Hangar::SceneExample_Hangar()
 
 	std::shared_ptr<Material> hangarBaseDeferredMaterial = std::make_shared<Material>("res/shaders/RenderPipeline/gBufferPBR.vert.glsl", "res/shaders/RenderPipeline/gBufferPBR.frag.glsl");
 	hangarBaseDeferredMaterial->SetTextureByPath((GLchar*)"albedoMap", 0, (GLchar*)"res/hangar/Base_Base_color.png");
-	hangarBaseDeferredMaterial->SetTextureByPath((GLchar*)"normalMap", 1, (GLchar*)"res/hangar/Base_Normal_DirectX.png");
-	hangarBaseDeferredMaterial->SetTextureByPath((GLchar*)"metallicMap", 2, (GLchar*)"res/hangar/Base_Metallic.png");
-	hangarBaseDeferredMaterial->SetTextureByPath((GLchar*)"roughnessMap", 3, (GLchar*)"res/hangar/Base_Roughness.png");
-	hangarBaseDeferredMaterial->SetTextureByPath((GLchar*)"aoMap", 4, (GLchar*)"res/hangar/Base_Mixed_AO.png");
+	hangarBaseDeferredMaterial->SetTextureByPath((GLchar*)"normalMap", 1, (GLchar*)"res/hangar/Base_Normal_DirectX.png", false, false);
+	hangarBaseDeferredMaterial->SetTextureByPath((GLchar*)"metallicMap", 2, (GLchar*)"res/hangar/Base_Metallic.png",false, false);
+	hangarBaseDeferredMaterial->SetTextureByPath((GLchar*)"roughnessMap", 3, (GLchar*)"res/hangar/Base_Roughness.png", false, false);
+	hangarBaseDeferredMaterial->SetTextureByPath((GLchar*)"aoMap", 4, (GLchar*)"res/hangar/Base_Mixed_AO.png", false, false);
 	hangarBaseDeferredMaterial->SetTextureByPath((GLchar*)"emissiveMap", 5, (GLchar*)"res/hangar/Base_Emissive.png");
 	hangarBaseDeferredMaterial->SetFloat("emissiveStrength", 1.5f);
 	hangarBaseDeferredMaterial->SetLightModel(LightModelType::LitDeferred);
@@ -30,10 +30,10 @@ SceneExample_Hangar::SceneExample_Hangar()
 
 	std::shared_ptr<Material> hangarDetailsDeferredMaterial = std::make_shared<Material>("res/shaders/RenderPipeline/gBufferPBR.vert.glsl", "res/shaders/RenderPipeline/gBufferPBR.frag.glsl");
 	hangarDetailsDeferredMaterial->SetTextureByPath((GLchar*)"albedoMap", 0, (GLchar*)"res/hangar/Details_Cevre_Base_color.png");
-	hangarDetailsDeferredMaterial->SetTextureByPath((GLchar*)"normalMap", 1, (GLchar*)"res/hangar/Details_Cevre_Normal_DirectX.png");
-	hangarDetailsDeferredMaterial->SetTextureByPath((GLchar*)"metallicMap", 2, (GLchar*)"res/hangar/Details_Cevre_Metallic.png");
-	hangarDetailsDeferredMaterial->SetTextureByPath((GLchar*)"roughnessMap", 3, (GLchar*)"res/hangar/Details_Cevre_Roughness.png");
-	hangarDetailsDeferredMaterial->SetTextureByPath((GLchar*)"aoMap", 4, (GLchar*)"res/hangar/Details_Cevre_Mixed_AO.png");
+	hangarDetailsDeferredMaterial->SetTextureByPath((GLchar*)"normalMap", 1, (GLchar*)"res/hangar/Details_Cevre_Normal_DirectX.png", false, false);
+	hangarDetailsDeferredMaterial->SetTextureByPath((GLchar*)"metallicMap", 2, (GLchar*)"res/hangar/Details_Cevre_Metallic.png", false, false);
+	hangarDetailsDeferredMaterial->SetTextureByPath((GLchar*)"roughnessMap", 3, (GLchar*)"res/hangar/Details_Cevre_Roughness.png", false, false);
+	hangarDetailsDeferredMaterial->SetTextureByPath((GLchar*)"aoMap", 4, (GLchar*)"res/hangar/Details_Cevre_Mixed_AO.png", false, false);
 	hangarDetailsDeferredMaterial->SetTextureByPath((GLchar*)"emissiveMap", 5, (GLchar*)"res/hangar/Details_Cevre_Emissive.png");
 	hangarDetailsDeferredMaterial->SetFloat("emissiveStrength", 1.5f);
 	hangarDetailsDeferredMaterial->SetLightModel(LightModelType::LitDeferred);
