@@ -724,7 +724,7 @@
     <None Include="res\shaders\PostProcess\textureMerger.frag.glsl">
       <Filter>Resource Files\Shaders\PostProcess</Filter>
     </None>
-    <None Include="res\shaders\RenderPipeline\gBufferNoTexture.frag.glsl">
+    <None Include="res\shaders\RenderPipeline\gBufferEmissive.frag.glsl">
       <Filter>Resource Files\Shaders\RenderPipeline</Filter>
     </None>
     <None Include="res\shaders\PostProcess\deferredShadingAddPointLightShadow.frag.glsl">
@@ -747,6 +747,9 @@
     </None>
     <None Include="res\shaders\PostProcess\ssaoBlur.frag.glsl">
       <Filter>Resource Files\Shaders\PostProcess</Filter>
+    </None>
+    <None Include="res\shaders\RenderPipeline\gBufferPBR.frag.glsl">
+      <Filter>Resource Files\Shaders\RenderPipeline</Filter>
     </None>
   </ItemGroup>
 </Project>

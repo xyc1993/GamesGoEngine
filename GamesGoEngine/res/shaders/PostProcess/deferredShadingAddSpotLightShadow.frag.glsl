@@ -10,7 +10,7 @@ layout(binding = 2) uniform sampler2D gPosition;
 layout(binding = 3) uniform sampler2D gNormal;
 layout(binding = 4) uniform sampler2D gAlbedo;
 layout(binding = 5) uniform sampler2D gSpecular;
-layout(binding = 6) uniform sampler2D gLightEnabled;
+layout(binding = 6) uniform sampler2D gEmissive;
 
 uniform mat4 spotLightSpaceMatrix;
 
@@ -81,49 +81,43 @@ void main()
     vec3 fragPos = texture(gPosition, TexCoords).rgb;
     vec3 normal = texture(gNormal, TexCoords).rgb;
     vec3 color = texture(gAlbedo, TexCoords).rgb;
-    float specular = texture(gSpecular, TexCoords).r;
-    float lightEnabled = texture(gLightEnabled, TexCoords).r;
+    float specularTex = texture(gSpecular, TexCoords).r;
+    vec3 emissive = texture(gEmissive, TexCoords).rgb;
     
     vec3 finalColor = screenColor;
-    if (lightEnabled > 0.5)
-    {
-        // then calculate lighting as usual
-        vec3 lighting  = vec3(0.0);
-        vec3 viewDir  = normalize(cameraPos - fragPos);
+    // then calculate lighting as usual
+    vec3 lighting  = vec3(0.0);
+    vec3 viewDir  = normalize(cameraPos - fragPos);
 
-        // diffuse
-        vec3 lightDir = normalize(spotLight.position - fragPos);
-	    float diff = max(dot(normal, lightDir), 0.0);
+    // diffuse
+    vec3 lightDir = normalize(spotLight.position - fragPos);
+	float diff = max(dot(normal, lightDir), 0.0);
 
-        // specular
-        vec3 halfwayDir = normalize(lightDir + viewDir);
-	    float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
+    // specular
+    vec3 halfwayDir = normalize(lightDir + viewDir);
+	float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
 	    
-	    //spotlight
-	    float theta = dot(lightDir, normalize(-spotLight.direction));
-	    float epsilon = spotLight.cutOff - spotLight.outerCutOff;
-	    float intensity = clamp((theta - spotLight.outerCutOff) / epsilon, 0.0, 1.0);
+	//spotlight
+	float theta = dot(lightDir, normalize(-spotLight.direction));
+	float epsilon = spotLight.cutOff - spotLight.outerCutOff;
+	float intensity = clamp((theta - spotLight.outerCutOff) / epsilon, 0.0, 1.0);
 
-	    vec3 diffuse = spotLight.diffuse * diff * color;
-	    vec3 specular = spotLight.specular * spec * color;
+	vec3 diffuse = spotLight.diffuse * diff * color;
+	vec3 specular = spotLight.specular * spec * specularTex;
 
-        float distance = length(spotLight.position - fragPos);
-        float attenuation = 1.0 / (spotLight.constant + spotLight.linear * distance + spotLight.quadratic * distance * distance);
-	    lighting = attenuation * intensity * (diffuse + specular);
+    float distance = length(spotLight.position - fragPos);
+    float attenuation = 1.0 / (spotLight.constant + spotLight.linear * distance + spotLight.quadratic * distance * distance);
+	lighting = attenuation * intensity * (diffuse + specular);
 
-        // shadows
-        vec4 fragPosSpotLightSpace = spotLightSpaceMatrix * vec4(fragPos, 1.0);
-        float shadow = ShadowCalculation(spotLightShadowMap, fragPosSpotLightSpace, 0.004);
-        lighting = (1.0f - shadow) * lighting;
+    // shadows
+    vec4 fragPosSpotLightSpace = spotLightSpaceMatrix * vec4(fragPos, 1.0);
+    float shadow = ShadowCalculation(spotLightShadowMap, fragPosSpotLightSpace, 0.004);
+    lighting = (1.0f - shadow) * lighting;
 
-        finalColor += lighting;
-    }
-    else
-    {
-        // in case pixel is unlit, set it to its albedo
-        // override because only lighting is additive, not base color
-        finalColor = color;
-    }
+    finalColor += lighting;
+
+     // emissive
+    finalColor += emissive;
 
     FragColor = vec4(finalColor, 1.0);
 }

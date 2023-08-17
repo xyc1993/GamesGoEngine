@@ -6,7 +6,7 @@ in vec2 TexCoords;
 
 layout(binding = 0) uniform sampler2D screenTexture;
 layout(binding = 1) uniform sampler2D gAlbedo;
-layout(binding = 2) uniform sampler2D gLightEnabled;
+layout(binding = 2) uniform sampler2D gEmissive;
 layout(binding = 3) uniform sampler2D ssao;
 
 uniform float ambientLightActive;
@@ -18,23 +18,18 @@ void main()
     vec3 screenColor = texture(screenTexture, TexCoords).rgb;;
     // retrieve data from gbuffer
     vec3 color = texture(gAlbedo, TexCoords).rgb;
-    float lightEnabled = texture(gLightEnabled, TexCoords).r;
+    vec3 emissive = texture(gEmissive, TexCoords).rgb;
     float ambientOcclusion = texture(ssao, TexCoords).r;
     
     vec3 finalColor = screenColor;
-    if (lightEnabled > 0.5)
-    {
-        // then calculate lighting as usual
-        vec3 lighting  = ambientLightColor * color;
-        lighting *= ambientOcclusion;
-        finalColor += lighting;
-    }
-    else
-    {
-        // in case pixel is unlit, set it to its albedo
-        // override because only lighting is additive, not base color
-        finalColor = color;
-    }
+
+    // calculate lighting as usual
+    vec3 lighting  = ambientLightColor * color;
+    lighting *= ambientOcclusion;
+    finalColor += lighting;
+
+    // lastly add emissive
+    finalColor += emissive;
 
     FragColor = vec4(finalColor, 1.0);
 }

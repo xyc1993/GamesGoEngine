@@ -14,25 +14,18 @@ SceneExample_Hangar::SceneExample_Hangar()
 	std::shared_ptr<MeshImported> hangarMesh = std::make_shared<MeshImported>((GLchar*)"res/hangar/scifiscene.obj");
 	hangarMeshRenderer->SetMesh(hangarMesh);
 
-	std::shared_ptr<Material> testMaterial = std::make_shared<Material>("res/shaders/RenderPipeline/gBuffer.vert.glsl", "res/shaders/RenderPipeline/gBufferNoTexture.frag.glsl");
-	testMaterial->SetVector3((GLchar*)"albedo", glm::vec3(0.5f));
-	testMaterial->SetFloat("enableLight", 1.0f);
-	testMaterial->SetLightModel(LightModelType::LitDeferred);
-
 	// set materials, this model accepts 2 materials
 	std::vector<std::shared_ptr<Material>> hangarMaterials;
 
 	std::shared_ptr<Material> hangarBaseDeferredMaterial = std::make_shared<Material>("res/shaders/RenderPipeline/gBuffer.vert.glsl", "res/shaders/RenderPipeline/gBuffer.frag.glsl");
 	hangarBaseDeferredMaterial->SetTextureByPath((GLchar*)"texture_diffuse1", 0, (GLchar*)"res/hangar/Base_Base_color.png");
 	hangarBaseDeferredMaterial->SetTextureByPath((GLchar*)"texture_specular1", 1, (GLchar*)"res/hangar/Base_Metallic.png");
-	hangarBaseDeferredMaterial->SetFloat("enableLight", 1.0f);
 	hangarBaseDeferredMaterial->SetLightModel(LightModelType::LitDeferred);
 	hangarMaterials.push_back(hangarBaseDeferredMaterial);
 
 	std::shared_ptr<Material> hangarDetailsDeferredMaterial = std::make_shared<Material>("res/shaders/RenderPipeline/gBuffer.vert.glsl", "res/shaders/RenderPipeline/gBuffer.frag.glsl");
 	hangarDetailsDeferredMaterial->SetTextureByPath((GLchar*)"texture_diffuse1", 0, (GLchar*)"res/hangar/Details_Cevre_Base_color.png");
 	hangarDetailsDeferredMaterial->SetTextureByPath((GLchar*)"texture_specular1", 1, (GLchar*)"res/hangar/Details_Cevre_Metallic.png");
-	hangarDetailsDeferredMaterial->SetFloat("enableLight", 1.0f);
 	hangarDetailsDeferredMaterial->SetLightModel(LightModelType::LitDeferred);
 	hangarMaterials.push_back(hangarDetailsDeferredMaterial);
 
@@ -64,9 +57,9 @@ SceneExample_Hangar::SceneExample_Hangar()
 	pointLightObject->GetTransform()->SetScale(glm::vec3(0.05f));
 
 	// Add debug renderer
-	std::shared_ptr<Material> lampMaterial = std::make_shared<Material>("res/shaders/RenderPipeline/gBuffer.vert.glsl", "res/shaders/RenderPipeline/gBufferNoTexture.frag.glsl");
-	lampMaterial->SetVector3((GLchar*)"albedo", pointLightColor);
-	lampMaterial->SetFloat("enableLight", 0.0f);
+	std::shared_ptr<Material> lampMaterial = std::make_shared<Material>("res/shaders/RenderPipeline/gBuffer.vert.glsl", "res/shaders/RenderPipeline/gBufferEmissive.frag.glsl");
+	lampMaterial->SetVector3((GLchar*)"emissiveColor", pointLightColor);
+	lampMaterial->SetFloat("emissiveStrength", 1.0f);
 	lampMaterial->SetLightModel(LightModelType::LitDeferred);
 	MeshRenderer* lampMeshRenderer = new MeshRenderer();
 	lampMeshRenderer->SetMesh(sphereMesh);

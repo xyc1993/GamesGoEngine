@@ -10,7 +10,7 @@ layout(binding = 2) uniform sampler2D gPosition;
 layout(binding = 3) uniform sampler2D gNormal;
 layout(binding = 4) uniform sampler2D gAlbedo;
 layout(binding = 5) uniform sampler2D gSpecular;
-layout(binding = 6) uniform sampler2D gLightEnabled;
+layout(binding = 6) uniform sampler2D gEmissive;
 
 uniform float far_plane;
 
@@ -80,50 +80,44 @@ void main()
     vec3 fragPos = texture(gPosition, TexCoords).rgb;
     vec3 normal = texture(gNormal, TexCoords).rgb;
     vec3 color = texture(gAlbedo, TexCoords).rgb;
-    float specular = texture(gSpecular, TexCoords).r;
-    float lightEnabled = texture(gLightEnabled, TexCoords).r;
+    float specularTex = texture(gSpecular, TexCoords).r;
+    vec3 emissive = texture(gEmissive, TexCoords).rgb;
     
     vec3 finalColor = screenColor;
-    if (lightEnabled > 0.5)
-    {
-        // then calculate lighting as usual
-        vec3 lighting  = vec3(0.0);
-        vec3 viewDir  = normalize(cameraPos - fragPos);
+    // then calculate lighting as usual
+    vec3 lighting  = vec3(0.0);
+    vec3 viewDir  = normalize(cameraPos - fragPos);
 
-        // diffuse
-        vec3 lightDir = normalize(pointLight.position - fragPos);
-        vec3 diffuse = max(dot(normal, lightDir), 0.0) * color * pointLight.diffuse;
+    // diffuse
+    vec3 lightDir = normalize(pointLight.position - fragPos);
+    vec3 diffuse = max(dot(normal, lightDir), 0.0) * color * pointLight.diffuse;
 
-        // specular
-        vec3 halfwayDir = normalize(lightDir + viewDir);  
-        float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
-        vec3 specular = pointLight.specular * spec * specular;
+    // specular
+    vec3 halfwayDir = normalize(lightDir + viewDir);  
+    float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
+    vec3 specular = pointLight.specular * spec * specularTex;
 
-        // attenuation
-        float distance = length(pointLight.position - fragPos);
-        float attenuation = 1.0 / (pointLight.constant + pointLight.linear * distance + pointLight.quadratic * distance * distance);
-        diffuse *= attenuation;
-        specular *= attenuation;
+    // attenuation
+    float distance = length(pointLight.position - fragPos);
+    float attenuation = 1.0 / (pointLight.constant + pointLight.linear * distance + pointLight.quadratic * distance * distance);
+    diffuse *= attenuation;
+    specular *= attenuation;
 
-        // sum of lights
-        lighting += diffuse;
-        lighting += specular;
+    // sum of lights
+    lighting += diffuse;
+    lighting += specular;
 
-        // hard distance limit
-        lighting *= (1.0 - smoothstep(pointLight.maxRadiusFallOffStart, pointLight.maxRadius, distance));
+    // hard distance limit
+    lighting *= (1.0 - smoothstep(pointLight.maxRadiusFallOffStart, pointLight.maxRadius, distance));
 
-        // calculate and apply shadow
-        float shadow = ShadowCalculation(fragPos, pointLight.position);
-        lighting = (1.0 - shadow) * lighting;
+    // calculate and apply shadow
+    float shadow = ShadowCalculation(fragPos, pointLight.position);
+    lighting = (1.0 - shadow) * lighting;
 
-        finalColor += lighting;
-    }
-    else
-    {
-        // in case pixel is unlit, set it to its albedo
-        // override because only lighting is additive, not base color
-        finalColor = color;
-    }
+    finalColor += lighting;
+
+    // emissive
+    finalColor += emissive;
 
     FragColor = vec4(finalColor, 1.0);
 }

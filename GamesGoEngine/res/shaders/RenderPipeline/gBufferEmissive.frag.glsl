@@ -12,8 +12,6 @@ in vec2 TexCoords;
 in vec3 FragPos;
 in vec3 Normal;
 
-uniform sampler2D texture_diffuse1;
-uniform sampler2D texture_specular1;
 uniform vec3 emissiveColor;
 uniform float emissiveStrength;
 
@@ -24,13 +22,13 @@ void main()
     // also store the per-fragment normals into the gbuffer
     gNormal = vec4(normalize(Normal), 1.0);
     // diffuse per-fragment color
-    gAlbedo = texture(texture_diffuse1, TexCoords);
+    gAlbedo = vec4(vec3(0.0), 1.0);
     // metallic per-fragment color
-    gMetallic = texture(texture_specular1, TexCoords);
+    gMetallic = vec4(0.0);
     // roughness per-fragment color
-    gRoughness = vec4(vec3(1.0) - vec3(texture(texture_specular1, TexCoords)), 1.0);
+    gRoughness = vec4(0.0);
     // ambient occlusion per-fragment color
     gAmbientOcclusion = vec4(vec3(0.0), 1.0);
     // emissive per-fragment color
-    gEmissive = vec4(vec3(0.0), 1.0);
+    gEmissive = vec4(emissiveStrength * emissiveColor, 1.0);
 }

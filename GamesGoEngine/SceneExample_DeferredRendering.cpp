@@ -12,13 +12,11 @@ SceneExample_DeferredRendering::SceneExample_DeferredRendering()
 	std::shared_ptr<Material> boxDeferredMaterial = std::make_shared<Material>("res/shaders/RenderPipeline/gBuffer.vert.glsl", "res/shaders/RenderPipeline/gBuffer.frag.glsl");
 	boxDeferredMaterial->SetTextureByPath((GLchar*)"texture_diffuse1", 0, (GLchar*)"res/box/container2_diffuse.png");
 	boxDeferredMaterial->SetTextureByPath((GLchar*)"texture_specular1", 1, (GLchar*)"res/box/container2_specular.png");
-	boxDeferredMaterial->SetFloat("enableLight", 1.0f);
 	boxDeferredMaterial->SetLightModel(LightModelType::LitDeferred);
 
 	std::shared_ptr<Material> bricksDeferredMaterial = std::make_shared<Material>("res/shaders/RenderPipeline/gBuffer.vert.glsl", "res/shaders/RenderPipeline/gBuffer.frag.glsl");
 	bricksDeferredMaterial->SetTextureByPath((GLchar*)"texture_diffuse1", 0, (GLchar*)"res/textures/brickDiffNormSpec/brick_wall2-diff-1024.tga");
 	bricksDeferredMaterial->SetTextureByPath((GLchar*)"texture_specular1", 1, (GLchar*)"res/textures/brickDiffNormSpec/brick_wall2-spec-1024.tga");
-	bricksDeferredMaterial->SetFloat("enableLight", 1.0f);
 	bricksDeferredMaterial->SetLightModel(LightModelType::LitDeferred);
 
 	std::vector<glm::vec3> boxPositions;
@@ -149,9 +147,9 @@ SceneExample_DeferredRendering::SceneExample_DeferredRendering()
 		pointLightObject->GetTransform()->SetScale(glm::vec3(0.2f));
 
 		// Add debug renderer
-		std::shared_ptr<Material> lampMaterial = std::make_shared<Material>("res/shaders/RenderPipeline/gBuffer.vert.glsl", "res/shaders/RenderPipeline/gBufferNoTexture.frag.glsl");		
-		lampMaterial->SetVector3((GLchar*)"albedo", pointLightColors[i]);
-		lampMaterial->SetFloat("enableLight", 0.0f);
+		std::shared_ptr<Material> lampMaterial = std::make_shared<Material>("res/shaders/RenderPipeline/gBuffer.vert.glsl", "res/shaders/RenderPipeline/gBufferEmissive.frag.glsl");		
+		lampMaterial->SetVector3((GLchar*)"emissiveColor", pointLightColors[i]);
+		lampMaterial->SetFloat("emissiveStrength", 1.0f);
 		lampMaterial->SetLightModel(LightModelType::LitDeferred);
 		MeshRenderer* lampMeshRenderer = new MeshRenderer();
 		lampMeshRenderer->SetMesh(sphereMesh);
@@ -194,9 +192,9 @@ SceneExample_DeferredRendering::SceneExample_DeferredRendering()
 		spotLightObject->GetTransform()->SetScale(glm::vec3(0.2f));
 
 		// Add debug renderer
-		std::shared_ptr<Material> lampMaterial = std::make_shared<Material>("res/shaders/RenderPipeline/gBuffer.vert.glsl", "res/shaders/RenderPipeline/gBufferNoTexture.frag.glsl");
-		lampMaterial->SetVector3((GLchar*)"albedo", spotLightColors[i]);
-		lampMaterial->SetFloat("enableLight", 0.0f);
+		std::shared_ptr<Material> lampMaterial = std::make_shared<Material>("res/shaders/RenderPipeline/gBuffer.vert.glsl", "res/shaders/RenderPipeline/gBufferEmissive.frag.glsl");
+		lampMaterial->SetVector3((GLchar*)"emissiveColor", spotLightColors[i]);
+		lampMaterial->SetFloat("emissiveStrength", 1.0f);
 		lampMaterial->SetLightModel(LightModelType::LitDeferred);
 		MeshRenderer* lampMeshRenderer = new MeshRenderer();
 		lampMeshRenderer->SetMesh(cubeMesh);

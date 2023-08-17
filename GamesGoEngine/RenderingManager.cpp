@@ -274,23 +274,37 @@ void RenderingManager::ConfigureGBuffer(GLint screenWidth, GLint screenHeight, b
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gAlbedo, 0);
-	// specular color buffer
-	glGenTextures(1, &gSpecular);
-	glBindTexture(GL_TEXTURE_2D, gSpecular);
+	// metallic color buffer
+	glGenTextures(1, &gMetallic);
+	glBindTexture(GL_TEXTURE_2D, gMetallic);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screenWidth, screenHeight, 0, GL_RGBA, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, gSpecular, 0);
-	// light enabled color buffer
-	glGenTextures(1, &gLightEnabled);
-	glBindTexture(GL_TEXTURE_2D, gLightEnabled);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, gMetallic, 0);
+	// roughness color buffer
+	glGenTextures(1, &gRoughness);
+	glBindTexture(GL_TEXTURE_2D, gRoughness);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screenWidth, screenHeight, 0, GL_RGBA, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT4, GL_TEXTURE_2D, gLightEnabled, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT4, GL_TEXTURE_2D, gRoughness, 0);
+	// ambient occlusion color buffer
+	glGenTextures(1, &gAmbientOcclusion);
+	glBindTexture(GL_TEXTURE_2D, gAmbientOcclusion);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screenWidth, screenHeight, 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT5, GL_TEXTURE_2D, gAmbientOcclusion, 0);
+	// emissive color buffer
+	glGenTextures(1, &gEmissive);
+	glBindTexture(GL_TEXTURE_2D, gEmissive);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, screenWidth, screenHeight, 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT6, GL_TEXTURE_2D, gEmissive, 0);
 	// tell OpenGL which color attachments we'll use (of this framebuffer) for rendering 
-	unsigned int attachments[5] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4 };
-	glDrawBuffers(5, attachments);
+	unsigned int attachments[7] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4, GL_COLOR_ATTACHMENT5, GL_COLOR_ATTACHMENT6 };
+	glDrawBuffers(7, attachments);
 
 	// create a depth & stencil attachment texture
 	glGenTextures(1, &gDepth);
@@ -383,8 +397,10 @@ void RenderingManager::ResizeBuffersInternal(GLint screenWidth, GLint screenHeig
 	glDeleteTextures(1, &gPosition);
 	glDeleteTextures(1, &gNormal);
 	glDeleteTextures(1, &gAlbedo);
-	glDeleteTextures(1, &gSpecular);
-	glDeleteTextures(1, &gLightEnabled);
+	glDeleteTextures(1, &gMetallic);
+	glDeleteTextures(1, &gRoughness);
+	glDeleteTextures(1, &gAmbientOcclusion);
+	glDeleteTextures(1, &gEmissive);
 	glDeleteTextures(1, &gDepth);
 	glDeleteTextures(1, &gStencil);
 
@@ -785,7 +801,7 @@ void RenderingManager::DrawDeferredShadedObjects()
 				{
 					deferredLightMaterial->SetTexture("screenTexture", 0, i % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
 					deferredLightMaterial->SetTexture("gAlbedo", 1, gAlbedo);
-					deferredLightMaterial->SetTexture("gLightEnabled", 2, gLightEnabled);
+					deferredLightMaterial->SetTexture("gEmissive", 2, gEmissive);
 					deferredLightMaterial->SetTexture("ssao", 3, ssaoColorBufferBlur);
 				}
 				else
@@ -794,8 +810,8 @@ void RenderingManager::DrawDeferredShadedObjects()
 					deferredLightMaterial->SetTexture("gPosition", 2, gPosition);
 					deferredLightMaterial->SetTexture("gNormal", 3, gNormal);
 					deferredLightMaterial->SetTexture("gAlbedo", 4, gAlbedo);
-					deferredLightMaterial->SetTexture("gSpecular", 5, gSpecular);
-					deferredLightMaterial->SetTexture("gLightEnabled", 6, gLightEnabled);
+					deferredLightMaterial->SetTexture("gSpecular", 5, gMetallic);
+					deferredLightMaterial->SetTexture("gEmissive", 6, gEmissive);
 				}
 				deferredLightMaterial->Draw(glm::mat4());
 				MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);

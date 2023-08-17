@@ -209,8 +209,10 @@ private:
 	unsigned int gPosition;
 	unsigned int gNormal;
 	unsigned int gAlbedo;
-	unsigned int gSpecular;
-	unsigned int gLightEnabled;
+	unsigned int gMetallic;
+	unsigned int gRoughness;
+	unsigned int gAmbientOcclusion;
+	unsigned int gEmissive;
 	unsigned int gDepth;
 	unsigned int gStencil;
 
