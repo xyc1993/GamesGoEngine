@@ -12,6 +12,7 @@ layout(binding = 4) uniform sampler2D ssao;
 
 uniform float ambientLightActive;
 uniform vec3 ambientLightColor;
+uniform float useAmbientOcclusionTexture;
 
 void main()
 {             
@@ -27,9 +28,16 @@ void main()
     vec3 finalColor = screenColor;
 
     // calculate lighting as usual
-    vec3 lighting  = ambientLightColor * color;
-    lighting *= ambientOcclusion;
-    lighting *= screenSpaceAmbientOcclusion;
+    vec3 lighting  = ambientLightColor * color;    
+    if (useAmbientOcclusionTexture > 0.5)
+    {
+        lighting *= ambientOcclusion;
+    }
+    else
+    {
+        lighting *= screenSpaceAmbientOcclusion;
+    }
+    
     finalColor += lighting;
 
     // lastly add emissive

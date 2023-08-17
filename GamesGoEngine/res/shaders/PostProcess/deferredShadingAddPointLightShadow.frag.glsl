@@ -141,6 +141,8 @@ void main()
     float attenuation = 1.0 / (distance * distance);
     // point light specular is used since it's brightest, relic from older light model
     vec3 radiance = pointLight.specular * attenuation;
+    // hard distance limit
+    radiance *= (1.0 - smoothstep(pointLight.maxRadiusFallOffStart, pointLight.maxRadius, distance));
 
     // Cook-Torrance BRDF
     float NDF = DistributionGGX(N, H, roughness);   

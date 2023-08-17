@@ -804,6 +804,8 @@ void RenderingManager::DrawDeferredShadedObjects()
 					deferredLightMaterial->SetTexture("gAmbientOcclusion", 2, gAmbientOcclusion);
 					deferredLightMaterial->SetTexture("gEmissive", 3, gEmissive);
 					deferredLightMaterial->SetTexture("ssao", 4, ssaoColorBufferBlur);
+					// use ambient occlusion texture only if ssao is disabled
+					deferredLightMaterial->SetFloat("useAmbientOcclusionTexture", ssaoEnabled ? 0.0f : 1.0f);
 				}
 				else
 				{
