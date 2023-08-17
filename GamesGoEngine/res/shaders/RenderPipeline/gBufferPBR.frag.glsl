@@ -13,6 +13,7 @@ in vec3 FragPos;
 in vec3 Normal;
 
 uniform sampler2D albedoMap;
+uniform sampler2D normalMap;
 uniform sampler2D metallicMap;
 uniform sampler2D roughnessMap;
 uniform sampler2D aoMap;
@@ -20,12 +21,29 @@ uniform sampler2D emissiveMap;
 
 uniform float emissiveStrength;
 
+vec3 getNormalFromMap(vec3 worldPos, vec3 worldNormal)
+{
+    vec3 tangentNormal = texture(normalMap, TexCoords).xyz * 2.0 - 1.0;
+
+    vec3 Q1 = dFdx(worldPos);
+    vec3 Q2 = dFdy(worldPos);
+    vec2 st1 = dFdx(TexCoords);
+    vec2 st2 = dFdy(TexCoords);
+
+    vec3 N = normalize(worldNormal);
+    vec3 T = normalize(Q1*st2.t - Q2*st1.t);
+    vec3 B = -normalize(cross(N, T));
+    mat3 TBN = mat3(T, B, N);
+
+    return normalize(TBN * tangentNormal);
+}
+
 void main()
 {    
    // store the fragment position vector in the first gbuffer texture
     gPosition = vec4(FragPos, 1.0);
     // also store the per-fragment normals into the gbuffer
-    gNormal = vec4(normalize(Normal), 1.0);
+    gNormal = vec4(getNormalFromMap(FragPos, normalize(Normal)), 1.0);
     // diffuse per-fragment color
     gAlbedo = texture(albedoMap, TexCoords);
     // metallic per-fragment color

@@ -751,5 +751,8 @@
     <None Include="res\shaders\RenderPipeline\gBufferPBR.frag.glsl">
       <Filter>Resource Files\Shaders\RenderPipeline</Filter>
     </None>
+    <None Include="res\shaders\RenderPipeline\gBufferPBR.vert.glsl">
+      <Filter>Resource Files\Shaders\RenderPipeline</Filter>
+    </None>
   </ItemGroup>
 </Project>

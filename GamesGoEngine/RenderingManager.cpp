@@ -801,8 +801,9 @@ void RenderingManager::DrawDeferredShadedObjects()
 				{
 					deferredLightMaterial->SetTexture("screenTexture", 0, i % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
 					deferredLightMaterial->SetTexture("gAlbedo", 1, gAlbedo);
-					deferredLightMaterial->SetTexture("gEmissive", 2, gEmissive);
-					deferredLightMaterial->SetTexture("ssao", 3, ssaoColorBufferBlur);
+					deferredLightMaterial->SetTexture("gAmbientOcclusion", 2, gAmbientOcclusion);
+					deferredLightMaterial->SetTexture("gEmissive", 3, gEmissive);
+					deferredLightMaterial->SetTexture("ssao", 4, ssaoColorBufferBlur);
 				}
 				else
 				{
@@ -810,8 +811,10 @@ void RenderingManager::DrawDeferredShadedObjects()
 					deferredLightMaterial->SetTexture("gPosition", 2, gPosition);
 					deferredLightMaterial->SetTexture("gNormal", 3, gNormal);
 					deferredLightMaterial->SetTexture("gAlbedo", 4, gAlbedo);
-					deferredLightMaterial->SetTexture("gSpecular", 5, gMetallic);
-					deferredLightMaterial->SetTexture("gEmissive", 6, gEmissive);
+					deferredLightMaterial->SetTexture("gMetallic", 5, gMetallic);
+					deferredLightMaterial->SetTexture("gRoughness", 6, gRoughness);
+					deferredLightMaterial->SetTexture("gEmissive", 7, gEmissive);
+					deferredLightMaterial->SetTexture("gAmbientOcclusion", 8, gAmbientOcclusion);
 				}
 				deferredLightMaterial->Draw(glm::mat4());
 				MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);

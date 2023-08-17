@@ -17,15 +17,25 @@ SceneExample_Hangar::SceneExample_Hangar()
 	// set materials, this model accepts 2 materials
 	std::vector<std::shared_ptr<Material>> hangarMaterials;
 
-	std::shared_ptr<Material> hangarBaseDeferredMaterial = std::make_shared<Material>("res/shaders/RenderPipeline/gBuffer.vert.glsl", "res/shaders/RenderPipeline/gBuffer.frag.glsl");
-	hangarBaseDeferredMaterial->SetTextureByPath((GLchar*)"texture_diffuse1", 0, (GLchar*)"res/hangar/Base_Base_color.png");
-	hangarBaseDeferredMaterial->SetTextureByPath((GLchar*)"texture_specular1", 1, (GLchar*)"res/hangar/Base_Metallic.png");
+	std::shared_ptr<Material> hangarBaseDeferredMaterial = std::make_shared<Material>("res/shaders/RenderPipeline/gBufferPBR.vert.glsl", "res/shaders/RenderPipeline/gBufferPBR.frag.glsl");
+	hangarBaseDeferredMaterial->SetTextureByPath((GLchar*)"albedoMap", 0, (GLchar*)"res/hangar/Base_Base_color.png");
+	hangarBaseDeferredMaterial->SetTextureByPath((GLchar*)"normalMap", 1, (GLchar*)"res/hangar/Base_Normal_DirectX.png");
+	hangarBaseDeferredMaterial->SetTextureByPath((GLchar*)"metallicMap", 2, (GLchar*)"res/hangar/Base_Metallic.png");
+	hangarBaseDeferredMaterial->SetTextureByPath((GLchar*)"roughnessMap", 3, (GLchar*)"res/hangar/Base_Roughness.png");
+	hangarBaseDeferredMaterial->SetTextureByPath((GLchar*)"aoMap", 4, (GLchar*)"res/hangar/Base_Mixed_AO.png");
+	hangarBaseDeferredMaterial->SetTextureByPath((GLchar*)"emissiveMap", 5, (GLchar*)"res/hangar/Base_Emissive.png");
+	hangarBaseDeferredMaterial->SetFloat("emissiveStrength", 1.5f);
 	hangarBaseDeferredMaterial->SetLightModel(LightModelType::LitDeferred);
 	hangarMaterials.push_back(hangarBaseDeferredMaterial);
 
-	std::shared_ptr<Material> hangarDetailsDeferredMaterial = std::make_shared<Material>("res/shaders/RenderPipeline/gBuffer.vert.glsl", "res/shaders/RenderPipeline/gBuffer.frag.glsl");
-	hangarDetailsDeferredMaterial->SetTextureByPath((GLchar*)"texture_diffuse1", 0, (GLchar*)"res/hangar/Details_Cevre_Base_color.png");
-	hangarDetailsDeferredMaterial->SetTextureByPath((GLchar*)"texture_specular1", 1, (GLchar*)"res/hangar/Details_Cevre_Metallic.png");
+	std::shared_ptr<Material> hangarDetailsDeferredMaterial = std::make_shared<Material>("res/shaders/RenderPipeline/gBufferPBR.vert.glsl", "res/shaders/RenderPipeline/gBufferPBR.frag.glsl");
+	hangarDetailsDeferredMaterial->SetTextureByPath((GLchar*)"albedoMap", 0, (GLchar*)"res/hangar/Details_Cevre_Base_color.png");
+	hangarDetailsDeferredMaterial->SetTextureByPath((GLchar*)"normalMap", 1, (GLchar*)"res/hangar/Details_Cevre_Normal_DirectX.png");
+	hangarDetailsDeferredMaterial->SetTextureByPath((GLchar*)"metallicMap", 2, (GLchar*)"res/hangar/Details_Cevre_Metallic.png");
+	hangarDetailsDeferredMaterial->SetTextureByPath((GLchar*)"roughnessMap", 3, (GLchar*)"res/hangar/Details_Cevre_Roughness.png");
+	hangarDetailsDeferredMaterial->SetTextureByPath((GLchar*)"aoMap", 4, (GLchar*)"res/hangar/Details_Cevre_Mixed_AO.png");
+	hangarDetailsDeferredMaterial->SetTextureByPath((GLchar*)"emissiveMap", 5, (GLchar*)"res/hangar/Details_Cevre_Emissive.png");
+	hangarDetailsDeferredMaterial->SetFloat("emissiveStrength", 1.5f);
 	hangarDetailsDeferredMaterial->SetLightModel(LightModelType::LitDeferred);
 	hangarMaterials.push_back(hangarDetailsDeferredMaterial);
 
@@ -51,7 +61,7 @@ SceneExample_Hangar::SceneExample_Hangar()
 
 	// Add point light
 	std::shared_ptr<MeshPrimitiveSphere> sphereMesh = MeshPrimitivesPool::GetSpherePrimitive();
-	glm::vec3 pointLightColor = glm::vec3(2.0f, 2.0f, 0.8f);
+	glm::vec3 pointLightColor = glm::vec3(5.0f, 5.0f, 2.8f);
 	GameObject* pointLightObject = new GameObject();
 	pointLightObject->GetTransform()->SetPosition(glm::vec3(0.0f, 0.0f, -1.5f));
 	pointLightObject->GetTransform()->SetScale(glm::vec3(0.05f));

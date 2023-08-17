@@ -325,6 +325,7 @@
     <None Include="res\shaders\RenderPipeline\gBuffer.vert.glsl" />
     <None Include="res\shaders\RenderPipeline\gBufferEmissive.frag.glsl" />
     <None Include="res\shaders\RenderPipeline\gBufferPBR.frag.glsl" />
+    <None Include="res\shaders\RenderPipeline\gBufferPBR.vert.glsl" />
     <None Include="res\shaders\RenderPipeline\omniDepthMap.frag.glsl" />
     <None Include="res\shaders\RenderPipeline\omniDepthMap.geom.glsl" />
     <None Include="res\shaders\RenderPipeline\omniDepthMap.vert.glsl" />
