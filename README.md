@@ -6,3 +6,6 @@ So far both forward and deferred rendering is implemented. Materials used by mes
 
 HDR tonemapping, gamma correction and bloom are effects available in the UI. Shadow mapping is implemented. It supports directional lights, point lights and spot lights. Several lights of each type can be handled.
 ![image](https://github.com/xyc1993/GamesGoEngine/assets/20773439/ef8de0a6-bdbd-42ed-a5c4-5892986a9997)
+
+PBR is supported in deferred rendering. Albedo, metallic, roughness, ambient occlusion and emissive textures are utilized in the following scene.
+![image](https://github.com/xyc1993/GamesGoEngine/assets/20773439/4abf7cea-03f8-481c-8eb6-fd2a56cf1a34)
