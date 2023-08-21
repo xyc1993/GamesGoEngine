@@ -85,5 +85,51 @@ void GraphicsSettingsUI::Draw()
 		ImGui::EndCombo();
 	}
 
+	bool aaEnabled = RenderingManager::IsAntiAliasingEnabled();
+	if (ImGui::Checkbox("AA Enabled", &aaEnabled))
+	{
+		RenderingManager::EnableAntiAliasing(aaEnabled);
+	}
+	if (aaEnabled)
+	{
+		// AA algorithm combo
+		constexpr size_t aaAlgorithmsNumber = 1;
+		const char* aaAlgorithms[aaAlgorithmsNumber] = { "FXAA" };
+		static const char* currentAntiAliasingAlgorithm = aaAlgorithms[0];
+		if (ImGui::BeginCombo("AA algorithm", currentAntiAliasingAlgorithm))
+		{
+			for (int i = 0; i < aaAlgorithmsNumber; i++)
+			{
+				const bool isSelected = (currentAntiAliasingAlgorithm == aaAlgorithms[i]);
+				if (ImGui::Selectable(aaAlgorithms[i], isSelected))
+				{
+					currentAntiAliasingAlgorithm = aaAlgorithms[i];
+					if (i == 0)
+					{
+						RenderingManager::SetAntiAliasingAlgorithm(AntiAliasingAlgorithm::FXAA);
+					}
+				}
+
+			}
+			ImGui::EndCombo();
+		}
+
+		// Settings for specific algorithms
+		if (RenderingManager::GetAntiAliasingAlgorithm() == AntiAliasingAlgorithm::FXAA)
+		{
+			float contrastThreshold = RenderingManager::GetFXAAContrastThreshold();
+			if (ImGui::SliderFloat("FXAA contrast threshold", &contrastThreshold, 0.0312f, 0.0833f))
+			{
+				RenderingManager::SetFXAAContrastThreshold(contrastThreshold);
+			}
+
+			float relativeThreshold = RenderingManager::GetFXAARelativeThreshold();
+			if (ImGui::SliderFloat("FXAA reelative threshold", &relativeThreshold, 0.063f, 0.333f))
+			{
+				RenderingManager::SetFXAARelativeThreshold(relativeThreshold);
+			}
+		}
+	}
+
 	ImGui::End();
 }

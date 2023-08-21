@@ -40,6 +40,7 @@ RenderingManager::RenderingManager()
 	textureMergerMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/textureMerger.frag.glsl");
 	ssaoMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/ssao.frag.glsl");
 	ssaoBlurMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/ssaoBlur.frag.glsl");
+	fxaaMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/AntiAliasing/FXAA.frag.glsl");;
 }
 
 RenderingManager::~RenderingManager()
@@ -1124,21 +1125,40 @@ void RenderingManager::DrawScreenEffects()
 		hdrToneMappingGammaCorrectionMaterial->SetFloat("bloomEnabled", IsBloomEnabled() ? 1.0f : 0.0f);
 		hdrToneMappingGammaCorrectionMaterial->Draw(glm::mat4());
 		MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
-	}
-
-	// lastly apply selection outline, saved for the last so it wouldn't be altered by post processing
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-	if (IsHDRToneMappingAndGammaEnabled())
-	{
 		lastPostProcessMaterialIndex++;
 	}
+
+	// apply selection outline after other color altering processing, done at this stage for consistent colors
+	if (aaEnabled)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, lastPostProcessMaterialIndex % 2 == 0 ? framebuffer2 : framebuffer1);
+	}
+	else
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
 	editorOutlineMaterial->SetTexture("screenTexture", 0, lastPostProcessMaterialIndex % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
 	editorOutlineMaterial->SetTexture("depthStencilTexture", 1, lastPostProcessMaterialIndex % 2 == 0 ? depthStencilBuffer1 : depthStencilBuffer2);
 	editorOutlineMaterial->SetTexture("stencilView", 2, lastPostProcessMaterialIndex % 2 == 0 ? stencilView1 : stencilView2);
 	editorOutlineMaterial->Draw(glm::mat4());
 	MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
+	lastPostProcessMaterialIndex++;
+
+	// lastly apply anti aliasing post process
+	if (aaEnabled)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glClear(GL_COLOR_BUFFER_BIT);
+		fxaaMaterial->SetTexture("screenTexture", 0, lastPostProcessMaterialIndex % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
+		fxaaMaterial->SetTexture("depthStencilTexture", 1, lastPostProcessMaterialIndex % 2 == 0 ? depthStencilBuffer1 : depthStencilBuffer2);
+		fxaaMaterial->SetTexture("stencilView", 2, lastPostProcessMaterialIndex % 2 == 0 ? stencilView1 : stencilView2);
+		fxaaMaterial->SetFloat("contrastThreshold", fxaaContrastThreshold);
+		fxaaMaterial->SetFloat("relativeThreshold", fxaaRelativeThreshold);
+		fxaaMaterial->Draw(glm::mat4());
+		MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
+	}
 }
 
 void RenderingManager::DrawRenderers(const std::vector<MeshRenderer*>& renderers)
@@ -1504,6 +1524,46 @@ void RenderingManager::EnableSSAOInternal(bool enable)
 		glClear(GL_COLOR_BUFFER_BIT);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
+}
+
+void RenderingManager::EnableAntiAliasing(bool enable)
+{
+	GetInstance()->aaEnabled = enable;
+}
+
+bool RenderingManager::IsAntiAliasingEnabled()
+{
+	return GetInstance()->aaEnabled;
+}
+
+void RenderingManager::SetAntiAliasingAlgorithm(AntiAliasingAlgorithm algorithm)
+{
+	GetInstance()->aaAlgorithm = algorithm;
+}
+
+AntiAliasingAlgorithm RenderingManager::GetAntiAliasingAlgorithm()
+{
+	return GetInstance()->aaAlgorithm;
+}
+
+float RenderingManager::GetFXAAContrastThreshold()
+{
+	return GetInstance()->fxaaContrastThreshold;
+}
+
+void RenderingManager::SetFXAAContrastThreshold(float contrastThreshold)
+{
+	GetInstance()->fxaaContrastThreshold = contrastThreshold;
+}
+
+float RenderingManager::GetFXAARelativeThreshold()
+{
+	return GetInstance()->fxaaRelativeThreshold;
+}
+
+void RenderingManager::SetFXAARelativeThreshold(float relativeThreshold)
+{
+	GetInstance()->fxaaRelativeThreshold = relativeThreshold;
 }
 
 bool RenderingManager::CompareRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2)

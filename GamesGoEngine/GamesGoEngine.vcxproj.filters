@@ -169,6 +169,9 @@
     <Filter Include="Resource Files\Shaders\DebugShaders">
       <UniqueIdentifier>{7ae7d5f2-e51e-482b-ba17-5226219632ef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Shaders\PostProcess\AntiAliasing">
+      <UniqueIdentifier>{2a2c13d2-e38b-4fe7-b1ec-de99a78d5626}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectionalLight.cpp">
@@ -753,6 +756,9 @@
     </None>
     <None Include="res\shaders\RenderPipeline\gBufferPBR.vert.glsl">
       <Filter>Resource Files\Shaders\RenderPipeline</Filter>
+    </None>
+    <None Include="res\shaders\PostProcess\AntiAliasing\FXAA.frag.glsl">
+      <Filter>Resource Files\Shaders\PostProcess\AntiAliasing</Filter>
     </None>
   </ItemGroup>
 </Project>

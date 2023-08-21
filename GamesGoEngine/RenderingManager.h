@@ -17,6 +17,11 @@ enum class RenderQueuePosition
 	EditorOutline = 4500,
 };
 
+enum class AntiAliasingAlgorithm
+{
+	FXAA
+};
+
 class RenderingManager
 {
 private:
@@ -130,6 +135,15 @@ public:
 	static bool IsSSAOEnabled();
 private:
 	void EnableSSAOInternal(bool enable);
+public:
+	static void EnableAntiAliasing(bool enable);
+	static bool IsAntiAliasingEnabled();
+	static void SetAntiAliasingAlgorithm(AntiAliasingAlgorithm algorithm);
+	static AntiAliasingAlgorithm GetAntiAliasingAlgorithm();
+	static float GetFXAAContrastThreshold();
+	static void SetFXAAContrastThreshold(float contrastThreshold);
+	static float GetFXAARelativeThreshold();
+	static void SetFXAARelativeThreshold(float relativeThreshold);
 	
 private:
 	static bool CompareRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2);
@@ -162,6 +176,10 @@ private:
 	unsigned int shadowWidth = 1024;
 	unsigned int shadowHeight = 1024;
 	bool ssaoEnabled = true;
+	bool aaEnabled = true;
+	AntiAliasingAlgorithm aaAlgorithm;
+	float fxaaContrastThreshold = 0.0312f;
+	float fxaaRelativeThreshold = 0.063f;
 
 	// uniform buffers used globally by shaders
 	unsigned int uboMatrices;
@@ -242,6 +260,7 @@ private:
 	std::shared_ptr<PostProcessMaterial> textureMergerMaterial;
 	std::shared_ptr<PostProcessMaterial> ssaoMaterial;
 	std::shared_ptr<PostProcessMaterial> ssaoBlurMaterial;
+	std::shared_ptr<PostProcessMaterial> fxaaMaterial;
 
 	// render pipeline materials
 	Material* depthMapMaterial;
