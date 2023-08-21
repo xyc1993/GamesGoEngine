@@ -24,6 +24,7 @@ uniform float contrastThreshold;
 uniform float relativeThreshold;
 
 // Might be a good idea to precalculate luminance and save it in a texture for quick look up instead of calculating it every time
+// Right now it's quite ok, so far performance wasn't hit by this drastically
 float RgbToLuminance(vec3 rgb)
 {
     return dot(rgb, vec3(0.2126729f,  0.7151522f, 0.0721750f));
@@ -82,9 +83,11 @@ struct EdgeData
 	bool isHorizontal;
     // direction of the offset used for blending
     vec2 pixelStep;
+    // data for edge blend factor
+    float oppositeLuminance, gradient;
 };
 
-EdgeData DetermineEdge (LuminanceData ld)
+EdgeData DetermineEdge(LuminanceData ld)
 {
 	EdgeData ed;
 	float horizontal =
@@ -110,9 +113,94 @@ EdgeData DetermineEdge (LuminanceData ld)
     if (pGradient < nGradient)
     {
 		ed.pixelStep = -ed.pixelStep;
+        ed.oppositeLuminance = nLuminance;
+		ed.gradient = nGradient;
 	}
+    else
+    {
+        ed.oppositeLuminance = pLuminance;
+		ed.gradient = pGradient;
+    }
 
 	return ed;
+}
+
+float DetermineEdgeBlendFactor(LuminanceData ld, EdgeData ed, vec2 uv, vec2 texelSize)
+{
+    vec2 uvEdge = uv;
+    vec2 edgeStep;
+	if (ed.isHorizontal)
+    {
+		uvEdge += ed.pixelStep * 0.5 * texelSize;
+        edgeStep = vec2(texelSize.x, 0.0);
+	}
+	else
+    {
+		uvEdge += ed.pixelStep * 0.5 * texelSize;
+        edgeStep = vec2(0.0, texelSize.y);
+	}
+
+	float edgeLuminance = (ld.m + ed.oppositeLuminance) * 0.5;
+	float gradientThreshold = ed.gradient * 0.25;
+
+    const int stepsNumber = 12;
+			
+    // sample positive direction
+	vec2 puv = uvEdge + edgeStep;
+	float pLuminanceDelta = RgbToLuminance(vec3(texture(screenTexture, puv).rgb)) - edgeLuminance;
+	bool pAtEnd = abs(pLuminanceDelta) >= gradientThreshold;
+
+    for (int i = 0; i < stepsNumber && !pAtEnd; i++)
+    {
+		puv += edgeStep;
+		pLuminanceDelta = RgbToLuminance(vec3(texture(screenTexture, puv).rgb)) - edgeLuminance;
+		pAtEnd = abs(pLuminanceDelta) >= gradientThreshold;
+	}
+
+    // sample negative direction
+    vec2 nuv = uvEdge - edgeStep;
+	float nLuminanceDelta = RgbToLuminance(vec3(texture(screenTexture, nuv).rgb)) - edgeLuminance;
+	bool nAtEnd = abs(nLuminanceDelta) >= gradientThreshold;
+
+	for (int i = 0; i < stepsNumber && !nAtEnd; i++) {
+		nuv -= edgeStep;
+		nLuminanceDelta = RgbToLuminance(vec3(texture(screenTexture, nuv).rgb)) - edgeLuminance;
+		nAtEnd = abs(nLuminanceDelta) >= gradientThreshold;
+	}
+
+    float pDistance, nDistance;
+	if (ed.isHorizontal)
+    {
+		pDistance = puv.x - uv.x;
+        nDistance = uv.x - nuv.x;
+	}
+	else
+    {
+		pDistance = puv.y - uv.y;
+        nDistance = uv.y - nuv.y;
+	}
+
+    // pick shortest distance
+    float shortestDistance;
+    bool deltaSign;
+	if (pDistance <= nDistance)
+    {
+		shortestDistance = pDistance;
+        deltaSign = pLuminanceDelta >= 0;
+	}
+	else
+    {
+		shortestDistance = nDistance;
+        deltaSign = nLuminanceDelta >= 0;
+	}
+
+    // blend pixels on only one side of the edge
+    if (deltaSign == (ld.m - edgeLuminance >= 0))
+    {
+		return 0;
+	}
+			
+	return 0.5 - shortestDistance / (pDistance + nDistance);
 }
 
 vec3 ApplyFXAA(vec3 screenColor, vec2 uv, vec2 texelSize) 
@@ -127,7 +215,10 @@ vec3 ApplyFXAA(vec3 screenColor, vec2 uv, vec2 texelSize)
     // use the blend factor to linearly interpolate between the middle pixel and its neighbor in the appropriate direction.
     float pixelBlend = DeterminePixelBlendFactor(ld);
     EdgeData ed = DetermineEdge(ld);
-    vec2 uvOffset = uv + texelSize * ed.pixelStep * pixelBlend;
+    float edgeBlend = DetermineEdgeBlendFactor(ld, ed, uv, texelSize);
+    float finalBlend = max(pixelBlend, edgeBlend);
+
+    vec2 uvOffset = uv + texelSize * ed.pixelStep * finalBlend;
 
 	return vec3(texture(screenTexture, uvOffset).rgb);
 }
