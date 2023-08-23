@@ -447,7 +447,7 @@ void RenderingManager::Update()
 	// set viewport
 	glViewport(0, 0, width, height);
 
-	// clear both buffers to ensure no unwanted data
+	// clear both buffers to ensure no unwanted data and set default color at the start of frame rendering
 	glBindFramebuffer(GL_FRAMEBUFFER, GetInstance()->framebuffer1);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -570,9 +570,7 @@ void RenderingManager::UpdateDirectionalShadowMap(Light* directionalLight, glm::
 	glBindFramebuffer(GL_FRAMEBUFFER, directionalDepthMapFBO);
 
 	glEnable(GL_DEPTH_TEST);
-	glClearColor(0.1f, 0.15f, 0.15f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClear(GL_DEPTH_BUFFER_BIT);
 
 	glCullFace(GL_FRONT);
 	DrawShadowCastingRenderers(meshRenderers, depthMapMaterial);
@@ -613,9 +611,7 @@ void RenderingManager::UpdateSpotLightShadowMap(Light* spotLight, glm::mat4& lig
 	glBindFramebuffer(GL_FRAMEBUFFER, spotLightDepthMapFBO);
 
 	glEnable(GL_DEPTH_TEST);
-	glClearColor(0.1f, 0.15f, 0.15f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClear(GL_DEPTH_BUFFER_BIT);
 
 	glCullFace(GL_FRONT);
 	DrawShadowCastingRenderers(meshRenderers, depthMapMaterial);
@@ -660,9 +656,7 @@ void RenderingManager::UpdateOmnidirectionalShadowMap(Light* pointLight)
 	glBindFramebuffer(GL_FRAMEBUFFER, omniDepthMapFBO);
 
 	glEnable(GL_DEPTH_TEST);
-	glClearColor(0.1f, 0.15f, 0.15f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClear(GL_DEPTH_BUFFER_BIT);
 
 	//glCullFace(GL_FRONT);
 	for (unsigned int i = 0; i < 6; ++i)
@@ -727,7 +721,6 @@ void RenderingManager::DrawDeferredShadedObjects()
 		{
 			const unsigned int currentFramebuffer = i % 2 == 0 ? framebuffer2 : framebuffer1;
 			glBindFramebuffer(GL_FRAMEBUFFER, currentFramebuffer);
-			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			std::shared_ptr<PostProcessMaterial> deferredLightMaterial = nullptr;
@@ -785,7 +778,6 @@ void RenderingManager::DrawDeferredShadedObjects()
 				glDisable(GL_DEPTH_TEST);
 				glDisable(GL_STENCIL_TEST);
 				glViewport(0, 0, WindowManager::GetCurrentWidth(), WindowManager::GetCurrentHeight());
-				glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 				glClear(GL_COLOR_BUFFER_BIT);
 
 				// update light data
@@ -891,7 +883,6 @@ void RenderingManager::DrawForwardShadedObjects()
 				// i > 1 since we have 2 separate framebuffers, no need to clean buffer is nothing is written yet
 				if (i > 1)
 				{
-					glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 					// before drawing new meshes, make sure that gBuffer data is copied if needed
@@ -919,7 +910,6 @@ void RenderingManager::DrawForwardShadedObjects()
 					glDisable(GL_STENCIL_TEST);
 
 					glBindFramebuffer(GL_FRAMEBUFFER, i % 2 == 0 ? shadowFBO2 : shadowFBO1);
-					glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 					// merge last texture and sum of previous textures
@@ -961,7 +951,6 @@ void RenderingManager::DrawForwardShadedObjects()
 		else
 		{
 			glBindFramebuffer(GL_FRAMEBUFFER, framebuffer2);
-			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			ApplyAllLightDataForForwardRenderers();
 			DrawRenderersExceptLightModel(opaqueMeshRenderers, LightModelType::LitDeferred);
@@ -1045,7 +1034,6 @@ void RenderingManager::DrawScreenEffects()
 		for (size_t i = 0; i < postProcessEffects; i++)
 		{
 			glBindFramebuffer(GL_FRAMEBUFFER, i % 2 == 0 ? framebuffer2 : framebuffer1);
-			glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			const std::shared_ptr<Material> ppMaterial = usedPostProcessMaterials[i];
@@ -1063,7 +1051,6 @@ void RenderingManager::DrawScreenEffects()
 	{
 		// extract pixels over bloom's brightness threshold	
 		glBindFramebuffer(GL_FRAMEBUFFER, lastPostProcessMaterialIndex % 2 == 0 ? framebuffer2 : framebuffer1);
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		brightPixelsExtractionMaterial->SetTexture("screenTexture", 0, lastPostProcessMaterialIndex % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
@@ -1080,7 +1067,6 @@ void RenderingManager::DrawScreenEffects()
 		for (unsigned int i = 0; i < bloomBlurAmount; i++)
 		{
 			glBindFramebuffer(GL_FRAMEBUFFER, horizontal ? bloomFBO1 : bloomFBO2);
-			glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			bloomBlurMaterial->SetInt("horizontal", horizontal);
@@ -1111,7 +1097,6 @@ void RenderingManager::DrawScreenEffects()
 	if (IsHDRToneMappingAndGammaEnabled())
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, lastPostProcessMaterialIndex % 2 == 0 ? framebuffer2 : framebuffer1);
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		hdrToneMappingGammaCorrectionMaterial->SetTexture("screenTexture", 0, lastPostProcessMaterialIndex % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
 		hdrToneMappingGammaCorrectionMaterial->SetTexture("depthStencilTexture", 1, lastPostProcessMaterialIndex % 2 == 0 ? depthStencilBuffer1 : depthStencilBuffer2);
@@ -1132,7 +1117,6 @@ void RenderingManager::DrawScreenEffects()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	editorOutlineMaterial->SetTexture("screenTexture", 0, lastPostProcessMaterialIndex % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
 	editorOutlineMaterial->SetTexture("depthStencilTexture", 1, lastPostProcessMaterialIndex % 2 == 0 ? depthStencilBuffer1 : depthStencilBuffer2);
