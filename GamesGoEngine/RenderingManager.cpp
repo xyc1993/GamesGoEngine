@@ -88,11 +88,6 @@ void RenderingManager::InitGammaCorrection()
 	SetExposure(GetExposure());
 }
 
-float ourLerp(float a, float b, float f)
-{
-	return a + f * (b - a);
-}
-
 void RenderingManager::InitSSAOData()
 {
 	// generate sample kernel
