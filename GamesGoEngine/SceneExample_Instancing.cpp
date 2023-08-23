@@ -15,7 +15,7 @@ SceneExample_Instancing::SceneExample_Instancing()
 	planetMeshRenderer->SetMesh(planetMesh);
 
 	std::shared_ptr<Material> planetMaterial = std::make_shared<Material>("res/shaders/unlitTextured.vert.glsl", "res/shaders/unlitTextured.frag.glsl");
-	planetMaterial->SetTextureByPath("mainTexture", 0, (GLchar*)"res/planet/mars.png");
+	planetMaterial->SetTextureByPath("mainTexture", 0, (GLchar*)"res/planet/mars.png", true);
 	planetMeshRenderer->SetMaterial(planetMaterial, 0);
 
 	planetObject->AddComponent(planetMeshRenderer);
