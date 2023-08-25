@@ -1542,6 +1542,17 @@ float RenderingManager::GetBloomStrength()
 	return GetInstance()->bloomStrength;
 }
 
+void RenderingManager::SetBloomMipChainLength(unsigned int length)
+{
+	GetInstance()->bloomMipChainLength = length;
+	GetInstance()->ConfigureBloomBuffer(WindowManager::GetCurrentWidth(), WindowManager::GetCurrentHeight(), false);
+}
+
+unsigned int RenderingManager::GetBloomMipChainLength()
+{
+	return GetInstance()->bloomMipChainLength;
+}
+
 void RenderingManager::SetShadowMapResolution(unsigned shadowMapRes)
 {
 	GetInstance()->SetShadowMapResolutionInternal(shadowMapRes);

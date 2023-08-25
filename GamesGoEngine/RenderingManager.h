@@ -126,6 +126,8 @@ private:
 public:
 	static void SetBloomStrength(float amount);
 	static float GetBloomStrength();
+	static void SetBloomMipChainLength(unsigned int length);
+	static unsigned int GetBloomMipChainLength();
 	// assume square textures
 	static void SetShadowMapResolution(unsigned int shadowMapRes);
 	static unsigned int GetShadowMapResolution();
@@ -172,8 +174,6 @@ private:
 	bool normalsDebugEnabled = false;
 	float gamma = 2.2f;
 	float exposure = 1.0f;
-	bool bloomEnabled = true;
-	float bloomStrength = 0.04f;
 	unsigned int shadowWidth = 1024;
 	unsigned int shadowHeight = 1024;
 	bool ssaoEnabled = true;
@@ -244,6 +244,8 @@ private:
 		unsigned int texture;
 	};
 	unsigned int bloomFBO;
+	bool bloomEnabled = true;
+	float bloomStrength = 0.04f;
 	unsigned int bloomMipChainLength = 6;
 	std::vector<BloomMip> bloomMipChain;
 

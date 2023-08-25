@@ -52,6 +52,12 @@ void GraphicsSettingsUI::Draw()
 		{
 			RenderingManager::SetBloomStrength(bloomStrength);
 		}
+
+		int bloomMipChainLength = RenderingManager::GetBloomMipChainLength();
+		if (ImGui::SliderInt("Bloom mip chain length", &bloomMipChainLength, 1, 10))
+		{
+			RenderingManager::SetBloomMipChainLength(bloomMipChainLength);
+		}
 	}
 
 	bool ssaoEnabled = RenderingManager::IsSSAOEnabled();
