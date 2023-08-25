@@ -24,6 +24,7 @@ WindowManager::WindowManager()
 
 	currentScreenWidth = startWindowWidth;
 	currentScreenHeight = startWindowHeight;
+	UpdateAspectRatio();
 
 	EditorUIManager::UpdateWindowSize(static_cast<float>(currentScreenWidth), static_cast<float>(currentScreenHeight));
 }
@@ -95,6 +96,11 @@ GLint WindowManager::GetCurrentHeight()
 	return GetInstance()->currentScreenHeight;
 }
 
+float WindowManager::GetCurrentAspectRatio()
+{
+	return GetInstance()->aspectRatio;
+}
+
 void WindowManager::EnableVSync(bool enable)
 {
 	GetInstance()->vsyncEnabled = enable;
@@ -112,5 +118,11 @@ void WindowManager::FramebufferSizeCallback(GLFWwindow* window, int width, int h
 	RenderingManager::ResizeBuffers(width, height);
 	GetInstance()->currentScreenWidth = width;
 	GetInstance()->currentScreenHeight = height;
+	GetInstance()->UpdateAspectRatio();
 	EditorUIManager::UpdateWindowSize(static_cast<float>(width), static_cast<float>(height));
+}
+
+void WindowManager::UpdateAspectRatio()
+{
+	aspectRatio = currentScreenWidth / currentScreenHeight;
 }

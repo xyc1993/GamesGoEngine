@@ -47,10 +47,10 @@ void GraphicsSettingsUI::Draw()
 	}
 	if (bloomEnabled)
 	{
-		int bloomBlurAmount = RenderingManager::GetBloomBlurAmount();
-		if (ImGui::SliderInt("bloom blur amount", &bloomBlurAmount, 5, 50))
+		float bloomStrength = RenderingManager::GetBloomStrength();
+		if (ImGui::SliderFloat("Bloom Strength", &bloomStrength, 0.0f, 1.0f))
 		{
-			RenderingManager::SetBloomBlurAmount(bloomBlurAmount);
+			RenderingManager::SetBloomStrength(bloomStrength);
 		}
 	}
 

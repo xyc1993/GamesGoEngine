@@ -12,15 +12,18 @@ uniform float blendWeight;
 uniform float gamma;
 uniform float exposure = 1.0f;
 uniform float bloomEnabled = 1.0f;
+uniform float bloomStrength = 0.04f;
 
 void main()
 {
     vec3 hdrColor  = texture(screenTexture, TexCoords).rgb;
     vec3 bloomColor = texture(bloomBlur, TexCoords).rgb;
-    vec3 bloom = mix(vec3(0.0f), bloomColor, bloomEnabled);
 
-    // additive blending
-    hdrColor += bloom;
+    // linear interpolation between HDR color and blurred bloom image
+    if (bloomEnabled > 0.5f)
+    {
+        hdrColor = mix(hdrColor, bloomColor, bloomStrength);
+    }
 
     // exposure tone mapping
     vec3 mapped = vec3(1.0) - exp(-hdrColor * exposure);

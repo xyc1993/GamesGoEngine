@@ -28,8 +28,8 @@ RenderingManager::RenderingManager()
 	omniDepthMapMaterial = new Material("res/shaders/RenderPipeline/omniDepthMap.vert.glsl", "res/shaders/RenderPipeline/omniDepthMap.frag.glsl", "res/shaders/RenderPipeline/omniDepthMap.geom.glsl");
 
 	// post process related materials
-	brightPixelsExtractionMaterial = std::make_shared<PostProcessMaterial>("res/shaders/RenderPipeline/extractBrightColor.frag.glsl");
-	bloomBlurMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/blurGaussian.frag.glsl");
+	bloomDownsampleMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/bloomDownsample.frag.glsl");
+	bloomUpsampleMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/bloomUpsample.frag.glsl");
 	hdrToneMappingGammaCorrectionMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/hdrToneMappingGammaCorrection.frag.glsl");
 	editorOutlineMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/editorOutline.frag.glsl");
 	deferredShadingMaterial = std::make_shared<PostProcessMaterial>("res/shaders/PostProcess/deferredShadingSimple.frag.glsl");
@@ -47,6 +47,7 @@ RenderingManager::~RenderingManager()
 {
 	delete lightsManager;
 	delete normalDebugMaterial;
+	delete orientationDebugMaterial;
 	delete depthMapMaterial;
 	delete omniDepthMapMaterial;
 }
@@ -132,13 +133,12 @@ void RenderingManager::ConfigureFramebuffers(GLint screenWidth, GLint screenHeig
 	ConfigureFramebuffer(screenWidth, screenHeight, framebuffer2, textureColorBuffer2, depthStencilBuffer2, stencilView2, shouldGenerateFramebuffer);
 	ConfigureFramebuffer(screenWidth, screenHeight, shadowFBO1, shadowColorBuffer1, shadowDepthStencilBuffer1, shadowStencilView1, shouldGenerateFramebuffer);
 	ConfigureFramebuffer(screenWidth, screenHeight, shadowFBO2, shadowColorBuffer2, shadowDepthStencilBuffer2, shadowStencilView2, shouldGenerateFramebuffer);
-	ConfigureFramebuffer(screenWidth, screenHeight, bloomFBO1, bloomColorBuffer1, bloomDepthStencilBuffer1, bloomStencilView1, shouldGenerateFramebuffer);
-	ConfigureFramebuffer(screenWidth, screenHeight, bloomFBO2, bloomColorBuffer2, bloomDepthStencilBuffer2, bloomStencilView2, shouldGenerateFramebuffer);
 	ConfigureShadowMapFramebuffer(shadowWidth, shadowHeight, directionalDepthMapFBO, directionalDepthMap, shouldGenerateFramebuffer);
 	ConfigureShadowMapFramebuffer(shadowWidth, shadowHeight, spotLightDepthMapFBO, spotLightDepthMap, shouldGenerateFramebuffer);
 	ConfigureShadowCubeMapFramebuffer(shadowWidth, shadowHeight, omniDepthMapFBO, omniDepthMap, shouldGenerateFramebuffer);
 	ConfigureGBuffer(screenWidth, screenHeight, shouldGenerateFramebuffer);
 	ConfigureSSAOBuffers(screenWidth, screenHeight, shouldGenerateFramebuffer);
+	ConfigureBloomBuffer(screenWidth, screenHeight, shouldGenerateFramebuffer);
 }
 
 void RenderingManager::ConfigureFramebuffer(GLint screenWidth, GLint screenHeight,
@@ -357,6 +357,72 @@ void RenderingManager::ConfigureSSAOBuffers(GLint screenWidth, GLint screenHeigh
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void RenderingManager::ConfigureBloomBuffer(GLint screenWidth, GLint screenHeight, bool shouldGenerateFramebuffer)
+{
+	if (shouldGenerateFramebuffer)
+	{
+		glGenFramebuffers(1, &bloomFBO);
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, bloomFBO);
+
+	glm::vec2 mipSize((float)screenWidth, (float)screenHeight);
+	glm::ivec2 mipIntSize((int)screenWidth, (int)screenHeight);
+	// Safety check
+	if (screenWidth > (unsigned int)INT_MAX || screenHeight > (unsigned int)INT_MAX)
+	{
+		std::cerr << "Window size conversion overflow - cannot build bloom FBO!\n";
+		return;
+	}
+
+	// TODO: This should be done only if bloom mip chain is empty or bloomMipChainLength changed
+	// bloom textures clean up (just to be sure we don't have some trash data)
+	for (size_t i = 0; i < bloomMipChain.size(); i++)
+	{
+		glDeleteTextures(1, &bloomMipChain[i].texture);
+	}
+	bloomMipChain.clear();
+
+	// bloom textures setup
+	for (unsigned int i = 0; i < bloomMipChainLength; i++)
+	{
+		BloomMip mip;
+
+		mipSize *= 0.5f;
+		mipIntSize /= 2;
+		mip.size = mipSize;
+		mip.intSize = mipIntSize;
+
+		glGenTextures(1, &mip.texture);
+		glBindTexture(GL_TEXTURE_2D, mip.texture);
+		// we are downscaling an HDR color buffer, so we need a float texture format
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_R11F_G11F_B10F,
+			(int)mipSize.x, (int)mipSize.y,
+			0, GL_RGB, GL_FLOAT, nullptr);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+		bloomMipChain.emplace_back(mip);
+	}
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, bloomMipChain[0].texture, 0);
+
+	// setup attachments
+	unsigned int attachments[1] = { GL_COLOR_ATTACHMENT0 };
+	glDrawBuffers(1, attachments);
+
+	// check completion status
+	int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	if (status != GL_FRAMEBUFFER_COMPLETE)
+	{
+		printf("bloom buffer FBO error, status: 0x\%x\n", status);
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 void RenderingManager::ResizeBuffers(GLint screenWidth, GLint screenHeight)
 {
 	GetInstance()->ResizeBuffersInternal(screenWidth, screenHeight);
@@ -369,22 +435,16 @@ void RenderingManager::ResizeBuffersInternal(GLint screenWidth, GLint screenHeig
 	glDeleteTextures(1, &textureColorBuffer2);
 	glDeleteTextures(1, &shadowColorBuffer1);
 	glDeleteTextures(1, &shadowColorBuffer2);
-	glDeleteTextures(1, &bloomColorBuffer1);
-	glDeleteTextures(1, &bloomColorBuffer2);
 
 	glDeleteTextures(1, &depthStencilBuffer1);
 	glDeleteTextures(1, &depthStencilBuffer2);
 	glDeleteTextures(1, &shadowDepthStencilBuffer1);
 	glDeleteTextures(1, &shadowDepthStencilBuffer2);
-	glDeleteTextures(1, &bloomDepthStencilBuffer1);
-	glDeleteTextures(1, &bloomDepthStencilBuffer2);
 
 	glDeleteTextures(1, &stencilView1);
 	glDeleteTextures(1, &stencilView2);
 	glDeleteTextures(1, &shadowStencilView1);
 	glDeleteTextures(1, &shadowStencilView2);
-	glDeleteTextures(1, &bloomStencilView1);
-	glDeleteTextures(1, &bloomStencilView2);
 
 	glDeleteTextures(1, &directionalDepthMap);
 	glDeleteTextures(1, &spotLightDepthMap);
@@ -402,6 +462,12 @@ void RenderingManager::ResizeBuffersInternal(GLint screenWidth, GLint screenHeig
 
 	glDeleteTextures(1, &ssaoColorBuffer);
 	glDeleteTextures(1, &ssaoColorBufferBlur);
+
+	for (size_t i = 0; i < bloomMipChain.size(); i++)
+	{
+		glDeleteTextures(1, &bloomMipChain[i].texture);
+	}
+	bloomMipChain.clear();
 
 	GetInstance()->ConfigureFramebuffers(screenWidth, screenHeight, false);
 }
@@ -1049,51 +1115,69 @@ void RenderingManager::DrawScreenEffects()
 	// Bloom
 	if (IsBloomEnabled())
 	{
-		// extract pixels over bloom's brightness threshold	
-		glBindFramebuffer(GL_FRAMEBUFFER, lastPostProcessMaterialIndex % 2 == 0 ? framebuffer2 : framebuffer1);
-		glClear(GL_COLOR_BUFFER_BIT);
+		// Bind bloom buffer
+		glBindFramebuffer(GL_FRAMEBUFFER, bloomFBO);
 
-		brightPixelsExtractionMaterial->SetTexture("screenTexture", 0, lastPostProcessMaterialIndex % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
-		brightPixelsExtractionMaterial->SetTexture("depthStencilTexture", 1, lastPostProcessMaterialIndex % 2 == 0 ? depthStencilBuffer1 : depthStencilBuffer2);
-		brightPixelsExtractionMaterial->SetTexture("stencilView", 2, lastPostProcessMaterialIndex % 2 == 0 ? stencilView1 : stencilView2);
-		brightPixelsExtractionMaterial->Draw(glm::mat4());
-		MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
-
-		// blur pixels meant for blur
-		bool horizontal = true;
-		bool firstIteration = true;
-		// get texture after bright pixels extraction
-		lastPostProcessMaterialIndex++;
-		for (unsigned int i = 0; i < bloomBlurAmount; i++)
+		// DOWNSAMPLE
+		glm::vec2 screenResolution = glm::vec2((float)WindowManager::GetCurrentWidth(), (float)WindowManager::GetCurrentHeight());
+		bloomDownsampleMaterial->SetVector2("screenResolution", screenResolution);
+		bloomDownsampleMaterial->SetTexture("screenTexture", 0, lastPostProcessMaterialIndex % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
+		
+		// Progressively downsample through the mip chain
+		for (int i = 0; i < bloomMipChain.size(); i++)
 		{
-			glBindFramebuffer(GL_FRAMEBUFFER, horizontal ? bloomFBO1 : bloomFBO2);
-			glClear(GL_COLOR_BUFFER_BIT);
+			const BloomMip& mip = bloomMipChain[i];
+			glViewport(0, 0, mip.size.x, mip.size.y);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mip.texture, 0);
 
-			bloomBlurMaterial->SetInt("horizontal", horizontal);
-			if (firstIteration)
-			{
-				bloomBlurMaterial->SetTexture("screenTexture", 0, lastPostProcessMaterialIndex % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
-			}
-			else
-			{
-				bloomBlurMaterial->SetTexture("screenTexture", 0, i % 2 == 1 ? bloomColorBuffer1 : bloomColorBuffer2);
-			}
-			bloomBlurMaterial->Draw(glm::mat4());
+			// Render screen-filled quad of resolution of current mip
+			bloomDownsampleMaterial->Draw(glm::mat4());
 			MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
-			horizontal = !horizontal;
-			if (firstIteration)
-			{
-				firstIteration = false;
-			}
+
+			// Set current mip resolution as srcResolution for next iteration
+			bloomDownsampleMaterial->SetVector2("screenResolution", mip.size);
+			bloomDownsampleMaterial->SetTexture("screenTexture", 0, mip.texture);
 		}
+
+		// UPSAMPLE
+		const float bloomFilterRadius = 0.005f;
+		bloomUpsampleMaterial->SetFloat("filterRadius", bloomFilterRadius);
+		bloomUpsampleMaterial->SetFloat("screenAspectRatio", WindowManager::GetCurrentAspectRatio());
+
+		// Enable additive blending
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_ONE, GL_ONE);
+		glBlendEquation(GL_FUNC_ADD);
+
+		for (int i = bloomMipChain.size() - 1; i > 0; i--)
+		{
+			const BloomMip& mip = bloomMipChain[i];
+			const BloomMip& nextMip = bloomMipChain[i - 1];
+
+			// Bind viewport and texture from where to read
+			bloomUpsampleMaterial->SetTexture("screenTexture", 0, mip.texture);
+
+			// Set framebuffer render target (we write to this texture)
+			glViewport(0, 0, nextMip.size.x, nextMip.size.y);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, nextMip.texture, 0);
+
+			// Render screen-filled quad of resolution of current mip
+			bloomUpsampleMaterial->Draw(glm::mat4());
+			MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
+		}
+
+		// Disable additive blending
+		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA); // Restore if this was default
+		glDisable(GL_BLEND);
+
+		// Reset viewport
+		glViewport(0, 0, WindowManager::GetCurrentWidth(), WindowManager::GetCurrentHeight());
+
+		// Unbind bloom buffer
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
 	// HDR tone mapping and gamma correction
-	if (IsBloomEnabled())
-	{
-		// get texture before bright pixels extraction
-		lastPostProcessMaterialIndex--;
-	}
 	if (IsHDRToneMappingAndGammaEnabled())
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, lastPostProcessMaterialIndex % 2 == 0 ? framebuffer2 : framebuffer1);
@@ -1101,8 +1185,9 @@ void RenderingManager::DrawScreenEffects()
 		hdrToneMappingGammaCorrectionMaterial->SetTexture("screenTexture", 0, lastPostProcessMaterialIndex % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
 		hdrToneMappingGammaCorrectionMaterial->SetTexture("depthStencilTexture", 1, lastPostProcessMaterialIndex % 2 == 0 ? depthStencilBuffer1 : depthStencilBuffer2);
 		hdrToneMappingGammaCorrectionMaterial->SetTexture("stencilView", 2, lastPostProcessMaterialIndex % 2 == 0 ? stencilView1 : stencilView2);
-		hdrToneMappingGammaCorrectionMaterial->SetTexture("bloomBlur", 3, (bloomBlurAmount - 1) % 2 == 1 ? bloomColorBuffer1 : bloomColorBuffer2);
+		hdrToneMappingGammaCorrectionMaterial->SetTexture("bloomBlur", 3, bloomMipChain[0].texture);
 		hdrToneMappingGammaCorrectionMaterial->SetFloat("bloomEnabled", IsBloomEnabled() ? 1.0f : 0.0f);
+		hdrToneMappingGammaCorrectionMaterial->SetFloat("bloomStrength", bloomStrength);
 		hdrToneMappingGammaCorrectionMaterial->Draw(glm::mat4());
 		MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
 		lastPostProcessMaterialIndex++;
@@ -1447,14 +1532,14 @@ void RenderingManager::SetExposureInternal(float exposureVal)
 	}
 }
 
-void RenderingManager::SetBloomBlurAmount(int amount)
+void RenderingManager::SetBloomStrength(float amount)
 {
-	GetInstance()->bloomBlurAmount = amount;
+	GetInstance()->bloomStrength = amount;
 }
 
-int RenderingManager::GetBloomBlurAmount()
+float RenderingManager::GetBloomStrength()
 {
-	return GetInstance()->bloomBlurAmount;
+	return GetInstance()->bloomStrength;
 }
 
 void RenderingManager::SetShadowMapResolution(unsigned shadowMapRes)

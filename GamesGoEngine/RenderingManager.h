@@ -50,6 +50,7 @@ private:
 		bool shouldGenerateFramebuffer);
 	void ConfigureGBuffer(GLint screenWidth, GLint screenHeight, bool shouldGenerateFramebuffer);
 	void ConfigureSSAOBuffers(GLint screenWidth, GLint screenHeight, bool shouldGenerateFramebuffer);
+	void ConfigureBloomBuffer(GLint screenWidth, GLint screenHeight, bool shouldGenerateFramebuffer);
 
 public:
 	static void ResizeBuffers(GLint screenWidth, GLint screenHeight);
@@ -123,8 +124,8 @@ public:
 private:
 	void SetExposureInternal(float exposureVal);
 public:
-	static void SetBloomBlurAmount(int amount);
-	static int GetBloomBlurAmount();
+	static void SetBloomStrength(float amount);
+	static float GetBloomStrength();
 	// assume square textures
 	static void SetShadowMapResolution(unsigned int shadowMapRes);
 	static unsigned int GetShadowMapResolution();
@@ -165,14 +166,14 @@ private:
 	// container holding all subscribed post process renderers
 	std::vector<std::shared_ptr<PostProcessMaterial>> postProcessMaterials;
 	bool postProcessingEnabled = true;
-	bool bloomEnabled = true;
 	bool hdrTonemappingAndGamma = true;
 	bool firstRenderedFrame = true;
 	bool renderWireframeOnly = false;
 	bool normalsDebugEnabled = false;
 	float gamma = 2.2f;
 	float exposure = 1.0f;
-	int bloomBlurAmount = 10;
+	bool bloomEnabled = true;
+	float bloomStrength = 0.04f;
 	unsigned int shadowWidth = 1024;
 	unsigned int shadowHeight = 1024;
 	bool ssaoEnabled = true;
@@ -191,8 +192,6 @@ private:
 	unsigned int framebuffer2;
 	unsigned int shadowFBO1;
 	unsigned int shadowFBO2;
-	unsigned int bloomFBO1;
-	unsigned int bloomFBO2;
 	unsigned int directionalDepthMapFBO;
 	unsigned int spotLightDepthMapFBO;
 	unsigned int omniDepthMapFBO;
@@ -201,22 +200,16 @@ private:
 	unsigned int textureColorBuffer2;
 	unsigned int shadowColorBuffer1;
 	unsigned int shadowColorBuffer2;
-	unsigned int bloomColorBuffer1;
-	unsigned int bloomColorBuffer2;
 
 	unsigned int depthStencilBuffer1;
 	unsigned int depthStencilBuffer2;
 	unsigned int shadowDepthStencilBuffer1;
 	unsigned int shadowDepthStencilBuffer2;
-	unsigned int bloomDepthStencilBuffer1;
-	unsigned int bloomDepthStencilBuffer2;
 
 	unsigned int stencilView1;
 	unsigned int stencilView2;
 	unsigned int shadowStencilView1;
 	unsigned int shadowStencilView2;
-	unsigned int bloomStencilView1;
-	unsigned int bloomStencilView2;
 
 	unsigned int directionalDepthMap;
 	unsigned int spotLightDepthMap;
@@ -243,13 +236,22 @@ private:
 	std::vector<glm::vec3> ssaoKernel;
 	const unsigned int ssaoKernelSize = 64;
 
+	// bloom buffer and other bloom related data
+	struct BloomMip
+	{
+		glm::vec2 size;
+		glm::ivec2 intSize;
+		unsigned int texture;
+	};
+	unsigned int bloomFBO;
+	unsigned int bloomMipChainLength = 6;
+	std::vector<BloomMip> bloomMipChain;
+
 	// debug materials
 	Material* normalDebugMaterial;
 	Material* orientationDebugMaterial;
 
 	// special post process materials
-	std::shared_ptr<PostProcessMaterial> brightPixelsExtractionMaterial; // used for bloom, gets the texture with pixels with brightness over bloom threshold
-	std::shared_ptr<PostProcessMaterial> bloomBlurMaterial;
 	std::shared_ptr<PostProcessMaterial> hdrToneMappingGammaCorrectionMaterial;
 	std::shared_ptr<PostProcessMaterial> editorOutlineMaterial;
 	std::shared_ptr<PostProcessMaterial> deferredShadingMaterial;
@@ -261,6 +263,8 @@ private:
 	std::shared_ptr<PostProcessMaterial> ssaoMaterial;
 	std::shared_ptr<PostProcessMaterial> ssaoBlurMaterial;
 	std::shared_ptr<PostProcessMaterial> fxaaMaterial;
+	std::shared_ptr<PostProcessMaterial> bloomDownsampleMaterial;
+	std::shared_ptr<PostProcessMaterial> bloomUpsampleMaterial;
 
 	// render pipeline materials
 	Material* depthMapMaterial;

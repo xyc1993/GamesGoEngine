@@ -19,11 +19,13 @@ public:
 	static void TerminateWindow();
 	static GLint GetCurrentWidth();
 	static GLint GetCurrentHeight();
+	static float GetCurrentAspectRatio();
 	static void EnableVSync(bool enable);
 	static bool IsVSyncEnabled();
 
 private:
 	static void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
+	void UpdateAspectRatio();
 
 	GLFWwindow* window;
 
@@ -32,6 +34,7 @@ private:
 
 	int currentScreenWidth;
 	int currentScreenHeight;
+	float aspectRatio;
 
 	bool vsyncEnabled;
 };

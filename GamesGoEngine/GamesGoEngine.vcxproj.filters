@@ -697,12 +697,6 @@
     <None Include="res\shaders\PostProcess\hdrToneMappingGammaCorrection.frag.glsl">
       <Filter>Resource Files\Shaders\PostProcess</Filter>
     </None>
-    <None Include="res\shaders\RenderPipeline\extractBrightColor.frag.glsl">
-      <Filter>Resource Files\Shaders\RenderPipeline</Filter>
-    </None>
-    <None Include="res\shaders\PostProcess\blurGaussian.frag.glsl">
-      <Filter>Resource Files\Shaders\PostProcess</Filter>
-    </None>
     <None Include="res\shaders\RenderPipeline\gBuffer.frag.glsl">
       <Filter>Resource Files\Shaders\RenderPipeline</Filter>
     </None>
@@ -759,6 +753,12 @@
     </None>
     <None Include="res\shaders\PostProcess\AntiAliasing\FXAA.frag.glsl">
       <Filter>Resource Files\Shaders\PostProcess\AntiAliasing</Filter>
+    </None>
+    <None Include="res\shaders\PostProcess\bloomDownsample.frag.glsl">
+      <Filter>Resource Files\Shaders\PostProcess</Filter>
+    </None>
+    <None Include="res\shaders\PostProcess\bloomUpsample.frag.glsl">
+      <Filter>Resource Files\Shaders\PostProcess</Filter>
     </None>
   </ItemGroup>
 </Project>

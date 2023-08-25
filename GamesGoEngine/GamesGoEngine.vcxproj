@@ -305,8 +305,9 @@
     <None Include="res\shaders\litShadowSimple.frag.glsl" />
     <None Include="res\shaders\litShadowSimple.vert.glsl" />
     <None Include="res\shaders\PostProcess\AntiAliasing\FXAA.frag.glsl" />
+    <None Include="res\shaders\PostProcess\bloomDownsample.frag.glsl" />
+    <None Include="res\shaders\PostProcess\bloomUpsample.frag.glsl" />
     <None Include="res\shaders\PostProcess\blur.frag.glsl" />
-    <None Include="res\shaders\PostProcess\blurGaussian.frag.glsl" />
     <None Include="res\shaders\PostProcess\deferredShadingAddAmbientLightShadow.frag.glsl" />
     <None Include="res\shaders\PostProcess\deferredShadingAddDirectionalLightShadow.frag.glsl" />
     <None Include="res\shaders\PostProcess\deferredShadingAddPointLightShadow.frag.glsl" />
@@ -324,7 +325,6 @@
     <None Include="res\shaders\PostProcess\textureMerger.frag.glsl" />
     <None Include="res\shaders\RenderPipeline\depthMap.frag.glsl" />
     <None Include="res\shaders\RenderPipeline\depthMap.vert.glsl" />
-    <None Include="res\shaders\RenderPipeline\extractBrightColor.frag.glsl" />
     <None Include="res\shaders\RenderPipeline\gBuffer.frag.glsl" />
     <None Include="res\shaders\RenderPipeline\gBuffer.vert.glsl" />
     <None Include="res\shaders\RenderPipeline\gBufferEmissive.frag.glsl" />
