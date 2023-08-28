@@ -1,4 +1,4 @@
-#include "SceneExample_Hangar.h"
+#include "SceneExample_HangarPBR.h"
 
 #include "MeshRenderer.h"
 #include "MeshImported.h"
@@ -7,7 +7,7 @@
 
 namespace GamesGoEngine
 {
-	SceneExample_Hangar::SceneExample_Hangar()
+	SceneExample_HangarPBR::SceneExample_HangarPBR()
 	{
 		GameObject* hangarObject = new GameObject();
 		hangarObject->GetTransform()->SetPosition(glm::vec3(0.0f, 0.0f, -3.0f));

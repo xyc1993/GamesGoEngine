@@ -366,7 +366,7 @@
     <ClCompile Include="AmbientLight.cpp">
       <Filter>Source Files\GamesGo\Light</Filter>
     </ClCompile>
-    <ClCompile Include="SceneExample_Hangar.cpp">
+    <ClCompile Include="SceneExample_HangarPBR.cpp">
       <Filter>Source Files\GamesGo\Examples</Filter>
     </ClCompile>
   </ItemGroup>
@@ -569,7 +569,7 @@
     <ClInclude Include="AmbientLight.h">
       <Filter>Header Files\GamesGo\Light</Filter>
     </ClInclude>
-    <ClInclude Include="SceneExample_Hangar.h">
+    <ClInclude Include="SceneExample_HangarPBR.h">
       <Filter>Header Files\GamesGo\Examples</Filter>
     </ClInclude>
   </ItemGroup>

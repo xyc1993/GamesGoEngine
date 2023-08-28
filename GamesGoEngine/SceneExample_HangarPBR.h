@@ -4,9 +4,9 @@
 
 namespace GamesGoEngine
 {
-	class SceneExample_Hangar : public SceneExample
+	class SceneExample_HangarPBR : public SceneExample
 	{
 	public:
-		SceneExample_Hangar();
+		SceneExample_HangarPBR();
 	};
 }

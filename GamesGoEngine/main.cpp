@@ -30,7 +30,7 @@ void MainLoop(GLFWwindow* window)
 	//SceneExample_OmnidirectionalShadows* activeScene = new SceneExample_OmnidirectionalShadows();
 	//SceneExample_DeferredRendering* activeScene = new SceneExample_DeferredRendering();
 	//SceneExample_MultipleLightsShadows* activeScene = new SceneExample_MultipleLightsShadows();
-	SceneExample_Hangar* activeScene = new SceneExample_Hangar();
+	SceneExample_HangarPBR* activeScene = new SceneExample_HangarPBR();
 	
 	while (!glfwWindowShouldClose(window))
 	{
