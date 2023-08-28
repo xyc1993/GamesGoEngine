@@ -2,17 +2,20 @@
 
 #include "GameObject.h"
 
-class Scene
+namespace GamesGoEngine
 {
-public:
-	Scene();
-	~Scene();
+	class Scene
+	{
+	public:
+		Scene();
+		~Scene();
 
-	void AddGameObject(GameObject* gameObject);
-	void RemoveGameObject(GameObject* gameObject);
-	void Update();
-	const std::set<GameObject*>& GetSceneObjects() const;
+		void AddGameObject(GameObject* gameObject);
+		void RemoveGameObject(GameObject* gameObject);
+		void Update();
+		const std::set<GameObject*>& GetSceneObjects() const;
 
-private:
-	std::set<GameObject*> sceneObjects;
-};
+	private:
+		std::set<GameObject*> sceneObjects;
+	};
+}

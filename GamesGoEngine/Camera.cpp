@@ -5,97 +5,100 @@
 #include "CamerasManager.h"
 #include "GameObject.h"
 
-Camera::Camera()
+namespace GamesGoEngine
 {
-	currentViewMatrix = glm::mat4(1.0f);
-	priority = 0;
-	fov = 45.0f;
-	nearClipPlane = 0.1f;
-	farClipPlane = 1000.0f;
-}
-
-Camera::~Camera()
-{
-	CamerasManager::RemoveSceneCamera(this);
-}
-
-void Camera::Init(GameObject* owner)
-{
-	Component::Init(owner);
-	CamerasManager::AddSceneCamera(this);
-}
-
-void Camera::Update()
-{
-	CalculateViewMatrix();
-	CalculateProjectionMatrix();
-}
-
-void Camera::CalculateViewMatrix()
-{
-	if (owner != nullptr)
-	{
-		currentViewMatrix = glm::lookAt(owner->GetTransform()->GetPosition(),
-			owner->GetTransform()->GetPosition() + owner->GetTransform()->GetForward(),
-			owner->GetTransform()->GetUp());
-	}
-	else
+	Camera::Camera()
 	{
 		currentViewMatrix = glm::mat4(1.0f);
+		priority = 0;
+		fov = 45.0f;
+		nearClipPlane = 0.1f;
+		farClipPlane = 1000.0f;
 	}
-}
 
-void Camera::CalculateProjectionMatrix()
-{
-	currentProjectionMatrix = glm::perspective(fov, CamerasManager::GetCurrentViewAspectRatio(), nearClipPlane, farClipPlane);
-}
+	Camera::~Camera()
+	{
+		CamerasManager::RemoveSceneCamera(this);
+	}
 
-void Camera::SetCameraPriority(int priority)
-{
-	this->priority = priority;
-}
+	void Camera::Init(GameObject* owner)
+	{
+		Component::Init(owner);
+		CamerasManager::AddSceneCamera(this);
+	}
 
-void Camera::SetFoV(float fov)
-{
-	this->fov = fov;
-}
+	void Camera::Update()
+	{
+		CalculateViewMatrix();
+		CalculateProjectionMatrix();
+	}
 
-void Camera::SetNearClipPlane(float nearClipPlane)
-{
-	this->nearClipPlane = nearClipPlane;
-}
+	void Camera::CalculateViewMatrix()
+	{
+		if (owner != nullptr)
+		{
+			currentViewMatrix = glm::lookAt(owner->GetTransform()->GetPosition(),
+				owner->GetTransform()->GetPosition() + owner->GetTransform()->GetForward(),
+				owner->GetTransform()->GetUp());
+		}
+		else
+		{
+			currentViewMatrix = glm::mat4(1.0f);
+		}
+	}
 
-void Camera::SetFarClipPlane(float farClipPlane)
-{
-	this->farClipPlane = farClipPlane;
-}
+	void Camera::CalculateProjectionMatrix()
+	{
+		currentProjectionMatrix = glm::perspective(fov, CamerasManager::GetCurrentViewAspectRatio(), nearClipPlane, farClipPlane);
+	}
 
-glm::mat4 Camera::GetCurrentViewMatrix() const
-{
-	return currentViewMatrix;
-}
+	void Camera::SetCameraPriority(int priority)
+	{
+		this->priority = priority;
+	}
 
-glm::mat4 Camera::GetCurrentProjectionMatrix() const
-{
-	return currentProjectionMatrix;
-}
+	void Camera::SetFoV(float fov)
+	{
+		this->fov = fov;
+	}
 
-int Camera::GetCameraPriority() const
-{
-	return priority;
-}
+	void Camera::SetNearClipPlane(float nearClipPlane)
+	{
+		this->nearClipPlane = nearClipPlane;
+	}
 
-float Camera::GetFoV() const
-{
-	return fov;
-}
+	void Camera::SetFarClipPlane(float farClipPlane)
+	{
+		this->farClipPlane = farClipPlane;
+	}
 
-float Camera::GetNearClipPlane() const
-{
-	return nearClipPlane;
-}
+	glm::mat4 Camera::GetCurrentViewMatrix() const
+	{
+		return currentViewMatrix;
+	}
 
-float Camera::GetFarClipPlane() const
-{
-	return farClipPlane;
+	glm::mat4 Camera::GetCurrentProjectionMatrix() const
+	{
+		return currentProjectionMatrix;
+	}
+
+	int Camera::GetCameraPriority() const
+	{
+		return priority;
+	}
+
+	float Camera::GetFoV() const
+	{
+		return fov;
+	}
+
+	float Camera::GetNearClipPlane() const
+	{
+		return nearClipPlane;
+	}
+
+	float Camera::GetFarClipPlane() const
+	{
+		return farClipPlane;
+	}
 }

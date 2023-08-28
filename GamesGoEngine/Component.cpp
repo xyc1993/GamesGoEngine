@@ -1,26 +1,29 @@
 #include "Component.h"
 
-void Component::Init(GameObject* owner)
+namespace GamesGoEngine
 {
-	this->owner = owner;
-}
-
-GameObject* Component::GetOwner() const
-{
-	return owner;
-}
-
-bool Component::IsValid(const Component* component)
-{
-	if (component == nullptr)
+	void Component::Init(GameObject* owner)
 	{
-		return false;
+		this->owner = owner;
 	}
 
-	if (component->owner == nullptr)
+	GameObject* Component::GetOwner() const
 	{
-		return false;
+		return owner;
 	}
 
-	return true;
+	bool Component::IsValid(const Component* component)
+	{
+		if (component == nullptr)
+		{
+			return false;
+		}
+
+		if (component->owner == nullptr)
+		{
+			return false;
+		}
+
+		return true;
+	}
 }

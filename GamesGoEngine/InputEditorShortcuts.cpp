@@ -2,20 +2,23 @@
 
 #include "InputManager.h"
 
-void InputEditorShortcuts::ProcessShortcuts(GLFWwindow* window)
+namespace GamesGoEngine
 {
-	if (InputManager::GetMouseButtonPressed(GLFW_MOUSE_BUTTON_RIGHT))
+	void InputEditorShortcuts::ProcessShortcuts(GLFWwindow* window)
 	{
-		InputManager::SetCursorEnabled(false);
-	}
+		if (InputManager::GetMouseButtonPressed(GLFW_MOUSE_BUTTON_RIGHT))
+		{
+			InputManager::SetCursorEnabled(false);
+		}
 
-	if (InputManager::GetMouseButtonReleased(GLFW_MOUSE_BUTTON_RIGHT))
-	{
-		InputManager::SetCursorEnabled(true);
-	}
-	
-	if (InputManager::GetKeyReleased(GLFW_KEY_ESCAPE))
-	{
-		glfwSetWindowShouldClose(window, GL_TRUE);
+		if (InputManager::GetMouseButtonReleased(GLFW_MOUSE_BUTTON_RIGHT))
+		{
+			InputManager::SetCursorEnabled(true);
+		}
+
+		if (InputManager::GetKeyReleased(GLFW_KEY_ESCAPE))
+		{
+			glfwSetWindowShouldClose(window, GL_TRUE);
+		}
 	}
 }

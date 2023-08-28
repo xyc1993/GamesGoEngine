@@ -1,11 +1,14 @@
 #pragma once
 
-class Math
+namespace GamesGoEngine
 {
-public:
-	static bool IsNearlyZero(float value);
-	static bool IsNearlyZero(float value, float errorMargin);
+	class Math
+	{
+	public:
+		static bool IsNearlyZero(float value);
+		static bool IsNearlyZero(float value, float errorMargin);
 
-private:
-	static const float SMALL_NUMBER;
-};
+	private:
+		static const float SMALL_NUMBER;
+	};
+}

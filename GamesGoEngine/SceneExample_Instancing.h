@@ -5,14 +5,17 @@
 
 #include "SceneExample.h"
 
-class MeshImported;
-
-class SceneExample_Instancing : public SceneExample
+namespace GamesGoEngine
 {
-public:
-	SceneExample_Instancing();
+	class MeshImported;
 
-private:
-	void InitAsteroidsUninstanced(int asteroidsNumber, std::shared_ptr<MeshImported> asteroidMesh, GLuint asteroidTexture, glm::mat4* modelMatrices);
-	void InitAsteroidsInstanced(int asteroidsNumber, std::shared_ptr<MeshImported> asteroidMesh, GLuint asteroidTexture, glm::mat4* modelMatrices);
-};
+	class SceneExample_Instancing : public SceneExample
+	{
+	public:
+		SceneExample_Instancing();
+
+	private:
+		void InitAsteroidsUninstanced(int asteroidsNumber, std::shared_ptr<MeshImported> asteroidMesh, GLuint asteroidTexture, glm::mat4* modelMatrices);
+		void InitAsteroidsInstanced(int asteroidsNumber, std::shared_ptr<MeshImported> asteroidMesh, GLuint asteroidTexture, glm::mat4* modelMatrices);
+	};
+}

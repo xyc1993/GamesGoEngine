@@ -3,64 +3,67 @@
 #include "CamerasManager.h"
 #include "GameObject.h"
 
-Renderer::~Renderer()
+namespace GamesGoEngine
 {
-	mesh.reset();
-	CleanMaterialList();
-}
-
-void Renderer::Update()
-{
-
-}
-
-void Renderer::Draw()
-{
-	if (owner != nullptr && mesh != nullptr)
+	Renderer::~Renderer()
 	{
-		for (size_t i = 0; i < materialList.size(); i++)
+		mesh.reset();
+		CleanMaterialList();
+	}
+
+	void Renderer::Update()
+	{
+
+	}
+
+	void Renderer::Draw()
+	{
+		if (owner != nullptr && mesh != nullptr)
 		{
-			if (materialList[i] != nullptr)
+			for (size_t i = 0; i < materialList.size(); i++)
 			{
-				materialList[i]->Draw(owner->GetTransform()->GetTransformMatrix());
+				if (materialList[i] != nullptr)
+				{
+					materialList[i]->Draw(owner->GetTransform()->GetTransformMatrix());
+					mesh->DrawSubMesh(i);
+				}
+			}
+		}
+	}
+
+	void Renderer::Draw(Material* material)
+	{
+		if (owner != nullptr && mesh != nullptr && material != nullptr)
+		{
+			for (size_t i = 0; i < mesh->GetSubMeshesCount(); i++)
+			{
+				material->Draw(owner->GetTransform()->GetTransformMatrix());
 				mesh->DrawSubMesh(i);
 			}
 		}
 	}
-}
 
-void Renderer::Draw(Material* material)
-{
-	if (owner != nullptr && mesh != nullptr && material != nullptr)
+	bool Renderer::TryGetMaterial(std::shared_ptr<Material>& outMaterial, int index)
 	{
-		for (size_t i = 0; i < mesh->GetSubMeshesCount(); i++)
+		if (index >= 0 && index < materialList.size())
 		{
-			material->Draw(owner->GetTransform()->GetTransformMatrix());
-			mesh->DrawSubMesh(i);
+			outMaterial = materialList[index];
+			return true;
 		}
+		return false;
 	}
-}
 
-bool Renderer::TryGetMaterial(std::shared_ptr<Material>& outMaterial, int index)
-{
-	if (index >= 0 && index < materialList.size())
+	void Renderer::CleanMaterialList()
 	{
-		outMaterial = materialList[index];
-		return true;
+		for (size_t i = 0; i < materialList.size(); i++)
+		{
+			materialList[i].reset();
+		}
+		materialList.clear();
 	}
-	return false;
-}
 
-void Renderer::CleanMaterialList()
-{
-	for (size_t i = 0; i < materialList.size(); i++)
+	glm::vec3 Renderer::GetCameraPosition() const
 	{
-		materialList[i].reset();
+		return CamerasManager::GetActiveCameraPosition();
 	}
-	materialList.clear();
-}
-
-glm::vec3 Renderer::GetCameraPosition() const
-{
-	return CamerasManager::GetActiveCameraPosition();
 }

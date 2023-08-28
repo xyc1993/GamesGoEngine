@@ -3,38 +3,41 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-class WindowManager
+namespace GamesGoEngine
 {
-private:
-	WindowManager();
+	class WindowManager
+	{
+	private:
+		WindowManager();
 
-	static WindowManager* instance;
-	static WindowManager* GetInstance();
-	
-	int SetWindow(GLFWwindow* window);
+		static WindowManager* instance;
+		static WindowManager* GetInstance();
 
-public:
-	static bool SetWindow();
-	static GLFWwindow* GetWindow();
-	static void TerminateWindow();
-	static GLint GetCurrentWidth();
-	static GLint GetCurrentHeight();
-	static float GetCurrentAspectRatio();
-	static void EnableVSync(bool enable);
-	static bool IsVSyncEnabled();
+		int SetWindow(GLFWwindow* window);
 
-private:
-	static void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
-	void UpdateAspectRatio();
+	public:
+		static bool SetWindow();
+		static GLFWwindow* GetWindow();
+		static void TerminateWindow();
+		static GLint GetCurrentWidth();
+		static GLint GetCurrentHeight();
+		static float GetCurrentAspectRatio();
+		static void EnableVSync(bool enable);
+		static bool IsVSyncEnabled();
 
-	GLFWwindow* window;
+	private:
+		static void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
+		void UpdateAspectRatio();
 
-	const GLint startWindowWidth = 1600;
-	const GLint startWindowHeight = 900;
+		GLFWwindow* window;
 
-	int currentScreenWidth;
-	int currentScreenHeight;
-	float aspectRatio;
+		const GLint startWindowWidth = 1600;
+		const GLint startWindowHeight = 900;
 
-	bool vsyncEnabled;
-};
+		int currentScreenWidth;
+		int currentScreenHeight;
+		float aspectRatio;
+
+		bool vsyncEnabled;
+	};
+}

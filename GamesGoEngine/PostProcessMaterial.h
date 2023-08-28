@@ -2,24 +2,27 @@
 
 #include "Material.h"
 
-class PostProcessMaterial : public Material
+namespace GamesGoEngine
 {
-public:
-	PostProcessMaterial();
-	PostProcessMaterial(const GLchar* fragmentPath);
+	class PostProcessMaterial : public Material
+	{
+	public:
+		PostProcessMaterial();
+		PostProcessMaterial(const GLchar* fragmentPath);
 
-	void SetBlendWeight(float weight);
-	float GetBlendWeight() const;
+		void SetBlendWeight(float weight);
+		float GetBlendWeight() const;
 
-	// This method is used to determine if post process material should be used. In the future it could be expanded to handle local post process volumes.
-	bool IsActive() const;
+		// This method is used to determine if post process material should be used. In the future it could be expanded to handle local post process volumes.
+		bool IsActive() const;
 
-	virtual void Draw(glm::mat4 model) override;
+		virtual void Draw(glm::mat4 model) override;
 
-	void SetPostProcessOrder(int orderValue);
-	int GetPostProcessOrder() const;
+		void SetPostProcessOrder(int orderValue);
+		int GetPostProcessOrder() const;
 
-private:
-	float blendWeight;
-	int postProcessOrder;
-};
+	private:
+		float blendWeight;
+		int postProcessOrder;
+	};
+}

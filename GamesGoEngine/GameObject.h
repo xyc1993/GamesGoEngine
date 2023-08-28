@@ -7,59 +7,62 @@
 #include "Transform.h"
 #include "Component.h"
 
-class GameObject
+namespace GamesGoEngine
 {
-public:
-	GameObject();
-	~GameObject();
+	class GameObject
+	{
+	public:
+		GameObject();
+		~GameObject();
 
-	void Update();
-	void LateUpdate();
-	void AddComponent(Component* component);
+		void Update();
+		void LateUpdate();
+		void AddComponent(Component* component);
 
-	Transform* GetTransform() const;
-	std::string GetName() const;
-	void SetName(std::string name);
+		Transform* GetTransform() const;
+		std::string GetName() const;
+		void SetName(std::string name);
 
-	GameObject* GetParent() const;
-	void SetParent(GameObject* parent);
+		GameObject* GetParent() const;
+		void SetParent(GameObject* parent);
 
-	// methods to check the status of the selection in the editor's UI
-	bool IsSelected() const;
-	void SetSelected(bool selected);
+		// methods to check the status of the selection in the editor's UI
+		bool IsSelected() const;
+		void SetSelected(bool selected);
 
-private:
-	void UpdateDirectChildrenTransforms();
+	private:
+		void UpdateDirectChildrenTransforms();
 
-public:
-	// returns number of all of the parents up the hierarchy
-	int GetAllParentsNumber() const;
+	public:
+		// returns number of all of the parents up the hierarchy
+		int GetAllParentsNumber() const;
 
-	void SetSceneReferenece(class Scene* scene);
+		void SetSceneReferenece(class Scene* scene);
 
-	const std::vector<GameObject*>& GetChildren() const;
+		const std::vector<GameObject*>& GetChildren() const;
 
-private:
-	void RemoveParent();
-	void SetNewParent(GameObject* parent);
-	static void CalculateParentsNumber(GameObject* parent, int& currentParentNumber);
-	void CleanChildren(GameObject* directChild, std::set<GameObject*> childsChildren);
+	private:
+		void RemoveParent();
+		void SetNewParent(GameObject* parent);
+		static void CalculateParentsNumber(GameObject* parent, int& currentParentNumber);
+		void CleanChildren(GameObject* directChild, std::set<GameObject*> childsChildren);
 
-	std::string name;
-	Transform* transform;
-	std::vector<Component*> components;
+		std::string name;
+		Transform* transform;
+		std::vector<Component*> components;
 
-	GameObject* parent;
-	// direct children of the game object
-	std::vector<GameObject*> children;
-	// all of the children in the game object hierarchy (i.e. children of children as well)
-	std::set<GameObject*> allChildren;
-	int parentsNumber;
+		GameObject* parent;
+		// direct children of the game object
+		std::vector<GameObject*> children;
+		// all of the children in the game object hierarchy (i.e. children of children as well)
+		std::set<GameObject*> allChildren;
+		int parentsNumber;
 
-	class Scene* scene;
+		class Scene* scene;
 
-	bool selected = false;
+		bool selected = false;
 
-public:
-	static constexpr int NAME_MAX_LENGTH = 256;
-};
+	public:
+		static constexpr int NAME_MAX_LENGTH = 256;
+	};
+}

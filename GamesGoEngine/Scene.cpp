@@ -4,76 +4,79 @@
 #include "PostProcessRenderer.h"
 #include "RenderingManager.h"
 
-Scene::Scene()
+namespace GamesGoEngine
 {
-	sceneObjects.clear();
-}
-
-Scene::~Scene()
-{
-	// delete only the top most game objects in the scene since their destructor will delete their children as well
-	std::vector<GameObject*> markedForDeletion;
-	for (auto it = sceneObjects.begin(); it != sceneObjects.end(); ++it)
+	Scene::Scene()
 	{
-		GameObject* go = *it;
-		if (go != nullptr && go->GetAllParentsNumber() == 0)
+		sceneObjects.clear();
+	}
+
+	Scene::~Scene()
+	{
+		// delete only the top most game objects in the scene since their destructor will delete their children as well
+		std::vector<GameObject*> markedForDeletion;
+		for (auto it = sceneObjects.begin(); it != sceneObjects.end(); ++it)
 		{
-			markedForDeletion.push_back(go);
+			GameObject* go = *it;
+			if (go != nullptr && go->GetAllParentsNumber() == 0)
+			{
+				markedForDeletion.push_back(go);
+			}
+		}
+
+		for (int i = 0; i < markedForDeletion.size(); i++)
+		{
+			RemoveGameObject(markedForDeletion[i]);
+		}
+
+		sceneObjects.clear();
+		CamerasManager::RemoveSceneCameras();
+	}
+
+	void Scene::AddGameObject(GameObject* gameObject)
+	{
+		gameObject->SetSceneReferenece(this);
+		sceneObjects.insert(gameObject);
+		if (gameObject->GetName().length() == 0)
+		{
+			std::string name = "GameObject_";
+			name.append(std::to_string(sceneObjects.size() - 1));
+			gameObject->SetName(name);
 		}
 	}
 
-	for (int i = 0; i < markedForDeletion.size(); i++)
+	void Scene::RemoveGameObject(GameObject* gameObject)
 	{
-		RemoveGameObject(markedForDeletion[i]);
-	}
-
-	sceneObjects.clear();
-	CamerasManager::RemoveSceneCameras();
-}
-
-void Scene::AddGameObject(GameObject* gameObject)
-{
-	gameObject->SetSceneReferenece(this);
-	sceneObjects.insert(gameObject);
-	if (gameObject->GetName().length() == 0)
-	{
-		std::string name = "GameObject_";
-		name.append(std::to_string(sceneObjects.size() - 1));
-		gameObject->SetName(name);
-	}
-}
-
-void Scene::RemoveGameObject(GameObject* gameObject)
-{
-	auto iterator = sceneObjects.find(gameObject);
-	if (iterator != sceneObjects.end())
-	{
-		delete *iterator;
-		sceneObjects.erase(iterator);
-		RenderingManager::SetSelectedGameObject(nullptr);
-	}
-}
-
-void Scene::Update()
-{
-	for (auto it = sceneObjects.begin(); it != sceneObjects.end(); ++it)
-	{
-		if (*it != nullptr)
+		auto iterator = sceneObjects.find(gameObject);
+		if (iterator != sceneObjects.end())
 		{
-			(*it)->Update();
+			delete* iterator;
+			sceneObjects.erase(iterator);
+			RenderingManager::SetSelectedGameObject(nullptr);
 		}
 	}
 
-	for (auto it = sceneObjects.begin(); it != sceneObjects.end(); ++it)
+	void Scene::Update()
 	{
-		if (*it != nullptr)
+		for (auto it = sceneObjects.begin(); it != sceneObjects.end(); ++it)
 		{
-			(*it)->LateUpdate();
+			if (*it != nullptr)
+			{
+				(*it)->Update();
+			}
+		}
+
+		for (auto it = sceneObjects.begin(); it != sceneObjects.end(); ++it)
+		{
+			if (*it != nullptr)
+			{
+				(*it)->LateUpdate();
+			}
 		}
 	}
-}
 
-const std::set<GameObject*>& Scene::GetSceneObjects() const
-{
-	return sceneObjects;
+	const std::set<GameObject*>& Scene::GetSceneObjects() const
+	{
+		return sceneObjects;
+	}
 }

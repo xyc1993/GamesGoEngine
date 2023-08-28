@@ -1,7 +1,10 @@
 #pragma once
 
-class GraphicsSettingsUI
+namespace GamesGoEngine
 {
-public:
-	void static Draw();
-};
+	class GraphicsSettingsUI
+	{
+	public:
+		void static Draw();
+	};
+}

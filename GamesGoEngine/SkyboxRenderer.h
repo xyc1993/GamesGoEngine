@@ -2,11 +2,14 @@
 
 #include "Renderer.h"
 
-class SkyboxRenderer : public Renderer
+namespace GamesGoEngine
 {
-public:
-	SkyboxRenderer();
-	
-	virtual void Draw() override;
-	void SetMaterial(const std::shared_ptr<Material>& material);
-};
+	class SkyboxRenderer : public Renderer
+	{
+	public:
+		SkyboxRenderer();
+
+		virtual void Draw() override;
+		void SetMaterial(const std::shared_ptr<Material>& material);
+	};
+}

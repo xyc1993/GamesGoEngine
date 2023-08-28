@@ -2,8 +2,11 @@
 
 #include "SceneExample.h"
 
-class SceneExample_MultipleLightsShadows : public SceneExample
+namespace GamesGoEngine
 {
-public:
-	SceneExample_MultipleLightsShadows();
-};
+	class SceneExample_MultipleLightsShadows : public SceneExample
+	{
+	public:
+		SceneExample_MultipleLightsShadows();
+	};
+}

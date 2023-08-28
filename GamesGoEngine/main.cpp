@@ -12,6 +12,8 @@
 
 #include "SceneExamples.h"
 
+using namespace GamesGoEngine;
+
 void MainLoop(GLFWwindow* window)
 {
 	RenderingManager::Init(WindowManager::GetCurrentWidth(), WindowManager::GetCurrentHeight());

@@ -4,138 +4,141 @@
 #include "RenderingManager.h"
 #include "WindowManager.h"
 
-void GraphicsSettingsUI::Draw()
+namespace GamesGoEngine
 {
-	ImGui::Begin("Graphics Settings");
+	void GraphicsSettingsUI::Draw()
+	{
+		ImGui::Begin("Graphics Settings");
 
-	bool vsyncEnabled = WindowManager::IsVSyncEnabled();
-	if (ImGui::Checkbox("V-Sync Enabled", &vsyncEnabled))
-	{
-		WindowManager::EnableVSync(vsyncEnabled);
-	}
-
-	bool postProcessingEnabled = RenderingManager::IsPostProcessingEnabled();
-	if (ImGui::Checkbox("Post Processing Enabled", &postProcessingEnabled))
-	{
-		RenderingManager::EnablePostProcessing(postProcessingEnabled);
-	}
-
-	bool hdrToneMappingAndGammaEnabled = RenderingManager::IsHDRToneMappingAndGammaEnabled();
-	if (ImGui::Checkbox("HDR tone mapping and gamma correction Enabled", &hdrToneMappingAndGammaEnabled))
-	{
-		RenderingManager::EnableHDRToneMappingAndGamma(hdrToneMappingAndGammaEnabled);
-	}
-	if (hdrToneMappingAndGammaEnabled)
-	{
-		float gamma = RenderingManager::GetGamma();
-		if (ImGui::SliderFloat("gamma", &gamma, 0.0f, 5.0f))
+		bool vsyncEnabled = WindowManager::IsVSyncEnabled();
+		if (ImGui::Checkbox("V-Sync Enabled", &vsyncEnabled))
 		{
-			RenderingManager::SetGamma(gamma);
+			WindowManager::EnableVSync(vsyncEnabled);
 		}
 
-		float exposure = RenderingManager::GetExposure();
-		if (ImGui::SliderFloat("exposure", &exposure, 0.0f, 5.0f))
+		bool postProcessingEnabled = RenderingManager::IsPostProcessingEnabled();
+		if (ImGui::Checkbox("Post Processing Enabled", &postProcessingEnabled))
 		{
-			RenderingManager::SetExposure(exposure);
-		}
-	}
-
-	bool bloomEnabled = RenderingManager::IsBloomEnabled();
-	if (ImGui::Checkbox("Bloom Enabled", &bloomEnabled))
-	{
-		RenderingManager::EnableBloom(bloomEnabled);
-	}
-	if (bloomEnabled)
-	{
-		float bloomStrength = RenderingManager::GetBloomStrength();
-		if (ImGui::SliderFloat("Bloom Strength", &bloomStrength, 0.0f, 1.0f))
-		{
-			RenderingManager::SetBloomStrength(bloomStrength);
+			RenderingManager::EnablePostProcessing(postProcessingEnabled);
 		}
 
-		int bloomMipChainLength = RenderingManager::GetBloomMipChainLength();
-		if (ImGui::SliderInt("Bloom mip chain length", &bloomMipChainLength, 1, 10))
+		bool hdrToneMappingAndGammaEnabled = RenderingManager::IsHDRToneMappingAndGammaEnabled();
+		if (ImGui::Checkbox("HDR tone mapping and gamma correction Enabled", &hdrToneMappingAndGammaEnabled))
 		{
-			RenderingManager::SetBloomMipChainLength(bloomMipChainLength);
+			RenderingManager::EnableHDRToneMappingAndGamma(hdrToneMappingAndGammaEnabled);
 		}
-	}
-
-	bool ssaoEnabled = RenderingManager::IsSSAOEnabled();
-	if (ImGui::Checkbox("SSAO Enabled", &ssaoEnabled))
-	{
-		RenderingManager::EnableSSAO(ssaoEnabled);
-	}
-
-	constexpr size_t shadowMapResolutionsNumber = 5;
-	const char* shadowMaps[shadowMapResolutionsNumber] = { "256", "512", "1024", "2048", "4096"};
-	static const char* currentShadowMap = shadowMaps[2];
-	if (ImGui::BeginCombo("shadow map res", currentShadowMap))
-	{
-		for (int i = 0; i < shadowMapResolutionsNumber; i++)
+		if (hdrToneMappingAndGammaEnabled)
 		{
-			const bool isSelected = (currentShadowMap == shadowMaps[i]);
-			if (ImGui::Selectable(shadowMaps[i], isSelected))
+			float gamma = RenderingManager::GetGamma();
+			if (ImGui::SliderFloat("gamma", &gamma, 0.0f, 5.0f))
 			{
-				currentShadowMap = shadowMaps[i];
-
-				std::stringstream strValue;
-				strValue << currentShadowMap;
-
-				unsigned int shadowMapResInt;
-				strValue >> shadowMapResInt;
-				
-				RenderingManager::SetShadowMapResolution(shadowMapResInt);
+				RenderingManager::SetGamma(gamma);
 			}
-				
-		}
-		ImGui::EndCombo();
-	}
 
-	bool aaEnabled = RenderingManager::IsAntiAliasingEnabled();
-	if (ImGui::Checkbox("AA Enabled", &aaEnabled))
-	{
-		RenderingManager::EnableAntiAliasing(aaEnabled);
-	}
-	if (aaEnabled)
-	{
-		// AA algorithm combo
-		constexpr size_t aaAlgorithmsNumber = 1;
-		const char* aaAlgorithms[aaAlgorithmsNumber] = { "FXAA" };
-		static const char* currentAntiAliasingAlgorithm = aaAlgorithms[0];
-		if (ImGui::BeginCombo("AA algorithm", currentAntiAliasingAlgorithm))
-		{
-			for (int i = 0; i < aaAlgorithmsNumber; i++)
+			float exposure = RenderingManager::GetExposure();
+			if (ImGui::SliderFloat("exposure", &exposure, 0.0f, 5.0f))
 			{
-				const bool isSelected = (currentAntiAliasingAlgorithm == aaAlgorithms[i]);
-				if (ImGui::Selectable(aaAlgorithms[i], isSelected))
+				RenderingManager::SetExposure(exposure);
+			}
+		}
+
+		bool bloomEnabled = RenderingManager::IsBloomEnabled();
+		if (ImGui::Checkbox("Bloom Enabled", &bloomEnabled))
+		{
+			RenderingManager::EnableBloom(bloomEnabled);
+		}
+		if (bloomEnabled)
+		{
+			float bloomStrength = RenderingManager::GetBloomStrength();
+			if (ImGui::SliderFloat("Bloom Strength", &bloomStrength, 0.0f, 1.0f))
+			{
+				RenderingManager::SetBloomStrength(bloomStrength);
+			}
+
+			int bloomMipChainLength = RenderingManager::GetBloomMipChainLength();
+			if (ImGui::SliderInt("Bloom mip chain length", &bloomMipChainLength, 1, 10))
+			{
+				RenderingManager::SetBloomMipChainLength(bloomMipChainLength);
+			}
+		}
+
+		bool ssaoEnabled = RenderingManager::IsSSAOEnabled();
+		if (ImGui::Checkbox("SSAO Enabled", &ssaoEnabled))
+		{
+			RenderingManager::EnableSSAO(ssaoEnabled);
+		}
+
+		constexpr size_t shadowMapResolutionsNumber = 5;
+		const char* shadowMaps[shadowMapResolutionsNumber] = { "256", "512", "1024", "2048", "4096" };
+		static const char* currentShadowMap = shadowMaps[2];
+		if (ImGui::BeginCombo("shadow map res", currentShadowMap))
+		{
+			for (int i = 0; i < shadowMapResolutionsNumber; i++)
+			{
+				const bool isSelected = (currentShadowMap == shadowMaps[i]);
+				if (ImGui::Selectable(shadowMaps[i], isSelected))
 				{
-					currentAntiAliasingAlgorithm = aaAlgorithms[i];
-					if (i == 0)
-					{
-						RenderingManager::SetAntiAliasingAlgorithm(AntiAliasingAlgorithm::FXAA);
-					}
+					currentShadowMap = shadowMaps[i];
+
+					std::stringstream strValue;
+					strValue << currentShadowMap;
+
+					unsigned int shadowMapResInt;
+					strValue >> shadowMapResInt;
+
+					RenderingManager::SetShadowMapResolution(shadowMapResInt);
 				}
 
 			}
 			ImGui::EndCombo();
 		}
 
-		// Settings for specific algorithms
-		if (RenderingManager::GetAntiAliasingAlgorithm() == AntiAliasingAlgorithm::FXAA)
+		bool aaEnabled = RenderingManager::IsAntiAliasingEnabled();
+		if (ImGui::Checkbox("AA Enabled", &aaEnabled))
 		{
-			float contrastThreshold = RenderingManager::GetFXAAContrastThreshold();
-			if (ImGui::SliderFloat("FXAA contrast threshold", &contrastThreshold, 0.0312f, 0.0833f))
+			RenderingManager::EnableAntiAliasing(aaEnabled);
+		}
+		if (aaEnabled)
+		{
+			// AA algorithm combo
+			constexpr size_t aaAlgorithmsNumber = 1;
+			const char* aaAlgorithms[aaAlgorithmsNumber] = { "FXAA" };
+			static const char* currentAntiAliasingAlgorithm = aaAlgorithms[0];
+			if (ImGui::BeginCombo("AA algorithm", currentAntiAliasingAlgorithm))
 			{
-				RenderingManager::SetFXAAContrastThreshold(contrastThreshold);
+				for (int i = 0; i < aaAlgorithmsNumber; i++)
+				{
+					const bool isSelected = (currentAntiAliasingAlgorithm == aaAlgorithms[i]);
+					if (ImGui::Selectable(aaAlgorithms[i], isSelected))
+					{
+						currentAntiAliasingAlgorithm = aaAlgorithms[i];
+						if (i == 0)
+						{
+							RenderingManager::SetAntiAliasingAlgorithm(AntiAliasingAlgorithm::FXAA);
+						}
+					}
+
+				}
+				ImGui::EndCombo();
 			}
 
-			float relativeThreshold = RenderingManager::GetFXAARelativeThreshold();
-			if (ImGui::SliderFloat("FXAA reelative threshold", &relativeThreshold, 0.063f, 0.333f))
+			// Settings for specific algorithms
+			if (RenderingManager::GetAntiAliasingAlgorithm() == AntiAliasingAlgorithm::FXAA)
 			{
-				RenderingManager::SetFXAARelativeThreshold(relativeThreshold);
+				float contrastThreshold = RenderingManager::GetFXAAContrastThreshold();
+				if (ImGui::SliderFloat("FXAA contrast threshold", &contrastThreshold, 0.0312f, 0.0833f))
+				{
+					RenderingManager::SetFXAAContrastThreshold(contrastThreshold);
+				}
+
+				float relativeThreshold = RenderingManager::GetFXAARelativeThreshold();
+				if (ImGui::SliderFloat("FXAA reelative threshold", &relativeThreshold, 0.063f, 0.333f))
+				{
+					RenderingManager::SetFXAARelativeThreshold(relativeThreshold);
+				}
 			}
 		}
-	}
 
-	ImGui::End();
+		ImGui::End();
+	}
 }

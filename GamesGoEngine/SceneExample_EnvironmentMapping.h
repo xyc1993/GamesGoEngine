@@ -2,8 +2,11 @@
 
 #include "SceneExample.h"
 
-class SceneExample_EnvironmentMapping : public SceneExample
+namespace GamesGoEngine
 {
-public:
-	SceneExample_EnvironmentMapping();
-};
+	class SceneExample_EnvironmentMapping : public SceneExample
+	{
+	public:
+		SceneExample_EnvironmentMapping();
+	};
+}

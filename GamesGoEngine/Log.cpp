@@ -4,22 +4,25 @@
 
 #include "LoggerUI.h"
 
-void Log::PrintMsg(MsgType type, std::string msg)
+namespace GamesGoEngine
 {
-	const time_t currentTime = time(0);
-	tm localTime;
-	localtime_s(&localTime , &currentTime);
+	void Log::PrintMsg(MsgType type, std::string msg)
+	{
+		const time_t currentTime = time(0);
+		tm localTime;
+		localtime_s(&localTime, &currentTime);
 
-	char buffer[256];
-	strftime(buffer, sizeof(buffer), "%Y.%b.%d %H:%M:%S", &localTime);
+		char buffer[256];
+		strftime(buffer, sizeof(buffer), "%Y.%b.%d %H:%M:%S", &localTime);
 
-	const std::string logTimeString = buffer;
-	const std::string logMsg = logTimeString + " " + msg;
+		const std::string logTimeString = buffer;
+		const std::string logMsg = logTimeString + " " + msg;
 
-	LoggerUI::AddMsg(type, logMsg);
-}
+		LoggerUI::AddMsg(type, logMsg);
+	}
 
-void Log::ClearLogs()
-{
-	LoggerUI::ClearLogs();
+	void Log::ClearLogs()
+	{
+		LoggerUI::ClearLogs();
+	}
 }

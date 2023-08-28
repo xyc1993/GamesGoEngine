@@ -2,8 +2,11 @@
 
 #include "SceneExample.h"
 
-class SceneExample_Transparency : public SceneExample
+namespace GamesGoEngine
 {
-public:
-	SceneExample_Transparency();
-};
+	class SceneExample_Transparency : public SceneExample
+	{
+	public:
+		SceneExample_Transparency();
+	};
+}

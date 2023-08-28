@@ -2,8 +2,11 @@
 
 #include <GLFW/glfw3.h>
 
-class InputEditorShortcuts
+namespace GamesGoEngine
 {
-public:
-	static void ProcessShortcuts(GLFWwindow* window);
-};
+	class InputEditorShortcuts
+	{
+	public:
+		static void ProcessShortcuts(GLFWwindow* window);
+	};
+}

@@ -1,7 +1,10 @@
 #pragma once
 
-class DebugToolsUI
+namespace GamesGoEngine
 {
-public:
-	void static Draw();
-};
+	class DebugToolsUI
+	{
+	public:
+		void static Draw();
+	};
+}

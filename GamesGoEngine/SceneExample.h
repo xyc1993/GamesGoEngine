@@ -2,19 +2,22 @@
 
 #include "Scene.h"
 
-class SceneExample
+namespace GamesGoEngine
 {
-public:
-	SceneExample();
-	~SceneExample();
-	
-	virtual void Update();
-	const Scene& GetScene() const;
-	Scene* GetSceneUnsafe() const;
+	class SceneExample
+	{
+	public:
+		SceneExample();
+		~SceneExample();
 
-protected:
-	GameObject* AddEditorSpectator(glm::vec3 position, glm::vec3 eulerAnglesRotation) const;
-	GameObject* AddEditorSpectator() const;
+		virtual void Update();
+		const Scene& GetScene() const;
+		Scene* GetSceneUnsafe() const;
 
-	Scene* scene;
-};
+	protected:
+		GameObject* AddEditorSpectator(glm::vec3 position, glm::vec3 eulerAnglesRotation) const;
+		GameObject* AddEditorSpectator() const;
+
+		Scene* scene;
+	};
+}

@@ -2,8 +2,11 @@
 
 #include "SceneExample.h"
 
-class SceneExample_GeometryShader : public SceneExample
+namespace GamesGoEngine
 {
-public:
-	SceneExample_GeometryShader();
-};
+	class SceneExample_GeometryShader : public SceneExample
+	{
+	public:
+		SceneExample_GeometryShader();
+	};
+}

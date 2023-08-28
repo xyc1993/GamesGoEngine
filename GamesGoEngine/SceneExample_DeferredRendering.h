@@ -2,8 +2,11 @@
 
 #include "SceneExample.h"
 
-class SceneExample_DeferredRendering : public SceneExample
+namespace GamesGoEngine
 {
-public:
-	SceneExample_DeferredRendering();
-};
+	class SceneExample_DeferredRendering : public SceneExample
+	{
+	public:
+		SceneExample_DeferredRendering();
+	};
+}

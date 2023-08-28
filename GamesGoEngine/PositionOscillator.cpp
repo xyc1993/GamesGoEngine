@@ -3,31 +3,34 @@
 #include "GameObject.h"
 #include "Time.h"
 
-void PositionOscillator::Init(GameObject* owner)
+namespace GamesGoEngine
 {
-	Component::Init(owner);
-
-	if (owner != nullptr && owner->GetTransform() != nullptr)
+	void PositionOscillator::Init(GameObject* owner)
 	{
-		startPosition = owner->GetTransform()->GetLocalPosition();
-	}	
-}
+		Component::Init(owner);
 
-void PositionOscillator::Update()
-{
-	if (owner != nullptr)
-	{
-		const glm::vec3 position = startPosition + amplitude * sin(speed * (float)Time::GetTime());
-		owner->GetTransform()->SetLocalPosition(position);
+		if (owner != nullptr && owner->GetTransform() != nullptr)
+		{
+			startPosition = owner->GetTransform()->GetLocalPosition();
+		}
 	}
-}
 
-void PositionOscillator::SetAmplitude(glm::vec3 amplitude)
-{
-	this->amplitude = amplitude;
-}
+	void PositionOscillator::Update()
+	{
+		if (owner != nullptr)
+		{
+			const glm::vec3 position = startPosition + amplitude * sin(speed * (float)Time::GetTime());
+			owner->GetTransform()->SetLocalPosition(position);
+		}
+	}
 
-void PositionOscillator::SetSpeed(float speed)
-{
-	this->speed = speed;
+	void PositionOscillator::SetAmplitude(glm::vec3 amplitude)
+	{
+		this->amplitude = amplitude;
+	}
+
+	void PositionOscillator::SetSpeed(float speed)
+	{
+		this->speed = speed;
+	}
 }

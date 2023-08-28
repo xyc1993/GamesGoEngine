@@ -2,13 +2,16 @@
 
 #include "Scene.h"
 
-class WorldOutlinerUI
+namespace GamesGoEngine
 {
-public:
-	static GameObject* Draw(Scene* activeScene);
+	class WorldOutlinerUI
+	{
+	public:
+		static GameObject* Draw(Scene* activeScene);
 
-private:
-	static void DrawSceneNodeChildren(GameObject* sceneObject);
+	private:
+		static void DrawSceneNodeChildren(GameObject* sceneObject);
 
-	static GameObject* selectedSceneObject;
-};
+		static GameObject* selectedSceneObject;
+	};
+}

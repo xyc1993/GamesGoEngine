@@ -4,20 +4,23 @@
 
 #include "Component.h"
 
-/*
- * Test class used for testing rotation change
- */
-class Rotator : public Component
+namespace GamesGoEngine
 {
-public:
-	Rotator();
-	
-	virtual void Update() override;
+	/*
+	 * Test class used for testing rotation change
+	 */
+	class Rotator : public Component
+	{
+	public:
+		Rotator();
 
-	// rotation speed expressed in degrees per second
-	void SetSpeed(glm::vec3 speed);
+		virtual void Update() override;
 
-private:
-	glm::quat identityQuat;
-	glm::quat speed;
-};
+		// rotation speed expressed in degrees per second
+		void SetSpeed(glm::vec3 speed);
+
+	private:
+		glm::quat identityQuat;
+		glm::quat speed;
+	};
+}

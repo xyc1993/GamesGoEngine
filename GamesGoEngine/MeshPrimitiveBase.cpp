@@ -1,11 +1,14 @@
 #include "MeshPrimitiveBase.h"
 
-void MeshPrimitiveBase::Init()
+namespace GamesGoEngine
 {
-	subMeshes.clear();
-	if (GetPrimitiveSubMesh() == nullptr)
+	void MeshPrimitiveBase::Init()
 	{
-		SetupMesh();
+		subMeshes.clear();
+		if (GetPrimitiveSubMesh() == nullptr)
+		{
+			SetupMesh();
+		}
+		subMeshes.push_back(GetPrimitiveSubMesh());
 	}
-	subMeshes.push_back(GetPrimitiveSubMesh());
 }

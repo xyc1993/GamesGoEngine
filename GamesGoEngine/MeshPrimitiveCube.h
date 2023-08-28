@@ -2,15 +2,18 @@
 
 #include "MeshPrimitiveBase.h"
 
-class MeshPrimitiveCube : public MeshPrimitiveBase
+namespace GamesGoEngine
 {
-public:
-	MeshPrimitiveCube();
+	class MeshPrimitiveCube : public MeshPrimitiveBase
+	{
+	public:
+		MeshPrimitiveCube();
 
-protected:
-	virtual SubMesh* GetPrimitiveSubMesh() override;
-	virtual void SetupMesh() override;
+	protected:
+		virtual SubMesh* GetPrimitiveSubMesh() override;
+		virtual void SetupMesh() override;
 
-	// shared submesh among all of the cube instances, generated just once
-	static SubMesh* cubeSubMesh;
-};
+		// shared submesh among all of the cube instances, generated just once
+		static SubMesh* cubeSubMesh;
+	};
+}

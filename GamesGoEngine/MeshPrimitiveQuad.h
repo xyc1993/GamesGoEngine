@@ -2,15 +2,18 @@
 
 #include "MeshPrimitiveBase.h"
 
-class MeshPrimitiveQuad : public MeshPrimitiveBase
+namespace GamesGoEngine
 {
-public:
-	MeshPrimitiveQuad();
+	class MeshPrimitiveQuad : public MeshPrimitiveBase
+	{
+	public:
+		MeshPrimitiveQuad();
 
-protected:
-	virtual SubMesh* GetPrimitiveSubMesh() override;
-	virtual void SetupMesh() override;
+	protected:
+		virtual SubMesh* GetPrimitiveSubMesh() override;
+		virtual void SetupMesh() override;
 
-	// shared submesh among all of the quad instances, generated just once
-	static SubMesh* quadSubMesh;
-};
+		// shared submesh among all of the quad instances, generated just once
+		static SubMesh* quadSubMesh;
+	};
+}

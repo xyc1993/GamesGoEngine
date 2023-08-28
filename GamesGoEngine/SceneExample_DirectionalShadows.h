@@ -2,8 +2,11 @@
 
 #include "SceneExample.h"
 
-class SceneExample_DirectionalShadows : public SceneExample
+namespace GamesGoEngine
 {
-public:
-	SceneExample_DirectionalShadows();
-};
+	class SceneExample_DirectionalShadows : public SceneExample
+	{
+	public:
+		SceneExample_DirectionalShadows();
+	};
+}

@@ -3,21 +3,24 @@
 #include "GameObject.h"
 #include "Time.h"
 
-Rotator::Rotator()
+namespace GamesGoEngine
 {
-	identityQuat = glm::quat(glm::vec3(0.0f));
-}
-
-void Rotator::Update()
-{
-	if (owner != nullptr && owner->GetTransform() != nullptr)
+	Rotator::Rotator()
 	{
-		const glm::quat frameRotation = glm::mix(identityQuat, speed, (float)Time::GetDeltaTime());
-		owner->GetTransform()->SetLocalRotation(frameRotation * owner->GetTransform()->GetLocalRotation());
+		identityQuat = glm::quat(glm::vec3(0.0f));
 	}
-}
 
-void Rotator::SetSpeed(glm::vec3 speed)
-{
-	this->speed = glm::quat(glm::radians(speed));
+	void Rotator::Update()
+	{
+		if (owner != nullptr && owner->GetTransform() != nullptr)
+		{
+			const glm::quat frameRotation = glm::mix(identityQuat, speed, (float)Time::GetDeltaTime());
+			owner->GetTransform()->SetLocalRotation(frameRotation * owner->GetTransform()->GetLocalRotation());
+		}
+	}
+
+	void Rotator::SetSpeed(glm::vec3 speed)
+	{
+		this->speed = glm::quat(glm::radians(speed));
+	}
 }

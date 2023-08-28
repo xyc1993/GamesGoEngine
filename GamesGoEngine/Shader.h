@@ -8,27 +8,30 @@
 
 #include <GL/glew.h>
 
-enum class ShaderType
+namespace GamesGoEngine
 {
-    Vertex,
-    Fragment,
-    Geometry
-};
+    enum class ShaderType
+    {
+        Vertex,
+        Fragment,
+        Geometry
+    };
 
-class Shader
-{
-public:
-    Shader();
-    Shader(const GLchar* vertexPath, const GLchar* fragmentPath);
-    Shader(const GLchar* vertexPath, const GLchar* fragmentPath, const GLchar* geometryPath);
-    void Use() const;
-    GLuint GetProgram() const;
+    class Shader
+    {
+    public:
+        Shader();
+        Shader(const GLchar* vertexPath, const GLchar* fragmentPath);
+        Shader(const GLchar* vertexPath, const GLchar* fragmentPath, const GLchar* geometryPath);
+        void Use() const;
+        GLuint GetProgram() const;
 
-private:
-    void CreateProgram(const std::vector<GLuint>& shadersToAttach);
-    static bool LoadShader(GLuint& shader, const GLchar* path, ShaderType shaderType);
-    static std::string GetShaderTypeName(ShaderType shaderType);
-    static GLuint GetShaderInteger(ShaderType shaderType);
+    private:
+        void CreateProgram(const std::vector<GLuint>& shadersToAttach);
+        static bool LoadShader(GLuint& shader, const GLchar* path, ShaderType shaderType);
+        static std::string GetShaderTypeName(ShaderType shaderType);
+        static GLuint GetShaderInteger(ShaderType shaderType);
 
-    GLuint program;
-};
+        GLuint program;
+    };
+}

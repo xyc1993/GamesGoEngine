@@ -6,9 +6,12 @@
 
 #include <vector>
 
-class TextureLoader
+namespace GamesGoEngine
 {
-public:
-    static GLuint LoadTexture(GLchar* path, bool transparencyEnabled = false, bool sRGB = true);
-    static GLuint LoadCubemap(std::vector<const GLchar*> faces, bool transparencyEnabled = false, bool sRGB = true);
-};
+    class TextureLoader
+    {
+    public:
+        static GLuint LoadTexture(GLchar* path, bool transparencyEnabled = false, bool sRGB = true);
+        static GLuint LoadCubemap(std::vector<const GLchar*> faces, bool transparencyEnabled = false, bool sRGB = true);
+    };
+}

@@ -1,8 +1,11 @@
 #pragma once
 #include "SceneExample.h"
 
-class SceneExample_DepthTest : public SceneExample
+namespace GamesGoEngine
 {
-public:
-	SceneExample_DepthTest();
-};
+	class SceneExample_DepthTest : public SceneExample
+	{
+	public:
+		SceneExample_DepthTest();
+	};
+}

@@ -9,19 +9,22 @@
 
 #include "MeshBase.h"
 
-class MeshImported : public MeshBase
+namespace GamesGoEngine
 {
-public:
-	MeshImported(GLchar* path);
-	MeshImported(std::string path);
+	class MeshImported : public MeshBase
+	{
+	public:
+		MeshImported(GLchar* path);
+		MeshImported(std::string path);
 
-	void ImportMesh(std::string path);
-	virtual bool IsImportedMesh() const override;
+		void ImportMesh(std::string path);
+		virtual bool IsImportedMesh() const override;
 
-private:
-	// Processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
-	void ProcessNode(aiNode* node, const aiScene* scene);
-	SubMesh* ProcessMesh(aiMesh* mesh, const aiScene* scene);
-	
-	std::string directory;
-};
+	private:
+		// Processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
+		void ProcessNode(aiNode* node, const aiScene* scene);
+		SubMesh* ProcessMesh(aiMesh* mesh, const aiScene* scene);
+
+		std::string directory;
+	};
+}
