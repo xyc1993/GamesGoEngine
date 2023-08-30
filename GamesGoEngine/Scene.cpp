@@ -56,6 +56,30 @@ namespace GamesGoEngine
 		}
 	}
 
+	GameObject* Scene::GetGameObjectWithId(int id)
+	{
+		for (auto it = sceneObjects.begin(); it != sceneObjects.end(); ++it)
+		{
+			if ((*it)->GetObjectId() == id)
+			{
+				return (*it);
+			}
+		}
+		return nullptr;
+	}
+
+	GameObject* Scene::GetSelectedGameObject()
+	{
+		for (auto it = sceneObjects.begin(); it != sceneObjects.end(); ++it)
+		{
+			if ((*it)->IsSelected())
+			{
+				return (*it);
+			}
+		}
+		return nullptr;
+	}
+
 	void Scene::Update()
 	{
 		for (auto it = sceneObjects.begin(); it != sceneObjects.end(); ++it)

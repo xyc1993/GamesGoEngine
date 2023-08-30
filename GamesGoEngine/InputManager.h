@@ -37,6 +37,8 @@ namespace GamesGoEngine
 		// returns distance covered by mouse in y axis in a single frame
 		static GLfloat GetMouseYInput();
 		static GLfloat GetMouseScrollInput();
+		static GLfloat GetMouseX();
+		static GLfloat GetMouseY();
 
 		// status of cursor, if enabled will be visible, otherwise not
 		static bool GetCursorEnabled();

@@ -163,6 +163,7 @@
     <ClCompile Include="DebugToolsUI.cpp" />
     <ClCompile Include="EditorUIManager.cpp" />
     <ClCompile Include="GraphicsSettingsUI.cpp" />
+    <ClCompile Include="InputEditorUtilities.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="LoggerUI.cpp" />
     <ClCompile Include="Math.cpp" />
@@ -205,6 +206,7 @@
     <ClCompile Include="SceneExample_OmnidirectionalShadows.cpp" />
     <ClCompile Include="SceneExample_OmnidirectionalShadowsSimple.cpp" />
     <ClCompile Include="SceneExample_Transparency.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SkyboxRenderer.cpp" />
     <ClCompile Include="SpotLight.cpp" />
@@ -231,6 +233,7 @@
     <ClInclude Include="DebugToolsUI.h" />
     <ClInclude Include="EditorUIManager.h" />
     <ClInclude Include="GraphicsSettingsUI.h" />
+    <ClInclude Include="InputEditorUtilities.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="LoggerUI.h" />
     <ClInclude Include="Math.h" />
@@ -274,6 +277,7 @@
     <ClInclude Include="SceneExample_OmnidirectionalShadows.h" />
     <ClInclude Include="SceneExample_OmnidirectionalShadowsSimple.h" />
     <ClInclude Include="SceneExample_Transparency.h" />
+    <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SkyboxRenderer.h" />
     <ClInclude Include="SpotLight.h" />
@@ -304,6 +308,7 @@
     <None Include="res\shaders\litOmniShadowSimple.vert.glsl" />
     <None Include="res\shaders\litShadowSimple.frag.glsl" />
     <None Include="res\shaders\litShadowSimple.vert.glsl" />
+    <None Include="res\shaders\objectSelection.frag.glsl" />
     <None Include="res\shaders\PostProcess\AntiAliasing\FXAA.frag.glsl" />
     <None Include="res\shaders\PostProcess\bloomDownsample.frag.glsl" />
     <None Include="res\shaders\PostProcess\bloomUpsample.frag.glsl" />

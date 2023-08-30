@@ -4,10 +4,14 @@
 
 namespace GamesGoEngine
 {
+	int GameObject::gameObjectNumber = 0;
+
 	GameObject::GameObject()
 	{
 		components.clear();
 		transform = new Transform();
+		gameObjectNumber++;
+		objectId = gameObjectNumber;
 		AddComponent(transform);
 	}
 
@@ -150,6 +154,11 @@ namespace GamesGoEngine
 				}
 			}
 		}
+	}
+
+	int GameObject::GetObjectId()
+	{
+		return objectId;
 	}
 
 	void GameObject::UpdateDirectChildrenTransforms()

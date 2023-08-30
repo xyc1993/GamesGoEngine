@@ -53,6 +53,7 @@ namespace GamesGoEngine
 		void ConfigureGBuffer(GLint screenWidth, GLint screenHeight, bool shouldGenerateFramebuffer);
 		void ConfigureSSAOBuffers(GLint screenWidth, GLint screenHeight, bool shouldGenerateFramebuffer);
 		void ConfigureBloomBuffer(GLint screenWidth, GLint screenHeight, bool shouldGenerateFramebuffer);
+		void ConfigureObjectSelectionBuffer(GLint screenWidth, GLint screenHeight, bool shouldGenerateFramebuffer);
 
 	public:
 		static void ResizeBuffers(GLint screenWidth, GLint screenHeight);
@@ -67,6 +68,7 @@ namespace GamesGoEngine
 
 	private:
 		void UpdateUniformBufferObjects();
+		void UpdateObjectSelectionBuffer();
 		// Updates data such as positions, normals, albedo, specular
 		void UpdateGBuffer();
 		void UpdateSSAOBuffers();
@@ -149,6 +151,8 @@ namespace GamesGoEngine
 		static void SetFXAAContrastThreshold(float contrastThreshold);
 		static float GetFXAARelativeThreshold();
 		static void SetFXAARelativeThreshold(float relativeThreshold);
+		// returns object id at coordinates <x,y>
+		static int GetObjectIdAt(int x, int y);
 
 	private:
 		static bool CompareRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2);
@@ -251,9 +255,15 @@ namespace GamesGoEngine
 		unsigned int bloomMipChainLength = 6;
 		std::vector<BloomMip> bloomMipChain;
 
-		// debug materials
+		// object selection buffer, used when selecting objects via mouse click in the rendered view
+		unsigned int objectSelectionFBO;
+		unsigned int objectSelectionColorBuffer;
+		unsigned int objectSelectionDepthStencilBuffer;
+
+		// debug & tools materials
 		Material* normalDebugMaterial;
 		Material* orientationDebugMaterial;
+		Material* objectSelectionMaterial;
 
 		// special post process materials
 		std::shared_ptr<PostProcessMaterial> hdrToneMappingGammaCorrectionMaterial;

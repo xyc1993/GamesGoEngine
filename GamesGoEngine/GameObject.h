@@ -30,6 +30,8 @@ namespace GamesGoEngine
 		bool IsSelected() const;
 		void SetSelected(bool selected);
 
+		int GetObjectId();
+
 	private:
 		void UpdateDirectChildrenTransforms();
 
@@ -61,6 +63,9 @@ namespace GamesGoEngine
 		class Scene* scene;
 
 		bool selected = false;
+		int objectId;
+		// tracks number of game objects
+		static int gameObjectNumber;
 
 	public:
 		static constexpr int NAME_MAX_LENGTH = 256;

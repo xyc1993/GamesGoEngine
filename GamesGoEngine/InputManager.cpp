@@ -1,5 +1,7 @@
 #include "InputManager.h"
 
+#include "InputEditorUtilities.h"
+
 namespace GamesGoEngine
 {
 	InputManager* InputManager::instance = new InputManager();
@@ -134,6 +136,16 @@ namespace GamesGoEngine
 		return GetInstance()->mouseScrollInput;
 	}
 
+	GLfloat InputManager::GetMouseX()
+	{
+		return GetInstance()->lastMouseX;
+	}
+
+	GLfloat InputManager::GetMouseY()
+	{
+		return GetInstance()->lastMouseY;
+	}
+
 	bool InputManager::GetCursorEnabled()
 	{
 		return GetInstance()->cursorEnabled;
@@ -188,6 +200,12 @@ namespace GamesGoEngine
 
 				GetInstance()->mouseButtonsReleased[button] = false;
 				GetInstance()->mouseButtons[button] = true;
+
+				// if left click
+				if (button == 0)
+				{
+					InputEditorUtilities::SelectGameObjectAt(GetInstance()->lastMouseX, GetInstance()->lastMouseY);
+				}
 			}
 			else if (GLFW_RELEASE == action)
 			{

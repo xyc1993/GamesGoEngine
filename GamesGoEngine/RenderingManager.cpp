@@ -21,9 +21,10 @@ namespace GamesGoEngine
 	{
 		lightsManager = new LightsManager();
 
-		//debug materials
+		//debug & tools materials
 		normalDebugMaterial = new Material("res/shaders/debugNormals.vert.glsl", "res/shaders/debugNormals.frag.glsl", "res/shaders/debugNormals.geom.glsl");
 		orientationDebugMaterial = new Material("res/shaders/DebugShaders/debugOrientation.vert.glsl", "res/shaders/DebugShaders/debugOrientation.frag.glsl", "res/shaders/DebugShaders/debugOrientation.geom.glsl");
+		objectSelectionMaterial = new Material("res/shaders/unlit.vert.glsl", "res/shaders/objectSelection.frag.glsl");
 
 		//render pipeline materials
 		depthMapMaterial = new Material("res/shaders/RenderPipeline/depthMap.vert.glsl", "res/shaders/RenderPipeline/depthMap.frag.glsl");
@@ -50,6 +51,7 @@ namespace GamesGoEngine
 		delete lightsManager;
 		delete normalDebugMaterial;
 		delete orientationDebugMaterial;
+		delete objectSelectionMaterial;
 		delete depthMapMaterial;
 		delete omniDepthMapMaterial;
 	}
@@ -141,6 +143,7 @@ namespace GamesGoEngine
 		ConfigureGBuffer(screenWidth, screenHeight, shouldGenerateFramebuffer);
 		ConfigureSSAOBuffers(screenWidth, screenHeight, shouldGenerateFramebuffer);
 		ConfigureBloomBuffer(screenWidth, screenHeight, shouldGenerateFramebuffer);
+		ConfigureObjectSelectionBuffer(screenWidth, screenHeight, shouldGenerateFramebuffer);
 	}
 
 	void RenderingManager::ConfigureFramebuffer(GLint screenWidth, GLint screenHeight,
@@ -425,6 +428,37 @@ namespace GamesGoEngine
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
+	void RenderingManager::ConfigureObjectSelectionBuffer(GLint screenWidth, GLint screenHeight, bool shouldGenerateFramebuffer)
+	{
+		if (shouldGenerateFramebuffer)
+		{
+			glGenFramebuffers(1, &objectSelectionFBO);
+		}
+
+		// create a color attachment texture
+		glBindFramebuffer(GL_FRAMEBUFFER, objectSelectionFBO);
+		glGenTextures(1, &objectSelectionColorBuffer);
+		glBindTexture(GL_TEXTURE_2D, objectSelectionColorBuffer);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_R32I, screenWidth, screenHeight, 0, GL_RED_INTEGER, GL_INT, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, objectSelectionColorBuffer, 0);
+
+		// create a depth & stencil attachment texture
+		glGenTextures(1, &objectSelectionDepthStencilBuffer);
+		glBindTexture(GL_TEXTURE_2D, objectSelectionDepthStencilBuffer);
+		glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, screenWidth, screenHeight);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, objectSelectionDepthStencilBuffer, 0);
+
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+			std::cout << "Object selection not complete!" << std::endl;
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
 	void RenderingManager::ResizeBuffers(GLint screenWidth, GLint screenHeight)
 	{
 		GetInstance()->ResizeBuffersInternal(screenWidth, screenHeight);
@@ -470,6 +504,9 @@ namespace GamesGoEngine
 			glDeleteTextures(1, &bloomMipChain[i].texture);
 		}
 		bloomMipChain.clear();
+
+		glDeleteTextures(1, &objectSelectionColorBuffer);
+		glDeleteTextures(1, &objectSelectionDepthStencilBuffer);
 
 		GetInstance()->ConfigureFramebuffers(screenWidth, screenHeight, false);
 	}
@@ -532,6 +569,8 @@ namespace GamesGoEngine
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_STENCIL_TEST);
 
+		GetInstance()->UpdateObjectSelectionBuffer();
+
 		GetInstance()->DrawDeferredShadedObjects();
 
 		glBindFramebuffer(GL_FRAMEBUFFER, GetInstance()->framebuffer2);
@@ -573,6 +612,27 @@ namespace GamesGoEngine
 		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(float), &time);
 		glBufferSubData(GL_UNIFORM_BUFFER, sizeof(float), sizeof(float), &deltaTime);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	}
+
+	void RenderingManager::UpdateObjectSelectionBuffer()
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, objectSelectionFBO);
+
+		glClearColor(-1.0f, 0.0f, 0.0f, 0.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+		// Write to framebuffer object id
+		for (size_t i = 0; i < meshRenderers.size(); i++)
+		{
+			MeshRenderer* meshRenderer = meshRenderers[i];
+			if (meshRenderer != nullptr && Component::IsValid(meshRenderer))
+			{
+				objectSelectionMaterial->SetInt("objectIdNumber", meshRenderer->GetOwner()->GetObjectId());
+				meshRenderer->Draw(objectSelectionMaterial);
+			}
+		}
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
 	void RenderingManager::UpdateGBuffer()
@@ -1641,6 +1701,16 @@ namespace GamesGoEngine
 	void RenderingManager::SetFXAARelativeThreshold(float relativeThreshold)
 	{
 		GetInstance()->fxaaRelativeThreshold = relativeThreshold;
+	}
+
+	int RenderingManager::GetObjectIdAt(int x, int y)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, GetInstance()->objectSelectionFBO);
+		glReadBuffer(GL_COLOR_ATTACHMENT0);
+		int objectId = 0;
+		glReadPixels(x, WindowManager::GetCurrentHeight() - y, 1, 1, GL_RED_INTEGER, GL_INT, &objectId);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		return objectId;
 	}
 
 	bool RenderingManager::CompareRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2)
