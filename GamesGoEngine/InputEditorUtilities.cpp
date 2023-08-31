@@ -2,11 +2,18 @@
 
 #include "RenderingManager.h"
 #include "SceneManager.h"
+#include "imgui.h"
 
 namespace GamesGoEngine
 {
 	void InputEditorUtilities::SelectGameObjectAt(int x, int y)
 	{
+		// If ImGui wants to capture mouse (we hover over some ImGui panel), don't try to select a game object
+		if (ImGui::GetIO().WantCaptureMouse)
+		{
+			return;
+		}
+
 		if (Scene* activeScene = SceneManager::GetActiveScene())
 		{
 			unsigned int objectId = RenderingManager::GetObjectIdAt(x, y);
