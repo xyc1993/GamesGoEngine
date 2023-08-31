@@ -12,6 +12,19 @@ namespace GamesGoEngine
 		ImGui::Begin("World Outliner");
 
 		const std::set<GameObject*>& sceneObjects = activeScene->GetSceneObjects();
+
+		// Update selection if object was selected via different means (for example via clicking directly through the camera view)
+		for (auto it = sceneObjects.begin(); it != sceneObjects.end(); ++it)
+		{
+			GameObject* sceneObject = *it;
+			if (sceneObject->IsSelected())
+			{
+				selectedSceneObject = sceneObject;
+				break;
+			}
+		}
+
+		// Perform standard UI selection
 		for (auto it = sceneObjects.begin(); it != sceneObjects.end(); ++it)
 		{
 			GameObject* sceneObject = *it;
