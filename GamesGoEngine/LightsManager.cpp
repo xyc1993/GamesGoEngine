@@ -42,7 +42,6 @@ namespace GamesGoEngine
 	{
 		if (this->ambientLight == ambientLight)
 		{
-			delete this->ambientLight;
 			this->ambientLight = nullptr;
 		}
 	}

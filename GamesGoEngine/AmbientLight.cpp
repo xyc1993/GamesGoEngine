@@ -22,6 +22,7 @@ namespace GamesGoEngine
 
 	AmbientLight::~AmbientLight()
 	{
+		RenderingManager::GetLightsManager()->RemoveAmbientLight(this);
 	}
 
 	void AmbientLight::CopyData(const AmbientLight& other)
