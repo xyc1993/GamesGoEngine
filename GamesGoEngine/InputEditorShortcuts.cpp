@@ -1,5 +1,6 @@
 #include "InputEditorShortcuts.h"
 
+#include "imgui.h"
 #include "InputManager.h"
 #include "Scene.h"
 
@@ -22,7 +23,7 @@ namespace GamesGoEngine
 			glfwSetWindowShouldClose(window, GL_TRUE);
 		}
 
-		if (InputManager::GetKeyReleased(GLFW_KEY_DELETE))
+		if (InputManager::GetKeyReleased(GLFW_KEY_DELETE) && !ImGui::GetIO().WantTextInput)
 		{
 			GameObject* selectedGameObject = activeScene->GetSelectedGameObject();
 			if (selectedGameObject != nullptr)
