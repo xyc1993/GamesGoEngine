@@ -13,6 +13,12 @@ namespace GamesGoEngine
 
 		const std::set<GameObject*>& sceneObjects = activeScene->GetSceneObjects();
 
+		// Check if the selected game object wasn't deselected via different means than this panel
+		if (selectedSceneObject != nullptr && activeScene->GetSelectedGameObject() == nullptr)
+		{
+			selectedSceneObject = nullptr;
+		}
+
 		// Update selection if object was selected via different means (for example via clicking directly through the camera view)
 		for (auto it = sceneObjects.begin(); it != sceneObjects.end(); ++it)
 		{
@@ -56,15 +62,6 @@ namespace GamesGoEngine
 			else
 			{
 				ImGui::Text("DELETED");
-			}
-		}
-
-		if (ImGui::IsWindowFocused())
-		{
-			if (InputManager::GetKeyReleased(GLFW_KEY_DELETE))
-			{
-				activeScene->RemoveGameObject(selectedSceneObject);
-				selectedSceneObject = nullptr;
 			}
 		}
 

@@ -42,7 +42,7 @@ void MainLoop(GLFWwindow* window)
 		CamerasManager::SetCurrentViewAspectRatio(static_cast<float>(WindowManager::GetCurrentWidth()) / static_cast<float>(WindowManager::GetCurrentHeight()));
 		
 		glfwPollEvents();
-		InputEditorShortcuts::ProcessShortcuts(window);
+		InputEditorShortcuts::ProcessShortcuts(window, activeScene->GetSceneUnsafe());
 		
 		activeScene->Update();
 		RenderingManager::Update();
