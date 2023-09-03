@@ -1278,8 +1278,6 @@ namespace GamesGoEngine
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			glClear(GL_COLOR_BUFFER_BIT);
 			fxaaMaterial->SetTexture("screenTexture", 0, lastPostProcessMaterialIndex % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
-			fxaaMaterial->SetTexture("depthStencilTexture", 1, lastPostProcessMaterialIndex % 2 == 0 ? depthStencilBuffer1 : depthStencilBuffer2);
-			fxaaMaterial->SetTexture("stencilView", 2, lastPostProcessMaterialIndex % 2 == 0 ? stencilView1 : stencilView2);
 			fxaaMaterial->SetFloat("contrastThreshold", fxaaContrastThreshold);
 			fxaaMaterial->SetFloat("relativeThreshold", fxaaRelativeThreshold);
 			fxaaMaterial->Draw(glm::mat4());
