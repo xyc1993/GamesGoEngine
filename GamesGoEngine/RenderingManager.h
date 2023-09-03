@@ -107,7 +107,6 @@ namespace GamesGoEngine
 
 	public:
 		static LightsManager* GetLightsManager();
-		static void SetSelectedGameObject(GameObject* selectedObject);
 		static void EnablePostProcessing(bool enable);
 		static bool IsPostProcessingEnabled();
 		static void EnableBloom(bool enable);
@@ -168,7 +167,6 @@ namespace GamesGoEngine
 		std::vector<MeshRenderer*> meshRenderers;
 		std::vector<MeshRenderer*> opaqueMeshRenderers;
 		std::vector<MeshRenderer*> transparentMeshRenderers;
-		GameObject* selectedGameObject;
 		// container holding only active post process renderers
 		std::vector<std::shared_ptr<PostProcessMaterial>> usedPostProcessMaterials;
 		// container holding all subscribed post process renderers

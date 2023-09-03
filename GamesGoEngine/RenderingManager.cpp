@@ -10,6 +10,7 @@
 #include "MeshRenderer.h"
 #include "PostProcessMaterial.h"
 #include "PostProcessRenderer.h"
+#include "SceneManager.h"
 #include "Time.h"
 #include "WindowManager.h"
 
@@ -1089,6 +1090,16 @@ namespace GamesGoEngine
 
 	void RenderingManager::DrawOrientationDebug() const
 	{
+		GameObject* selectedGameObject = nullptr;
+		if (Scene* activeScene = SceneManager::GetActiveScene()) // Try to get a selected game object for drawing orientation debug
+		{
+			selectedGameObject = activeScene->GetSelectedGameObject();
+		}
+		else // No active scene then no point in drawing orientation debug
+		{
+			return;
+		}
+
 		if (selectedGameObject != nullptr)
 		{
 			const Transform* transform = selectedGameObject->GetTransform();
@@ -1495,11 +1506,6 @@ namespace GamesGoEngine
 	LightsManager* RenderingManager::GetLightsManager()
 	{
 		return GetInstance()->lightsManager;
-	}
-
-	void RenderingManager::SetSelectedGameObject(GameObject* selectedObject)
-	{
-		GetInstance()->selectedGameObject = selectedObject;
 	}
 
 	void RenderingManager::EnablePostProcessing(bool enable)

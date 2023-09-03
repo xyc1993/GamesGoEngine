@@ -52,7 +52,6 @@ namespace GamesGoEngine
 		{
 			delete* iterator;
 			sceneObjects.erase(iterator);
-			RenderingManager::SetSelectedGameObject(nullptr);
 		}
 	}
 
@@ -68,6 +67,7 @@ namespace GamesGoEngine
 		return nullptr;
 	}
 
+	// TODO: Cache this!
 	GameObject* Scene::GetSelectedGameObject()
 	{
 		for (auto it = sceneObjects.begin(); it != sceneObjects.end(); ++it)

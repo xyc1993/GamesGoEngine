@@ -28,11 +28,6 @@ namespace GamesGoEngine
 
 	}
 
-	void Transform::OnSelected()
-	{
-		RenderingManager::SetSelectedGameObject(GetOwner());
-	}
-
 	void Transform::SetPosition(glm::vec3 position)
 	{
 		const glm::vec3 translation = position - this->position;

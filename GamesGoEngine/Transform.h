@@ -12,7 +12,6 @@ namespace GamesGoEngine
 		Transform();
 
 		virtual void Update() override;
-		virtual void OnSelected() override;
 
 		void SetPosition(glm::vec3 position);
 		void SetLocalPosition(glm::vec3 localPosition);
