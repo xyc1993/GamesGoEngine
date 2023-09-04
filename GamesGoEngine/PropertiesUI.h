@@ -1,9 +1,9 @@
 #pragma once
 
-#include "GameObject.h"
-
 namespace GamesGoEngine
 {
+	class GameObject;
+
 	class PropertiesUI
 	{
 	public:

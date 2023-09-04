@@ -172,6 +172,12 @@
     <Filter Include="Resource Files\Shaders\PostProcess\AntiAliasing">
       <UniqueIdentifier>{2a2c13d2-e38b-4fe7-b1ec-de99a78d5626}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\ImGuizmo">
+      <UniqueIdentifier>{c902958e-d5d9-4767-a609-a612b5386485}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ImGuizmo">
+      <UniqueIdentifier>{543ac948-5138-4488-a68c-1ad438acbd7f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectionalLight.cpp">
@@ -374,6 +380,24 @@
     </ClCompile>
     <ClCompile Include="SceneManager.cpp">
       <Filter>Source Files\GamesGo\Scene Management</Filter>
+    </ClCompile>
+    <ClCompile Include="..\External Libraries\ImGuizmo\GraphEditor.cpp">
+      <Filter>Source Files\ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\External Libraries\ImGuizmo\ImCurveEdit.cpp">
+      <Filter>Source Files\ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\External Libraries\ImGuizmo\ImGradient.cpp">
+      <Filter>Source Files\ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\External Libraries\ImGuizmo\ImGuizmo.cpp">
+      <Filter>Source Files\ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\External Libraries\ImGuizmo\ImSequencer.cpp">
+      <Filter>Source Files\ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneViewport.cpp">
+      <Filter>Source Files\GamesGo\Editor\UI\Panels</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -583,6 +607,27 @@
     </ClInclude>
     <ClInclude Include="SceneManager.h">
       <Filter>Header Files\GamesGo\Scene Management</Filter>
+    </ClInclude>
+    <ClInclude Include="..\External Libraries\ImGuizmo\GraphEditor.h">
+      <Filter>Header Files\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\External Libraries\ImGuizmo\ImCurveEdit.h">
+      <Filter>Header Files\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\External Libraries\ImGuizmo\ImGradient.h">
+      <Filter>Header Files\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\External Libraries\ImGuizmo\ImGuizmo.h">
+      <Filter>Header Files\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\External Libraries\ImGuizmo\ImSequencer.h">
+      <Filter>Header Files\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\External Libraries\ImGuizmo\ImZoomSlider.h">
+      <Filter>Header Files\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneViewport.h">
+      <Filter>Header Files\GamesGo\Editor\UI\Panels</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

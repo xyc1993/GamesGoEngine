@@ -8,10 +8,13 @@ namespace GamesGoEngine
 {
 	void InputEditorUtilities::SelectGameObjectAt(int x, int y)
 	{
+		// TODO: update after working with viewport
+		return;
+
 		// If ImGui wants to capture mouse (we hover over some ImGui panel), don't try to select a game object
 		if (ImGui::GetIO().WantCaptureMouse)
 		{
-			return;
+			//return;
 		}
 
 		if (Scene* activeScene = SceneManager::GetActiveScene())

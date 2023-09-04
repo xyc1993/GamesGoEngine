@@ -1,19 +1,26 @@
 #include "EditorUIManager.h"
 
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
+
+#include <ImGuizmo.h>
 
 #include "LoggerUI.h"
 #include "PropertiesUI.h"
 #include "WorldOutlinerUI.h"
 #include "DebugToolsUI.h"
 #include "GraphicsSettingsUI.h"
+#include "SceneViewport.h"
 
 namespace GamesGoEngine
 {
 	float EditorUIManager::windowWidth = 0.0f;
 	float EditorUIManager::windowHeight = 0.0f;
+	float EditorUIManager::viewportPanelWidth = 0.0f;
+	float EditorUIManager::viewportPanelHeight = 0.0f;
+	float EditorUIManager::viewportTextureWidth = 0.0f;
+	float EditorUIManager::viewportTextureHeight = 0.0f;
 
 	void EditorUIManager::Init(GLFWwindow* window)
 	{
@@ -23,6 +30,7 @@ namespace GamesGoEngine
 		ImGui::StyleColorsDark();
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
 		ImGui_ImplOpenGL3_Init("#version 330");
+		UpdateViewportDimensions();
 	}
 
 	void EditorUIManager::Draw(Scene* activeScene)
@@ -30,6 +38,7 @@ namespace GamesGoEngine
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+		ImGuizmo::BeginFrame();
 
 		const float uiScale = GetUIScale();
 
@@ -60,6 +69,12 @@ namespace GamesGoEngine
 
 		DebugToolsUI::Draw();
 
+		UpdateViewportDimensions();
+		ImGui::SetNextWindowPos(ImVec2(0.125f * windowWidth, 0.0f));
+		ImGui::SetNextWindowSize(ImVec2(viewportPanelWidth, viewportPanelHeight));
+
+		SceneViewport::Draw(viewportTextureWidth, viewportTextureHeight, selectedSceneObject);
+		
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	}
@@ -69,6 +84,25 @@ namespace GamesGoEngine
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
+	}
+
+	float EditorUIManager::GetViewportWidth()
+	{
+		return viewportTextureWidth;
+	}
+
+	float EditorUIManager::GetViewportHeight()
+	{
+		return viewportTextureHeight;
+	}
+
+	void EditorUIManager::UpdateViewportDimensions()
+	{
+		viewportPanelWidth = 0.8125f * windowWidth - 0.125f * windowWidth;
+		viewportPanelHeight = 0.67f * windowHeight;
+
+		viewportTextureWidth = viewportPanelWidth;
+		viewportTextureHeight = viewportPanelHeight - 40.0f; // 40 pixels is reserved for label padding
 	}
 
 	void EditorUIManager::UpdateWindowSize(float width, float height)

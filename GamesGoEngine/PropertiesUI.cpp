@@ -2,6 +2,8 @@
 
 #include "imgui.h"
 
+#include "GameObject.h"
+
 namespace GamesGoEngine
 {
 	void PropertiesUI::Draw(GameObject* selectedGameObject)

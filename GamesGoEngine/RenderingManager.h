@@ -71,17 +71,16 @@ namespace GamesGoEngine
 		void UpdateObjectSelectionBuffer();
 		// Updates data such as positions, normals, albedo, specular
 		void UpdateGBuffer();
-		void UpdateSSAOBuffers();
+		void UpdateSSAOBuffers(int width, int height);
 		void UpdateDirectionalShadowMap(Light* directionalLight, glm::mat4& lightSpaceMatrix);
 		void UpdateSpotLightShadowMap(Light* spotLight, glm::mat4& lightSpaceMatrix);
 		void UpdateOmnidirectionalShadowMap(Light* pointLight);
 		bool AreThereAnyShadowCasters() const;
-		void DrawDeferredShadedObjects();
-		void DrawForwardShadedObjects();
-		void DrawOrientationDebug() const;
+		void DrawDeferredShadedObjects(int width, int height);
+		void DrawForwardShadedObjects(int width, int height);
 		void DrawSkybox();
 		void DrawDebug();
-		void DrawScreenEffects();
+		void DrawScreenEffects(int width, int height);
 		static void DrawRenderers(const std::vector<MeshRenderer*>& renderers);
 		static void DrawRenderersOfLightModel(const std::vector<MeshRenderer*>& renderers, LightModelType lightModel);
 		static void DrawRenderersExceptLightModel(const std::vector<MeshRenderer*>& renderers, LightModelType lightModel);
@@ -152,6 +151,7 @@ namespace GamesGoEngine
 		static void SetFXAARelativeThreshold(float relativeThreshold);
 		// returns object id at coordinates <x,y>
 		static int GetObjectIdAt(int x, int y);
+		static unsigned int GetFinalColorBuffer();
 
 	private:
 		static bool CompareRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2);
@@ -219,6 +219,9 @@ namespace GamesGoEngine
 		unsigned int spotLightDepthMap;
 		unsigned int omniDepthMap;
 
+		// handle to texture holding final color information (all colors, lighting, post process effects and so on)
+		unsigned int finalColorBuffer;
+
 		// g buffer & its textures
 		unsigned int gBuffer;
 		unsigned int gPosition;
@@ -260,7 +263,6 @@ namespace GamesGoEngine
 
 		// debug & tools materials
 		Material* normalDebugMaterial;
-		Material* orientationDebugMaterial;
 		Material* objectSelectionMaterial;
 
 		// special post process materials

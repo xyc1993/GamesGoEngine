@@ -12,6 +12,9 @@ namespace GamesGoEngine
 		static void Init(GLFWwindow* window);
 		static void Draw(Scene* activeScene);
 		static void Shutdown();
+		static float GetViewportWidth();
+		static float GetViewportHeight();
+		static void UpdateViewportDimensions();
 		static void UpdateWindowSize(float width, float height);
 
 	private:
@@ -19,5 +22,9 @@ namespace GamesGoEngine
 
 		static float windowWidth;
 		static float windowHeight;
+		static float viewportPanelWidth;
+		static float viewportPanelHeight;
+		static float viewportTextureWidth;
+		static float viewportTextureHeight;
 	};
 }

@@ -120,7 +120,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\External Libraries\assimp\include;$(SolutionDir)\External Libraries\glew\glew-2.1.0\include;$(SolutionDir)\External Libraries\glfw\glfw-3.3.2.bin.WIN64\include;$(SolutionDir)\External Libraries\glm;$(SolutionDir)\External Libraries\imgui;$(SolutionDir)\External Libraries\SOIL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\External Libraries\assimp\include;$(SolutionDir)\External Libraries\glew\glew-2.1.0\include;$(SolutionDir)\External Libraries\glfw\glfw-3.3.2.bin.WIN64\include;$(SolutionDir)\External Libraries\glm;$(SolutionDir)\External Libraries\imgui;$(SolutionDir)\External Libraries\ImGuizmo;$(SolutionDir)\External Libraries\SOIL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -137,7 +137,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\External Libraries\assimp\include;$(SolutionDir)\External Libraries\glew\glew-2.1.0\include;$(SolutionDir)\External Libraries\glfw\glfw-3.3.2.bin.WIN64\include;$(SolutionDir)\External Libraries\glm;$(SolutionDir)\External Libraries\imgui;$(SolutionDir)\External Libraries\SOIL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\External Libraries\assimp\include;$(SolutionDir)\External Libraries\glew\glew-2.1.0\include;$(SolutionDir)\External Libraries\glfw\glfw-3.3.2.bin.WIN64\include;$(SolutionDir)\External Libraries\glm;$(SolutionDir)\External Libraries\imgui;$(SolutionDir)\External Libraries\ImGuizmo;$(SolutionDir)\External Libraries\SOIL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -149,6 +149,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\External Libraries\ImGuizmo\GraphEditor.cpp" />
+    <ClCompile Include="..\External Libraries\ImGuizmo\ImCurveEdit.cpp" />
+    <ClCompile Include="..\External Libraries\ImGuizmo\ImGradient.cpp" />
+    <ClCompile Include="..\External Libraries\ImGuizmo\ImGuizmo.cpp" />
+    <ClCompile Include="..\External Libraries\ImGuizmo\ImSequencer.cpp" />
     <ClCompile Include="..\External Libraries\imgui\imgui.cpp" />
     <ClCompile Include="..\External Libraries\imgui\imgui_demo.cpp" />
     <ClCompile Include="..\External Libraries\imgui\imgui_draw.cpp" />
@@ -207,6 +212,7 @@
     <ClCompile Include="SceneExample_OmnidirectionalShadowsSimple.cpp" />
     <ClCompile Include="SceneExample_Transparency.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="SceneViewport.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SkyboxRenderer.cpp" />
     <ClCompile Include="SpotLight.cpp" />
@@ -218,6 +224,12 @@
     <ClCompile Include="WorldOutlinerUI.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\External Libraries\ImGuizmo\GraphEditor.h" />
+    <ClInclude Include="..\External Libraries\ImGuizmo\ImCurveEdit.h" />
+    <ClInclude Include="..\External Libraries\ImGuizmo\ImGradient.h" />
+    <ClInclude Include="..\External Libraries\ImGuizmo\ImGuizmo.h" />
+    <ClInclude Include="..\External Libraries\ImGuizmo\ImSequencer.h" />
+    <ClInclude Include="..\External Libraries\ImGuizmo\ImZoomSlider.h" />
     <ClInclude Include="..\External Libraries\imgui\imconfig.h" />
     <ClInclude Include="..\External Libraries\imgui\imgui.h" />
     <ClInclude Include="..\External Libraries\imgui\imgui_impl_glfw.h" />
@@ -278,6 +290,7 @@
     <ClInclude Include="SceneExample_OmnidirectionalShadowsSimple.h" />
     <ClInclude Include="SceneExample_Transparency.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="SceneViewport.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SkyboxRenderer.h" />
     <ClInclude Include="SpotLight.h" />

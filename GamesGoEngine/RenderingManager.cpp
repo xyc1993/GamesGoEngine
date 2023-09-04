@@ -4,6 +4,7 @@
 #include <random>
 
 #include "CamerasManager.h"
+#include "EditorUIManager.h"
 #include "GameObject.h"
 #include "Math.h"
 #include "MeshPrimitivesPool.h"
@@ -23,8 +24,7 @@ namespace GamesGoEngine
 		lightsManager = new LightsManager();
 
 		//debug & tools materials
-		normalDebugMaterial = new Material("res/shaders/debugNormals.vert.glsl", "res/shaders/debugNormals.frag.glsl", "res/shaders/debugNormals.geom.glsl");
-		orientationDebugMaterial = new Material("res/shaders/DebugShaders/debugOrientation.vert.glsl", "res/shaders/DebugShaders/debugOrientation.frag.glsl", "res/shaders/DebugShaders/debugOrientation.geom.glsl");
+		normalDebugMaterial = new Material("res/shaders/debugNormals.vert.glsl", "res/shaders/debugNormals.frag.glsl", "res/shaders/debugNormals.geom.glsl");		
 		objectSelectionMaterial = new Material("res/shaders/unlit.vert.glsl", "res/shaders/objectSelection.frag.glsl");
 
 		//render pipeline materials
@@ -51,7 +51,6 @@ namespace GamesGoEngine
 	{
 		delete lightsManager;
 		delete normalDebugMaterial;
-		delete orientationDebugMaterial;
 		delete objectSelectionMaterial;
 		delete depthMapMaterial;
 		delete omniDepthMapMaterial;
@@ -462,7 +461,11 @@ namespace GamesGoEngine
 
 	void RenderingManager::ResizeBuffers(GLint screenWidth, GLint screenHeight)
 	{
-		GetInstance()->ResizeBuffersInternal(screenWidth, screenHeight);
+		// make sure viewport dimensions are up to date and use them to update framebuffers size
+		EditorUIManager::UpdateViewportDimensions();
+		const GLint width = static_cast<GLint>(EditorUIManager::GetViewportWidth());
+		const GLint height = static_cast<GLint>(EditorUIManager::GetViewportHeight());
+		GetInstance()->ResizeBuffersInternal(width, height);
 	}
 
 	void RenderingManager::ResizeBuffersInternal(GLint screenWidth, GLint screenHeight)
@@ -546,12 +549,12 @@ namespace GamesGoEngine
 		// TODO: more optimal sorting, it could sort on camera view change, not on every draw frame
 		SortTransparentMeshRenderers();
 
-		const int width = WindowManager::GetCurrentWidth();
-		const int height = WindowManager::GetCurrentHeight();
+		const int viewportWidth = static_cast<int>(EditorUIManager::GetViewportWidth());
+		const int viewportHeight = static_cast<int>(EditorUIManager::GetViewportHeight());
 
 		// Rendering the scene
 		// set viewport
-		glViewport(0, 0, width, height);
+		glViewport(0, 0, viewportWidth, viewportHeight);
 
 		// clear both buffers to ensure no unwanted data and set default color at the start of frame rendering
 		glBindFramebuffer(GL_FRAMEBUFFER, GetInstance()->framebuffer1);
@@ -572,14 +575,14 @@ namespace GamesGoEngine
 
 		GetInstance()->UpdateObjectSelectionBuffer();
 
-		GetInstance()->DrawDeferredShadedObjects();
+		GetInstance()->DrawDeferredShadedObjects(viewportWidth, viewportHeight);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, GetInstance()->framebuffer2);
 
 		glEnable(GL_DEPTH_TEST); // enable depth testing (is disabled for rendering screen-space quad)
 		glEnable(GL_STENCIL_TEST);
 
-		GetInstance()->DrawForwardShadedObjects();
+		GetInstance()->DrawForwardShadedObjects(viewportWidth, viewportHeight);
 
 		GetInstance()->DrawSkybox();
 		GetInstance()->DrawDebug();
@@ -588,11 +591,18 @@ namespace GamesGoEngine
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, GetInstance()->framebuffer2);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, GetInstance()->framebuffer1);
 
-		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
-		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+		glBlitFramebuffer(0, 0, viewportWidth, viewportHeight, 0, 0, viewportWidth, viewportHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+		glBlitFramebuffer(0, 0, viewportWidth, viewportHeight, 0, 0, viewportWidth, viewportHeight, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+		glBlitFramebuffer(0, 0, viewportWidth, viewportHeight, 0, 0, viewportWidth, viewportHeight, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 
-		GetInstance()->DrawScreenEffects();
+		GetInstance()->DrawScreenEffects(viewportWidth, viewportHeight);
+
+		// Draw black on screen as color texture information is going to be passed to an apprioprate UI panel
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		const int windowWidth = WindowManager::GetCurrentWidth();
+		const int windowHeight = WindowManager::GetCurrentHeight();
+		glViewport(0, 0, windowWidth, windowHeight);		
+		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
 	void RenderingManager::UpdateUniformBufferObjects()
@@ -648,7 +658,7 @@ namespace GamesGoEngine
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void RenderingManager::UpdateSSAOBuffers()
+	void RenderingManager::UpdateSSAOBuffers(int width, int height)
 	{
 		if (ssaoEnabled)
 		{
@@ -663,7 +673,7 @@ namespace GamesGoEngine
 			ssaoMaterial->SetTexture("gNormal", 1, gNormal);
 			ssaoMaterial->SetTexture("texNoise", 2, ssaoNoiseTexture);
 			// tile noise texture over screen based on screen dimensions divided by noise size, noise size is constant 4x4
-			ssaoMaterial->SetVector2("noiseScale", glm::vec2((float)WindowManager::GetCurrentWidth() / 4.0f, (float)WindowManager::GetCurrentHeight() / 4.0f));
+			ssaoMaterial->SetVector2("noiseScale", glm::vec2((float)width / 4.0f, (float)height / 4.0f));
 			ssaoMaterial->Draw(glm::mat4());
 			MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -829,20 +839,17 @@ namespace GamesGoEngine
 		return false;
 	}
 
-	void RenderingManager::DrawDeferredShadedObjects()
+	void RenderingManager::DrawDeferredShadedObjects(int width, int height)
 	{
 		if (AreThereAnyDeferredRendereredMeshes())
 		{
-			const int width = WindowManager::GetCurrentWidth();
-			const int height = WindowManager::GetCurrentHeight();
-
 			UpdateGBuffer();
 
 			// disable depth and buffer for deferred shading rendering since it's quad rendering over whole screen
 			glDisable(GL_DEPTH_TEST);
 			glDisable(GL_STENCIL_TEST);
 
-			UpdateSSAOBuffers();
+			UpdateSSAOBuffers(width, height);
 
 			std::vector<Light*> lights = GetLightsManager()->GetAllLights();
 			size_t lastReachedLightIndex = 0;
@@ -906,7 +913,7 @@ namespace GamesGoEngine
 					glBindFramebuffer(GL_FRAMEBUFFER, currentFramebuffer);
 					glDisable(GL_DEPTH_TEST);
 					glDisable(GL_STENCIL_TEST);
-					glViewport(0, 0, WindowManager::GetCurrentWidth(), WindowManager::GetCurrentHeight());
+					glViewport(0, 0, width, height);
 					glClear(GL_COLOR_BUFFER_BIT);
 
 					// update light data
@@ -970,13 +977,10 @@ namespace GamesGoEngine
 		}
 	}
 
-	void RenderingManager::DrawForwardShadedObjects()
+	void RenderingManager::DrawForwardShadedObjects(int width, int height)
 	{
 		if (AreThereAnyForwardRendereredMeshes())
 		{
-			const int width = WindowManager::GetCurrentWidth();
-			const int height = WindowManager::GetCurrentHeight();
-
 			std::vector<Light*> lights = GetLightsManager()->GetAllLights();
 			const bool areThereAnyShadowCasters = AreThereAnyShadowCasters();
 			if (!lights.empty() && areThereAnyShadowCasters)
@@ -1005,7 +1009,7 @@ namespace GamesGoEngine
 					}
 
 					// reset viewport
-					glViewport(0, 0, WindowManager::GetCurrentWidth(), WindowManager::GetCurrentHeight());
+					glViewport(0, 0, width, height);
 					const unsigned int currentFramebuffer = i % 2 == 0 ? framebuffer2 : framebuffer1;
 					glBindFramebuffer(GL_FRAMEBUFFER, currentFramebuffer);
 					// clear color and depth buffer for next rendering steps so that new pass can be rendered on top of the previous one
@@ -1088,47 +1092,6 @@ namespace GamesGoEngine
 		}
 	}
 
-	void RenderingManager::DrawOrientationDebug() const
-	{
-		GameObject* selectedGameObject = nullptr;
-		if (Scene* activeScene = SceneManager::GetActiveScene()) // Try to get a selected game object for drawing orientation debug
-		{
-			selectedGameObject = activeScene->GetSelectedGameObject();
-		}
-		else // No active scene then no point in drawing orientation debug
-		{
-			return;
-		}
-
-		if (selectedGameObject != nullptr)
-		{
-			const Transform* transform = selectedGameObject->GetTransform();
-			const glm::mat4 transformMatrix = transform->GetTransformMatrix();
-			const glm::vec3 forward = transform->GetForward();
-			const glm::vec3 up = transform->GetUp();
-			const glm::vec3 right = transform->GetRight();
-			const glm::vec3 position = transform->GetPosition();
-
-			const GLfloat vertexPosition[3] = { position.x, position.y, position.z };
-
-			orientationDebugMaterial->SetVector3("forward", forward);
-			orientationDebugMaterial->SetVector3("up", up);
-			orientationDebugMaterial->SetVector3("right", right);
-			orientationDebugMaterial->Draw(transformMatrix);
-
-			GLuint vao;
-			glGenVertexArrays(1, &vao);
-			glBindVertexArray(vao);
-			GLuint vbo;
-			glGenBuffers(1, &vbo);
-			glBindBuffer(GL_ARRAY_BUFFER, vbo);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(vertexPosition), vertexPosition, GL_STATIC_DRAW);
-			glBindVertexArray(vao);
-			glDrawArrays(GL_POINTS, 0, 1);
-			glBindVertexArray(0);
-		}
-	}
-
 	void RenderingManager::DrawSkybox()
 	{
 		if (skybox != nullptr)
@@ -1143,16 +1106,9 @@ namespace GamesGoEngine
 		{
 			DrawRenderers(meshRenderers, normalDebugMaterial);
 		}
-
-		// disable stencil drawing for debug orientation lines so they wouldn't have an outline
-		glDisable(GL_STENCIL_TEST);
-		DrawOrientationDebug();
-
-		// turn stencil drawing back again
-		glEnable(GL_STENCIL_TEST);
 	}
 
-	void RenderingManager::DrawScreenEffects()
+	void RenderingManager::DrawScreenEffects(int width, int height)
 	{
 		// disable depth and stencil test so we don't overwrite it for screen effects
 		glDisable(GL_DEPTH_TEST);
@@ -1192,7 +1148,7 @@ namespace GamesGoEngine
 			glBindFramebuffer(GL_FRAMEBUFFER, bloomFBO);
 
 			// DOWNSAMPLE
-			glm::vec2 screenResolution = glm::vec2((float)WindowManager::GetCurrentWidth(), (float)WindowManager::GetCurrentHeight());
+			glm::vec2 screenResolution = glm::vec2((float)width, (float)height);
 			bloomDownsampleMaterial->SetVector2("screenResolution", screenResolution);
 			bloomDownsampleMaterial->SetTexture("screenTexture", 0, lastPostProcessMaterialIndex % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
 
@@ -1215,7 +1171,7 @@ namespace GamesGoEngine
 			// UPSAMPLE
 			const float bloomFilterRadius = 0.005f;
 			bloomUpsampleMaterial->SetFloat("filterRadius", bloomFilterRadius);
-			bloomUpsampleMaterial->SetFloat("screenAspectRatio", WindowManager::GetCurrentAspectRatio());
+			bloomUpsampleMaterial->SetFloat("screenAspectRatio", (float)width / (float)height);
 
 			// Enable additive blending
 			glEnable(GL_BLEND);
@@ -1244,7 +1200,7 @@ namespace GamesGoEngine
 			glDisable(GL_BLEND);
 
 			// Reset viewport
-			glViewport(0, 0, WindowManager::GetCurrentWidth(), WindowManager::GetCurrentHeight());
+			glViewport(0, 0, width, height);
 
 			// Unbind bloom buffer
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -1265,16 +1221,8 @@ namespace GamesGoEngine
 			MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
 			lastPostProcessMaterialIndex++;
 		}
-
-		// apply selection outline after other color altering processing, done at this stage for consistent colors
-		if (aaEnabled)
-		{
-			glBindFramebuffer(GL_FRAMEBUFFER, lastPostProcessMaterialIndex % 2 == 0 ? framebuffer2 : framebuffer1);
-		}
-		else
-		{
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		}
+		
+		glBindFramebuffer(GL_FRAMEBUFFER, lastPostProcessMaterialIndex % 2 == 0 ? framebuffer2 : framebuffer1);
 		glClear(GL_COLOR_BUFFER_BIT);
 		editorOutlineMaterial->SetTexture("screenTexture", 0, lastPostProcessMaterialIndex % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
 		editorOutlineMaterial->SetTexture("depthStencilTexture", 1, lastPostProcessMaterialIndex % 2 == 0 ? depthStencilBuffer1 : depthStencilBuffer2);
@@ -1286,14 +1234,17 @@ namespace GamesGoEngine
 		// lastly apply anti aliasing post process
 		if (aaEnabled)
 		{
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			glBindFramebuffer(GL_FRAMEBUFFER, lastPostProcessMaterialIndex % 2 == 0 ? framebuffer2 : framebuffer1);
 			glClear(GL_COLOR_BUFFER_BIT);
 			fxaaMaterial->SetTexture("screenTexture", 0, lastPostProcessMaterialIndex % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
 			fxaaMaterial->SetFloat("contrastThreshold", fxaaContrastThreshold);
 			fxaaMaterial->SetFloat("relativeThreshold", fxaaRelativeThreshold);
 			fxaaMaterial->Draw(glm::mat4());
 			MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
+			lastPostProcessMaterialIndex++;
 		}
+
+		finalColorBuffer = lastPostProcessMaterialIndex % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2;
 	}
 
 	void RenderingManager::DrawRenderers(const std::vector<MeshRenderer*>& renderers)
@@ -1611,7 +1562,7 @@ namespace GamesGoEngine
 	void RenderingManager::SetBloomMipChainLength(unsigned int length)
 	{
 		GetInstance()->bloomMipChainLength = length;
-		GetInstance()->ConfigureBloomBuffer(WindowManager::GetCurrentWidth(), WindowManager::GetCurrentHeight(), false);
+		GetInstance()->ConfigureBloomBuffer(EditorUIManager::GetViewportWidth(), EditorUIManager::GetViewportHeight(), false);
 	}
 
 	unsigned int RenderingManager::GetBloomMipChainLength()
@@ -1715,6 +1666,11 @@ namespace GamesGoEngine
 		glReadPixels(x, WindowManager::GetCurrentHeight() - y, 1, 1, GL_RED_INTEGER, GL_INT, &objectId);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		return objectId;
+	}
+
+	unsigned RenderingManager::GetFinalColorBuffer()
+	{
+		return GetInstance()->finalColorBuffer;
 	}
 
 	bool RenderingManager::CompareRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2)
