@@ -8,7 +8,10 @@ namespace GamesGoEngine
 
 	void LoggerUI::Draw()
 	{
-		ImGui::Begin("Log");
+		ImGuiWindowFlags windowFlags = 0;
+		windowFlags |= ImGuiWindowFlags_NoResize;
+
+		ImGui::Begin("Log", nullptr, windowFlags);
 
 		ImGui::BeginChild("Buttons", ImVec2(0, 20));
 		ImGui::Button("Clear logs");

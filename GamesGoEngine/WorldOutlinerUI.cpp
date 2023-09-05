@@ -9,7 +9,10 @@ namespace GamesGoEngine
 
 	GameObject* WorldOutlinerUI::Draw(Scene* activeScene)
 	{
-		ImGui::Begin("World Outliner");
+		ImGuiWindowFlags windowFlags = 0;
+		windowFlags |= ImGuiWindowFlags_NoResize;
+
+		ImGui::Begin("World Outliner", nullptr, windowFlags);
 
 		const std::set<GameObject*>& sceneObjects = activeScene->GetSceneObjects();
 

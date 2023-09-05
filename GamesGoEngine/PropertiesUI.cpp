@@ -8,7 +8,10 @@ namespace GamesGoEngine
 {
 	void PropertiesUI::Draw(GameObject* selectedGameObject)
 	{
-		ImGui::Begin("Properties Panel");
+		ImGuiWindowFlags windowFlags = 0;
+		windowFlags |= ImGuiWindowFlags_NoResize;
+
+		ImGui::Begin("Properties Panel", nullptr, windowFlags);
 
 		if (selectedGameObject != nullptr)
 		{

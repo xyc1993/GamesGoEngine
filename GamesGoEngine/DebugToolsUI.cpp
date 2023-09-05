@@ -10,7 +10,10 @@ namespace GamesGoEngine
 {
 	void DebugToolsUI::Draw()
 	{
-		ImGui::Begin("Debug Tools");
+		ImGuiWindowFlags windowFlags = 0;
+		windowFlags |= ImGuiWindowFlags_NoResize;
+
+		ImGui::Begin("Debug Tools", nullptr, windowFlags);
 
 		GLfloat fps = 1.0f / Time::GetUnscaledDeltaTime();
 		std::string fpsText = "FPS = ";
