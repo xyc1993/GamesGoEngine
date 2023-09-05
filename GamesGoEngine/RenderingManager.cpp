@@ -1663,7 +1663,7 @@ namespace GamesGoEngine
 		glBindFramebuffer(GL_FRAMEBUFFER, GetInstance()->objectSelectionFBO);
 		glReadBuffer(GL_COLOR_ATTACHMENT0);
 		int objectId = 0;
-		glReadPixels(x, WindowManager::GetCurrentHeight() - y, 1, 1, GL_RED_INTEGER, GL_INT, &objectId);
+		glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &objectId);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		return objectId;
 	}

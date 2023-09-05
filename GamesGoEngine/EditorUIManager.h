@@ -12,6 +12,8 @@ namespace GamesGoEngine
 		static void Init(GLFWwindow* window);
 		static void Draw(Scene* activeScene);
 		static void Shutdown();
+		static float GetViewportPosX();
+		static float GetViewportPosY();
 		static float GetViewportWidth();
 		static float GetViewportHeight();
 		static void UpdateViewportDimensions();
@@ -22,6 +24,8 @@ namespace GamesGoEngine
 
 		static float windowWidth;
 		static float windowHeight;
+		static float viewportPanelPosX;
+		static float viewportPanelPosY;
 		static float viewportPanelWidth;
 		static float viewportPanelHeight;
 		static float viewportTextureWidth;

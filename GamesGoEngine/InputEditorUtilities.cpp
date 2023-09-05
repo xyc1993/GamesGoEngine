@@ -1,20 +1,25 @@
 #include "InputEditorUtilities.h"
 
 #include "RenderingManager.h"
+#include "EditorUIManager.h"
 #include "SceneManager.h"
-#include "imgui.h"
 
 namespace GamesGoEngine
 {
 	void InputEditorUtilities::SelectGameObjectAt(int x, int y)
 	{
-		// TODO: update after working with viewport
-		return;
+		// Transform window coordinates to viewport coordinates
+		const int viewportPosX = static_cast<int>(EditorUIManager::GetViewportPosX());
+		const int viewportPosY = static_cast<int>(EditorUIManager::GetViewportPosY());
+		const int viewportWidth = static_cast<int>(EditorUIManager::GetViewportWidth());
+		const int viewportHeight = static_cast<int>(EditorUIManager::GetViewportHeight());
+		const int viewportX = x - viewportPosX;
+		const int viewportY = viewportHeight - (y - viewportPosY); // We need to revert Y, max value at the top not bottom
 
-		// If ImGui wants to capture mouse (we hover over some ImGui panel), don't try to select a game object
-		if (ImGui::GetIO().WantCaptureMouse)
+		// Check if it's within bounds
+		if (viewportX < 0 || viewportX > viewportWidth || viewportY < 0 || viewportY > viewportHeight)
 		{
-			//return;
+			return;
 		}
 
 		if (Scene* activeScene = SceneManager::GetActiveScene())
@@ -28,7 +33,7 @@ namespace GamesGoEngine
 			}
 
 			// Get the id and try to find a matching game object, select it if found
-			const int objectId = RenderingManager::GetObjectIdAt(x, y);			
+			const int objectId = RenderingManager::GetObjectIdAt(viewportX, viewportY);
 			GameObject* selectedGameObject = activeScene->GetGameObjectWithId(objectId);
 			if (selectedGameObject != nullptr)
 			{

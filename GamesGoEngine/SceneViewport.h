@@ -7,6 +7,6 @@ namespace GamesGoEngine
 	class SceneViewport
 	{
 	public:
-		void static Draw(float width, float height, GameObject* selectedSceneObject);
+		void static Draw(GameObject* selectedSceneObject, float& viewportPosX, float& viewportPosY);
 	};
 }

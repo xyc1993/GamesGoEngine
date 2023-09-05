@@ -17,6 +17,8 @@ namespace GamesGoEngine
 {
 	float EditorUIManager::windowWidth = 0.0f;
 	float EditorUIManager::windowHeight = 0.0f;
+	float EditorUIManager::viewportPanelPosX = 0.0f;
+	float EditorUIManager::viewportPanelPosY = 0.0f;
 	float EditorUIManager::viewportPanelWidth = 0.0f;
 	float EditorUIManager::viewportPanelHeight = 0.0f;
 	float EditorUIManager::viewportTextureWidth = 0.0f;
@@ -73,7 +75,7 @@ namespace GamesGoEngine
 		ImGui::SetNextWindowPos(ImVec2(0.125f * windowWidth, 0.0f));
 		ImGui::SetNextWindowSize(ImVec2(viewportPanelWidth, viewportPanelHeight));
 
-		SceneViewport::Draw(viewportTextureWidth, viewportTextureHeight, selectedSceneObject);
+		SceneViewport::Draw(selectedSceneObject, viewportPanelPosX, viewportPanelPosY);
 		
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -84,6 +86,16 @@ namespace GamesGoEngine
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
+	}
+
+	float EditorUIManager::GetViewportPosX()
+	{
+		return viewportPanelPosX;
+	}
+
+	float EditorUIManager::GetViewportPosY()
+	{
+		return viewportPanelPosY;
 	}
 
 	float EditorUIManager::GetViewportWidth()
@@ -101,8 +113,8 @@ namespace GamesGoEngine
 		viewportPanelWidth = 0.8125f * windowWidth - 0.125f * windowWidth;
 		viewportPanelHeight = 0.67f * windowHeight;
 
-		viewportTextureWidth = viewportPanelWidth;
-		viewportTextureHeight = viewportPanelHeight - 40.0f; // 40 pixels is reserved for label padding
+		viewportTextureWidth = viewportPanelWidth - 16.0f; // 16 pixels are for padding on the edges
+		viewportTextureHeight = viewportPanelHeight - 30.0f - 9.0f; // 30 pixels are reserved for label padding and 9 are reserved for border padding
 	}
 
 	void EditorUIManager::UpdateWindowSize(float width, float height)
