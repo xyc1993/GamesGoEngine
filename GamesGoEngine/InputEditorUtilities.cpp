@@ -4,10 +4,19 @@
 #include "EditorUIManager.h"
 #include "SceneManager.h"
 
+#include <imgui.h>
+#include <ImGuizmo.h>
+
 namespace GamesGoEngine
 {
 	void InputEditorUtilities::SelectGameObjectAt(int x, int y)
 	{
+		// If transform gizmos are used, don't try to select an object
+		if (ImGuizmo::IsOver())
+		{
+			return;
+		}
+
 		// Transform window coordinates to viewport coordinates
 		const int viewportPosX = static_cast<int>(EditorUIManager::GetViewportPosX());
 		const int viewportPosY = static_cast<int>(EditorUIManager::GetViewportPosY());
