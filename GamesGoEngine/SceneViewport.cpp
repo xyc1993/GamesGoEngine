@@ -1,7 +1,10 @@
 #include "SceneViewport.h"
 
 #include <imgui.h>
-#include "ImGuizmo.h"
+#include <ImGuizmo.h>
+
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/matrix_decompose.hpp>
 
 #include "RenderingManager.h"
 #include "CamerasManager.h"
@@ -41,15 +44,30 @@ namespace GamesGoEngine
 			const glm::mat4 cameraProjection = CamerasManager::GetActiveCameraProjectionMatrix();
 
 			// Get selected object data
-			glm::mat4 selectedObjectTransform = selectedSceneObject->GetTransform()->GetTransformMatrix();
+			glm::mat4 selectedObjectTransformMatrix = selectedSceneObject->GetTransform()->GetTransformMatrix();
+
+			// Transform operation
+			ImGuizmo::OPERATION transformOperation = ImGuizmo::OPERATION::TRANSLATE;
 
 			// Draw gizmo
 			ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection),
-				ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::MODE::LOCAL, glm::value_ptr(selectedObjectTransform));
+				transformOperation, ImGuizmo::MODE::LOCAL, glm::value_ptr(selectedObjectTransformMatrix));
 
 			if (ImGuizmo::IsUsing())
 			{
-				selectedSceneObject->GetTransform()->SetPosition(glm::vec3(selectedObjectTransform[3]));
+				glm::vec3 translation;
+				glm::quat orientation;
+				glm::vec3 scale;
+				glm::vec3 skew;
+				glm::vec4 perspective;
+
+				// If transform matrix decomposition was successful then apply changes
+				if (glm::decompose(selectedObjectTransformMatrix, scale, orientation, translation, skew, perspective))
+				{
+					selectedSceneObject->GetTransform()->SetPosition(translation);
+					selectedSceneObject->GetTransform()->SetRotation(orientation);
+					selectedSceneObject->GetTransform()->SetScale(scale);
+				}
 			}
 		}
 
