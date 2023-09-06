@@ -113,6 +113,7 @@ namespace GamesGoEngine
 		viewportPanelWidth = 0.8125f * windowWidth - 0.125f * windowWidth;
 		viewportPanelHeight = 0.67f * windowHeight;
 
+		// Padding comes from how ImGui dedicates space for child that fills the panel (plus label on top if enabled)
 		viewportTextureWidth = viewportPanelWidth - 16.0f; // 16 pixels are for padding on the edges
 		viewportTextureHeight = viewportPanelHeight - 30.0f - 9.0f; // 30 pixels are reserved for label padding and 9 are reserved for border padding
 	}
