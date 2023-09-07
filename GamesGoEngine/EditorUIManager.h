@@ -2,12 +2,23 @@
 
 #include <GLFW/glfw3.h>
 
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
+#include <ImGuizmo.h>
+
 namespace GamesGoEngine
 {
 	class Scene;
 
 	class EditorUIManager
 	{
+	private:
+		EditorUIManager();
+
+		static EditorUIManager* instance;
+		static EditorUIManager* GetInstance();
+
 	public:
 		static void Init(GLFWwindow* window);
 		static void Draw(Scene* activeScene);
@@ -18,17 +29,19 @@ namespace GamesGoEngine
 		static float GetViewportHeight();
 		static void UpdateViewportDimensions();
 		static void UpdateWindowSize(float width, float height);
+		static void SetTransformOperation(ImGuizmo::OPERATION transformOperation);
 
 	private:
-		static float GetUIScale();
+		static float GetUIScale(const float& windowWidth, const float& windowHeight);
 
-		static float windowWidth;
-		static float windowHeight;
-		static float viewportPanelPosX;
-		static float viewportPanelPosY;
-		static float viewportPanelWidth;
-		static float viewportPanelHeight;
-		static float viewportTextureWidth;
-		static float viewportTextureHeight;
+		float windowWidth;
+		float windowHeight;
+		float viewportPanelPosX;
+		float viewportPanelPosY;
+		float viewportPanelWidth;
+		float viewportPanelHeight;
+		float viewportTextureWidth;
+		float viewportTextureHeight;
+		ImGuizmo::OPERATION currentTransformOperation;
 	};
 }

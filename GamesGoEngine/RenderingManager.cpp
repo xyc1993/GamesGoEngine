@@ -461,8 +461,7 @@ namespace GamesGoEngine
 
 	void RenderingManager::ResizeBuffers(GLint screenWidth, GLint screenHeight)
 	{
-		// make sure viewport dimensions are up to date and use them to update framebuffers size
-		EditorUIManager::UpdateViewportDimensions();
+		// get updated viewport dimensions
 		const GLint width = static_cast<GLint>(EditorUIManager::GetViewportWidth());
 		const GLint height = static_cast<GLint>(EditorUIManager::GetViewportHeight());
 		GetInstance()->ResizeBuffersInternal(width, height);

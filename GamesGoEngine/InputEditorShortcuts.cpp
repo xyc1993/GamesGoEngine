@@ -1,6 +1,6 @@
 #include "InputEditorShortcuts.h"
 
-#include "imgui.h"
+#include "EditorUIManager.h"
 #include "InputManager.h"
 #include "Scene.h"
 
@@ -30,6 +30,21 @@ namespace GamesGoEngine
 			{
 				activeScene->RemoveGameObject(selectedGameObject);
 			}
+		}
+
+		if (InputManager::GetKeyReleased(GLFW_KEY_W))
+		{
+			EditorUIManager::SetTransformOperation(ImGuizmo::OPERATION::TRANSLATE);
+		}
+
+		if (InputManager::GetKeyReleased(GLFW_KEY_E))
+		{
+			EditorUIManager::SetTransformOperation(ImGuizmo::OPERATION::ROTATE);
+		}
+
+		if (InputManager::GetKeyReleased(GLFW_KEY_R))
+		{
+			EditorUIManager::SetTransformOperation(ImGuizmo::OPERATION::SCALE);
 		}
 	}
 }

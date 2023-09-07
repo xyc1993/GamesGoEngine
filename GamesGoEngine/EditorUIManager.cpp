@@ -1,11 +1,5 @@
 #include "EditorUIManager.h"
 
-#include <imgui.h>
-#include <imgui_impl_glfw.h>
-#include <imgui_impl_opengl3.h>
-
-#include <ImGuizmo.h>
-
 #include "LoggerUI.h"
 #include "PropertiesUI.h"
 #include "WorldOutlinerUI.h"
@@ -15,14 +9,20 @@
 
 namespace GamesGoEngine
 {
-	float EditorUIManager::windowWidth = 0.0f;
-	float EditorUIManager::windowHeight = 0.0f;
-	float EditorUIManager::viewportPanelPosX = 0.0f;
-	float EditorUIManager::viewportPanelPosY = 0.0f;
-	float EditorUIManager::viewportPanelWidth = 0.0f;
-	float EditorUIManager::viewportPanelHeight = 0.0f;
-	float EditorUIManager::viewportTextureWidth = 0.0f;
-	float EditorUIManager::viewportTextureHeight = 0.0f;
+	EditorUIManager* EditorUIManager::instance = nullptr;
+
+	EditorUIManager::EditorUIManager()
+	{
+	}
+
+	EditorUIManager* EditorUIManager::GetInstance()
+	{
+		if (instance == nullptr)
+		{
+			instance = new EditorUIManager();
+		}
+		return instance;
+	}
 
 	void EditorUIManager::Init(GLFWwindow* window)
 	{
@@ -42,7 +42,9 @@ namespace GamesGoEngine
 		ImGui::NewFrame();
 		ImGuizmo::BeginFrame();
 
-		const float uiScale = GetUIScale();
+		const float windowWidth = GetInstance()->windowWidth;
+		const float windowHeight = GetInstance()->windowHeight;
+		const float uiScale = GetUIScale(windowWidth, windowHeight);
 
 		ImGui::GetIO().FontGlobalScale = uiScale;
 
@@ -73,9 +75,9 @@ namespace GamesGoEngine
 
 		UpdateViewportDimensions();
 		ImGui::SetNextWindowPos(ImVec2(0.125f * windowWidth, 0.0f));
-		ImGui::SetNextWindowSize(ImVec2(viewportPanelWidth, viewportPanelHeight));
+		ImGui::SetNextWindowSize(ImVec2(GetInstance()->viewportPanelWidth, GetInstance()->viewportPanelHeight));
 
-		SceneViewport::Draw(selectedSceneObject, viewportPanelPosX, viewportPanelPosY);
+		SceneViewport::Draw(selectedSceneObject, GetInstance()->currentTransformOperation, GetInstance()->viewportPanelPosX, GetInstance()->viewportPanelPosY);
 		
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -90,41 +92,46 @@ namespace GamesGoEngine
 
 	float EditorUIManager::GetViewportPosX()
 	{
-		return viewportPanelPosX;
+		return GetInstance()->viewportPanelPosX;
 	}
 
 	float EditorUIManager::GetViewportPosY()
 	{
-		return viewportPanelPosY;
+		return GetInstance()->viewportPanelPosY;
 	}
 
 	float EditorUIManager::GetViewportWidth()
 	{
-		return viewportTextureWidth;
+		return GetInstance()->viewportTextureWidth;
 	}
 
 	float EditorUIManager::GetViewportHeight()
 	{
-		return viewportTextureHeight;
+		return GetInstance()->viewportTextureHeight;
 	}
 
 	void EditorUIManager::UpdateViewportDimensions()
 	{
-		viewportPanelWidth = 0.8125f * windowWidth - 0.125f * windowWidth;
-		viewportPanelHeight = 0.67f * windowHeight;
+		GetInstance()->viewportPanelWidth = 0.8125f * GetInstance()->windowWidth - 0.125f * GetInstance()->windowWidth;
+		GetInstance()->viewportPanelHeight = 0.67f * GetInstance()->windowHeight;
 
 		// Padding comes from how ImGui dedicates space for child that fills the panel (plus label on top if enabled)
-		viewportTextureWidth = viewportPanelWidth - 16.0f; // 16 pixels are for padding on the edges
-		viewportTextureHeight = viewportPanelHeight - 30.0f - 9.0f; // 30 pixels are reserved for label padding and 9 are reserved for border padding
+		GetInstance()->viewportTextureWidth = GetInstance()->viewportPanelWidth - 16.0f; // 16 pixels are for padding on the edges
+		GetInstance()->viewportTextureHeight = GetInstance()->viewportPanelHeight - 30.0f - 9.0f; // 30 pixels are reserved for label padding and 9 are reserved for border padding
 	}
 
 	void EditorUIManager::UpdateWindowSize(float width, float height)
 	{
-		windowWidth = width;
-		windowHeight = height;
+		GetInstance()->windowWidth = width;
+		GetInstance()->windowHeight = height;
 	}
 
-	float EditorUIManager::GetUIScale()
+	void EditorUIManager::SetTransformOperation(ImGuizmo::OPERATION transformOperation)
+	{
+		GetInstance()->currentTransformOperation = transformOperation;
+	}
+
+	float EditorUIManager::GetUIScale(const float& windowWidth, const float& windowHeight)
 	{
 		// Calculate scale factor based on the following values with assuming linear scaling (based on trial and error)
 		// 3840 x 2160 :: 3.0

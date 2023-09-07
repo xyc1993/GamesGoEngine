@@ -1,8 +1,5 @@
 #include "SceneViewport.h"
 
-#include <imgui.h>
-#include <ImGuizmo.h>
-
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/matrix_decompose.hpp>
 
@@ -12,7 +9,7 @@
 
 namespace GamesGoEngine
 {
-	void SceneViewport::Draw(GameObject* selectedSceneObject, float& viewportPosX, float& viewportPosY)
+	void SceneViewport::Draw(GameObject* selectedSceneObject, ImGuizmo::OPERATION transformOperation, float& viewportPosX, float& viewportPosY)
 	{
 		ImGuiWindowFlags windowFlags = 0;
 		windowFlags |= ImGuiWindowFlags_NoResize;
@@ -45,9 +42,6 @@ namespace GamesGoEngine
 
 			// Get selected object data
 			glm::mat4 selectedObjectTransformMatrix = selectedSceneObject->GetTransform()->GetTransformMatrix();
-
-			// Transform operation
-			ImGuizmo::OPERATION transformOperation = ImGuizmo::OPERATION::TRANSLATE;
 
 			// Draw gizmo
 			ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection),
