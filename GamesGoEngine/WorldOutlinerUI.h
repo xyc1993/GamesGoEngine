@@ -10,7 +10,8 @@ namespace GamesGoEngine
 		static GameObject* Draw(Scene* activeScene);
 
 	private:
-		static void DrawSceneNodeChildren(GameObject* sceneObject);
+		static void DrawSceneNodeChildren(Scene* activeScene, GameObject* sceneObject);
+		static void HandleDragAndDrop(Scene* activeScene, GameObject* sceneObject);
 
 		static GameObject* selectedSceneObject;
 	};

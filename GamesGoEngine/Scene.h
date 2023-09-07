@@ -1,5 +1,7 @@
 #pragma once
 
+#include <map>
+
 #include "GameObject.h"
 
 namespace GamesGoEngine
@@ -15,9 +17,9 @@ namespace GamesGoEngine
 		GameObject* GetGameObjectWithId(int id);
 		GameObject* GetSelectedGameObject();
 		void Update();
-		const std::set<GameObject*>& GetSceneObjects() const;
+		const std::map<int, GameObject*>& GetSceneObjects() const;
 
 	private:
-		std::set<GameObject*> sceneObjects;
+		std::map<int, GameObject*> sceneObjects;
 	};
 }

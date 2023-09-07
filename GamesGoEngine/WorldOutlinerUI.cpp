@@ -14,7 +14,7 @@ namespace GamesGoEngine
 
 		ImGui::Begin("World Outliner", nullptr, windowFlags);
 
-		const std::set<GameObject*>& sceneObjects = activeScene->GetSceneObjects();
+		const std::map<int, GameObject*>& sceneObjects = activeScene->GetSceneObjects();
 
 		// Check if the selected game object wasn't deselected via different means than this panel
 		if (selectedSceneObject != nullptr && activeScene->GetSelectedGameObject() == nullptr)
@@ -25,7 +25,7 @@ namespace GamesGoEngine
 		// Update selection if object was selected via different means (for example via clicking directly through the camera view)
 		for (auto it = sceneObjects.begin(); it != sceneObjects.end(); ++it)
 		{
-			GameObject* sceneObject = *it;
+			GameObject* sceneObject = it->second;
 			if (sceneObject->IsSelected())
 			{
 				selectedSceneObject = sceneObject;
@@ -36,9 +36,10 @@ namespace GamesGoEngine
 		// Perform standard UI selection
 		for (auto it = sceneObjects.begin(); it != sceneObjects.end(); ++it)
 		{
-			GameObject* sceneObject = *it;
+			GameObject* sceneObject = it->second;
 			if (sceneObject != nullptr)
 			{
+				// Game objects are processed down the hierarchy, never up, ignore children
 				if (sceneObject->GetAllParentsNumber() > 0)
 				{
 					continue;
@@ -57,9 +58,11 @@ namespace GamesGoEngine
 					selectedSceneObject->SetSelected(true);
 				}
 
+				HandleDragAndDrop(activeScene, sceneObject);
+
 				if (opened)
 				{
-					DrawSceneNodeChildren(sceneObject);
+					DrawSceneNodeChildren(activeScene, sceneObject);
 				}
 			}
 			else
@@ -73,7 +76,7 @@ namespace GamesGoEngine
 		return selectedSceneObject;
 	}
 
-	void WorldOutlinerUI::DrawSceneNodeChildren(GameObject* sceneObject)
+	void WorldOutlinerUI::DrawSceneNodeChildren(Scene* activeScene, GameObject* sceneObject)
 	{
 		for (int j = 0; j < sceneObject->GetChildren().size(); j++)
 		{
@@ -93,12 +96,39 @@ namespace GamesGoEngine
 					selectedSceneObject->SetSelected(true);
 				}
 
+				HandleDragAndDrop(activeScene, child);
+
 				if (opened)
 				{
-					DrawSceneNodeChildren(child);
+					DrawSceneNodeChildren(activeScene, child);
 				}
 			}
 		}
 		ImGui::TreePop();
+	}
+
+	void WorldOutlinerUI::HandleDragAndDrop(Scene* activeScene, GameObject* sceneObject)
+	{
+		if (ImGui::BeginDragDropSource())
+		{
+			int gameObjectId = sceneObject->GetObjectId();
+			ImGui::SetDragDropPayload("SceneHierarchy", &gameObjectId, sizeof(int));
+			ImGui::Text(sceneObject->GetName().c_str());
+			ImGui::EndDragDropSource();
+		}
+
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("SceneHierarchy"))
+			{
+				int dragDropGameObjectId = *(int*)payload->Data;
+				GameObject* droppedGameObject = activeScene->GetGameObjectWithId(dragDropGameObjectId);
+				if (droppedGameObject)
+				{
+					droppedGameObject->SetParent(sceneObject);
+				}
+			}
+			ImGui::EndDragDropTarget();
+		}
 	}
 }

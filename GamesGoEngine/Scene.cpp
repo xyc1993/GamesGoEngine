@@ -17,7 +17,7 @@ namespace GamesGoEngine
 		std::vector<GameObject*> markedForDeletion;
 		for (auto it = sceneObjects.begin(); it != sceneObjects.end(); ++it)
 		{
-			GameObject* go = *it;
+			GameObject* go = it->second;
 			if (go != nullptr && go->GetAllParentsNumber() == 0)
 			{
 				markedForDeletion.push_back(go);
@@ -36,7 +36,7 @@ namespace GamesGoEngine
 	void Scene::AddGameObject(GameObject* gameObject)
 	{
 		gameObject->SetSceneReferenece(this);
-		sceneObjects.insert(gameObject);
+		sceneObjects[gameObject->GetObjectId()] = gameObject;
 		if (gameObject->GetName().length() == 0)
 		{
 			std::string name = "GameObject_";
@@ -47,24 +47,12 @@ namespace GamesGoEngine
 
 	void Scene::RemoveGameObject(GameObject* gameObject)
 	{
-		auto iterator = sceneObjects.find(gameObject);
-		if (iterator != sceneObjects.end())
-		{
-			delete* iterator;
-			sceneObjects.erase(iterator);
-		}
+		sceneObjects.erase(gameObject->GetObjectId());
 	}
 
 	GameObject* Scene::GetGameObjectWithId(int id)
 	{
-		for (auto it = sceneObjects.begin(); it != sceneObjects.end(); ++it)
-		{
-			if ((*it)->GetObjectId() == id)
-			{
-				return (*it);
-			}
-		}
-		return nullptr;
+		return sceneObjects[id];
 	}
 
 	// TODO: Cache this!
@@ -72,9 +60,10 @@ namespace GamesGoEngine
 	{
 		for (auto it = sceneObjects.begin(); it != sceneObjects.end(); ++it)
 		{
-			if ((*it)->IsSelected())
+			GameObject* gameObject = it->second;
+			if (gameObject->IsSelected())
 			{
-				return (*it);
+				return gameObject;
 			}
 		}
 		return nullptr;
@@ -84,22 +73,24 @@ namespace GamesGoEngine
 	{
 		for (auto it = sceneObjects.begin(); it != sceneObjects.end(); ++it)
 		{
-			if (*it != nullptr)
+			GameObject* gameObject = it->second;
+			if (gameObject != nullptr)
 			{
-				(*it)->Update();
+				gameObject->Update();
 			}
 		}
 
 		for (auto it = sceneObjects.begin(); it != sceneObjects.end(); ++it)
 		{
-			if (*it != nullptr)
+			GameObject* gameObject = it->second;
+			if (gameObject != nullptr)
 			{
-				(*it)->LateUpdate();
+				gameObject->LateUpdate();
 			}
 		}
 	}
 
-	const std::set<GameObject*>& Scene::GetSceneObjects() const
+	const std::map<int, GameObject*>& Scene::GetSceneObjects() const
 	{
 		return sceneObjects;
 	}
