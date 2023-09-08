@@ -1,4 +1,5 @@
 #pragma once
+
 #include "SceneExample.h"
 
 namespace GamesGoEngine
