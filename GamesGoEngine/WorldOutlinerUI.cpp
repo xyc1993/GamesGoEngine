@@ -2,13 +2,20 @@
 
 #include "imgui.h"
 #include "InputManager.h"
+#include "SceneManager.h"
 
 namespace GamesGoEngine
 {
 	GameObject* WorldOutlinerUI::selectedSceneObject = nullptr;
 
-	GameObject* WorldOutlinerUI::Draw(Scene* activeScene)
+	GameObject* WorldOutlinerUI::Draw()
 	{
+		Scene* activeScene = SceneManager::GetActiveScene();
+		if (activeScene == nullptr)
+		{
+			return nullptr;
+		}
+
 		ImGuiWindowFlags windowFlags = 0;
 		windowFlags |= ImGuiWindowFlags_NoResize;
 

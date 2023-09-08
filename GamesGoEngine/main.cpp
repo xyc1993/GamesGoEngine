@@ -46,7 +46,7 @@ void MainLoop(GLFWwindow* window)
 		
 		activeScene->Update();
 		RenderingManager::Update();
-		EditorUIManager::Draw(activeScene->GetSceneUnsafe());
+		EditorUIManager::Draw();
 		
 		glfwSwapBuffers(window);
 

@@ -48,7 +48,7 @@ namespace GamesGoEngine
 		ImGui_ImplOpenGL3_Init("#version 330");
 	}
 
-	void EditorUIManager::Draw(Scene* activeScene)
+	void EditorUIManager::Draw()
 	{
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
@@ -63,7 +63,7 @@ namespace GamesGoEngine
 
 		ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
 		ImGui::SetNextWindowSize(ImVec2(0.125f * windowWidth, 0.33f * windowHeight));
-		GameObject* selectedSceneObject = WorldOutlinerUI::Draw(activeScene);
+		GameObject* selectedSceneObject = WorldOutlinerUI::Draw();
 
 		ImGui::SetNextWindowPos(ImVec2(0.8125f * windowWidth, 0.0f));
 		ImGui::SetNextWindowSize(ImVec2(0.1875f * windowWidth, 0.33f * windowHeight));

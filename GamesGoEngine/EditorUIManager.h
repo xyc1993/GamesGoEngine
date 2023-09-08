@@ -20,7 +20,7 @@ namespace GamesGoEngine
 
 	public:
 		static void Init(GLFWwindow* window);
-		static void Draw(Scene* activeScene);
+		static void Draw();
 		static void Shutdown();
 		static void SetTransformOperation(ImGuizmo::OPERATION transformOperation);
 		static void SelectGameObjectAt(int x, int y);

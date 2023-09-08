@@ -7,7 +7,7 @@ namespace GamesGoEngine
 	class WorldOutlinerUI
 	{
 	public:
-		static GameObject* Draw(Scene* activeScene);
+		static GameObject* Draw();
 
 	private:
 		static void DrawSceneNodeChildren(Scene* activeScene, GameObject* sceneObject);
