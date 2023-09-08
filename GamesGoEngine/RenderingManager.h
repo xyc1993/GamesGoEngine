@@ -34,7 +34,7 @@ namespace GamesGoEngine
 		static RenderingManager* GetInstance();
 
 	public:
-		static void Init(GLint screenWidth, GLint screenHeight);
+		static void Init();
 
 	private:
 		void InitGammaCorrection();
@@ -56,10 +56,10 @@ namespace GamesGoEngine
 		void ConfigureObjectSelectionBuffer(GLint screenWidth, GLint screenHeight, bool shouldGenerateFramebuffer);
 
 	public:
-		static void ResizeBuffers(GLint screenWidth, GLint screenHeight);
+		static void ResizeBuffers(GLint buffersWidth, GLint buffersHeight);
 
 	private:
-		void ResizeBuffersInternal(GLint screenWidth, GLint screenHeight);
+		void ResizeBuffersInternal(GLint buffersWidth, GLint buffersHeight);
 		void ConfigureUniformBufferObjects();
 		void CreateDebugMaterials();
 
@@ -264,6 +264,9 @@ namespace GamesGoEngine
 		// debug & tools materials
 		Material* normalDebugMaterial;
 		Material* objectSelectionMaterial;
+
+		int currentBuffersWidth = 800;
+		int currentBuffersHeight = 450;
 
 		// special post process materials
 		std::shared_ptr<PostProcessMaterial> hdrToneMappingGammaCorrectionMaterial;

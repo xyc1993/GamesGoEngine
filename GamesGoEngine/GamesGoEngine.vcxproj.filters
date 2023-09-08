@@ -375,9 +375,6 @@
     <ClCompile Include="SceneExample_HangarPBR.cpp">
       <Filter>Source Files\GamesGo\Examples</Filter>
     </ClCompile>
-    <ClCompile Include="InputEditorUtilities.cpp">
-      <Filter>Source Files\GamesGo\Input</Filter>
-    </ClCompile>
     <ClCompile Include="SceneManager.cpp">
       <Filter>Source Files\GamesGo\Scene Management</Filter>
     </ClCompile>
@@ -601,9 +598,6 @@
     </ClInclude>
     <ClInclude Include="SceneExample_HangarPBR.h">
       <Filter>Header Files\GamesGo\Examples</Filter>
-    </ClInclude>
-    <ClInclude Include="InputEditorUtilities.h">
-      <Filter>Header Files\GamesGo\Input</Filter>
     </ClInclude>
     <ClInclude Include="SceneManager.h">
       <Filter>Header Files\GamesGo\Scene Management</Filter>

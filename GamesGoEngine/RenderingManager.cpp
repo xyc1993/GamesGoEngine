@@ -65,7 +65,7 @@ namespace GamesGoEngine
 		return instance;
 	}
 
-	void RenderingManager::Init(GLint screenWidth, GLint screenHeight)
+	void RenderingManager::Init()
 	{
 		glEnable(GL_DEPTH_TEST);
 
@@ -79,7 +79,10 @@ namespace GamesGoEngine
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 
-		GetInstance()->ConfigureFramebuffers(screenWidth, screenHeight, true);
+		const int buffersWidth = GetInstance()->currentBuffersWidth;
+		const int buffersHeight = GetInstance()->currentBuffersHeight;
+
+		GetInstance()->ConfigureFramebuffers(buffersWidth, buffersHeight, true);
 		GetInstance()->ConfigureUniformBufferObjects();
 		GetInstance()->CreateDebugMaterials();
 		GetInstance()->InitGammaCorrection();
@@ -459,16 +462,16 @@ namespace GamesGoEngine
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void RenderingManager::ResizeBuffers(GLint screenWidth, GLint screenHeight)
+	void RenderingManager::ResizeBuffers(GLint buffersWidth, GLint buffersHeight)
 	{
-		// get updated viewport dimensions
-		const GLint width = static_cast<GLint>(EditorUIManager::GetViewportWidth());
-		const GLint height = static_cast<GLint>(EditorUIManager::GetViewportHeight());
-		GetInstance()->ResizeBuffersInternal(width, height);
+		GetInstance()->ResizeBuffersInternal(buffersWidth, buffersHeight);
 	}
 
-	void RenderingManager::ResizeBuffersInternal(GLint screenWidth, GLint screenHeight)
+	void RenderingManager::ResizeBuffersInternal(GLint buffersWidth, GLint buffersHeight)
 	{
+		currentBuffersWidth = buffersWidth;
+		currentBuffersHeight = buffersHeight;
+
 		// not the most lightweight approach since we need to recreate textures but it is required due to how we write data from stencil buffer into texture
 		glDeleteTextures(1, &textureColorBuffer1);
 		glDeleteTextures(1, &textureColorBuffer2);
@@ -511,7 +514,7 @@ namespace GamesGoEngine
 		glDeleteTextures(1, &objectSelectionColorBuffer);
 		glDeleteTextures(1, &objectSelectionDepthStencilBuffer);
 
-		GetInstance()->ConfigureFramebuffers(screenWidth, screenHeight, false);
+		GetInstance()->ConfigureFramebuffers(currentBuffersWidth, currentBuffersHeight, false);
 	}
 
 	void RenderingManager::ConfigureUniformBufferObjects()
@@ -548,8 +551,8 @@ namespace GamesGoEngine
 		// TODO: more optimal sorting, it could sort on camera view change, not on every draw frame
 		SortTransparentMeshRenderers();
 
-		const int viewportWidth = static_cast<int>(EditorUIManager::GetViewportWidth());
-		const int viewportHeight = static_cast<int>(EditorUIManager::GetViewportHeight());
+		const int viewportWidth = GetInstance()->currentBuffersWidth;
+		const int viewportHeight = GetInstance()->currentBuffersHeight;
 
 		// Rendering the scene
 		// set viewport
@@ -1561,7 +1564,7 @@ namespace GamesGoEngine
 	void RenderingManager::SetBloomMipChainLength(unsigned int length)
 	{
 		GetInstance()->bloomMipChainLength = length;
-		GetInstance()->ConfigureBloomBuffer(EditorUIManager::GetViewportWidth(), EditorUIManager::GetViewportHeight(), false);
+		GetInstance()->ConfigureBloomBuffer(GetInstance()->currentBuffersWidth, GetInstance()->currentBuffersHeight, false);
 	}
 
 	unsigned int RenderingManager::GetBloomMipChainLength()

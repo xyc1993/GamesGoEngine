@@ -168,7 +168,6 @@
     <ClCompile Include="DebugToolsUI.cpp" />
     <ClCompile Include="EditorUIManager.cpp" />
     <ClCompile Include="GraphicsSettingsUI.cpp" />
-    <ClCompile Include="InputEditorUtilities.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="LoggerUI.cpp" />
     <ClCompile Include="Math.cpp" />
@@ -245,7 +244,6 @@
     <ClInclude Include="DebugToolsUI.h" />
     <ClInclude Include="EditorUIManager.h" />
     <ClInclude Include="GraphicsSettingsUI.h" />
-    <ClInclude Include="InputEditorUtilities.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="LoggerUI.h" />
     <ClInclude Include="Math.h" />

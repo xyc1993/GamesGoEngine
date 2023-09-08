@@ -27,8 +27,6 @@ namespace GamesGoEngine
 		currentScreenWidth = startWindowWidth;
 		currentScreenHeight = startWindowHeight;
 		UpdateAspectRatio();
-
-		EditorUIManager::UpdateWindowSize(static_cast<float>(currentScreenWidth), static_cast<float>(currentScreenHeight));
 	}
 
 	WindowManager* WindowManager::GetInstance()
@@ -117,9 +115,6 @@ namespace GamesGoEngine
 	void WindowManager::FramebufferSizeCallback(GLFWwindow* window, int width, int height)
 	{
 		glViewport(0, 0, width, height);
-		EditorUIManager::UpdateWindowSize(static_cast<float>(width), static_cast<float>(height));
-		EditorUIManager::UpdateViewportDimensions();
-		RenderingManager::ResizeBuffers(width, height);
 		GetInstance()->currentScreenWidth = width;
 		GetInstance()->currentScreenHeight = height;
 		GetInstance()->UpdateAspectRatio();		

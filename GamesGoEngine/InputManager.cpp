@@ -1,6 +1,6 @@
 #include "InputManager.h"
 
-#include "InputEditorUtilities.h"
+#include "EditorUIManager.h"
 
 namespace GamesGoEngine
 {
@@ -204,7 +204,7 @@ namespace GamesGoEngine
 				// if left click
 				if (button == 0)
 				{
-					InputEditorUtilities::SelectGameObjectAt(GetInstance()->lastMouseX, GetInstance()->lastMouseY);
+					EditorUIManager::SelectGameObjectAt(GetInstance()->lastMouseX, GetInstance()->lastMouseY);
 				}
 			}
 			else if (GLFW_RELEASE == action)

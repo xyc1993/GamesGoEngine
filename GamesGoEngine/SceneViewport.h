@@ -10,6 +10,17 @@ namespace GamesGoEngine
 	class SceneViewport
 	{
 	public:
-		void static Draw(GameObject* selectedSceneObject, ImGuizmo::OPERATION transformOperation, float& viewportPosX, float& viewportPosY);
+		SceneViewport();
+
+		void Draw(GameObject* selectedSceneObject);
+		void SetTransformOperation(ImGuizmo::OPERATION transformOperation);
+		void SelectGameObjectAt(int x, int y);
+		
+	private:
+		ImGuizmo::OPERATION currentTransformOperation;
+		int viewportPanelPosX;
+		int viewportPanelPosY;
+		int viewportTextureWidth;
+		int viewportTextureHeight;
 	};
 }

@@ -18,7 +18,7 @@ using namespace GamesGoEngine;
 void MainLoop(GLFWwindow* window)
 {
 	EditorUIManager::Init(window);
-	RenderingManager::Init(EditorUIManager::GetViewportWidth(), EditorUIManager::GetViewportHeight());
+	RenderingManager::Init();
 	
 	//SceneExample_LitForward* activeScene = new SceneExample_LitForward(false);
 	//SceneExample_LitForward* activeScene = new SceneExample_LitForward(true);

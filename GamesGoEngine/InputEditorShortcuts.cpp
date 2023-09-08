@@ -1,5 +1,8 @@
 #include "InputEditorShortcuts.h"
 
+#include <imgui.h>
+#include <ImGuizmo.h>
+
 #include "EditorUIManager.h"
 #include "InputManager.h"
 #include "Scene.h"
