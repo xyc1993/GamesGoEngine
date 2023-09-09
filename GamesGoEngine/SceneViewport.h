@@ -9,7 +9,7 @@ namespace GamesGoEngine
 {
 	class GameObject;
 
-	class SceneViewport : EditorPanel
+	class SceneViewport : public EditorPanel
 	{
 	public:
 		SceneViewport();

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 // forward declaration of window struct and enum to avoid linking libraries in this header
 struct GLFWwindow;
@@ -9,6 +10,7 @@ namespace ImGuizmo { enum OPERATION : int; }
 namespace GamesGoEngine
 {
 	enum class MsgType;
+	class EditorPanel;
 	class DebugToolsUI;
 	class GraphicsSettingsUI;
 	class LoggerUI;
@@ -46,5 +48,7 @@ namespace GamesGoEngine
 		PropertiesUI* propertiesUI;
 		SceneViewport* sceneViewer;
 		WorldOutlinerUI* worldOutliner;
+
+		std::vector<EditorPanel*> editorPanels;
 	};
 }

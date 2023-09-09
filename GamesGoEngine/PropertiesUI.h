@@ -6,7 +6,7 @@ namespace GamesGoEngine
 {
 	class GameObject;
 
-	class PropertiesUI : EditorPanel
+	class PropertiesUI : public EditorPanel
 	{
 	public:
 		PropertiesUI();

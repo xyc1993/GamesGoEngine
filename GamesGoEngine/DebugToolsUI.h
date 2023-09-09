@@ -4,7 +4,7 @@
 
 namespace GamesGoEngine
 {
-	class DebugToolsUI : EditorPanel
+	class DebugToolsUI : public EditorPanel
 	{
 	public:
 		DebugToolsUI();

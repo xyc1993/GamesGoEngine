@@ -4,7 +4,7 @@
 
 namespace GamesGoEngine
 {
-	class GraphicsSettingsUI : EditorPanel
+	class GraphicsSettingsUI : public EditorPanel
 	{
 	public:
 		GraphicsSettingsUI();

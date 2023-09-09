@@ -8,7 +8,7 @@
 
 namespace GamesGoEngine
 {
-	class LoggerUI : EditorPanel
+	class LoggerUI : public EditorPanel
 	{
 	public:
 		LoggerUI();

@@ -27,6 +27,22 @@ namespace GamesGoEngine
 		propertiesUI = new PropertiesUI();
 		sceneViewer = new SceneViewport();
 		worldOutliner = new WorldOutlinerUI();
+
+		// set panels sizes and position offsets
+		debugToolsUI->SetDrawingMultipliers(0.75f, 0.67f, 0.25f, 0.33f);
+		graphicsSettingsUI->SetDrawingMultipliers(0.0f, 0.67f, 0.25f, 0.33f);
+		loggerUI->SetDrawingMultipliers(0.25f, 0.67f, 0.5f, 0.33f);
+		propertiesUI->SetDrawingMultipliers(0.8125f, 0.0f, 0.1875f, 0.33f);
+		sceneViewer->SetDrawingMultipliers(0.125f, 0.0f, 0.6875f, 0.67f);
+		worldOutliner->SetDrawingMultipliers(0.0f, 0.0f, 0.125f, 0.33f);
+
+		// fill editor panels container
+		editorPanels.push_back(debugToolsUI);
+		editorPanels.push_back(graphicsSettingsUI);
+		editorPanels.push_back(loggerUI);
+		editorPanels.push_back(propertiesUI);
+		editorPanels.push_back(sceneViewer);
+		editorPanels.push_back(worldOutliner);
 	}
 
 	EditorUIManager::~EditorUIManager()
@@ -37,6 +53,8 @@ namespace GamesGoEngine
 		delete propertiesUI;
 		delete sceneViewer;
 		delete worldOutliner;
+
+		editorPanels.clear();
 	}
 
 	EditorUIManager* EditorUIManager::GetInstance()
@@ -80,29 +98,10 @@ namespace GamesGoEngine
 
 	void EditorUIManager::DrawPanels(const float windowWidth, const float windowHeight)
 	{
-		ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
-		ImGui::SetNextWindowSize(ImVec2(0.125f * windowWidth, 0.33f * windowHeight));
-		worldOutliner->Draw();
-
-		ImGui::SetNextWindowPos(ImVec2(0.8125f * windowWidth, 0.0f));
-		ImGui::SetNextWindowSize(ImVec2(0.1875f * windowWidth, 0.33f * windowHeight));
-		propertiesUI->Draw();
-
-		ImGui::SetNextWindowPos(ImVec2(0.125f * windowWidth, 0.0f));
-		ImGui::SetNextWindowSize(ImVec2(0.8125f * windowWidth - 0.125f * windowWidth, 0.67f * windowHeight));
-		sceneViewer->Draw();
-
-		ImGui::SetNextWindowPos(ImVec2(0.75f * windowWidth, 0.67f * windowHeight));
-		ImGui::SetNextWindowSize(ImVec2(0.25f * windowWidth, 0.33f * windowHeight));
-		debugToolsUI->Draw();
-
-		ImGui::SetNextWindowPos(ImVec2(0.0f, 0.67f * windowHeight));
-		ImGui::SetNextWindowSize(ImVec2(0.25f * windowWidth, 0.33f * windowHeight));
-		graphicsSettingsUI->Draw();
-
-		ImGui::SetNextWindowPos(ImVec2(0.25f * windowWidth, 0.67f * windowHeight));
-		ImGui::SetNextWindowSize(ImVec2(0.5f * windowWidth, 0.33f * windowHeight));
-		loggerUI->Draw();
+		for (size_t i = 0; i < editorPanels.size(); i++)
+		{
+			editorPanels[i]->DrawToWindowDimensions(windowWidth, windowHeight);
+		}
 	}
 
 	void EditorUIManager::Shutdown()

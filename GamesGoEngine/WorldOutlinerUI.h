@@ -5,7 +5,7 @@
 
 namespace GamesGoEngine
 {
-	class WorldOutlinerUI : EditorPanel
+	class WorldOutlinerUI : public EditorPanel
 	{
 	public:
 		WorldOutlinerUI();
