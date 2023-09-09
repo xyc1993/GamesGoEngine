@@ -3,15 +3,22 @@
 #include "imgui.h"
 
 #include "GameObject.h"
+#include "SceneManager.h"
 
 namespace GamesGoEngine
 {
-	void PropertiesUI::Draw(GameObject* selectedGameObject)
+	void PropertiesUI::Draw()
 	{
 		ImGuiWindowFlags windowFlags = 0;
 		windowFlags |= ImGuiWindowFlags_NoResize;
 
 		ImGui::Begin("Properties Panel", nullptr, windowFlags);
+
+		GameObject* selectedGameObject = nullptr;
+		if (Scene* activeScene = SceneManager::GetActiveScene())
+		{
+			selectedGameObject = activeScene->GetSelectedGameObject();
+		}
 
 		if (selectedGameObject != nullptr)
 		{

@@ -12,7 +12,7 @@ namespace GamesGoEngine
 	public:
 		SceneViewport();
 
-		void Draw(GameObject* selectedSceneObject);
+		void Draw();
 		void SetTransformOperation(ImGuizmo::OPERATION transformOperation);
 		void SelectGameObjectAt(int x, int y);
 		

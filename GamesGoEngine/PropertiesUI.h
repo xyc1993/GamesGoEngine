@@ -7,7 +7,7 @@ namespace GamesGoEngine
 	class PropertiesUI
 	{
 	public:
-		static void Draw(GameObject* selectedGameObject);
+		static void Draw();
 
 	private:
 		static void DrawNameInputField(GameObject* selectedGameObject);

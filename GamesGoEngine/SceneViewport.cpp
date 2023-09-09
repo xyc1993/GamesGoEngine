@@ -19,7 +19,7 @@ namespace GamesGoEngine
 		viewportTextureHeight = 450;
 	}
 
-	void SceneViewport::Draw(GameObject* selectedSceneObject)
+	void SceneViewport::Draw()
 	{
 		ImGuiWindowFlags windowFlags = 0;
 		windowFlags |= ImGuiWindowFlags_NoResize;
@@ -49,7 +49,13 @@ namespace GamesGoEngine
 		}
 		
 		// Transform Gizmos
-		if (selectedSceneObject != nullptr)
+		GameObject* selectedGameObject = nullptr;
+		if (Scene* activeScene = SceneManager::GetActiveScene())
+		{
+			selectedGameObject = activeScene->GetSelectedGameObject();
+		}
+
+		if (selectedGameObject != nullptr)
 		{
 			ImGuizmo::SetOrthographic(false);
 			ImGuizmo::SetDrawlist();
@@ -61,7 +67,7 @@ namespace GamesGoEngine
 			const glm::mat4 cameraProjection = CamerasManager::GetActiveCameraProjectionMatrix();
 
 			// Get selected object data
-			glm::mat4 selectedObjectTransformMatrix = selectedSceneObject->GetTransform()->GetTransformMatrix();
+			glm::mat4 selectedObjectTransformMatrix = selectedGameObject->GetTransform()->GetTransformMatrix();
 
 			// Draw gizmo
 			ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection),
@@ -78,9 +84,9 @@ namespace GamesGoEngine
 				// If transform matrix decomposition was successful then apply changes
 				if (glm::decompose(selectedObjectTransformMatrix, scale, orientation, translation, skew, perspective))
 				{
-					selectedSceneObject->GetTransform()->SetPosition(translation);
-					selectedSceneObject->GetTransform()->SetRotation(orientation);
-					selectedSceneObject->GetTransform()->SetScale(scale);
+					selectedGameObject->GetTransform()->SetPosition(translation);
+					selectedGameObject->GetTransform()->SetRotation(orientation);
+					selectedGameObject->GetTransform()->SetScale(scale);
 				}
 			}
 		}
