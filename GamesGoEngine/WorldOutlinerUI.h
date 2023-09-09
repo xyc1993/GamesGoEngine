@@ -1,13 +1,16 @@
 #pragma once
 
+#include "EditorPanel.h"
 #include "Scene.h"
 
 namespace GamesGoEngine
 {
-	class WorldOutlinerUI
+	class WorldOutlinerUI : EditorPanel
 	{
 	public:
-		static void Draw();
+		WorldOutlinerUI();
+
+		virtual void Draw() override;
 
 	private:
 		static void DrawSceneNodeChildren(Scene* activeScene, GameObject* sceneObject);

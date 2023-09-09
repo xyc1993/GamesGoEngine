@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "EditorUIManager.h"
 #include "LoggerUI.h"
 
 namespace GamesGoEngine
@@ -18,11 +19,11 @@ namespace GamesGoEngine
 		const std::string logTimeString = buffer;
 		const std::string logMsg = logTimeString + " " + msg;
 
-		LoggerUI::AddMsg(type, logMsg);
+		EditorUIManager::AddLog(type, logMsg);
 	}
 
 	void Log::ClearLogs()
 	{
-		LoggerUI::ClearLogs();
+		EditorUIManager::ClearLogs();
 	}
 }

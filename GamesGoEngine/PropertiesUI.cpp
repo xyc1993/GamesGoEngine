@@ -7,6 +7,11 @@
 
 namespace GamesGoEngine
 {
+	PropertiesUI::PropertiesUI()
+	{
+
+	}
+
 	void PropertiesUI::Draw()
 	{
 		ImGuiWindowFlags windowFlags = 0;

@@ -1,10 +1,14 @@
 #pragma once
 
+#include "EditorPanel.h"
+
 namespace GamesGoEngine
 {
-	class GraphicsSettingsUI
+	class GraphicsSettingsUI : EditorPanel
 	{
 	public:
-		void static Draw();
+		GraphicsSettingsUI();
+
+		virtual void Draw() override;
 	};
 }

@@ -396,6 +396,9 @@
     <ClCompile Include="SceneViewport.cpp">
       <Filter>Source Files\GamesGo\Editor\UI\Panels</Filter>
     </ClCompile>
+    <ClCompile Include="EditorPanel.cpp">
+      <Filter>Source Files\GamesGo\Editor\UI\Panels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -621,6 +624,9 @@
       <Filter>Header Files\ImGuizmo</Filter>
     </ClInclude>
     <ClInclude Include="SceneViewport.h">
+      <Filter>Header Files\GamesGo\Editor\UI\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorPanel.h">
       <Filter>Header Files\GamesGo\Editor\UI\Panels</Filter>
     </ClInclude>
   </ItemGroup>

@@ -6,6 +6,11 @@
 
 namespace GamesGoEngine
 {
+	WorldOutlinerUI::WorldOutlinerUI()
+	{
+
+	}
+
 	void WorldOutlinerUI::Draw()
 	{
 		Scene* activeScene = SceneManager::GetActiveScene();

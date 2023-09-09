@@ -4,7 +4,10 @@
 
 namespace GamesGoEngine
 {
-	std::vector<std::tuple<MsgType, std::string>> LoggerUI::messages;
+	LoggerUI::LoggerUI()
+	{
+		messages.clear();
+	}
 
 	void LoggerUI::Draw()
 	{
@@ -46,7 +49,7 @@ namespace GamesGoEngine
 		messages.clear();
 	}
 
-	void LoggerUI::AddMsg(MsgType type, std::string msg)
+	void LoggerUI::AddLog(MsgType type, std::string msg)
 	{
 		const std::tuple<MsgType, std::string> logMsg = std::make_tuple(type, msg);
 		messages.push_back(logMsg);

@@ -1,24 +1,26 @@
 #pragma once
 
 #include <vector>
+#include <imgui.h>
 
-#include "imgui.h"
+#include "EditorPanel.h"
 #include "Log.h"
 
 namespace GamesGoEngine
 {
-	class LoggerUI
+	class LoggerUI : EditorPanel
 	{
 	public:
-		static void Draw();
-		static void ClearLogs();
+		LoggerUI();
+
+		virtual void Draw() override;
+		void ClearLogs();
+		void AddLog(MsgType type, std::string msg);
 
 	private:
-		static void AddMsg(MsgType type, std::string msg);
+		
 		static ImVec4 GetMsgColor(MsgType type);
 
-		static std::vector<std::tuple<MsgType, std::string>> messages;
-
-		friend class Log;
+		std::vector<std::tuple<MsgType, std::string>> messages;
 	};
 }

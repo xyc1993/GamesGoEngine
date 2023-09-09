@@ -6,6 +6,11 @@
 
 namespace GamesGoEngine
 {
+	GraphicsSettingsUI::GraphicsSettingsUI()
+	{
+
+	}
+
 	void GraphicsSettingsUI::Draw()
 	{
 		ImGuiWindowFlags windowFlags = 0;

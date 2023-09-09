@@ -3,16 +3,18 @@
 #include <imgui.h>
 #include <ImGuizmo.h>
 
+#include "EditorPanel.h"
+
 namespace GamesGoEngine
 {
 	class GameObject;
 
-	class SceneViewport
+	class SceneViewport : EditorPanel
 	{
 	public:
 		SceneViewport();
 
-		void Draw();
+		virtual void Draw() override;
 		void SetTransformOperation(ImGuizmo::OPERATION transformOperation);
 		void SelectGameObjectAt(int x, int y);
 		

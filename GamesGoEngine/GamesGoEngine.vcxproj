@@ -166,6 +166,7 @@
     <ClCompile Include="CamerasManager.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="DebugToolsUI.cpp" />
+    <ClCompile Include="EditorPanel.cpp" />
     <ClCompile Include="EditorUIManager.cpp" />
     <ClCompile Include="GraphicsSettingsUI.cpp" />
     <ClCompile Include="Log.cpp" />
@@ -242,6 +243,7 @@
     <ClInclude Include="CamerasManager.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="DebugToolsUI.h" />
+    <ClInclude Include="EditorPanel.h" />
     <ClInclude Include="EditorUIManager.h" />
     <ClInclude Include="GraphicsSettingsUI.h" />
     <ClInclude Include="Log.h" />

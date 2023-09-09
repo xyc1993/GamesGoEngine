@@ -8,6 +8,11 @@
 
 namespace GamesGoEngine
 {
+	DebugToolsUI::DebugToolsUI()
+	{
+
+	}
+
 	void DebugToolsUI::Draw()
 	{
 		ImGuiWindowFlags windowFlags = 0;

@@ -1,10 +1,14 @@
 #pragma once
 
+#include "EditorPanel.h"
+
 namespace GamesGoEngine
 {
-	class DebugToolsUI
+	class DebugToolsUI : EditorPanel
 	{
 	public:
-		void static Draw();
+		DebugToolsUI();
+
+		virtual void Draw() override;
 	};
 }

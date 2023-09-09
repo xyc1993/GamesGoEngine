@@ -1,13 +1,17 @@
 #pragma once
 
+#include "EditorPanel.h"
+
 namespace GamesGoEngine
 {
 	class GameObject;
 
-	class PropertiesUI
+	class PropertiesUI : EditorPanel
 	{
 	public:
-		static void Draw();
+		PropertiesUI();
+
+		virtual void Draw() override;
 
 	private:
 		static void DrawNameInputField(GameObject* selectedGameObject);
