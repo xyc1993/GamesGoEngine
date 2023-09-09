@@ -27,22 +27,27 @@ void main()
     // - l - m -
     // g - h - i
     // === ('e' is the current texel) ===
-    vec3 a = texture(screenTexture, vec2(TexCoords.x - 2*x, TexCoords.y + 2*y)).rgb;
-    vec3 b = texture(screenTexture, vec2(TexCoords.x,       TexCoords.y + 2*y)).rgb;
-    vec3 c = texture(screenTexture, vec2(TexCoords.x + 2*x, TexCoords.y + 2*y)).rgb;
 
-    vec3 d = texture(screenTexture, vec2(TexCoords.x - 2*x, TexCoords.y)).rgb;
-    vec3 e = texture(screenTexture, vec2(TexCoords.x,       TexCoords.y)).rgb;
-    vec3 f = texture(screenTexture, vec2(TexCoords.x + 2*x, TexCoords.y)).rgb;
+    // In order to avoid any spill during downsampling, clamp texture coordinates
+    float minClamp = 0.001;
+    float maxClamp = 0.999;
 
-    vec3 g = texture(screenTexture, vec2(TexCoords.x - 2*x, TexCoords.y - 2*y)).rgb;
-    vec3 h = texture(screenTexture, vec2(TexCoords.x,       TexCoords.y - 2*y)).rgb;
-    vec3 i = texture(screenTexture, vec2(TexCoords.x + 2*x, TexCoords.y - 2*y)).rgb;
+    vec3 a = texture(screenTexture, vec2(clamp(TexCoords.x - 2*x, minClamp, maxClamp), clamp(TexCoords.y + 2*y, minClamp, maxClamp))).rgb;
+    vec3 b = texture(screenTexture, vec2(clamp(TexCoords.x, minClamp, maxClamp),       clamp(TexCoords.y + 2*y, minClamp, maxClamp))).rgb;
+    vec3 c = texture(screenTexture, vec2(clamp(TexCoords.x + 2*x, minClamp, maxClamp), clamp(TexCoords.y + 2*y, minClamp, maxClamp))).rgb;
 
-    vec3 j = texture(screenTexture, vec2(TexCoords.x - x, TexCoords.y + y)).rgb;
-    vec3 k = texture(screenTexture, vec2(TexCoords.x + x, TexCoords.y + y)).rgb;
-    vec3 l = texture(screenTexture, vec2(TexCoords.x - x, TexCoords.y - y)).rgb;
-    vec3 m = texture(screenTexture, vec2(TexCoords.x + x, TexCoords.y - y)).rgb;
+    vec3 d = texture(screenTexture, vec2(clamp(TexCoords.x - 2*x, minClamp, maxClamp), clamp(TexCoords.y, minClamp, maxClamp))).rgb;
+    vec3 e = texture(screenTexture, vec2(clamp(TexCoords.x, minClamp, maxClamp),       clamp(TexCoords.y, minClamp, maxClamp))).rgb;
+    vec3 f = texture(screenTexture, vec2(clamp(TexCoords.x + 2*x, minClamp, maxClamp), clamp(TexCoords.y, minClamp, maxClamp))).rgb;
+
+    vec3 g = texture(screenTexture, vec2(clamp(TexCoords.x - 2*x, minClamp, maxClamp), clamp(TexCoords.y - 2*y, minClamp, maxClamp))).rgb;
+    vec3 h = texture(screenTexture, vec2(clamp(TexCoords.x, minClamp, maxClamp),       clamp(TexCoords.y - 2*y, minClamp, maxClamp))).rgb;
+    vec3 i = texture(screenTexture, vec2(clamp(TexCoords.x + 2*x, minClamp, maxClamp), clamp(TexCoords.y - 2*y, minClamp, maxClamp))).rgb;
+
+    vec3 j = texture(screenTexture, vec2(clamp(TexCoords.x - x, minClamp, maxClamp), clamp(TexCoords.y + y, minClamp, maxClamp))).rgb;
+    vec3 k = texture(screenTexture, vec2(clamp(TexCoords.x + x, minClamp, maxClamp), clamp(TexCoords.y + y, minClamp, maxClamp))).rgb;
+    vec3 l = texture(screenTexture, vec2(clamp(TexCoords.x - x, minClamp, maxClamp), clamp(TexCoords.y - y, minClamp, maxClamp))).rgb;
+    vec3 m = texture(screenTexture, vec2(clamp(TexCoords.x + x, minClamp, maxClamp), clamp(TexCoords.y - y, minClamp, maxClamp))).rgb;
 
     // Apply weighted distribution:
     // 0.5 + 0.125 + 0.125 + 0.125 + 0.125 = 1
