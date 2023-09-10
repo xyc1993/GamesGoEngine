@@ -9,3 +9,5 @@ HDR tonemapping, gamma correction and bloom are effects available in the UI. Sha
 
 PBR is supported in deferred rendering. Albedo, normal, metallic, roughness, ambient occlusion and emissive textures are utilized in the following scene.
 ![image](https://github.com/xyc1993/GamesGoEngine/assets/20773439/8382ccd0-3214-4b4e-9668-5a5f4a30d429)
+
+Devlog: https://macgry.wordpress.com/
