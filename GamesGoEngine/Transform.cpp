@@ -31,7 +31,9 @@ namespace GamesGoEngine
 	void Transform::SetPosition(glm::vec3 position)
 	{
 		const glm::vec3 translation = position - this->position;
-		this->localPosition += translation;
+		const glm::quat parentRotation = (owner != nullptr && owner->GetParent() != nullptr) ? owner->GetParent()->GetTransform()->rotation : glm::quat(glm::vec3(0.0f));
+		// make sure translation is independent of parent rotation since we're changing world position
+		this->localPosition += inverse(parentRotation) * translation;
 		this->position = position;
 		UpdateTransformMatrix();
 	}
@@ -242,7 +244,22 @@ namespace GamesGoEngine
 
 		if (owner != nullptr && owner->GetParent() != nullptr)
 		{
+			// get world transform matrix
 			transformMatrix = owner->GetParent()->GetTransform()->GetTransformMatrix() * transformMatrix;
+
+			glm::vec3 translation;
+			glm::quat orientation;
+			glm::vec3 scale;
+			glm::vec3 skew;
+			glm::vec4 perspective;
+
+			// if transform matrix decomposition was successful then update global values
+			if (glm::decompose(transformMatrix, scale, orientation, translation, skew, perspective))
+			{
+				this->position = translation;
+				this->rotation = orientation;
+				this->scale = scale;
+			}
 		}
 
 		UpdateChildrenTransformMatrix();

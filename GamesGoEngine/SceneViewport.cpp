@@ -71,7 +71,7 @@ namespace GamesGoEngine
 
 			// Draw gizmo
 			ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection),
-				currentTransformOperation, ImGuizmo::MODE::LOCAL, glm::value_ptr(selectedObjectTransformMatrix));
+				currentTransformOperation, ImGuizmo::MODE::WORLD, glm::value_ptr(selectedObjectTransformMatrix));
 
 			if (ImGuizmo::IsUsing())
 			{
