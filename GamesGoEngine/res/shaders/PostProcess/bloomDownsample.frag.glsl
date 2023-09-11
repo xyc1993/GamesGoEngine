@@ -28,7 +28,7 @@ void main()
     // g - h - i
     // === ('e' is the current texel) ===
 
-    // In order to avoid any spill during downsampling, clamp texture coordinates
+    // In order to avoid any spill during downsampling, clamp texture coordinates; CL_CLAMP wasn't enough
     float minClamp = 0.001;
     float maxClamp = 0.999;
 
