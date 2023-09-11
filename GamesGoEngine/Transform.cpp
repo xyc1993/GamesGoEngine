@@ -130,13 +130,15 @@ namespace GamesGoEngine
 		GetParentsCumulativeScale(owner, cumulativeScale);
 		localScale = scale / cumulativeScale;
 
-		// update local position
-		const glm::vec3 parentPosition = (owner != nullptr && owner->GetParent() != nullptr) ? owner->GetParent()->GetTransform()->position : glm::vec3(0.0f);
-		localPosition = localScale * (position - parentPosition);
-
 		// update local rotation
 		const glm::quat parentRotation = (owner != nullptr && owner->GetParent() != nullptr) ? owner->GetParent()->GetTransform()->rotation : glm::quat(glm::vec3(0.0f));
-		localRotation = rotation * inverse(parentRotation);
+		localRotation = inverse(parentRotation) * rotation;
+
+		// update local position
+		const glm::vec3 parentPosition = (owner != nullptr && owner->GetParent() != nullptr) ? owner->GetParent()->GetTransform()->position : glm::vec3(0.0f);
+		localPosition = inverse(parentRotation) * (localScale * (position - parentPosition));
+		
+		UpdateTransformMatrix();
 	}
 
 	void Transform::GetParentsCumulativeScale(GameObject* transformOwner, glm::vec3& cumulativeScale)
