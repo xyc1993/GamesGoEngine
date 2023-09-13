@@ -119,15 +119,15 @@ namespace GamesGoEngine
 		// Menu bar
 		/*
 		if (ImGui::BeginMenuBar())
-		{
-			/*
+		{			
 			if (ImGui::BeginMenu("File"))
 			{
 				// In the future this will be utilized for features such as applications options, file open/save, etc.
-			}
+			}			
 			ImGui::EndMenuBar();
 		}
-	*/
+		*/
+
 		// Draw individual panels
 		GetInstance()->DrawPanels();
 
