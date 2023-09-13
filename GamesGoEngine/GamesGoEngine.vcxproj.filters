@@ -629,6 +629,9 @@
     <ClInclude Include="EditorPanel.h">
       <Filter>Header Files\GamesGo\Editor\UI\Panels</Filter>
     </ClInclude>
+    <ClInclude Include="..\External Libraries\imgui\imgui_impl_opengl3_loader.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\PostProcess\blur.frag.glsl">

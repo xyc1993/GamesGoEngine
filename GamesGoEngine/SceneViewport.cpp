@@ -21,11 +21,7 @@ namespace GamesGoEngine
 
 	void SceneViewport::Draw()
 	{
-		ImGuiWindowFlags windowFlags = 0;
-		windowFlags |= ImGuiWindowFlags_NoResize;
-		windowFlags |= ImGuiWindowFlags_NoScrollbar;
-
-		ImGui::Begin("Viewport", nullptr, windowFlags);
+		ImGui::Begin("Viewport");
 
 		// Using a Child allow to fill all the space of the window.
 		ImGui::BeginChild("Viewport Image");

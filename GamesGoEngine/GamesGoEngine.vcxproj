@@ -234,6 +234,7 @@
     <ClInclude Include="..\External Libraries\imgui\imgui.h" />
     <ClInclude Include="..\External Libraries\imgui\imgui_impl_glfw.h" />
     <ClInclude Include="..\External Libraries\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="..\External Libraries\imgui\imgui_impl_opengl3_loader.h" />
     <ClInclude Include="..\External Libraries\imgui\imgui_internal.h" />
     <ClInclude Include="..\External Libraries\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\External Libraries\imgui\imstb_textedit.h" />

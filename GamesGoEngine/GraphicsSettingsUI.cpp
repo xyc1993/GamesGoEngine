@@ -13,10 +13,7 @@ namespace GamesGoEngine
 
 	void GraphicsSettingsUI::Draw()
 	{
-		ImGuiWindowFlags windowFlags = 0;
-		windowFlags |= ImGuiWindowFlags_NoResize;
-
-		ImGui::Begin("Graphics Settings", nullptr, windowFlags);
+		ImGui::Begin("Graphics Settings");
 
 		bool vsyncEnabled = WindowManager::IsVSyncEnabled();
 		if (ImGui::Checkbox("V-Sync Enabled", &vsyncEnabled))

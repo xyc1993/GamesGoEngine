@@ -14,10 +14,7 @@ namespace GamesGoEngine
 
 	void PropertiesUI::Draw()
 	{
-		ImGuiWindowFlags windowFlags = 0;
-		windowFlags |= ImGuiWindowFlags_NoResize;
-
-		ImGui::Begin("Properties Panel", nullptr, windowFlags);
+		ImGui::Begin("Properties Panel");
 
 		GameObject* selectedGameObject = nullptr;
 		if (Scene* activeScene = SceneManager::GetActiveScene())

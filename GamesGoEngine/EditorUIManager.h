@@ -31,7 +31,7 @@ namespace GamesGoEngine
 		static void Init(GLFWwindow* window);
 		static void Draw();
 	private:
-		void DrawPanels(const float windowWidth, const float windowHeight);
+		void DrawPanels();
 	public:
 		static void Shutdown();
 		static void SetTransformOperation(ImGuizmo::OPERATION transformOperation);

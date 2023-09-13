@@ -20,11 +20,8 @@ namespace GamesGoEngine
 		}
 
 		GameObject* selectedGameObject = activeScene->GetSelectedGameObject();
-
-		ImGuiWindowFlags windowFlags = 0;
-		windowFlags |= ImGuiWindowFlags_NoResize;
-
-		ImGui::Begin("World Outliner", nullptr, windowFlags);
+		
+		ImGui::Begin("World Outliner");
 
 		const std::map<int, GameObject*>& sceneObjects = activeScene->GetSceneObjects();
 
