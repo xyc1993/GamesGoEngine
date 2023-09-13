@@ -16,46 +16,46 @@ namespace GamesGoEngine
 		ImGui::Begin("Graphics Settings");
 
 		bool vsyncEnabled = WindowManager::IsVSyncEnabled();
-		if (ImGui::Checkbox("V-Sync Enabled", &vsyncEnabled))
+		if (ImGui::Checkbox("V-Sync", &vsyncEnabled))
 		{
 			WindowManager::EnableVSync(vsyncEnabled);
 		}
 
 		bool postProcessingEnabled = RenderingManager::IsPostProcessingEnabled();
-		if (ImGui::Checkbox("Post Processing Enabled", &postProcessingEnabled))
+		if (ImGui::Checkbox("Post Processing", &postProcessingEnabled))
 		{
 			RenderingManager::EnablePostProcessing(postProcessingEnabled);
 		}
 
 		bool hdrToneMappingAndGammaEnabled = RenderingManager::IsHDRToneMappingAndGammaEnabled();
-		if (ImGui::Checkbox("HDR tone mapping and gamma correction Enabled", &hdrToneMappingAndGammaEnabled))
+		if (ImGui::Checkbox("HDR tone mapping and gamma correction", &hdrToneMappingAndGammaEnabled))
 		{
 			RenderingManager::EnableHDRToneMappingAndGamma(hdrToneMappingAndGammaEnabled);
 		}
 		if (hdrToneMappingAndGammaEnabled)
 		{
 			float gamma = RenderingManager::GetGamma();
-			if (ImGui::SliderFloat("gamma", &gamma, 0.0f, 5.0f))
+			if (ImGui::SliderFloat("Gamma", &gamma, 0.0f, 5.0f))
 			{
 				RenderingManager::SetGamma(gamma);
 			}
 
 			float exposure = RenderingManager::GetExposure();
-			if (ImGui::SliderFloat("exposure", &exposure, 0.0f, 5.0f))
+			if (ImGui::SliderFloat("Exposure", &exposure, 0.0f, 5.0f))
 			{
 				RenderingManager::SetExposure(exposure);
 			}
 		}
 
 		bool bloomEnabled = RenderingManager::IsBloomEnabled();
-		if (ImGui::Checkbox("Bloom Enabled", &bloomEnabled))
+		if (ImGui::Checkbox("Bloom", &bloomEnabled))
 		{
 			RenderingManager::EnableBloom(bloomEnabled);
 		}
 		if (bloomEnabled)
 		{
 			float bloomStrength = RenderingManager::GetBloomStrength();
-			if (ImGui::SliderFloat("Bloom Strength", &bloomStrength, 0.0f, 1.0f))
+			if (ImGui::SliderFloat("Bloom strength", &bloomStrength, 0.0f, 1.0f))
 			{
 				RenderingManager::SetBloomStrength(bloomStrength);
 			}
@@ -68,7 +68,7 @@ namespace GamesGoEngine
 		}
 
 		bool ssaoEnabled = RenderingManager::IsSSAOEnabled();
-		if (ImGui::Checkbox("SSAO Enabled", &ssaoEnabled))
+		if (ImGui::Checkbox("SSAO", &ssaoEnabled))
 		{
 			RenderingManager::EnableSSAO(ssaoEnabled);
 		}
@@ -76,7 +76,7 @@ namespace GamesGoEngine
 		constexpr size_t shadowMapResolutionsNumber = 5;
 		const char* shadowMaps[shadowMapResolutionsNumber] = { "256", "512", "1024", "2048", "4096" };
 		static const char* currentShadowMap = shadowMaps[2];
-		if (ImGui::BeginCombo("shadow map res", currentShadowMap))
+		if (ImGui::BeginCombo("Shadow map res", currentShadowMap))
 		{
 			for (int i = 0; i < shadowMapResolutionsNumber; i++)
 			{
@@ -99,7 +99,7 @@ namespace GamesGoEngine
 		}
 
 		bool aaEnabled = RenderingManager::IsAntiAliasingEnabled();
-		if (ImGui::Checkbox("AA Enabled", &aaEnabled))
+		if (ImGui::Checkbox("Anti-Aliasing", &aaEnabled))
 		{
 			RenderingManager::EnableAntiAliasing(aaEnabled);
 		}
@@ -137,7 +137,7 @@ namespace GamesGoEngine
 				}
 
 				float relativeThreshold = RenderingManager::GetFXAARelativeThreshold();
-				if (ImGui::SliderFloat("FXAA reelative threshold", &relativeThreshold, 0.063f, 0.333f))
+				if (ImGui::SliderFloat("FXAA relative threshold", &relativeThreshold, 0.063f, 0.333f))
 				{
 					RenderingManager::SetFXAARelativeThreshold(relativeThreshold);
 				}
