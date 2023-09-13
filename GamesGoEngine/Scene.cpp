@@ -52,6 +52,10 @@ namespace GamesGoEngine
 
 	GameObject* Scene::GetGameObjectWithId(int id)
 	{
+		if (sceneObjects.find(id) == sceneObjects.end())
+		{
+			return nullptr;
+		}
 		return sceneObjects[id];
 	}
 
