@@ -122,6 +122,10 @@ namespace GamesGoEngine
 
 	void WindowManager::UpdateAspectRatio()
 	{
-		aspectRatio = currentScreenWidth / currentScreenHeight;
+		if (currentScreenHeight == 0)
+		{
+			aspectRatio = 1.0f;
+		}
+		aspectRatio = static_cast<float>(currentScreenWidth) / static_cast<float>(currentScreenHeight);
 	}
 }
