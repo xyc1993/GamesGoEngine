@@ -64,21 +64,20 @@ namespace GamesGoEngine
 	{
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
-		ImGuiIO& io = ImGui::GetIO(); (void)io;
-		ImGui::StyleColorsDark();
-		ImGui_ImplGlfw_InitForOpenGL(window, true);
-		ImGui_ImplOpenGL3_Init("#version 440");
+		ImGuiIO& io = ImGui::GetIO();
+		// Set all of the used flags before init!
 		io.ConfigFlags = ImGuiConfigFlags_None;
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+		ImGui::StyleColorsDark();
+		ImGui_ImplOpenGL3_Init("#version 440");
+		ImGui_ImplGlfw_InitForOpenGL(window, true);
 	}
 
 	void EditorUIManager::Draw()
 	{
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-		ImGuizmo::BeginFrame();
-
+		OnFrameDrawBegin();
+		
 		// Set dock space
 		static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 		static bool p_open = true;
@@ -129,8 +128,28 @@ namespace GamesGoEngine
 
 		ImGui::End();
 		
+		OnFrameDrawEnd();
+	}
+
+	void EditorUIManager::OnFrameDrawBegin()
+	{
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+		ImGuizmo::BeginFrame();
+	}
+
+	void EditorUIManager::OnFrameDrawEnd()
+	{
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			GLFWwindow* currentContext = glfwGetCurrentContext();
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+			glfwMakeContextCurrent(currentContext);
+		}
 	}
 
 	void EditorUIManager::DrawPanels()

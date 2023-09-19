@@ -32,6 +32,8 @@ namespace GamesGoEngine
 		static void Init(GLFWwindow* window);
 		static void Draw();
 	private:
+		static void OnFrameDrawBegin();
+		static void OnFrameDrawEnd();
 		void DrawPanels();
 	public:
 		static void Shutdown();
