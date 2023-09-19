@@ -68,7 +68,12 @@ namespace GamesGoEngine
 		// Set all of the used flags before init!
 		io.ConfigFlags = ImGuiConfigFlags_None;
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+		/* TODO: proper viewports support (check notes on viewports here: https://ikrima.dev/dev-notes/imgui/imgui-multiviewport/), this includes:
+		 * 1) Calculating proper position of viewport coordinates for object selection (with viewports pos is in relation to OS window)
+		 * 2) Implementing proper input support for scene viewport when it's detached from main window (with viewports when detached it doesn't respond to current inputs)
+		 * 3) Make sure ImGuizmo works correctly with detached viewport. Currently when viewport is detached, trying to move transform gizmos moves whole viewport.
+		 */
+		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 		ImGui::StyleColorsDark();
 		ImGui_ImplOpenGL3_Init("#version 440");
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
