@@ -399,6 +399,9 @@
     <ClCompile Include="EditorPanel.cpp">
       <Filter>Source Files\GamesGo\Editor\UI\Panels</Filter>
     </ClCompile>
+    <ClCompile Include="EditorSettingsPanel.cpp">
+      <Filter>Source Files\GamesGo\Editor\UI\Panels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -631,6 +634,9 @@
     </ClInclude>
     <ClInclude Include="..\External Libraries\imgui\imgui_impl_opengl3_loader.h">
       <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorSettingsPanel.h">
+      <Filter>Header Files\GamesGo\Editor\UI\Panels</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

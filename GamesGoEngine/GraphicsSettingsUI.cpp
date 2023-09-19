@@ -1,6 +1,7 @@
 #include "GraphicsSettingsUI.h"
 
-#include "imgui.h"
+#include <imgui.h>
+
 #include "RenderingManager.h"
 #include "WindowManager.h"
 

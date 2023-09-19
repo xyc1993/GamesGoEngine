@@ -13,7 +13,7 @@ namespace GamesGoEngine
 	{
 		ImGui::Begin("Log");
 
-		ImGui::BeginChild("Buttons", ImVec2(0, 20));
+		ImGui::BeginChild("Buttons", ImVec2(0, 40));
 		ImGui::Button("Clear logs");
 		if (ImGui::IsItemClicked())
 		{

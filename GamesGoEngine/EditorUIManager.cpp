@@ -8,12 +8,13 @@
 #include <imgui_impl_opengl3.h>
 #include <ImGuizmo.h>
 
+#include "DebugToolsUI.h"
+#include "EditorSettingsPanel.h"
+#include "GraphicsSettingsUI.h"
 #include "LoggerUI.h"
 #include "PropertiesUI.h"
-#include "WorldOutlinerUI.h"
-#include "DebugToolsUI.h"
-#include "GraphicsSettingsUI.h"
 #include "SceneViewport.h"
+#include "WorldOutlinerUI.h"
 
 namespace GamesGoEngine
 {
@@ -22,6 +23,7 @@ namespace GamesGoEngine
 	EditorUIManager::EditorUIManager()
 	{
 		debugToolsUI = new DebugToolsUI();
+		editorSettingsPanel = new EditorSettingsPanel();
 		graphicsSettingsUI = new GraphicsSettingsUI();
 		loggerUI = new LoggerUI();
 		propertiesUI = new PropertiesUI();
@@ -30,6 +32,7 @@ namespace GamesGoEngine
 
 		// fill editor panels container
 		editorPanels.push_back(debugToolsUI);
+		editorPanels.push_back(editorSettingsPanel);
 		editorPanels.push_back(graphicsSettingsUI);
 		editorPanels.push_back(loggerUI);
 		editorPanels.push_back(propertiesUI);
@@ -40,6 +43,7 @@ namespace GamesGoEngine
 	EditorUIManager::~EditorUIManager()
 	{
 		delete debugToolsUI;
+		delete editorSettingsPanel;
 		delete graphicsSettingsUI;
 		delete loggerUI;
 		delete propertiesUI;
@@ -76,12 +80,6 @@ namespace GamesGoEngine
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 		ImGuizmo::BeginFrame();
-
-		// Set font size
-		const float windowWidth = WindowManager::GetCurrentWidth();
-		const float windowHeight = WindowManager::GetCurrentHeight();
-		const float uiScale = GetUIScale(windowWidth, windowHeight);
-		ImGui::GetIO().FontGlobalScale = uiScale;
 
 		// Set dock space
 		static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
@@ -170,20 +168,5 @@ namespace GamesGoEngine
 	void EditorUIManager::ClearLogs()
 	{
 		GetInstance()->loggerUI->ClearLogs();
-	}
-
-	float EditorUIManager::GetUIScale(const float& windowWidth, const float& windowHeight)
-	{
-		// Calculate scale factor based on the following values with assuming linear scaling (based on trial and error)
-		// 3840 x 2160 :: 3.0
-
-		if (windowWidth / 16.0f > windowHeight / 9.0f) // aspect ratio wider than 16:9, scale to lower density value of height
-		{
-			return 3.0f * windowHeight / 2160.0f;
-		}
-		else // aspect ratio narrower than 16:9, scale to lower density value of width
-		{
-			return 3.0f * windowWidth / 3840.0f;
-		}
 	}
 }

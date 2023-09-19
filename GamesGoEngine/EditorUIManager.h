@@ -12,6 +12,7 @@ namespace GamesGoEngine
 	enum class MsgType;
 	class EditorPanel;
 	class DebugToolsUI;
+	class EditorSettingsPanel;
 	class GraphicsSettingsUI;
 	class LoggerUI;
 	class PropertiesUI;
@@ -40,9 +41,8 @@ namespace GamesGoEngine
 		static void ClearLogs();
 
 	private:
-		static float GetUIScale(const float& windowWidth, const float& windowHeight);
-
 		DebugToolsUI* debugToolsUI;
+		EditorSettingsPanel* editorSettingsPanel;
 		GraphicsSettingsUI* graphicsSettingsUI;
 		LoggerUI* loggerUI;
 		PropertiesUI* propertiesUI;
