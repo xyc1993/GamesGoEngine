@@ -1,18 +1,18 @@
-#include "PropertiesUI.h"
+#include "PropertiesPanel.h"
 
-#include "imgui.h"
+#include <imgui.h>
 
 #include "GameObject.h"
 #include "SceneManager.h"
 
 namespace GamesGoEngine
 {
-	PropertiesUI::PropertiesUI()
+	PropertiesPanel::PropertiesPanel()
 	{
 
 	}
 
-	void PropertiesUI::Draw()
+	void PropertiesPanel::Draw()
 	{
 		ImGui::Begin("Properties Panel");
 
@@ -31,7 +31,7 @@ namespace GamesGoEngine
 		ImGui::End();
 	}
 
-	void PropertiesUI::DrawNameInputField(GameObject* selectedGameObject)
+	void PropertiesPanel::DrawNameInputField(GameObject* selectedGameObject)
 	{
 		const std::string nameString = selectedGameObject->GetName();
 
@@ -44,7 +44,7 @@ namespace GamesGoEngine
 		}
 	}
 
-	void PropertiesUI::DrawTransformField(GameObject* selectedGameObject)
+	void PropertiesPanel::DrawTransformField(GameObject* selectedGameObject)
 	{
 		ImGui::Text("Transform");
 

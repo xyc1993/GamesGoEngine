@@ -5,10 +5,10 @@
 
 namespace GamesGoEngine
 {
-	class WorldOutlinerUI : public EditorPanel
+	class WorldOutlinerPanel : public EditorPanel
 	{
 	public:
-		WorldOutlinerUI();
+		WorldOutlinerPanel();
 
 		virtual void Draw() override;
 

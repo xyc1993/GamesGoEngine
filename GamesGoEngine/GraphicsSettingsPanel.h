@@ -4,10 +4,10 @@
 
 namespace GamesGoEngine
 {
-	class GraphicsSettingsUI : public EditorPanel
+	class GraphicsSettingsPanel : public EditorPanel
 	{
 	public:
-		GraphicsSettingsUI();
+		GraphicsSettingsPanel();
 
 		virtual void Draw() override;
 	};

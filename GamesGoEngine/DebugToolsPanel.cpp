@@ -1,4 +1,4 @@
-#include "DebugToolsUI.h"
+#include "DebugToolsPanel.h"
 
 #include <string>
 #include <imgui.h>
@@ -8,12 +8,12 @@
 
 namespace GamesGoEngine
 {
-	DebugToolsUI::DebugToolsUI()
+	DebugToolsPanel::DebugToolsPanel()
 	{
 
 	}
 
-	void DebugToolsUI::Draw()
+	void DebugToolsPanel::Draw()
 	{
 		ImGui::Begin("Debug Tools");
 

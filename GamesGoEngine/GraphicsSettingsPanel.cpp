@@ -1,4 +1,4 @@
-#include "GraphicsSettingsUI.h"
+#include "GraphicsSettingsPanel.h"
 
 #include <imgui.h>
 
@@ -7,12 +7,12 @@
 
 namespace GamesGoEngine
 {
-	GraphicsSettingsUI::GraphicsSettingsUI()
+	GraphicsSettingsPanel::GraphicsSettingsPanel()
 	{
 
 	}
 
-	void GraphicsSettingsUI::Draw()
+	void GraphicsSettingsPanel::Draw()
 	{
 		ImGui::Begin("Graphics Settings");
 

@@ -303,16 +303,16 @@
     <ClCompile Include="EditorUIManager.cpp">
       <Filter>Source Files\GamesGo\Editor\UI</Filter>
     </ClCompile>
-    <ClCompile Include="LoggerUI.cpp">
+    <ClCompile Include="LoggerPanel.cpp">
       <Filter>Source Files\GamesGo\Editor\UI\Panels</Filter>
     </ClCompile>
-    <ClCompile Include="PropertiesUI.cpp">
+    <ClCompile Include="PropertiesPanel.cpp">
       <Filter>Source Files\GamesGo\Editor\UI\Panels</Filter>
     </ClCompile>
-    <ClCompile Include="WorldOutlinerUI.cpp">
+    <ClCompile Include="WorldOutlinerPanel.cpp">
       <Filter>Source Files\GamesGo\Editor\UI\Panels</Filter>
     </ClCompile>
-    <ClCompile Include="DebugToolsUI.cpp">
+    <ClCompile Include="DebugToolsPanel.cpp">
       <Filter>Source Files\GamesGo\Editor\UI\Panels</Filter>
     </ClCompile>
     <ClCompile Include="Material.cpp">
@@ -348,7 +348,7 @@
     <ClCompile Include="WindowManager.cpp">
       <Filter>Source Files\GamesGo\Window Management</Filter>
     </ClCompile>
-    <ClCompile Include="GraphicsSettingsUI.cpp">
+    <ClCompile Include="GraphicsSettingsPanel.cpp">
       <Filter>Source Files\GamesGo\Editor\UI\Panels</Filter>
     </ClCompile>
     <ClCompile Include="MeshPrimitivesPool.cpp">
@@ -393,7 +393,7 @@
     <ClCompile Include="..\External Libraries\ImGuizmo\ImSequencer.cpp">
       <Filter>Source Files\ImGuizmo</Filter>
     </ClCompile>
-    <ClCompile Include="SceneViewport.cpp">
+    <ClCompile Include="SceneViewportPanel.cpp">
       <Filter>Source Files\GamesGo\Editor\UI\Panels</Filter>
     </ClCompile>
     <ClCompile Include="EditorPanel.cpp">
@@ -530,16 +530,16 @@
     <ClInclude Include="EditorUIManager.h">
       <Filter>Header Files\GamesGo\Editor\UI</Filter>
     </ClInclude>
-    <ClInclude Include="LoggerUI.h">
+    <ClInclude Include="LoggerPanel.h">
       <Filter>Header Files\GamesGo\Editor\UI\Panels</Filter>
     </ClInclude>
-    <ClInclude Include="PropertiesUI.h">
+    <ClInclude Include="PropertiesPanel.h">
       <Filter>Header Files\GamesGo\Editor\UI\Panels</Filter>
     </ClInclude>
-    <ClInclude Include="WorldOutlinerUI.h">
+    <ClInclude Include="WorldOutlinerPanel.h">
       <Filter>Header Files\GamesGo\Editor\UI\Panels</Filter>
     </ClInclude>
-    <ClInclude Include="DebugToolsUI.h">
+    <ClInclude Include="DebugToolsPanel.h">
       <Filter>Header Files\GamesGo\Editor\UI\Panels</Filter>
     </ClInclude>
     <ClInclude Include="Material.h">
@@ -575,7 +575,7 @@
     <ClInclude Include="WindowManager.h">
       <Filter>Header Files\GamesGo\Window Management</Filter>
     </ClInclude>
-    <ClInclude Include="GraphicsSettingsUI.h">
+    <ClInclude Include="GraphicsSettingsPanel.h">
       <Filter>Header Files\GamesGo\Editor\UI\Panels</Filter>
     </ClInclude>
     <ClInclude Include="MeshPrimitivesPool.h">
@@ -626,7 +626,7 @@
     <ClInclude Include="..\External Libraries\ImGuizmo\ImZoomSlider.h">
       <Filter>Header Files\ImGuizmo</Filter>
     </ClInclude>
-    <ClInclude Include="SceneViewport.h">
+    <ClInclude Include="SceneViewportPanel.h">
       <Filter>Header Files\GamesGo\Editor\UI\Panels</Filter>
     </ClInclude>
     <ClInclude Include="EditorPanel.h">

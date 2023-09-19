@@ -165,13 +165,13 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CamerasManager.cpp" />
     <ClCompile Include="Component.cpp" />
-    <ClCompile Include="DebugToolsUI.cpp" />
+    <ClCompile Include="DebugToolsPanel.cpp" />
     <ClCompile Include="EditorPanel.cpp" />
     <ClCompile Include="EditorSettingsPanel.cpp" />
     <ClCompile Include="EditorUIManager.cpp" />
-    <ClCompile Include="GraphicsSettingsUI.cpp" />
+    <ClCompile Include="GraphicsSettingsPanel.cpp" />
     <ClCompile Include="Log.cpp" />
-    <ClCompile Include="LoggerUI.cpp" />
+    <ClCompile Include="LoggerPanel.cpp" />
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="MeshPrimitiveBase.cpp" />
     <ClCompile Include="MeshPrimitiveCube.cpp" />
@@ -193,7 +193,7 @@
     <ClCompile Include="PositionOscillator.cpp" />
     <ClCompile Include="PostProcessMaterial.cpp" />
     <ClCompile Include="PostProcessRenderer.cpp" />
-    <ClCompile Include="PropertiesUI.cpp" />
+    <ClCompile Include="PropertiesPanel.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderingManager.cpp" />
     <ClCompile Include="Rotator.cpp" />
@@ -213,7 +213,7 @@
     <ClCompile Include="SceneExample_OmnidirectionalShadowsSimple.cpp" />
     <ClCompile Include="SceneExample_Transparency.cpp" />
     <ClCompile Include="SceneManager.cpp" />
-    <ClCompile Include="SceneViewport.cpp" />
+    <ClCompile Include="SceneViewportPanel.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SkyboxRenderer.cpp" />
     <ClCompile Include="SpotLight.cpp" />
@@ -222,7 +222,7 @@
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="WindowManager.cpp" />
-    <ClCompile Include="WorldOutlinerUI.cpp" />
+    <ClCompile Include="WorldOutlinerPanel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\External Libraries\ImGuizmo\GraphEditor.h" />
@@ -244,13 +244,13 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CamerasManager.h" />
     <ClInclude Include="Component.h" />
-    <ClInclude Include="DebugToolsUI.h" />
+    <ClInclude Include="DebugToolsPanel.h" />
     <ClInclude Include="EditorPanel.h" />
     <ClInclude Include="EditorSettingsPanel.h" />
     <ClInclude Include="EditorUIManager.h" />
-    <ClInclude Include="GraphicsSettingsUI.h" />
+    <ClInclude Include="GraphicsSettingsPanel.h" />
     <ClInclude Include="Log.h" />
-    <ClInclude Include="LoggerUI.h" />
+    <ClInclude Include="LoggerPanel.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="MeshPrimitiveBase.h" />
     <ClInclude Include="MeshPrimitiveCube.h" />
@@ -272,7 +272,7 @@
     <ClInclude Include="PositionOscillator.h" />
     <ClInclude Include="PostProcessMaterial.h" />
     <ClInclude Include="PostProcessRenderer.h" />
-    <ClInclude Include="PropertiesUI.h" />
+    <ClInclude Include="PropertiesPanel.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderingManager.h" />
     <ClInclude Include="Rotator.h" />
@@ -293,7 +293,7 @@
     <ClInclude Include="SceneExample_OmnidirectionalShadowsSimple.h" />
     <ClInclude Include="SceneExample_Transparency.h" />
     <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="SceneViewport.h" />
+    <ClInclude Include="SceneViewportPanel.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SkyboxRenderer.h" />
     <ClInclude Include="SpotLight.h" />
@@ -302,7 +302,7 @@
     <ClInclude Include="Time.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="WindowManager.h" />
-    <ClInclude Include="WorldOutlinerUI.h" />
+    <ClInclude Include="WorldOutlinerPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\debugNormals.frag.glsl" />

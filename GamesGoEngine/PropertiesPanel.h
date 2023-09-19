@@ -6,10 +6,10 @@ namespace GamesGoEngine
 {
 	class GameObject;
 
-	class PropertiesUI : public EditorPanel
+	class PropertiesPanel : public EditorPanel
 	{
 	public:
-		PropertiesUI();
+		PropertiesPanel();
 
 		virtual void Draw() override;
 

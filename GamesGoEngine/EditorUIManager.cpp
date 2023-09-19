@@ -8,13 +8,13 @@
 #include <imgui_impl_opengl3.h>
 #include <ImGuizmo.h>
 
-#include "DebugToolsUI.h"
+#include "DebugToolsPanel.h"
 #include "EditorSettingsPanel.h"
-#include "GraphicsSettingsUI.h"
-#include "LoggerUI.h"
-#include "PropertiesUI.h"
-#include "SceneViewport.h"
-#include "WorldOutlinerUI.h"
+#include "GraphicsSettingsPanel.h"
+#include "LoggerPanel.h"
+#include "PropertiesPanel.h"
+#include "SceneViewportPanel.h"
+#include "WorldOutlinerPanel.h"
 
 namespace GamesGoEngine
 {
@@ -22,33 +22,33 @@ namespace GamesGoEngine
 
 	EditorUIManager::EditorUIManager()
 	{
-		debugToolsUI = new DebugToolsUI();
+		debugToolsPanel = new DebugToolsPanel();
 		editorSettingsPanel = new EditorSettingsPanel();
-		graphicsSettingsUI = new GraphicsSettingsUI();
-		loggerUI = new LoggerUI();
-		propertiesUI = new PropertiesUI();
-		sceneViewer = new SceneViewport();
-		worldOutliner = new WorldOutlinerUI();
+		graphicsSettingsPanel = new GraphicsSettingsPanel();
+		loggerPanel = new LoggerPanel();
+		propertiesPanel = new PropertiesPanel();
+		sceneViewerPanel = new SceneViewportPanel();
+		worldOutlinerPanel = new WorldOutlinerPanel();
 
 		// fill editor panels container
-		editorPanels.push_back(debugToolsUI);
+		editorPanels.push_back(debugToolsPanel);
 		editorPanels.push_back(editorSettingsPanel);
-		editorPanels.push_back(graphicsSettingsUI);
-		editorPanels.push_back(loggerUI);
-		editorPanels.push_back(propertiesUI);
-		editorPanels.push_back(sceneViewer);
-		editorPanels.push_back(worldOutliner);
+		editorPanels.push_back(graphicsSettingsPanel);
+		editorPanels.push_back(loggerPanel);
+		editorPanels.push_back(propertiesPanel);
+		editorPanels.push_back(sceneViewerPanel);
+		editorPanels.push_back(worldOutlinerPanel);
 	}
 
 	EditorUIManager::~EditorUIManager()
 	{
-		delete debugToolsUI;
+		delete debugToolsPanel;
 		delete editorSettingsPanel;
-		delete graphicsSettingsUI;
-		delete loggerUI;
-		delete propertiesUI;
-		delete sceneViewer;
-		delete worldOutliner;
+		delete graphicsSettingsPanel;
+		delete loggerPanel;
+		delete propertiesPanel;
+		delete sceneViewerPanel;
+		delete worldOutlinerPanel;
 
 		editorPanels.clear();
 	}
@@ -152,21 +152,21 @@ namespace GamesGoEngine
 
 	void EditorUIManager::SetTransformOperation(ImGuizmo::OPERATION transformOperation)
 	{
-		GetInstance()->sceneViewer->SetTransformOperation(transformOperation);
+		GetInstance()->sceneViewerPanel->SetTransformOperation(transformOperation);
 	}
 
 	void EditorUIManager::SelectGameObjectAt(int x, int y)
 	{
-		GetInstance()->sceneViewer->SelectGameObjectAt(x, y);
+		GetInstance()->sceneViewerPanel->SelectGameObjectAt(x, y);
 	}
 
 	void EditorUIManager::AddLog(MsgType type, std::string msg)
 	{
-		GetInstance()->loggerUI->AddLog(type, msg);
+		GetInstance()->loggerPanel->AddLog(type, msg);
 	}
 
 	void EditorUIManager::ClearLogs()
 	{
-		GetInstance()->loggerUI->ClearLogs();
+		GetInstance()->loggerPanel->ClearLogs();
 	}
 }

@@ -9,10 +9,10 @@ namespace GamesGoEngine
 {
 	class GameObject;
 
-	class SceneViewport : public EditorPanel
+	class SceneViewportPanel : public EditorPanel
 	{
 	public:
-		SceneViewport();
+		SceneViewportPanel();
 
 		virtual void Draw() override;
 		void SetTransformOperation(ImGuizmo::OPERATION transformOperation);

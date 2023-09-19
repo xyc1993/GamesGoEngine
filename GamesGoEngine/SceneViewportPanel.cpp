@@ -1,4 +1,4 @@
-#include "SceneViewport.h"
+#include "SceneViewportPanel.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/matrix_decompose.hpp>
@@ -10,7 +10,7 @@
 
 namespace GamesGoEngine
 {
-	SceneViewport::SceneViewport()
+	SceneViewportPanel::SceneViewportPanel()
 	{
 		currentTransformOperation = ImGuizmo::OPERATION::TRANSLATE;
 		viewportPanelPosX = 0;
@@ -19,7 +19,7 @@ namespace GamesGoEngine
 		viewportTextureHeight = 450;
 	}
 
-	void SceneViewport::Draw()
+	void SceneViewportPanel::Draw()
 	{
 		ImGui::Begin("Viewport");
 
@@ -92,12 +92,12 @@ namespace GamesGoEngine
 		ImGui::End();
 	}
 
-	void SceneViewport::SetTransformOperation(ImGuizmo::OPERATION transformOperation)
+	void SceneViewportPanel::SetTransformOperation(ImGuizmo::OPERATION transformOperation)
 	{
 		currentTransformOperation = transformOperation;
 	}
 
-	void SceneViewport::SelectGameObjectAt(int x, int y)
+	void SceneViewportPanel::SelectGameObjectAt(int x, int y)
 	{
 		// If transform gizmos are used, don't try to select an object
 		if (ImGuizmo::IsOver())

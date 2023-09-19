@@ -1,17 +1,18 @@
-#include "WorldOutlinerUI.h"
+#include "WorldOutlinerPanel.h"
 
-#include "imgui.h"
+#include <imgui.h>
+
 #include "InputManager.h"
 #include "SceneManager.h"
 
 namespace GamesGoEngine
 {
-	WorldOutlinerUI::WorldOutlinerUI()
+	WorldOutlinerPanel::WorldOutlinerPanel()
 	{
 
 	}
 
-	void WorldOutlinerUI::Draw()
+	void WorldOutlinerPanel::Draw()
 	{
 		Scene* activeScene = SceneManager::GetActiveScene();
 		if (activeScene == nullptr)
@@ -83,7 +84,7 @@ namespace GamesGoEngine
 		ImGui::End();
 	}
 
-	void WorldOutlinerUI::DrawSceneNodeChildren(Scene* activeScene, GameObject* sceneObject)
+	void WorldOutlinerPanel::DrawSceneNodeChildren(Scene* activeScene, GameObject* sceneObject)
 	{
 		GameObject* selectedGameObject = activeScene->GetSelectedGameObject();
 		for (int j = 0; j < sceneObject->GetChildren().size(); j++)
@@ -115,7 +116,7 @@ namespace GamesGoEngine
 		ImGui::TreePop();
 	}
 
-	void WorldOutlinerUI::HandleDragAndDrop(Scene* activeScene, GameObject* sceneObject)
+	void WorldOutlinerPanel::HandleDragAndDrop(Scene* activeScene, GameObject* sceneObject)
 	{
 		if (ImGui::BeginDragDropSource())
 		{

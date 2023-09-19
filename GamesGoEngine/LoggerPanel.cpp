@@ -1,15 +1,15 @@
-#include "LoggerUI.h"
+#include "LoggerPanel.h"
 
 #include <tuple>
 
 namespace GamesGoEngine
 {
-	LoggerUI::LoggerUI()
+	LoggerPanel::LoggerPanel()
 	{
 		messages.clear();
 	}
 
-	void LoggerUI::Draw()
+	void LoggerPanel::Draw()
 	{
 		ImGui::Begin("Log");
 
@@ -41,18 +41,18 @@ namespace GamesGoEngine
 		ImGui::End();
 	}
 
-	void LoggerUI::ClearLogs()
+	void LoggerPanel::ClearLogs()
 	{
 		messages.clear();
 	}
 
-	void LoggerUI::AddLog(MsgType type, std::string msg)
+	void LoggerPanel::AddLog(MsgType type, std::string msg)
 	{
 		const std::tuple<MsgType, std::string> logMsg = std::make_tuple(type, msg);
 		messages.push_back(logMsg);
 	}
 
-	ImVec4 LoggerUI::GetMsgColor(MsgType type)
+	ImVec4 LoggerPanel::GetMsgColor(MsgType type)
 	{
 		switch (type)
 		{

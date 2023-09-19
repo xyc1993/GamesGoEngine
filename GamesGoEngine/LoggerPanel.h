@@ -8,10 +8,10 @@
 
 namespace GamesGoEngine
 {
-	class LoggerUI : public EditorPanel
+	class LoggerPanel : public EditorPanel
 	{
 	public:
-		LoggerUI();
+		LoggerPanel();
 
 		virtual void Draw() override;
 		void ClearLogs();

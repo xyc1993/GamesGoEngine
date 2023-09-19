@@ -11,13 +11,13 @@ namespace GamesGoEngine
 {
 	enum class MsgType;
 	class EditorPanel;
-	class DebugToolsUI;
+	class DebugToolsPanel;
 	class EditorSettingsPanel;
-	class GraphicsSettingsUI;
-	class LoggerUI;
-	class PropertiesUI;
-	class SceneViewport;
-	class WorldOutlinerUI;
+	class GraphicsSettingsPanel;
+	class LoggerPanel;
+	class PropertiesPanel;
+	class SceneViewportPanel;
+	class WorldOutlinerPanel;
 
 	class EditorUIManager
 	{
@@ -41,13 +41,13 @@ namespace GamesGoEngine
 		static void ClearLogs();
 
 	private:
-		DebugToolsUI* debugToolsUI;
+		DebugToolsPanel* debugToolsPanel;
 		EditorSettingsPanel* editorSettingsPanel;
-		GraphicsSettingsUI* graphicsSettingsUI;
-		LoggerUI* loggerUI;
-		PropertiesUI* propertiesUI;
-		SceneViewport* sceneViewer;
-		WorldOutlinerUI* worldOutliner;
+		GraphicsSettingsPanel* graphicsSettingsPanel;
+		LoggerPanel* loggerPanel;
+		PropertiesPanel* propertiesPanel;
+		SceneViewportPanel* sceneViewerPanel;
+		WorldOutlinerPanel* worldOutlinerPanel;
 
 		std::vector<EditorPanel*> editorPanels;
 	};

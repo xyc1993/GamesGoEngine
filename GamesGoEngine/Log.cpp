@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include "EditorUIManager.h"
-#include "LoggerUI.h"
+#include "LoggerPanel.h"
 
 namespace GamesGoEngine
 {

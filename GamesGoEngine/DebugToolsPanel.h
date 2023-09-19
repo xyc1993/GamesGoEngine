@@ -4,10 +4,10 @@
 
 namespace GamesGoEngine
 {
-	class DebugToolsUI : public EditorPanel
+	class DebugToolsPanel : public EditorPanel
 	{
 	public:
-		DebugToolsUI();
+		DebugToolsPanel();
 
 		virtual void Draw() override;
 	};
