@@ -65,6 +65,7 @@ namespace GamesGoEngine
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
+
 		// Set all of the used flags before init!
 		io.ConfigFlags = ImGuiConfigFlags_None;
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -74,6 +75,10 @@ namespace GamesGoEngine
 		 * 3) Make sure ImGuizmo works correctly with detached viewport. Currently when viewport is detached, trying to move transform gizmos moves whole viewport.
 		 */
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+		// Load and set font
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("res/fonts/Poppins/Poppins-Regular.ttf", 17.0f);
+
 		ImGui::StyleColorsDark();
 		ImGui_ImplOpenGL3_Init("#version 440");
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
