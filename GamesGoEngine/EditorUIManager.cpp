@@ -82,6 +82,7 @@ namespace GamesGoEngine
 		ImGui::StyleColorsDark();
 		ImGui_ImplOpenGL3_Init("#version 440");
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
+		SetDarkThemeColors();
 	}
 
 	void EditorUIManager::Draw()
@@ -182,6 +183,21 @@ namespace GamesGoEngine
 		{
 			editorPanels[i]->Draw();
 		}
+	}
+
+	void EditorUIManager::SetDarkThemeColors()
+	{
+		auto& colors = ImGui::GetStyle().Colors;
+
+		colors[ImGuiCol_Header] = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
+		colors[ImGuiCol_HeaderHovered] = ImVec4(0.4f, 0.4f, 0.4f, 1.0f);
+		colors[ImGuiCol_HeaderActive] = ImVec4(0.6f, 0.6f, 0.6f, 1.0f);
+
+		colors[ImGuiCol_FrameBg] = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
+		colors[ImGuiCol_FrameBgHovered] = ImVec4(0.4f, 0.4f, 0.4f, 1.0f);
+		colors[ImGuiCol_FrameBgActive] = ImVec4(0.6f, 0.6f, 0.6f, 1.0f);
+
+		colors[ImGuiCol_TitleBgActive] = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
 	}
 
 	void EditorUIManager::Shutdown()

@@ -31,10 +31,13 @@ namespace GamesGoEngine
 	public:
 		static void Init(GLFWwindow* window);
 		static void Draw();
+
 	private:
 		static void OnFrameDrawBegin();
 		static void OnFrameDrawEnd();
 		void DrawPanels();
+		static void SetDarkThemeColors();
+
 	public:
 		static void Shutdown();
 		static void SetTransformOperation(ImGuizmo::OPERATION transformOperation);
