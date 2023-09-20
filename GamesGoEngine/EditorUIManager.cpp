@@ -122,16 +122,30 @@ namespace GamesGoEngine
 		}
 
 		// Menu bar
-		/*
 		if (ImGui::BeginMenuBar())
-		{			
+		{
+			// In the future this will be utilized for features such as applications options, file open/save, etc.
 			if (ImGui::BeginMenu("File"))
-			{
-				// In the future this will be utilized for features such as applications options, file open/save, etc.
+			{				
+				if (ImGui::MenuItem("New Scene"))
+				{
+					// Create and open a new, blank scene
+				}
+
+				if (ImGui::MenuItem("Open Scene"))
+				{
+					// Open existing scene from path
+				}
+
+				if (ImGui::MenuItem("Save Scene"))
+				{
+					// Save existing scene
+				}
+
+				ImGui::EndMenu();
 			}			
 			ImGui::EndMenuBar();
 		}
-		*/
 
 		// Draw individual panels
 		GetInstance()->DrawPanels();
