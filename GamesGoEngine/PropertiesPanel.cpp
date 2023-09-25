@@ -28,6 +28,33 @@ namespace GamesGoEngine
 			DrawTransformField(selectedGameObject);
 		}
 
+		if (selectedGameObject != nullptr)
+		{
+			const std::vector<Component*> components = selectedGameObject->GetComponents();
+			const size_t componentsNumber = components.size();
+			for (int i = 0; i < componentsNumber; i++)
+			{
+				const Component* component = components[i];
+				const ClassMetaData metaData = component->GetMetaData();
+				if (!metaData.classFields.empty())
+				{
+					ImGui::Text(metaData.className.c_str());
+					for (size_t j = 0; j < metaData.classFields.size(); j++)
+					{
+						Field field = metaData.classFields[j];
+						if (field.typeName == "float")
+						{
+							float* floatField = (float*)field.fieldPointer;
+							if (ImGui::SliderFloat(field.fieldName.c_str(), floatField, 0.0f, 10.0f))
+							{
+								
+							}
+						}
+					}
+				}
+			}
+		}		
+
 		ImGui::End();
 	}
 

@@ -145,12 +145,6 @@
     <Filter Include="Header Files\GamesGo\Rendering\Renderers">
       <UniqueIdentifier>{65cb743c-dad7-43db-bcf1-73a669e1624c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\GamesGo\Tools">
-      <UniqueIdentifier>{198a8f67-9f8e-4d07-8d0f-cf61dd816c45}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\GamesGo\Tools">
-      <UniqueIdentifier>{763ad8f6-137b-4ac6-a89b-671b464f47af}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\GamesGo\Window Management">
       <UniqueIdentifier>{d19efd63-8338-43df-baf5-d7a3d8647055}</UniqueIdentifier>
     </Filter>
@@ -177,6 +171,12 @@
     </Filter>
     <Filter Include="Source Files\ImGuizmo">
       <UniqueIdentifier>{543ac948-5138-4488-a68c-1ad438acbd7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GamesGo\Utilities">
+      <UniqueIdentifier>{763ad8f6-137b-4ac6-a89b-671b464f47af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GamesGo\Utilities">
+      <UniqueIdentifier>{198a8f67-9f8e-4d07-8d0f-cf61dd816c45}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -334,7 +334,7 @@
       <Filter>Source Files\GamesGo\Rendering\Renderers</Filter>
     </ClCompile>
     <ClCompile Include="Math.cpp">
-      <Filter>Source Files\GamesGo\Tools</Filter>
+      <Filter>Source Files\GamesGo\Utilities</Filter>
     </ClCompile>
     <ClCompile Include="SceneExample_EnvironmentMapping.cpp">
       <Filter>Source Files\GamesGo\Examples</Filter>
@@ -401,6 +401,9 @@
     </ClCompile>
     <ClCompile Include="EditorSettingsPanel.cpp">
       <Filter>Source Files\GamesGo\Editor\UI\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="ReflectableObject.cpp">
+      <Filter>Source Files\GamesGo\Utilities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -561,7 +564,7 @@
       <Filter>Header Files\GamesGo\Rendering\Renderers</Filter>
     </ClInclude>
     <ClInclude Include="Math.h">
-      <Filter>Header Files\GamesGo\Tools</Filter>
+      <Filter>Header Files\GamesGo\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="SceneExample_EnvironmentMapping.h">
       <Filter>Header Files\GamesGo\Examples</Filter>
@@ -637,6 +640,9 @@
     </ClInclude>
     <ClInclude Include="EditorSettingsPanel.h">
       <Filter>Header Files\GamesGo\Editor\UI\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="ReflectableObject.h">
+      <Filter>Header Files\GamesGo\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

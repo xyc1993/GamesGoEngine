@@ -1,10 +1,12 @@
 #pragma once
 
+#include "ReflectableObject.h"
+
 namespace GamesGoEngine
 {
 	class GameObject;
 
-	class Component
+	class Component : public ReflectableObject
 	{
 	public:
 		virtual ~Component() = default;

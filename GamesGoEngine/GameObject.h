@@ -42,6 +42,7 @@ namespace GamesGoEngine
 		void SetSceneReferenece(class Scene* scene);
 
 		const std::vector<GameObject*>& GetChildren() const;
+		const std::vector<Component*>& GetComponents() const;
 
 	private:
 		void RemoveParent();

@@ -188,6 +188,11 @@ namespace GamesGoEngine
 		return children;
 	}
 
+	const std::vector<Component*>& GameObject::GetComponents() const
+	{
+		return components;
+	}
+
 	void GameObject::RemoveParent()
 	{
 		// remove child's children & child from parent's allChildren
