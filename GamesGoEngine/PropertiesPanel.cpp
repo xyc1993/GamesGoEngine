@@ -36,9 +36,10 @@ namespace GamesGoEngine
 			{
 				const Component* component = components[i];
 				const ClassMetaData metaData = component->GetMetaData();
+				ImGui::Text(metaData.className.c_str());
+
 				if (!metaData.classFields.empty())
 				{
-					ImGui::Text(metaData.className.c_str());
 					for (size_t j = 0; j < metaData.classFields.size(); j++)
 					{
 						Field field = metaData.classFields[j];
