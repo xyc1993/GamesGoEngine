@@ -48,6 +48,7 @@ namespace GamesGoEngine
 	void Scene::RemoveGameObject(GameObject* gameObject)
 	{
 		sceneObjects.erase(gameObject->GetObjectId());
+		delete gameObject;
 	}
 
 	GameObject* Scene::GetGameObjectWithId(int id)
