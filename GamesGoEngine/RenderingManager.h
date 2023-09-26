@@ -149,6 +149,10 @@ namespace GamesGoEngine
 		static void SetFXAAContrastThreshold(float contrastThreshold);
 		static float GetFXAARelativeThreshold();
 		static void SetFXAARelativeThreshold(float relativeThreshold);
+		static float GetFXAASubpixelBlending();
+		static void SetFXAASubpixelBlending(float subpixelBlending);
+		static int GetFXAAEdgeSearchStepsNumber();
+		static void SetFXAAEdgeSearchStepsNumber(int edgeSearchStepsNumber);
 		// returns object id at coordinates <x,y>
 		static int GetObjectIdAt(int x, int y);
 		static unsigned int GetFinalColorBuffer();
@@ -185,6 +189,8 @@ namespace GamesGoEngine
 		AntiAliasingAlgorithm aaAlgorithm;
 		float fxaaContrastThreshold = 0.0312f;
 		float fxaaRelativeThreshold = 0.063f;
+		float fxaaSubpixelBlending = 1.0f;
+		int fxaaEdgeSearchStepsNumber = 12;
 
 		// uniform buffers used globally by shaders
 		unsigned int uboMatrices;

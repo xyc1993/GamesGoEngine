@@ -142,6 +142,18 @@ namespace GamesGoEngine
 				{
 					RenderingManager::SetFXAARelativeThreshold(relativeThreshold);
 				}
+				
+				float subpixelBlending = RenderingManager::GetFXAASubpixelBlending();
+				if (ImGui::SliderFloat("FXAA subpixel blending", &subpixelBlending, 0.0f, 1.0f))
+				{
+					RenderingManager::SetFXAASubpixelBlending(subpixelBlending);
+				}
+
+				int edgeSearchStepsNumber = RenderingManager::GetFXAAEdgeSearchStepsNumber();
+				if (ImGui::SliderInt("FXAA edge search steps number", &edgeSearchStepsNumber, 0, 50))
+				{
+					RenderingManager::SetFXAAEdgeSearchStepsNumber(edgeSearchStepsNumber);
+				}
 			}
 		}
 

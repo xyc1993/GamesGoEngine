@@ -19,6 +19,11 @@ uniform float contrastThreshold;
 // 0.063 - overkill (slower)
 uniform float relativeThreshold;
 
+// Rate of blending, 1.0 provides biggest blending and biggest antialiasing but can add too much blur
+uniform float subpixelBlending = 1.0;
+// Step (in pixels) to look for edge
+uniform int edgeSearchStepsNumber = 12;
+
 // Might be a good idea to precalculate luminance and save it in a texture for quick look up instead of calculating it every time
 // Right now it's quite ok, so far performance wasn't hit by this drastically
 float RgbToLuminance(vec3 rgb)
@@ -71,7 +76,7 @@ float DeterminePixelBlendFactor(LuminanceData ld)
     fxaaFilter = clamp(fxaaFilter / ld.contrast, 0.0, 1.0);
     // now smoothen the blend
     float blendFactor = smoothstep(0.0, 1.0, fxaaFilter);
-    return blendFactor * blendFactor;
+    return blendFactor * blendFactor * subpixelBlending;
 }
 
 struct EdgeData
@@ -137,16 +142,14 @@ float DetermineEdgeBlendFactor(LuminanceData ld, EdgeData ed, vec2 uv, vec2 texe
 	}
 
 	float edgeLuminance = (ld.m + ed.oppositeLuminance) * 0.5;
-	float gradientThreshold = ed.gradient * 0.25;
-
-    const int stepsNumber = 12;
+	float gradientThreshold = ed.gradient * 0.25;    
 			
     // sample positive direction
 	vec2 puv = uvEdge + edgeStep;
 	float pLuminanceDelta = RgbToLuminance(vec3(texture(screenTexture, puv).rgb)) - edgeLuminance;
 	bool pAtEnd = abs(pLuminanceDelta) >= gradientThreshold;
 
-    for (int i = 0; i < stepsNumber && !pAtEnd; i++)
+    for (int i = 0; i < edgeSearchStepsNumber && !pAtEnd; i++)
     {
 		puv += edgeStep;
 		pLuminanceDelta = RgbToLuminance(vec3(texture(screenTexture, puv).rgb)) - edgeLuminance;
@@ -158,7 +161,7 @@ float DetermineEdgeBlendFactor(LuminanceData ld, EdgeData ed, vec2 uv, vec2 texe
 	float nLuminanceDelta = RgbToLuminance(vec3(texture(screenTexture, nuv).rgb)) - edgeLuminance;
 	bool nAtEnd = abs(nLuminanceDelta) >= gradientThreshold;
 
-	for (int i = 0; i < stepsNumber && !nAtEnd; i++) {
+	for (int i = 0; i < edgeSearchStepsNumber && !nAtEnd; i++) {
 		nuv -= edgeStep;
 		nLuminanceDelta = RgbToLuminance(vec3(texture(screenTexture, nuv).rgb)) - edgeLuminance;
 		nAtEnd = abs(nLuminanceDelta) >= gradientThreshold;

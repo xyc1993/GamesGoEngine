@@ -1241,6 +1241,8 @@ namespace GamesGoEngine
 			fxaaMaterial->SetTexture("screenTexture", 0, lastPostProcessMaterialIndex % 2 == 0 ? textureColorBuffer1 : textureColorBuffer2);
 			fxaaMaterial->SetFloat("contrastThreshold", fxaaContrastThreshold);
 			fxaaMaterial->SetFloat("relativeThreshold", fxaaRelativeThreshold);
+			fxaaMaterial->SetFloat("subpixelBlending", fxaaSubpixelBlending);
+			fxaaMaterial->SetInt("edgeSearchStepsNumber", fxaaEdgeSearchStepsNumber);
 			fxaaMaterial->Draw(glm::mat4());
 			MeshPrimitivesPool::GetQuadPrimitive()->DrawSubMesh(0);
 			lastPostProcessMaterialIndex++;
@@ -1658,6 +1660,26 @@ namespace GamesGoEngine
 	void RenderingManager::SetFXAARelativeThreshold(float relativeThreshold)
 	{
 		GetInstance()->fxaaRelativeThreshold = relativeThreshold;
+	}
+
+	float RenderingManager::GetFXAASubpixelBlending()
+	{
+		return GetInstance()->fxaaSubpixelBlending;
+	}
+
+	void RenderingManager::SetFXAASubpixelBlending(float subpixelBlending)
+	{
+		GetInstance()->fxaaSubpixelBlending = subpixelBlending;
+	}
+
+	int RenderingManager::GetFXAAEdgeSearchStepsNumber()
+	{
+		return GetInstance()->fxaaEdgeSearchStepsNumber;
+	}
+
+	void RenderingManager::SetFXAAEdgeSearchStepsNumber(int edgeSearchStepsNumber)
+	{
+		GetInstance()->fxaaEdgeSearchStepsNumber = edgeSearchStepsNumber;
 	}
 
 	int RenderingManager::GetObjectIdAt(int x, int y)
