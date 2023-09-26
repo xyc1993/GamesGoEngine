@@ -16,5 +16,6 @@ namespace GamesGoEngine
 	private:
 		static void DrawNameInputField(GameObject* selectedGameObject);
 		static void DrawTransformField(GameObject* selectedGameObject);
+		static void DrawComponentsFields(GameObject* selectedGameObject);
 	};
 }

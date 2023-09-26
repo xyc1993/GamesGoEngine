@@ -26,63 +26,8 @@ namespace GamesGoEngine
 		{
 			DrawNameInputField(selectedGameObject);
 			DrawTransformField(selectedGameObject);
-		}
-
-		if (selectedGameObject != nullptr)
-		{
-			const std::vector<Component*> components = selectedGameObject->GetComponents();
-			const size_t componentsNumber = components.size();
-			for (int i = 0; i < componentsNumber; i++)
-			{
-				const Component* component = components[i];
-				const ClassMetaData metaData = component->GetMetaData();
-				ImGui::Text(metaData.className.c_str());
-
-				if (!metaData.classFields.empty())
-				{
-					for (size_t j = 0; j < metaData.classFields.size(); j++)
-					{
-						Field field = metaData.classFields[j];
-
-						if (field.typeName == "bool")
-						{
-							bool* boolField = static_cast<bool*>(field.fieldPointer);
-							if (ImGui::Checkbox(field.fieldName.c_str(), boolField))
-							{
-
-							}
-						}
-
-						if (field.typeName == "float")
-						{
-							float* floatField = static_cast<float*>(field.fieldPointer);
-							if (ImGui::DragFloat(field.fieldName.c_str(), floatField, 0.1f))
-							{
-								
-							}
-						}
-
-						if (field.typeName == "int")
-						{
-							int* intField = static_cast<int*>(field.fieldPointer);
-							if (ImGui::DragInt(field.fieldName.c_str(), intField, 1))
-							{
-
-							}
-						}
-
-						if (field.typeName == "glm::vec3")
-						{
-							glm::vec3* vec3Field = static_cast<glm::vec3*>(field.fieldPointer);
-							if (ImGui::DragFloat3(field.fieldName.c_str(), glm::value_ptr(*vec3Field), 0.1f))
-							{
-								
-							}
-						}
-					}
-				}
-			}
-		}		
+			DrawComponentsFields(selectedGameObject);
+		}	
 
 		ImGui::End();
 	}
@@ -122,6 +67,66 @@ namespace GamesGoEngine
 		if (ImGui::DragFloat3("Scale", glm::value_ptr(localScale), 0.1f))
 		{
 			transform->SetLocalScale(localScale);
+		}
+	}
+
+	void PropertiesPanel::DrawComponentsFields(GameObject* selectedGameObject)
+	{
+		const std::vector<Component*> components = selectedGameObject->GetComponents();
+		const size_t componentsNumber = components.size();
+		for (int i = 0; i < componentsNumber; i++)
+		{
+			const Component* component = components[i];
+			const ClassMetaData metaData = component->GetMetaData();
+
+			if (!metaData.className.empty())
+			{
+				ImGui::Text(metaData.className.c_str());
+			}
+
+			if (!metaData.classFields.empty())
+			{
+				for (size_t j = 0; j < metaData.classFields.size(); j++)
+				{
+					Field field = metaData.classFields[j];
+
+					if (field.typeName == "bool")
+					{
+						bool* boolField = static_cast<bool*>(field.fieldPointer);
+						if (ImGui::Checkbox(field.fieldName.c_str(), boolField))
+						{
+
+						}
+					}
+
+					if (field.typeName == "float")
+					{
+						float* floatField = static_cast<float*>(field.fieldPointer);
+						if (ImGui::DragFloat(field.fieldName.c_str(), floatField, 0.1f))
+						{
+
+						}
+					}
+
+					if (field.typeName == "int")
+					{
+						int* intField = static_cast<int*>(field.fieldPointer);
+						if (ImGui::DragInt(field.fieldName.c_str(), intField, 1))
+						{
+
+						}
+					}
+
+					if (field.typeName == "glm::vec3")
+					{
+						glm::vec3* vec3Field = static_cast<glm::vec3*>(field.fieldPointer);
+						if (ImGui::DragFloat3(field.fieldName.c_str(), glm::value_ptr(*vec3Field), 0.1f))
+						{
+
+						}
+					}
+				}
+			}
 		}
 	}
 }
