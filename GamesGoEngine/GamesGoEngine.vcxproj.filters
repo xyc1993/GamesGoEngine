@@ -178,6 +178,12 @@
     <Filter Include="Source Files\GamesGo\Utilities">
       <UniqueIdentifier>{198a8f67-9f8e-4d07-8d0f-cf61dd816c45}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GamesGo\Reflection">
+      <UniqueIdentifier>{a08dce54-2be1-49b2-8889-f083518cfdf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GamesGo\Reflection">
+      <UniqueIdentifier>{cb4bc93d-fcf2-4cdd-8866-e76595328bb0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectionalLight.cpp">
@@ -403,7 +409,10 @@
       <Filter>Source Files\GamesGo\Editor\UI\Panels</Filter>
     </ClCompile>
     <ClCompile Include="ReflectableObject.cpp">
-      <Filter>Source Files\GamesGo\Utilities</Filter>
+      <Filter>Source Files\GamesGo\Reflection</Filter>
+    </ClCompile>
+    <ClCompile Include="ReflectionFactory.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -642,7 +651,10 @@
       <Filter>Header Files\GamesGo\Editor\UI\Panels</Filter>
     </ClInclude>
     <ClInclude Include="ReflectableObject.h">
-      <Filter>Header Files\GamesGo\Utilities</Filter>
+      <Filter>Header Files\GamesGo\Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="ReflectionFactory.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

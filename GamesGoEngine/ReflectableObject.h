@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+#include "ReflectionFactory.h"
+
 namespace GamesGoEngine
 {
 	#define TO_STRING(X) (#X)

@@ -17,5 +17,6 @@ namespace GamesGoEngine
 		static void DrawNameInputField(GameObject* selectedGameObject);
 		static void DrawTransformField(GameObject* selectedGameObject);
 		static void DrawComponentsFields(GameObject* selectedGameObject);
+		static void DrawAddComponentButton(GameObject* selectedGameObject);
 	};
 }

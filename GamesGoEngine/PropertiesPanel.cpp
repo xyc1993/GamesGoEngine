@@ -27,7 +27,8 @@ namespace GamesGoEngine
 			DrawNameInputField(selectedGameObject);
 			DrawTransformField(selectedGameObject);
 			DrawComponentsFields(selectedGameObject);
-		}	
+			DrawAddComponentButton(selectedGameObject);
+		}
 
 		ImGui::End();
 	}
@@ -127,6 +128,31 @@ namespace GamesGoEngine
 					}
 				}
 			}
+		}
+	}
+
+	void PropertiesPanel::DrawAddComponentButton(GameObject* selectedGameObject)
+	{
+		if (ImGui::Button("Add Component"))
+		{
+			ImGui::OpenPopup("AddComponent");
+		}
+
+		if (ImGui::BeginPopup("AddComponent"))
+		{
+			auto registeredComponents = ReflectionFactory::GetReflectableObjectsFactory().classes;
+			for (auto it = registeredComponents.begin(); it != registeredComponents.end(); ++it)
+			{
+				std::string componentName = it->first;
+				if (ImGui::MenuItem(componentName.c_str()))
+				{
+					Component* component = (Component*)ReflectionFactory::GetReflectableObjectsFactory().Construct(componentName);
+					selectedGameObject->AddComponent(component);
+					ImGui::CloseCurrentPopup();
+				}
+			}
+
+			ImGui::EndPopup();
 		}
 	}
 }

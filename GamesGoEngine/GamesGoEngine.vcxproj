@@ -195,6 +195,7 @@
     <ClCompile Include="PostProcessRenderer.cpp" />
     <ClCompile Include="PropertiesPanel.cpp" />
     <ClCompile Include="ReflectableObject.cpp" />
+    <ClCompile Include="ReflectionFactory.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderingManager.cpp" />
     <ClCompile Include="Rotator.cpp" />
@@ -275,6 +276,7 @@
     <ClInclude Include="PostProcessRenderer.h" />
     <ClInclude Include="PropertiesPanel.h" />
     <ClInclude Include="ReflectableObject.h" />
+    <ClInclude Include="ReflectionFactory.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderingManager.h" />
     <ClInclude Include="Rotator.h" />
