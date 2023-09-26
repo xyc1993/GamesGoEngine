@@ -77,12 +77,49 @@ namespace GamesGoEngine
 		const size_t componentsNumber = components.size();
 		for (int i = 0; i < componentsNumber; i++)
 		{
-			const Component* component = components[i];
+			Component* component = components[i];
 			const ClassMetaData metaData = component->GetMetaData();
 
+			bool removedComponent = false;
 			if (!metaData.className.empty())
 			{
+				// Label
 				ImGui::Text(metaData.className.c_str());
+				// Settings such as "Remove component"
+				ImGui::SameLine();
+
+				/*
+				 * When displaying a list of objects, using indices or pointers as ID will preserve the node open/closed state per object
+				 * When passing a label you can optionally specify extra unique ID information within the same string using "##".
+				 * This helps solving the simpler collision cases. e.g. "Label##Foobar" display "Label" and uses "Label##Foobar" as ID
+				 */
+				std::string buttonLabel = "+##";
+				buttonLabel.append(std::to_string(i));
+
+				std::string componentSettingsId = "ComponentSettings";
+				componentSettingsId.append(std::to_string(i));
+				
+				if (ImGui::Button(buttonLabel.c_str()))
+				{
+					ImGui::OpenPopup(componentSettingsId.c_str());
+				}
+				
+				if (ImGui::BeginPopup(componentSettingsId.c_str()))
+				{
+					if (ImGui::MenuItem("Remove component"))
+					{
+						selectedGameObject->RemoveComponent(component);
+						removedComponent = true;
+						ImGui::CloseCurrentPopup();
+					}
+
+					ImGui::EndPopup();
+				}
+			}
+
+			if (removedComponent)
+			{
+				break;
 			}
 
 			if (!metaData.classFields.empty())
@@ -91,10 +128,16 @@ namespace GamesGoEngine
 				{
 					Field field = metaData.classFields[j];
 
+					// Append "##"ij to avoid label collision where there are 2 fields with the same name
+					std::string fieldLabel = field.fieldName;
+					fieldLabel.append("##");
+					fieldLabel.append(std::to_string(i));
+					fieldLabel.append(std::to_string(j));
+
 					if (field.typeName == "bool")
 					{
 						bool* boolField = static_cast<bool*>(field.fieldPointer);
-						if (ImGui::Checkbox(field.fieldName.c_str(), boolField))
+						if (ImGui::Checkbox(fieldLabel.c_str(), boolField))
 						{
 
 						}
@@ -103,7 +146,7 @@ namespace GamesGoEngine
 					if (field.typeName == "float")
 					{
 						float* floatField = static_cast<float*>(field.fieldPointer);
-						if (ImGui::DragFloat(field.fieldName.c_str(), floatField, 0.1f))
+						if (ImGui::DragFloat(fieldLabel.c_str(), floatField, 0.1f))
 						{
 
 						}
@@ -112,7 +155,7 @@ namespace GamesGoEngine
 					if (field.typeName == "int")
 					{
 						int* intField = static_cast<int*>(field.fieldPointer);
-						if (ImGui::DragInt(field.fieldName.c_str(), intField, 1))
+						if (ImGui::DragInt(fieldLabel.c_str(), intField, 1))
 						{
 
 						}
@@ -121,7 +164,7 @@ namespace GamesGoEngine
 					if (field.typeName == "glm::vec3")
 					{
 						glm::vec3* vec3Field = static_cast<glm::vec3*>(field.fieldPointer);
-						if (ImGui::DragFloat3(field.fieldName.c_str(), glm::value_ptr(*vec3Field), 0.1f))
+						if (ImGui::DragFloat3(fieldLabel.c_str(), glm::value_ptr(*vec3Field), 0.1f))
 						{
 
 						}

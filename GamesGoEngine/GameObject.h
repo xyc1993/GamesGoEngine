@@ -18,6 +18,7 @@ namespace GamesGoEngine
 		void Update();
 		void LateUpdate();
 		void AddComponent(Component* component);
+		void RemoveComponent(Component* component);
 
 		Transform* GetTransform() const;
 		std::string GetName() const;

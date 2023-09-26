@@ -76,6 +76,21 @@ namespace GamesGoEngine
 		}
 	}
 
+	void GameObject::RemoveComponent(Component* component)
+	{
+		if (component != nullptr)
+		{
+			for (size_t i = 0; i < components.size(); i++)
+			{
+				if (components[i] == component)
+				{
+					components.erase(components.begin() + i);
+					delete component;
+				}
+			}
+		}
+	}
+
 	Transform* GameObject::GetTransform() const
 	{
 		return transform;
