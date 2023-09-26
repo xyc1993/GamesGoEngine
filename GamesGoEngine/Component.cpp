@@ -4,7 +4,8 @@ namespace GamesGoEngine
 {
 	void Component::Init(GameObject* owner)
 	{
-		this->owner = owner;
+		InitMetaData();
+		this->owner = owner;		
 	}
 
 	GameObject* Component::GetOwner() const

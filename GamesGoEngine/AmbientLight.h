@@ -18,6 +18,7 @@ namespace GamesGoEngine
 			bool overrideLightsNumber = false, int lightsNumberOverride = 0) override;
 
 	protected:
-		std::string GetNumberedShaderProperty(int lightNumber) override;
+		std::string GetNumberedShaderProperty(int lightNumber) override;		
+		virtual void InitMetaData() override;
 	};
 }

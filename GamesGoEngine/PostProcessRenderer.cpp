@@ -54,4 +54,9 @@ namespace GamesGoEngine
 		}
 		return -1.0f;
 	}
+
+	void PostProcessRenderer::InitMetaData()
+	{
+		metaData.className = CLASS_NAME(PostProcessRenderer);
+	}
 }

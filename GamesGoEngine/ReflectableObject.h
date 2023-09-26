@@ -19,6 +19,7 @@ namespace GamesGoEngine
 		// TODO: option to provide a setter function
 		// TODO: think about pointer fields (think what type of pointer fields you can have, maybe rely on polymorphism if common parent? or templates? some extra identifier?)
 		// TODO: think about container fields
+		// TODO: think about adding range of field
 	};
 
 	struct ClassMetaData

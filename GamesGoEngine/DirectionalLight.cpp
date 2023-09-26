@@ -62,4 +62,13 @@ namespace GamesGoEngine
 		std::string number = std::to_string(lightNumber);
 		return ("dirLight[" + number + "]").c_str();
 	}
+
+	void DirectionalLight::InitMetaData()
+	{
+		metaData.className = CLASS_NAME(DirectionalLight);
+
+		ADD_FIELD_META_DATA(metaData, glm::vec3, ambient, this->ambient)
+		ADD_FIELD_META_DATA(metaData, glm::vec3, diffuse, this->diffuse)
+		ADD_FIELD_META_DATA(metaData, glm::vec3, specular, this->specular)
+	}
 }

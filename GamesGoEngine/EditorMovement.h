@@ -18,6 +18,10 @@ namespace GamesGoEngine
 		void UpdatePosition(const float deltaTime) const;
 		void UpdateRotation(const float deltaTime);
 
+	protected:
+		virtual void InitMetaData() override;
+
+	private:
 		float movementSpeed;
 		float rotationSpeed;
 		bool constrainPitch;

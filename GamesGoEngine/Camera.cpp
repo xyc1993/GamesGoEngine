@@ -49,7 +49,7 @@ namespace GamesGoEngine
 
 	void Camera::CalculateProjectionMatrix()
 	{
-		currentProjectionMatrix = glm::perspective(fov, CamerasManager::GetCurrentViewAspectRatio(), nearClipPlane, farClipPlane);
+		currentProjectionMatrix = glm::perspective(glm::radians(fov), CamerasManager::GetCurrentViewAspectRatio(), nearClipPlane, farClipPlane);
 	}
 
 	void Camera::SetCameraPriority(int priority)
@@ -100,5 +100,16 @@ namespace GamesGoEngine
 	float Camera::GetFarClipPlane() const
 	{
 		return farClipPlane;
+	}
+
+	void Camera::InitMetaData()
+	{
+		metaData.className = CLASS_NAME(Camera);
+
+		ADD_FIELD_META_DATA(metaData, int, priority, this->priority)
+
+		ADD_FIELD_META_DATA(metaData, float, fov, this->fov)
+		ADD_FIELD_META_DATA(metaData, float, nearClipPlane, this->nearClipPlane)
+		ADD_FIELD_META_DATA(metaData, float, farClipPlane, this->farClipPlane)
 	}
 }

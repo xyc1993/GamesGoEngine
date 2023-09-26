@@ -57,4 +57,11 @@ namespace GamesGoEngine
 
 		return "";
 	}
+
+	void AmbientLight::InitMetaData()
+	{
+		metaData.className = CLASS_NAME(AmbientLight);
+
+		ADD_FIELD_META_DATA(metaData, glm::vec3, ambient, this->ambient)
+	}
 }

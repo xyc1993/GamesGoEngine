@@ -36,6 +36,9 @@ namespace GamesGoEngine
 		// NO SUPPORT FOR MIXED MATERIALS LISTS YET!
 		LightModelType GetLightModelType() const;
 
+	protected:
+		virtual void InitMetaData() override;
+
 	private:
 		// used to determine position in the render queue
 		int currentRenderQueuePosition;

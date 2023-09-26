@@ -14,13 +14,21 @@ namespace GamesGoEngine
 	{
 		if (owner != nullptr && owner->GetTransform() != nullptr)
 		{
-			const glm::quat frameRotation = glm::mix(identityQuat, speed, (float)Time::GetDeltaTime());
+			glm::quat speedQuat = glm::quat(glm::radians(speed));
+			const glm::quat frameRotation = glm::mix(identityQuat, speedQuat, (float)Time::GetDeltaTime());
 			owner->GetTransform()->SetLocalRotation(frameRotation * owner->GetTransform()->GetLocalRotation());
 		}
 	}
 
 	void Rotator::SetSpeed(glm::vec3 speed)
 	{
-		this->speed = glm::quat(glm::radians(speed));
+		this->speed = speed;
+	}
+
+	void Rotator::InitMetaData()
+	{
+		metaData.className = CLASS_NAME(Rotator);
+		
+		ADD_FIELD_META_DATA(metaData, glm::vec3, speed, this->speed)
 	}
 }

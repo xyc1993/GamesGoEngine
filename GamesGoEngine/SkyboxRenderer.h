@@ -11,5 +11,8 @@ namespace GamesGoEngine
 
 		virtual void Draw() override;
 		void SetMaterial(const std::shared_ptr<Material>& material);
+
+	protected:
+		virtual void InitMetaData() override;
 	};
 }

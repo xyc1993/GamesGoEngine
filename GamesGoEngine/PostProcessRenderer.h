@@ -19,6 +19,9 @@ namespace GamesGoEngine
 		void SetBlendWeight(float weight, size_t materialIndex) const;
 		float GetBlendWeight(size_t materialIndex) const;
 
+	protected:
+		virtual void InitMetaData() override;
+
 	private:
 		std::vector<std::shared_ptr<PostProcessMaterial>> ppMaterialList;
 	};

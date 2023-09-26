@@ -18,6 +18,7 @@ namespace GamesGoEngine
 
 	protected:
 		std::string GetNumberedShaderProperty(int lightNumber) override;
+		virtual void InitMetaData() override;
 
 	private:
 		glm::vec3 position;

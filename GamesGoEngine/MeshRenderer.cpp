@@ -137,4 +137,11 @@ namespace GamesGoEngine
 		}
 		return LightModelType::Unlit;
 	}
+
+	void MeshRenderer::InitMetaData()
+	{
+		metaData.className = CLASS_NAME(MeshRenderer);
+
+		ADD_FIELD_META_DATA(metaData, bool, isCastingShadow, this->isCastingShadow)
+	}
 }

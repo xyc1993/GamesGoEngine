@@ -78,4 +78,19 @@ namespace GamesGoEngine
 		return ("spotLight[" + number + "]").c_str();
 	}
 
+	void SpotLight::InitMetaData()
+	{
+		metaData.className = CLASS_NAME(SpotLight);
+
+		ADD_FIELD_META_DATA(metaData, glm::vec3, ambient, this->ambient)
+		ADD_FIELD_META_DATA(metaData, glm::vec3, diffuse, this->diffuse)
+		ADD_FIELD_META_DATA(metaData, glm::vec3, specular, this->specular)
+
+		ADD_FIELD_META_DATA(metaData, float, constant, this->constant)
+		ADD_FIELD_META_DATA(metaData, float, linear, this->linear)
+		ADD_FIELD_META_DATA(metaData, float, quadratic, this->quadratic)
+
+		ADD_FIELD_META_DATA(metaData, float, cutOff, this->cutOff)
+		ADD_FIELD_META_DATA(metaData, float, outerCutOff, this->outerCutOff)
+	}
 }

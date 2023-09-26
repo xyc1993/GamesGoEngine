@@ -19,8 +19,12 @@ namespace GamesGoEngine
 		// rotation speed expressed in degrees per second
 		void SetSpeed(glm::vec3 speed);
 
+	protected:
+		virtual void InitMetaData() override;
+
 	private:
 		glm::quat identityQuat;
-		glm::quat speed;
+		// rotation expressed in Euler angles
+		glm::vec3 speed;
 	};
 }

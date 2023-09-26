@@ -7,16 +7,12 @@ namespace GamesGoEngine
 {
 	PointLight::PointLight()
 	{
-		InitMetaData();
-
 		this->lightNumber = RenderingManager::GetLightsManager()->AddPointLight(this);
 		if (this->lightNumber == INITIALIZATION_ERROR) delete this;
 	}
 
 	PointLight::PointLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float constant, float linear, float quadratic, float maxRadius, float maxRadiusFallOffStart)
 	{
-		InitMetaData();
-
 		this->ambient = ambient;
 		this->diffuse = diffuse;
 		this->specular = specular;
@@ -82,6 +78,15 @@ namespace GamesGoEngine
 	void PointLight::InitMetaData()
 	{
 		metaData.className = CLASS_NAME(PointLight);
+
+		ADD_FIELD_META_DATA(metaData, glm::vec3, ambient, this->ambient)
+		ADD_FIELD_META_DATA(metaData, glm::vec3, diffuse, this->diffuse)
+		ADD_FIELD_META_DATA(metaData, glm::vec3, specular, this->specular)
+
+		ADD_FIELD_META_DATA(metaData, float, constant, this->constant)
+		ADD_FIELD_META_DATA(metaData, float, linear, this->linear)
+		ADD_FIELD_META_DATA(metaData, float, quadratic, this->quadratic)
+
 		ADD_FIELD_META_DATA(metaData, float, maxRadius, this->maxRadius)
 		ADD_FIELD_META_DATA(metaData, float, maxRadiusFallOffStart, this->maxRadiusFallOffStart)
 	}

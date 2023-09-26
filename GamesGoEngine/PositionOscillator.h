@@ -18,6 +18,9 @@ namespace GamesGoEngine
 		void SetAmplitude(glm::vec3 amplitude);
 		void SetSpeed(float speed);
 
+	protected:
+		virtual void InitMetaData() override;
+
 	private:
 		glm::vec3 startPosition;
 		glm::vec3 amplitude;

@@ -117,4 +117,14 @@ namespace GamesGoEngine
 
 		owner->GetTransform()->SetRotationEulerDegrees(currentRotation);
 	}
+
+	void EditorMovement::InitMetaData()
+	{
+		metaData.className = CLASS_NAME(EditorMovement);
+
+		ADD_FIELD_META_DATA(metaData, float, movementSpeed, this->movementSpeed)
+		ADD_FIELD_META_DATA(metaData, float, rotationSpeed, this->rotationSpeed)
+
+		ADD_FIELD_META_DATA(metaData, bool, constrainPitch, this->constrainPitch)
+	}
 }

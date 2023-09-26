@@ -35,4 +35,9 @@ namespace GamesGoEngine
 			materialList[0] = material;
 		}
 	}
+
+	void SkyboxRenderer::InitMetaData()
+	{
+		metaData.className = CLASS_NAME(SkyboxRenderer);
+	}
 }

@@ -32,6 +32,9 @@ namespace GamesGoEngine
 		float GetNearClipPlane() const;
 		float GetFarClipPlane() const;
 
+	protected:
+		virtual void InitMetaData() override;
+
 	private:
 		glm::mat4 currentViewMatrix;
 		glm::mat4 currentProjectionMatrix;

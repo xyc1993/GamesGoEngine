@@ -33,4 +33,12 @@ namespace GamesGoEngine
 	{
 		this->speed = speed;
 	}
+
+	void PositionOscillator::InitMetaData()
+	{
+		metaData.className = CLASS_NAME(PositionOscillator);
+		
+		ADD_FIELD_META_DATA(metaData, glm::vec3, amplitude, this->amplitude)
+		ADD_FIELD_META_DATA(metaData, float, speed, this->speed)
+	}
 }

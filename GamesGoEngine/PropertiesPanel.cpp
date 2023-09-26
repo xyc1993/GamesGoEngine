@@ -42,10 +42,38 @@ namespace GamesGoEngine
 					for (size_t j = 0; j < metaData.classFields.size(); j++)
 					{
 						Field field = metaData.classFields[j];
+
+						if (field.typeName == "bool")
+						{
+							bool* boolField = static_cast<bool*>(field.fieldPointer);
+							if (ImGui::Checkbox(field.fieldName.c_str(), boolField))
+							{
+
+							}
+						}
+
 						if (field.typeName == "float")
 						{
-							float* floatField = (float*)field.fieldPointer;
-							if (ImGui::SliderFloat(field.fieldName.c_str(), floatField, 0.0f, 10.0f))
+							float* floatField = static_cast<float*>(field.fieldPointer);
+							if (ImGui::DragFloat(field.fieldName.c_str(), floatField, 0.1f))
+							{
+								
+							}
+						}
+
+						if (field.typeName == "int")
+						{
+							int* intField = static_cast<int*>(field.fieldPointer);
+							if (ImGui::DragInt(field.fieldName.c_str(), intField, 1))
+							{
+
+							}
+						}
+
+						if (field.typeName == "glm::vec3")
+						{
+							glm::vec3* vec3Field = static_cast<glm::vec3*>(field.fieldPointer);
+							if (ImGui::DragFloat3(field.fieldName.c_str(), glm::value_ptr(*vec3Field), 0.1f))
 							{
 								
 							}
