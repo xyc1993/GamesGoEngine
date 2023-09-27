@@ -412,7 +412,7 @@
       <Filter>Source Files\GamesGo\Reflection</Filter>
     </ClCompile>
     <ClCompile Include="ReflectionFactory.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\GamesGo\Reflection</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -654,7 +654,7 @@
       <Filter>Header Files\GamesGo\Reflection</Filter>
     </ClInclude>
     <ClInclude Include="ReflectionFactory.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\GamesGo\Reflection</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
