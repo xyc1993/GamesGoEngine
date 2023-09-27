@@ -6,6 +6,8 @@
 
 namespace GamesGoEngine
 {
+	REGISTER_CLASS_STATIC(MeshRenderer);
+
 	MeshRenderer::MeshRenderer()
 	{
 		mesh = nullptr;

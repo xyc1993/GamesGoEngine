@@ -5,6 +5,8 @@
 
 namespace GamesGoEngine
 {
+	REGISTER_CLASS_STATIC(ScaleOscillator);
+
 	void ScaleOscillator::Init(GameObject* owner)
 	{
 		Component::Init(owner);

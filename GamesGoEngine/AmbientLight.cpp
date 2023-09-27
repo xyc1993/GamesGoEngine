@@ -4,6 +4,8 @@
 
 namespace GamesGoEngine
 {
+	REGISTER_CLASS_STATIC(AmbientLight);
+
 	AmbientLight::AmbientLight()
 	{
 		this->ambient = glm::vec3(0.01f, 0.01f, 0.01f);

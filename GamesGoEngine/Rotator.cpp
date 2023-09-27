@@ -5,6 +5,8 @@
 
 namespace GamesGoEngine
 {
+	REGISTER_CLASS_STATIC(Rotator);
+
 	Rotator::Rotator()
 	{
 		identityQuat = glm::quat(glm::vec3(0.0f));

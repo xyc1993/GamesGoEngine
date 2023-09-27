@@ -6,6 +6,8 @@
 
 namespace GamesGoEngine
 {
+	REGISTER_CLASS_STATIC(SkyboxRenderer);
+
 	SkyboxRenderer::SkyboxRenderer()
 	{
 		mesh = std::make_shared<MeshPrimitiveCube>();

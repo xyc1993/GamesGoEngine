@@ -5,6 +5,8 @@
 
 namespace GamesGoEngine
 {
+	REGISTER_CLASS_STATIC(SpotLight);
+
 	SpotLight::SpotLight()
 	{
 		this->lightNumber = RenderingManager::GetLightsManager()->AddSpotLight(this);

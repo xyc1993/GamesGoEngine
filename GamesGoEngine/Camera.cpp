@@ -7,6 +7,8 @@
 
 namespace GamesGoEngine
 {
+	REGISTER_CLASS_STATIC(Camera);
+
 	Camera::Camera()
 	{
 		currentViewMatrix = glm::mat4(1.0f);

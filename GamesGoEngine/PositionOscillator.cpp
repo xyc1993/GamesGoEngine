@@ -5,6 +5,8 @@
 
 namespace GamesGoEngine
 {
+	REGISTER_CLASS_STATIC(PositionOscillator);
+
 	void PositionOscillator::Init(GameObject* owner)
 	{
 		Component::Init(owner);

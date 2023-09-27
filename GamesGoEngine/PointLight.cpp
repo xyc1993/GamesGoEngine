@@ -5,6 +5,8 @@
 
 namespace GamesGoEngine
 {
+	REGISTER_CLASS_STATIC(PointLight);
+
 	PointLight::PointLight()
 	{
 		this->lightNumber = RenderingManager::GetLightsManager()->AddPointLight(this);

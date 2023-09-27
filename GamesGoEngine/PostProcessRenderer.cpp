@@ -5,6 +5,8 @@
 
 namespace GamesGoEngine
 {
+	REGISTER_CLASS_STATIC(PostProcessRenderer);
+
 	PostProcessRenderer::PostProcessRenderer()
 	{
 		ppMaterialList.clear();

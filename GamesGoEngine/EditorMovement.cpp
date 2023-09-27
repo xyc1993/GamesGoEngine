@@ -6,6 +6,8 @@
 
 namespace GamesGoEngine
 {
+	REGISTER_CLASS_STATIC(EditorMovement);
+
 	EditorMovement::EditorMovement()
 	{
 		movementSpeed = 6.0f;
