@@ -48,26 +48,29 @@ namespace GamesGoEngine
 
 	void PropertiesPanel::DrawTransformField(GameObject* selectedGameObject)
 	{
-		ImGui::Text("Transform");
-
-		Transform* transform = selectedGameObject->GetTransform();
-
-		glm::vec3 localPosition = transform->GetLocalPosition();
-		if (ImGui::DragFloat3("Position", glm::value_ptr(localPosition), 0.1f))
+		if (ImGui::TreeNodeEx("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			transform->SetLocalPosition(localPosition);
-		}
+			Transform* transform = selectedGameObject->GetTransform();
 
-		glm::vec3 localRotation = transform->GetHintLocalRotation();
-		if (ImGui::DragFloat3("Rotation", glm::value_ptr(localRotation), 0.1f))
-		{
-			transform->SetHintLocalRotation(localRotation);
-		}
+			glm::vec3 localPosition = transform->GetLocalPosition();
+			if (ImGui::DragFloat3("Position", glm::value_ptr(localPosition), 0.1f))
+			{
+				transform->SetLocalPosition(localPosition);
+			}
 
-		glm::vec3 localScale = transform->GetLocalScale();
-		if (ImGui::DragFloat3("Scale", glm::value_ptr(localScale), 0.1f))
-		{
-			transform->SetLocalScale(localScale);
+			glm::vec3 localRotation = transform->GetHintLocalRotation();
+			if (ImGui::DragFloat3("Rotation", glm::value_ptr(localRotation), 0.1f))
+			{
+				transform->SetHintLocalRotation(localRotation);
+			}
+
+			glm::vec3 localScale = transform->GetLocalScale();
+			if (ImGui::DragFloat3("Scale", glm::value_ptr(localScale), 0.1f))
+			{
+				transform->SetLocalScale(localScale);
+			}
+
+			ImGui::TreePop();
 		}
 	}
 
@@ -80,11 +83,16 @@ namespace GamesGoEngine
 			Component* component = components[i];
 			const ClassMetaData metaData = component->GetMetaData();
 
-			bool removedComponent = false;
-			if (!metaData.className.empty())
+			if (metaData.className.empty())
 			{
-				// Label
-				ImGui::Text(metaData.className.c_str());
+				// Do not display unnamed components
+				continue;
+			}
+			
+			if (ImGui::TreeNodeEx(metaData.className.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+			{
+				bool removedComponent = false;
+
 				// Settings such as "Remove component"
 				ImGui::SameLine();
 
@@ -98,12 +106,12 @@ namespace GamesGoEngine
 
 				std::string componentSettingsId = "ComponentSettings";
 				componentSettingsId.append(std::to_string(i));
-				
+
 				if (ImGui::Button(buttonLabel.c_str()))
 				{
 					ImGui::OpenPopup(componentSettingsId.c_str());
 				}
-				
+
 				if (ImGui::BeginPopup(componentSettingsId.c_str()))
 				{
 					if (ImGui::MenuItem("Remove component"))
@@ -115,61 +123,63 @@ namespace GamesGoEngine
 
 					ImGui::EndPopup();
 				}
-			}
 
-			if (removedComponent)
-			{
-				break;
-			}
-
-			if (!metaData.classFields.empty())
-			{
-				for (size_t j = 0; j < metaData.classFields.size(); j++)
+				if (removedComponent)
 				{
-					Field field = metaData.classFields[j];
+					break;
+				}
 
-					// Append "##"ij to avoid label collision where there are 2 fields with the same name
-					std::string fieldLabel = field.fieldName;
-					fieldLabel.append("##");
-					fieldLabel.append(std::to_string(i));
-					fieldLabel.append(std::to_string(j));
-
-					if (field.typeName == "bool")
+				if (!metaData.classFields.empty())
+				{
+					for (size_t j = 0; j < metaData.classFields.size(); j++)
 					{
-						bool* boolField = static_cast<bool*>(field.fieldPointer);
-						if (ImGui::Checkbox(fieldLabel.c_str(), boolField))
-						{
+						Field field = metaData.classFields[j];
 
+						// Append "##"ij to avoid label collision where there are 2 fields with the same name
+						std::string fieldLabel = field.fieldName;
+						fieldLabel.append("##");
+						fieldLabel.append(std::to_string(i));
+						fieldLabel.append(std::to_string(j));
+
+						if (field.typeName == "bool")
+						{
+							bool* boolField = static_cast<bool*>(field.fieldPointer);
+							if (ImGui::Checkbox(fieldLabel.c_str(), boolField))
+							{
+
+							}
 						}
-					}
 
-					if (field.typeName == "float")
-					{
-						float* floatField = static_cast<float*>(field.fieldPointer);
-						if (ImGui::DragFloat(fieldLabel.c_str(), floatField, 0.1f))
+						if (field.typeName == "float")
 						{
+							float* floatField = static_cast<float*>(field.fieldPointer);
+							if (ImGui::DragFloat(fieldLabel.c_str(), floatField, 0.1f))
+							{
 
+							}
 						}
-					}
 
-					if (field.typeName == "int")
-					{
-						int* intField = static_cast<int*>(field.fieldPointer);
-						if (ImGui::DragInt(fieldLabel.c_str(), intField, 1))
+						if (field.typeName == "int")
 						{
+							int* intField = static_cast<int*>(field.fieldPointer);
+							if (ImGui::DragInt(fieldLabel.c_str(), intField, 1))
+							{
 
+							}
 						}
-					}
 
-					if (field.typeName == "glm::vec3")
-					{
-						glm::vec3* vec3Field = static_cast<glm::vec3*>(field.fieldPointer);
-						if (ImGui::DragFloat3(fieldLabel.c_str(), glm::value_ptr(*vec3Field), 0.1f))
+						if (field.typeName == "glm::vec3")
 						{
+							glm::vec3* vec3Field = static_cast<glm::vec3*>(field.fieldPointer);
+							if (ImGui::DragFloat3(fieldLabel.c_str(), glm::value_ptr(*vec3Field), 0.1f))
+							{
 
+							}
 						}
 					}
 				}
+
+				ImGui::TreePop();
 			}
 		}
 	}
