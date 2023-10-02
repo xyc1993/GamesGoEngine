@@ -11,6 +11,7 @@ namespace GamesGoEngine
 {
 	enum class MsgType;
 	class EditorPanel;
+	class ContentBrowserPanel;
 	class DebugToolsPanel;
 	class EditorSettingsPanel;
 	class GraphicsSettingsPanel;
@@ -46,6 +47,7 @@ namespace GamesGoEngine
 		static void ClearLogs();
 
 	private:
+		ContentBrowserPanel* contentBrowserPanel;
 		DebugToolsPanel* debugToolsPanel;
 		EditorSettingsPanel* editorSettingsPanel;
 		GraphicsSettingsPanel* graphicsSettingsPanel;

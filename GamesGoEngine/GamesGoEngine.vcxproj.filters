@@ -414,6 +414,9 @@
     <ClCompile Include="ReflectionFactory.cpp">
       <Filter>Source Files\GamesGo\Reflection</Filter>
     </ClCompile>
+    <ClCompile Include="ContentBrowserPanel.cpp">
+      <Filter>Source Files\GamesGo\Editor\UI\Panels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -655,6 +658,9 @@
     </ClInclude>
     <ClInclude Include="ReflectionFactory.h">
       <Filter>Header Files\GamesGo\Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="ContentBrowserPanel.h">
+      <Filter>Header Files\GamesGo\Editor\UI\Panels</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

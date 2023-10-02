@@ -121,6 +121,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)\External Libraries\assimp\include;$(SolutionDir)\External Libraries\glew\glew-2.1.0\include;$(SolutionDir)\External Libraries\glfw\glfw-3.3.2.bin.WIN64\include;$(SolutionDir)\External Libraries\glm;$(SolutionDir)\External Libraries\imgui;$(SolutionDir)\External Libraries\ImGuizmo;$(SolutionDir)\External Libraries\SOIL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -138,6 +139,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)\External Libraries\assimp\include;$(SolutionDir)\External Libraries\glew\glew-2.1.0\include;$(SolutionDir)\External Libraries\glfw\glfw-3.3.2.bin.WIN64\include;$(SolutionDir)\External Libraries\glm;$(SolutionDir)\External Libraries\imgui;$(SolutionDir)\External Libraries\ImGuizmo;$(SolutionDir)\External Libraries\SOIL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -165,6 +167,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CamerasManager.cpp" />
     <ClCompile Include="Component.cpp" />
+    <ClCompile Include="ContentBrowserPanel.cpp" />
     <ClCompile Include="DebugToolsPanel.cpp" />
     <ClCompile Include="EditorPanel.cpp" />
     <ClCompile Include="EditorSettingsPanel.cpp" />
@@ -246,6 +249,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CamerasManager.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="ContentBrowserPanel.h" />
     <ClInclude Include="DebugToolsPanel.h" />
     <ClInclude Include="EditorPanel.h" />
     <ClInclude Include="EditorSettingsPanel.h" />
