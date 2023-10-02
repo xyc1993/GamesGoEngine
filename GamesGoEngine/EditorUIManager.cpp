@@ -6,6 +6,7 @@
 #include <imgui_impl_opengl3.h>
 #include <ImGuizmo.h>
 
+#include "AssetPropertiesPanel.h"
 #include "ContentBrowserPanel.h"
 #include "DebugToolsPanel.h"
 #include "EditorSettingsPanel.h"
@@ -21,6 +22,7 @@ namespace GamesGoEngine
 
 	EditorUIManager::EditorUIManager()
 	{
+		assetPropertiesPanel = new AssetPropertiesPanel();
 		contentBrowserPanel = new ContentBrowserPanel();
 		debugToolsPanel = new DebugToolsPanel();
 		editorSettingsPanel = new EditorSettingsPanel();
@@ -31,6 +33,7 @@ namespace GamesGoEngine
 		worldOutlinerPanel = new WorldOutlinerPanel();
 
 		// fill editor panels container
+		editorPanels.push_back(assetPropertiesPanel);
 		editorPanels.push_back(contentBrowserPanel);
 		editorPanels.push_back(debugToolsPanel);
 		editorPanels.push_back(editorSettingsPanel);
@@ -43,6 +46,7 @@ namespace GamesGoEngine
 
 	EditorUIManager::~EditorUIManager()
 	{
+		delete assetPropertiesPanel;
 		delete contentBrowserPanel;
 		delete debugToolsPanel;
 		delete editorSettingsPanel;

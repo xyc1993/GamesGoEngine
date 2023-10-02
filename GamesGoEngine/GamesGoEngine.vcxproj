@@ -164,6 +164,7 @@
     <ClCompile Include="..\External Libraries\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\External Libraries\imgui\imgui_widgets.cpp" />
     <ClCompile Include="AmbientLight.cpp" />
+    <ClCompile Include="AssetPropertiesPanel.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CamerasManager.cpp" />
     <ClCompile Include="Component.cpp" />
@@ -246,6 +247,7 @@
     <ClInclude Include="..\External Libraries\imgui\imstb_textedit.h" />
     <ClInclude Include="..\External Libraries\imgui\imstb_truetype.h" />
     <ClInclude Include="AmbientLight.h" />
+    <ClInclude Include="AssetPropertiesPanel.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CamerasManager.h" />
     <ClInclude Include="Component.h" />

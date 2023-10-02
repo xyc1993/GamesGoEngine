@@ -417,6 +417,9 @@
     <ClCompile Include="ContentBrowserPanel.cpp">
       <Filter>Source Files\GamesGo\Editor\UI\Panels</Filter>
     </ClCompile>
+    <ClCompile Include="AssetPropertiesPanel.cpp">
+      <Filter>Source Files\GamesGo\Editor\UI\Panels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -660,6 +663,9 @@
       <Filter>Header Files\GamesGo\Reflection</Filter>
     </ClInclude>
     <ClInclude Include="ContentBrowserPanel.h">
+      <Filter>Header Files\GamesGo\Editor\UI\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetPropertiesPanel.h">
       <Filter>Header Files\GamesGo\Editor\UI\Panels</Filter>
     </ClInclude>
   </ItemGroup>
