@@ -20,6 +20,11 @@ namespace GamesGoEngine
 		thumbnailSize = 64.0f;
 	}
 
+	ContentBrowserPanel::~ContentBrowserPanel()
+	{
+		// TODO: textures should be deleted!
+	}
+
 	void ContentBrowserPanel::Draw()
 	{
 		ImGui::Begin("Content Browser");

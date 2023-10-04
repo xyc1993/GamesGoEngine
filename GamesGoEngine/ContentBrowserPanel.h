@@ -11,6 +11,7 @@ namespace GamesGoEngine
 	{
 	public:
 		ContentBrowserPanel();
+		~ContentBrowserPanel();
 
 		virtual void Draw() override;
 
