@@ -20,6 +20,7 @@ namespace GamesGoEngine
 	class PropertiesPanel;
 	class SceneViewportPanel;
 	class WorldOutlinerPanel;
+	class EditorTitleBar;
 
 	class EditorUIManager
 	{
@@ -35,6 +36,7 @@ namespace GamesGoEngine
 		static void Draw();
 
 	private:
+		static void DrawTitleBar();
 		static void OnFrameDrawBegin();
 		static void OnFrameDrawEnd();
 		void DrawPanels();
@@ -57,6 +59,7 @@ namespace GamesGoEngine
 		PropertiesPanel* propertiesPanel;
 		SceneViewportPanel* sceneViewerPanel;
 		WorldOutlinerPanel* worldOutlinerPanel;
+		EditorTitleBar* titleBar;
 
 		std::vector<EditorPanel*> editorPanels;
 	};

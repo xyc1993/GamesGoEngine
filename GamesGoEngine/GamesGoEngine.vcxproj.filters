@@ -184,6 +184,12 @@
     <Filter Include="Source Files\GamesGo\Reflection">
       <UniqueIdentifier>{cb4bc93d-fcf2-4cdd-8866-e76595328bb0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GamesGo\Editor\Input">
+      <UniqueIdentifier>{e5604a41-17ae-42ad-8c34-a48159e2d594}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GamesGo\Editor\Input">
+      <UniqueIdentifier>{65f1e541-6a8e-4fc6-9a3e-14a17b0ae768}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectionalLight.cpp">
@@ -220,9 +226,6 @@
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
     <ClCompile Include="InputManager.cpp">
-      <Filter>Source Files\GamesGo\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="InputEditorShortcuts.cpp">
       <Filter>Source Files\GamesGo\Input</Filter>
     </ClCompile>
     <ClCompile Include="MeshBase.cpp">
@@ -420,6 +423,12 @@
     <ClCompile Include="AssetPropertiesPanel.cpp">
       <Filter>Source Files\GamesGo\Editor\UI\Panels</Filter>
     </ClCompile>
+    <ClCompile Include="EditorTitleBar.cpp">
+      <Filter>Source Files\GamesGo\Editor\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="InputEditorShortcuts.cpp">
+      <Filter>Source Files\GamesGo\Editor\Input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -462,9 +471,6 @@
       <Filter>Header Files\imgui</Filter>
     </ClInclude>
     <ClInclude Include="InputManager.h">
-      <Filter>Header Files\GamesGo\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="InputEditorShortcuts.h">
       <Filter>Header Files\GamesGo\Input</Filter>
     </ClInclude>
     <ClInclude Include="MeshBase.h">
@@ -667,6 +673,12 @@
     </ClInclude>
     <ClInclude Include="AssetPropertiesPanel.h">
       <Filter>Header Files\GamesGo\Editor\UI\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorTitleBar.h">
+      <Filter>Header Files\GamesGo\Editor\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="InputEditorShortcuts.h">
+      <Filter>Header Files\GamesGo\Editor\Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

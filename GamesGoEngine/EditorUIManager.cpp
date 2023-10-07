@@ -10,6 +10,7 @@
 #include "ContentBrowserPanel.h"
 #include "DebugToolsPanel.h"
 #include "EditorSettingsPanel.h"
+#include "EditorTitleBar.h"
 #include "GraphicsSettingsPanel.h"
 #include "LoggerPanel.h"
 #include "PropertiesPanel.h"
@@ -31,6 +32,7 @@ namespace GamesGoEngine
 		propertiesPanel = new PropertiesPanel();
 		sceneViewerPanel = new SceneViewportPanel();
 		worldOutlinerPanel = new WorldOutlinerPanel();
+		titleBar = new EditorTitleBar();
 
 		// fill editor panels container
 		editorPanels.push_back(assetPropertiesPanel);
@@ -42,6 +44,7 @@ namespace GamesGoEngine
 		editorPanels.push_back(propertiesPanel);
 		editorPanels.push_back(sceneViewerPanel);
 		editorPanels.push_back(worldOutlinerPanel);
+		editorPanels.push_back(titleBar);
 	}
 
 	EditorUIManager::~EditorUIManager()
@@ -55,6 +58,7 @@ namespace GamesGoEngine
 		delete propertiesPanel;
 		delete sceneViewerPanel;
 		delete worldOutlinerPanel;
+		delete titleBar;
 
 		editorPanels.clear();
 	}
@@ -91,6 +95,14 @@ namespace GamesGoEngine
 		ImGui_ImplOpenGL3_Init("#version 440");
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
 		SetDarkThemeColors();
+
+		GetInstance()->titleBar->InitWindow(window);
+
+		// Set callback to titlebar hit test, needed for the ability to drag window
+		glfwSetTitlebarHitTestCallback(window, [](GLFWwindow* window, int x, int y, int* hit)
+			{
+				*hit = GetInstance()->titleBar->IsTitleBarHovered();
+			});
 	}
 
 	void EditorUIManager::Draw()
@@ -128,32 +140,6 @@ namespace GamesGoEngine
 		{
 			ImGuiID dockspace_id = ImGui::GetID("DockSpace");
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
-		}
-
-		// Menu bar
-		if (ImGui::BeginMenuBar())
-		{
-			// In the future this will be utilized for features such as applications options, file open/save, etc.
-			if (ImGui::BeginMenu("File"))
-			{				
-				if (ImGui::MenuItem("New Scene"))
-				{
-					// Create and open a new, blank scene
-				}
-
-				if (ImGui::MenuItem("Open Scene"))
-				{
-					// Open existing scene from path
-				}
-
-				if (ImGui::MenuItem("Save Scene"))
-				{
-					// Save existing scene
-				}
-
-				ImGui::EndMenu();
-			}			
-			ImGui::EndMenuBar();
 		}
 
 		// Draw individual panels

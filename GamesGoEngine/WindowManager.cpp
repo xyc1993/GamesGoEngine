@@ -12,15 +12,19 @@ namespace GamesGoEngine
 	{
 		glfwInit();
 
-		//sets OpenGL version to 4.4
+		// sets OpenGL version to 4.4
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
 
-		//sets profile, core has new features, compat prioritizes compatibility, might not have the newest features
+		// sets profile, core has new features, compat prioritizes compatibility, might not have the newest features
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 		glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
+		
+		// Extension from Cherno's fork https://github.com/TheCherno/GLFW/tree/d516e6680183bed7096c8fb58c31365deb2cc9b7
+		// Example of use in Walnut's project https://github.com/StudioCherno/Walnut
+		glfwWindowHint(GLFW_TITLEBAR, false);
 
 		window = glfwCreateWindow(startWindowWidth, startWindowHeight, "GamesGo Engine", nullptr, nullptr);
 
@@ -53,7 +57,7 @@ namespace GamesGoEngine
 
 		InputManager::Init(window);
 
-		glewExperimental = GL_TRUE; //GLEW will use modern approach, it's not 'experimental' per se
+		glewExperimental = GL_TRUE; // GLEW will use modern approach, it's not 'experimental' per se
 
 		if (glewInit() != GLEW_OK)
 		{
