@@ -120,14 +120,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\External Libraries\assimp\include;$(SolutionDir)\External Libraries\glew\glew-2.1.0\include;$(SolutionDir)\External Libraries\glfw\glfw-3.3.2.bin.WIN64\include;$(SolutionDir)\External Libraries\glm;$(SolutionDir)\External Libraries\imgui;$(SolutionDir)\External Libraries\ImGuizmo;$(SolutionDir)\External Libraries\SOIL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\External Libraries\assimp\include;$(SolutionDir)\External Libraries\glew\glew-2.1.0\include;$(SolutionDir)\External Libraries\glfw\include;$(SolutionDir)\External Libraries\glm;$(SolutionDir)\External Libraries\imgui;$(SolutionDir)\External Libraries\ImGuizmo;$(SolutionDir)\External Libraries\SOIL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;glew32s.lib;glfw3.lib;soil2-debug.lib;assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)\External Libraries\assimp\lib;$(SolutionDir)\External Libraries\glew\glew-2.1.0\lib;$(SolutionDir)\External Libraries\glfw\glfw-3.3.2.bin.WIN64\lib-vc2019;$(SolutionDir)\External Libraries\SOIL2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\External Libraries\assimp\lib;$(SolutionDir)\External Libraries\glew\glew-2.1.0\lib;$(SolutionDir)\External Libraries\glfw\lib;$(SolutionDir)\External Libraries\SOIL2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -138,7 +138,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\External Libraries\assimp\include;$(SolutionDir)\External Libraries\glew\glew-2.1.0\include;$(SolutionDir)\External Libraries\glfw\glfw-3.3.2.bin.WIN64\include;$(SolutionDir)\External Libraries\glm;$(SolutionDir)\External Libraries\imgui;$(SolutionDir)\External Libraries\ImGuizmo;$(SolutionDir)\External Libraries\SOIL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\External Libraries\assimp\include;$(SolutionDir)\External Libraries\glew\glew-2.1.0\include;$(SolutionDir)\External Libraries\glfw\include;$(SolutionDir)\External Libraries\glm;$(SolutionDir)\External Libraries\imgui;$(SolutionDir)\External Libraries\ImGuizmo;$(SolutionDir)\External Libraries\SOIL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -146,7 +146,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)\External Libraries\assimp\lib;$(SolutionDir)\External Libraries\glew\glew-2.1.0\lib;$(SolutionDir)\External Libraries\glfw\glfw-3.3.2.bin.WIN64\lib-vc2019;$(SolutionDir)\External Libraries\SOIL2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\External Libraries\assimp\lib;$(SolutionDir)\External Libraries\glew\glew-2.1.0\lib;$(SolutionDir)\External Libraries\glfw\lib;$(SolutionDir)\External Libraries\SOIL2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glew32s.lib;glfw3.lib;soil2-debug.lib;assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
