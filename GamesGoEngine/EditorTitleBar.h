@@ -23,9 +23,13 @@ namespace GamesGoEngine
 		bool isTitleBarHovered;
 		bool isWindowMaximized;
 
-		ImTextureID minimizeButtonTexture;
-		ImTextureID maximizeButtonTexture;
-		ImTextureID closeButtonTexture;
+		unsigned int minimizeButtonTexture;
+		unsigned int maximizeButtonTexture;
+		unsigned int closeButtonTexture;
+
+		ImTextureID minimizeButtonTextureID;
+		ImTextureID maximizeButtonTextureID;
+		ImTextureID closeButtonTextureID;
 
 		const ImVec2 buttonsSize = { 16.0f, 16.0f };
 	};

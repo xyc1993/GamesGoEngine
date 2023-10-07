@@ -19,9 +19,13 @@ namespace GamesGoEngine
 		std::filesystem::path currentDirectory;
 		const std::filesystem::path resDirectory = "res";
 
-		ImTextureID backButtonTexture;
-		ImTextureID fileButtonTexture;
-		ImTextureID folderButtonTexture;
+		unsigned int backButtonTexture;
+		unsigned int fileButtonTexture;
+		unsigned int folderButtonTexture;
+
+		ImTextureID backButtonTextureID;
+		ImTextureID fileButtonTextureID;
+		ImTextureID folderButtonTextureID;
 
 		float padding;
 		float thumbnailSize;

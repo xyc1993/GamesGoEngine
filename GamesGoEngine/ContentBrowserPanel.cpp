@@ -12,9 +12,15 @@ namespace GamesGoEngine
 		// TODO: in the future directory iterator should take project path from project file and iterate files in project directory instead of "res"
 		currentDirectory = resDirectory;
 
-		backButtonTexture = reinterpret_cast<ImTextureID>(TextureLoader::LoadTexture(const_cast<GLchar*>("res/icons/back.png"), true, true));
-		fileButtonTexture = reinterpret_cast<ImTextureID>(TextureLoader::LoadTexture(const_cast<GLchar*>("res/icons/file.png"), true, true));
-		folderButtonTexture = reinterpret_cast<ImTextureID>(TextureLoader::LoadTexture(const_cast<GLchar*>("res/icons/folder.png"), true, true));
+		// used later for cleanup
+		backButtonTexture = TextureLoader::LoadTexture("res/icons/back.png", true, true);
+		fileButtonTexture = TextureLoader::LoadTexture("res/icons/file.png", true, true);
+		folderButtonTexture = TextureLoader::LoadTexture("res/icons/folder.png", true, true);
+
+		// used to avoid casting on drawing
+		backButtonTextureID = (ImTextureID)backButtonTexture;
+		fileButtonTextureID = (ImTextureID)fileButtonTexture;
+		folderButtonTextureID = (ImTextureID)folderButtonTexture;
 
 		padding = 16.0f;
 		thumbnailSize = 64.0f;
@@ -22,7 +28,9 @@ namespace GamesGoEngine
 
 	ContentBrowserPanel::~ContentBrowserPanel()
 	{
-		// TODO: textures should be deleted!
+		TextureLoader::UnloadTexture(backButtonTexture);
+		TextureLoader::UnloadTexture(fileButtonTexture);
+		TextureLoader::UnloadTexture(folderButtonTexture);
 	}
 
 	void ContentBrowserPanel::Draw()
@@ -46,7 +54,7 @@ namespace GamesGoEngine
 
 		if (currentDirectory != std::filesystem::path(resDirectory))
 		{
-			if (ImGui::ImageButton(backButtonTexture, buttonsThumbnailSize))
+			if (ImGui::ImageButton(backButtonTextureID, buttonsThumbnailSize))
 			{
 				currentDirectory = currentDirectory.parent_path();
 			}
@@ -61,7 +69,7 @@ namespace GamesGoEngine
 			const std::string filename = p.path().filename().string();
 			if (p.is_directory())
 			{
-				if (ImGui::ImageButton(filename.c_str(), folderButtonTexture, buttonsThumbnailSize))
+				if (ImGui::ImageButton(filename.c_str(), folderButtonTextureID, buttonsThumbnailSize))
 				{
 					currentDirectory /= p.path().filename();
 				}
@@ -76,7 +84,7 @@ namespace GamesGoEngine
 			const std::string filename = p.path().filename().string();
 			if (!p.is_directory())
 			{
-				if (ImGui::ImageButton(filename.c_str(), fileButtonTexture, buttonsThumbnailSize))
+				if (ImGui::ImageButton(filename.c_str(), fileButtonTextureID, buttonsThumbnailSize))
 				{
 
 				}

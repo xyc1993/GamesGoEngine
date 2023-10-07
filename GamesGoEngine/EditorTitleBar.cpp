@@ -12,14 +12,22 @@ namespace GamesGoEngine
 		isWindowMaximized = false;
 		isTitleBarHovered = false;
 
-		minimizeButtonTexture = reinterpret_cast<ImTextureID>(TextureLoader::LoadTexture(const_cast<GLchar*>("res/icons/minimize.png"), true, true));;
-		maximizeButtonTexture = reinterpret_cast<ImTextureID>(TextureLoader::LoadTexture(const_cast<GLchar*>("res/icons/maximize.png"), true, true));;
-		closeButtonTexture = reinterpret_cast<ImTextureID>(TextureLoader::LoadTexture(const_cast<GLchar*>("res/icons/close.png"), true, true));;
+		// used later for cleanup
+		minimizeButtonTexture = TextureLoader::LoadTexture("res/icons/minimize.png", true, true);
+		maximizeButtonTexture = TextureLoader::LoadTexture("res/icons/maximize.png", true, true);
+		closeButtonTexture = TextureLoader::LoadTexture("res/icons/close.png", true, true);
+
+		// used to avoid casting on drawing
+		minimizeButtonTextureID = (ImTextureID)minimizeButtonTexture;
+		maximizeButtonTextureID = (ImTextureID)maximizeButtonTexture;
+		closeButtonTextureID = (ImTextureID)closeButtonTexture;
 	}
 
 	EditorTitleBar::~EditorTitleBar()
 	{
-		// TODO: textures should be deleted!
+		TextureLoader::UnloadTexture(minimizeButtonTexture);
+		TextureLoader::UnloadTexture(maximizeButtonTexture);
+		TextureLoader::UnloadTexture(closeButtonTexture);
 	}
 
 	void EditorTitleBar::Draw()
@@ -62,14 +70,14 @@ namespace GamesGoEngine
 			
 			// Minimize Button
 			ImGui::SameLine(titleBarWidth - 3.0f * titleBarHeight);
-			if (ImGui::ImageButton(minimizeButtonTexture, buttonsSize))
+			if (ImGui::ImageButton(minimizeButtonTextureID, buttonsSize))
 			{
 				glfwIconifyWindow(window);
 			}
 			
 			// Maximize Button
 			ImGui::SameLine(titleBarWidth - 2.0f * titleBarHeight);
-			if (ImGui::ImageButton(maximizeButtonTexture, buttonsSize))
+			if (ImGui::ImageButton(maximizeButtonTextureID, buttonsSize))
 			{
 				if (isWindowMaximized)
 				{
@@ -85,7 +93,7 @@ namespace GamesGoEngine
 			
 			// Close Button
 			ImGui::SameLine(titleBarWidth - titleBarHeight);
-			if (ImGui::ImageButton(closeButtonTexture, buttonsSize))
+			if (ImGui::ImageButton(closeButtonTextureID, buttonsSize))
 			{
 				glfwSetWindowShouldClose(window, true);
 			}
