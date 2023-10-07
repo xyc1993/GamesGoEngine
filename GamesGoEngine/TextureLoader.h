@@ -1,9 +1,5 @@
 #pragma once
 
-#define GLEW_STATIC
-#include <GL/glew.h>
-#include "SOIL2/SOIL2.h"
-
 #include <vector>
 
 namespace GamesGoEngine
@@ -11,7 +7,8 @@ namespace GamesGoEngine
     class TextureLoader
     {
     public:
-        static GLuint LoadTexture(GLchar* path, bool transparencyEnabled = false, bool sRGB = true);
-        static GLuint LoadCubemap(std::vector<const GLchar*> faces, bool transparencyEnabled = false, bool sRGB = true);
+        static unsigned int LoadTexture(const char* path, bool transparencyEnabled = false, bool sRGB = true);
+        static unsigned int LoadCubemap(std::vector<const char*> faces, bool transparencyEnabled = false, bool sRGB = true);
+        static void UnloadTexture(unsigned int texture);
     };
 }

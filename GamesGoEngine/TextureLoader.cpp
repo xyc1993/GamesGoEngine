@@ -1,11 +1,15 @@
 #include "TextureLoader.h"
 
+#define GLEW_STATIC
+#include <GL/glew.h>
+#include <SOIL2/SOIL2.h>
+
 namespace GamesGoEngine
 {
-    GLuint TextureLoader::LoadTexture(GLchar* path, bool transparencyEnabled, bool sRGB)
+    unsigned int TextureLoader::LoadTexture(const char* path, bool transparencyEnabled, bool sRGB)
     {
         //Generate texture ID and load texture data
-        GLuint textureID;
+        unsigned int textureID;
         glGenTextures(1, &textureID);
 
         int imageWidth, imageHeight;
@@ -34,9 +38,9 @@ namespace GamesGoEngine
         return textureID;
     }
 
-    GLuint TextureLoader::LoadCubemap(std::vector<const GLchar*> faces, bool transparencyEnabled, bool sRGB)
+    unsigned int TextureLoader::LoadCubemap(std::vector<const char*> faces, bool transparencyEnabled, bool sRGB)
     {
-        GLuint textureID;
+        unsigned int textureID;
         glGenTextures(1, &textureID);
 
         int imageWidth, imageHeight;
@@ -63,5 +67,10 @@ namespace GamesGoEngine
         glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
         return textureID;
+    }
+
+    void TextureLoader::UnloadTexture(unsigned int texture)
+    {
+        glDeleteTextures(1, &texture);
     }
 }
