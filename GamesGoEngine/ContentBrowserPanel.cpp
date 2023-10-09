@@ -3,6 +3,7 @@
 #include <imgui.h>
 #include <filesystem>
 
+#include "AssetsManager.h"
 #include "TextureLoader.h"
 
 namespace GamesGoEngine
@@ -86,7 +87,7 @@ namespace GamesGoEngine
 			{
 				if (ImGui::ImageButton(filename.c_str(), fileButtonTextureID, buttonsThumbnailSize))
 				{
-
+					AssetsManager::SelectAsset(p.path().string());
 				}
 				ImGui::TextWrapped(filename.c_str());
 				ImGui::NextColumn();

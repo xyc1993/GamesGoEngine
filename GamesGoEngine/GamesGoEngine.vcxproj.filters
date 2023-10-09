@@ -190,6 +190,12 @@
     <Filter Include="Source Files\GamesGo\Editor\Input">
       <UniqueIdentifier>{65f1e541-6a8e-4fc6-9a3e-14a17b0ae768}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\GamesGo\Assets Management">
+      <UniqueIdentifier>{45ddd3ac-3eda-462e-a229-871432fbbd5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GamesGo\Assets Management">
+      <UniqueIdentifier>{e0c4c3d8-0417-4d16-9662-80512a47ecc5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectionalLight.cpp">
@@ -428,6 +434,12 @@
     </ClCompile>
     <ClCompile Include="InputEditorShortcuts.cpp">
       <Filter>Source Files\GamesGo\Editor\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetsManager.cpp">
+      <Filter>Source Files\GamesGo\Assets Management</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset.cpp">
+      <Filter>Source Files\GamesGo\Assets Management</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -679,6 +691,12 @@
     </ClInclude>
     <ClInclude Include="InputEditorShortcuts.h">
       <Filter>Header Files\GamesGo\Editor\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetsManager.h">
+      <Filter>Header Files\GamesGo\Assets Management</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset.h">
+      <Filter>Header Files\GamesGo\Assets Management</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
