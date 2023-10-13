@@ -46,6 +46,8 @@ namespace GamesGoEngine
 				textureAsset->EnableSRGB(isSRGB);
 			}
 
+			ImGui::BeginChild("Texture Image");
+
 			// texture dimensions
 			const float width = static_cast<float>(textureAsset->GetWidth());
 			const float height = static_cast<float>(textureAsset->GetHeight());
@@ -56,6 +58,8 @@ namespace GamesGoEngine
 
 			const ImVec2 imageSize = ImVec2(viewWidth, viewHeight);
 			ImGui::Image((void*)textureAsset->GetTexture(), imageSize);
+
+			ImGui::EndChild();
 
 			std::string imageResolutionString;
 			imageResolutionString.append(std::to_string(textureAsset->GetWidth()));
