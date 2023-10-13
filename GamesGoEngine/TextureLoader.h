@@ -8,6 +8,7 @@ namespace GamesGoEngine
     {
     public:
         static unsigned int LoadTexture(const char* path, bool transparencyEnabled = false, bool sRGB = true);
+        static unsigned int LoadTexture(int& imageWidth, int& imageHeight, const char* path, bool transparencyEnabled = false, bool sRGB = true);
         static unsigned int LoadCubemap(std::vector<const char*> faces, bool transparencyEnabled = false, bool sRGB = true);
         static void UnloadTexture(unsigned int texture);
     };

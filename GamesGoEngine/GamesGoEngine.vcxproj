@@ -167,6 +167,7 @@
     <ClCompile Include="Asset.cpp" />
     <ClCompile Include="AssetsManager.cpp" />
     <ClCompile Include="AssetPropertiesPanel.cpp" />
+    <ClCompile Include="AssetTexture.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CamerasManager.cpp" />
     <ClCompile Include="Component.cpp" />
@@ -253,6 +254,7 @@
     <ClInclude Include="Asset.h" />
     <ClInclude Include="AssetsManager.h" />
     <ClInclude Include="AssetPropertiesPanel.h" />
+    <ClInclude Include="AssetTexture.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CamerasManager.h" />
     <ClInclude Include="Component.h" />

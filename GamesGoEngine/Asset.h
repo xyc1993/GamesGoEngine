@@ -14,10 +14,15 @@ namespace GamesGoEngine
 	{
 	public:
 		Asset();
-		Asset(AssetType type, std::string name);
+
+		virtual void Load(AssetType type, std::string name, std::string path);
+		virtual void Unload();
 
 		AssetType GetType() const;
 		std::string GetName() const;
+		
+	protected:
+		std::string path;
 
 	private:
 		AssetType type;

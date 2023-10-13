@@ -11,6 +11,7 @@ namespace GamesGoEngine
 	{
 	private:
 		AssetsManager();
+		~AssetsManager();
 
 		static AssetsManager* instance;
 		static AssetsManager* GetInstance();

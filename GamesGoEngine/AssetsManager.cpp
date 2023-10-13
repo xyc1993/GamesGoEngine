@@ -2,6 +2,8 @@
 
 #include <filesystem>
 
+#include "AssetTexture.h"
+
 namespace GamesGoEngine
 {
 	AssetsManager* AssetsManager::instance = nullptr;
@@ -10,6 +12,14 @@ namespace GamesGoEngine
 	{
 		loadedAssets.clear();
 		selectedAsset = nullptr;
+	}
+
+	AssetsManager::~AssetsManager()
+	{
+		for (auto it = loadedAssets.begin(); it != loadedAssets.end(); ++it)
+		{
+			it->second->Unload();
+		}
 	}
 
 	AssetsManager* AssetsManager::GetInstance()
@@ -67,23 +77,23 @@ namespace GamesGoEngine
 			const std::string filename = filePath.filename().string();
 
 			const AssetType assetType = GetType(path);
-
 			Asset* newAsset = nullptr;
 
 			switch (assetType)
 			{
 			case AssetType::Texture:
 				{
-				newAsset = new Asset(assetType, filename);
+				newAsset = new AssetTexture();
 				break;
 				}
 			case AssetType::Unsupported:
 				{
-				newAsset = new Asset(assetType, filename);
+				newAsset = new Asset();
 				break;
 				}
 			}
-			
+
+			newAsset->Load(assetType, filename, filePath.string());			
 			loadedAssets[path] = newAsset;
 		}
 	}

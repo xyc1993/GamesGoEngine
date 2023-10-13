@@ -8,11 +8,15 @@ namespace GamesGoEngine
 {
     unsigned int TextureLoader::LoadTexture(const char* path, bool transparencyEnabled, bool sRGB)
     {
+        int imageWidth, imageHeight;
+        return LoadTexture(imageWidth, imageHeight, path, transparencyEnabled, sRGB);
+    }
+
+    unsigned TextureLoader::LoadTexture(int& imageWidth, int& imageHeight, const char* path, bool transparencyEnabled, bool sRGB)
+    {
         //Generate texture ID and load texture data
         unsigned int textureID;
         glGenTextures(1, &textureID);
-
-        int imageWidth, imageHeight;
 
         unsigned char* image = SOIL_load_image(path, &imageWidth, &imageHeight, 0, transparencyEnabled ? SOIL_LOAD_RGBA : SOIL_LOAD_RGB);
 
