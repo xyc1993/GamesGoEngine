@@ -22,6 +22,12 @@ namespace GamesGoEngine
 		fpsText.append(std::to_string(fps));
 		ImGui::Text(fpsText.c_str());
 
+		GLfloat milliseconds = Time::GetUnscaledDeltaTime() * 1000.0f;
+		std::string millisecondsText = "Time per frame = ";
+		millisecondsText.append(std::to_string(milliseconds));
+		millisecondsText.append(" [ms]");
+		ImGui::Text(millisecondsText.c_str());
+
 		float timeScale = Time::GetTimeScale();
 		if (ImGui::SliderFloat("Time Scale", &timeScale, 0.0f, 5.0f))
 		{
