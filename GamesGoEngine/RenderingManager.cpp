@@ -1697,6 +1697,13 @@ namespace GamesGoEngine
 		return GetInstance()->finalColorBuffer;
 	}
 
+	float RenderingManager::GetBufferAspectRatio()
+	{
+		const float width = static_cast<float>(GetInstance()->currentBuffersWidth);
+		const float height = static_cast<float>(GetInstance()->currentBuffersHeight);
+		return width / height;
+	}
+
 	bool RenderingManager::CompareRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2)
 	{
 		return (mr1->GetRenderQueuePosition() < mr2->GetRenderQueuePosition());

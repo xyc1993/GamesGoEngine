@@ -156,6 +156,7 @@ namespace GamesGoEngine
 		// returns object id at coordinates <x,y>
 		static int GetObjectIdAt(int x, int y);
 		static unsigned int GetFinalColorBuffer();
+		static float GetBufferAspectRatio();
 
 	private:
 		static bool CompareRenderersPositions(MeshRenderer* mr1, MeshRenderer* mr2);
