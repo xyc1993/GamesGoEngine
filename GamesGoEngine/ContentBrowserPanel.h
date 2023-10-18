@@ -16,8 +16,8 @@ namespace GamesGoEngine
 		virtual void Draw() override;
 
 	private:
+		std::filesystem::path currentProjectFilePath;
 		std::filesystem::path currentDirectory;
-		const std::filesystem::path resDirectory = "res";
 
 		unsigned int backButtonTexture;
 		unsigned int fileButtonTexture;

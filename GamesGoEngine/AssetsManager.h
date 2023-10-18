@@ -7,6 +7,8 @@
 
 namespace GamesGoEngine
 {
+	class AssetProject;
+
 	class AssetsManager
 	{
 	private:
@@ -21,13 +23,19 @@ namespace GamesGoEngine
 		static Asset* GetSelectedAsset();
 		// Determines asset type based on file's path
 		static AssetType GetType(std::string path);
+		static void LoadAsset(std::string path);
+		static std::string GetProjectPath();
+		static std::string GetProjectFilePath();
 		
 	private:
 		void SelectAssetInternal(std::string path);
-		void LoadAsset(std::string path);
+		void LoadAssetInternal(std::string path);
+		std::string GetProjectPathInternal() const;
+		std::string GetProjectFilePathInternal() const;
 
 		// key is asset path
 		std::map<std::string, Asset*> loadedAssets;
 		Asset* selectedAsset;
+		AssetProject* currentProject;
 	};
 }

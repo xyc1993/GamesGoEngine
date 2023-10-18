@@ -6,6 +6,7 @@ namespace GamesGoEngine
 {
 	enum class AssetType
 	{
+		Project,
 		Texture,
 		Unsupported
 	};
@@ -20,6 +21,7 @@ namespace GamesGoEngine
 
 		AssetType GetType() const;
 		std::string GetName() const;
+		std::string GetPath() const;
 		
 	protected:
 		std::string path;

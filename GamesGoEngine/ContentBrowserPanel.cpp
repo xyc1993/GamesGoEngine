@@ -10,9 +10,6 @@ namespace GamesGoEngine
 {
 	ContentBrowserPanel::ContentBrowserPanel()
 	{
-		// TODO: in the future directory iterator should take project path from project file and iterate files in project directory instead of "res"
-		currentDirectory = resDirectory;
-
 		// used later for cleanup
 		backButtonTexture = TextureLoader::LoadTexture("res/icons/back.png", true, true);
 		fileButtonTexture = TextureLoader::LoadTexture("res/icons/file.png", true, true);
@@ -38,6 +35,22 @@ namespace GamesGoEngine
 	{
 		ImGui::Begin("Content Browser");
 
+		const std::string projectPath = AssetsManager::GetProjectPath();
+		if (projectPath.empty())
+		{
+			ImGui::Text("Please open project file");
+			ImGui::End();
+			return;
+		}
+
+		// Reset current directory if project file path has changed
+		const std::string projectFilePath = AssetsManager::GetProjectPath();
+		if (currentProjectFilePath != projectFilePath)
+		{
+			currentProjectFilePath = projectFilePath;
+			currentDirectory = projectPath;
+		}
+
 		std::string currentDirectoryText = "Current Directory: ";
 		currentDirectoryText.append(currentDirectory.string());
 		ImGui::Text("%s", currentDirectoryText.c_str());
@@ -53,7 +66,7 @@ namespace GamesGoEngine
 
 		ImGui::Columns(columnCount, 0, false);
 
-		if (currentDirectory != std::filesystem::path(resDirectory))
+		if (currentDirectory != std::filesystem::path(projectPath))
 		{
 			if (ImGui::ImageButton(backButtonTextureID, buttonsThumbnailSize))
 			{

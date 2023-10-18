@@ -165,6 +165,7 @@
     <ClCompile Include="..\External Libraries\imgui\imgui_widgets.cpp" />
     <ClCompile Include="AmbientLight.cpp" />
     <ClCompile Include="Asset.cpp" />
+    <ClCompile Include="AssetProject.cpp" />
     <ClCompile Include="AssetsManager.cpp" />
     <ClCompile Include="AssetPropertiesPanel.cpp" />
     <ClCompile Include="AssetTexture.cpp" />
@@ -177,6 +178,7 @@
     <ClCompile Include="EditorSettingsPanel.cpp" />
     <ClCompile Include="EditorTitleBar.cpp" />
     <ClCompile Include="EditorUIManager.cpp" />
+    <ClCompile Include="FileDialogs.cpp" />
     <ClCompile Include="GraphicsSettingsPanel.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="LoggerPanel.cpp" />
@@ -252,6 +254,7 @@
     <ClInclude Include="..\External Libraries\imgui\imstb_truetype.h" />
     <ClInclude Include="AmbientLight.h" />
     <ClInclude Include="Asset.h" />
+    <ClInclude Include="AssetProject.h" />
     <ClInclude Include="AssetsManager.h" />
     <ClInclude Include="AssetPropertiesPanel.h" />
     <ClInclude Include="AssetTexture.h" />
@@ -264,6 +267,7 @@
     <ClInclude Include="EditorSettingsPanel.h" />
     <ClInclude Include="EditorTitleBar.h" />
     <ClInclude Include="EditorUIManager.h" />
+    <ClInclude Include="FileDialogs.h" />
     <ClInclude Include="GraphicsSettingsPanel.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="LoggerPanel.h" />

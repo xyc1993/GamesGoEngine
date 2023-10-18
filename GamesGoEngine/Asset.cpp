@@ -29,4 +29,9 @@ namespace GamesGoEngine
 	{
 		return name;
 	}
+
+	std::string Asset::GetPath() const
+	{
+		return path;
+	}
 }

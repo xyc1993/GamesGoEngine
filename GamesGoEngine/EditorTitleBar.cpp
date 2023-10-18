@@ -1,7 +1,11 @@
 #include "EditorTitleBar.h"
 
+#include <iostream>
+#include <fstream>  
 #include <imgui.h>
 
+#include "AssetsManager.h"
+#include "FileDialogs.h"
 #include "TextureLoader.h"
 #include "WindowManager.h"
 
@@ -40,23 +44,30 @@ namespace GamesGoEngine
 			const float titleBarWidth = ImGui::GetWindowSize().x;
 			float dragZoneWidth = titleBarWidth - 3.0 * titleBarHeight - 10.0f; // -10.0f comes from padding; TODO: do it in more scalable way in case more buttons are added
 			
-			// In the future this will be utilized for features such as applications options, file open/save, etc.
 			if (ImGui::BeginMenu("File"))
 			{
-				if (ImGui::MenuItem("New Scene"))
+				if (ImGui::MenuItem("New Project"))
 				{
-					// Create and open a new, blank scene
+					const std::string projectFilePath = FileDialogs::SaveFile("GamesGo Project (*.ggproject)\0*.ggproject\0");
+					if (!projectFilePath.empty())
+					{
+						// For now, let's just create an empty file
+						std::ofstream outfile(projectFilePath);
+						outfile.close();
+						AssetsManager::LoadAsset(projectFilePath);
+					}
 				}
 
-				if (ImGui::MenuItem("Open Scene"))
+				if (ImGui::MenuItem("Open Project"))
 				{
-					// Open existing scene from path
+					const std::string projectFilePath = FileDialogs::OpenFile("GamesGo Project (*.ggproject)\0*.ggproject\0");
+					if (!projectFilePath.empty())
+					{
+						AssetsManager::LoadAsset(projectFilePath);
+					}
 				}
 
-				if (ImGui::MenuItem("Save Scene"))
-				{
-					// Save existing scene
-				}
+				// TODO: add 'save project' when project settings are added
 
 				ImGui::EndMenu();				
 			}

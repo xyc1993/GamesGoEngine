@@ -2,6 +2,7 @@
 
 #include <filesystem>
 
+#include "AssetProject.h"
 #include "AssetTexture.h"
 
 namespace GamesGoEngine
@@ -12,6 +13,7 @@ namespace GamesGoEngine
 	{
 		loadedAssets.clear();
 		selectedAsset = nullptr;
+		currentProject = nullptr;
 	}
 
 	AssetsManager::~AssetsManager()
@@ -46,6 +48,11 @@ namespace GamesGoEngine
 		std::filesystem::path filePath = path;
 		const std::string extension = filePath.extension().string();
 
+		if (extension == ".ggproject")
+		{
+			return AssetType::Project;
+		}
+
 		if (extension == ".png" ||
 			extension == ".jpg" ||
 			extension == ".tga")
@@ -56,6 +63,21 @@ namespace GamesGoEngine
 		return AssetType::Unsupported;
 	}
 
+	void AssetsManager::LoadAsset(std::string path)
+	{
+		GetInstance()->LoadAssetInternal(path);
+	}
+
+	std::string AssetsManager::GetProjectPath()
+	{
+		return GetInstance()->GetProjectPathInternal();
+	}
+
+	std::string AssetsManager::GetProjectFilePath()
+	{
+		return GetInstance()->GetProjectFilePathInternal();
+	}
+
 	void AssetsManager::SelectAssetInternal(std::string path)
 	{
 		if (loadedAssets.find(path) != loadedAssets.end())
@@ -64,12 +86,12 @@ namespace GamesGoEngine
 		}
 		else
 		{
-			LoadAsset(path);
+			LoadAssetInternal(path);
 			selectedAsset = loadedAssets[path];
 		}
 	}
 
-	void AssetsManager::LoadAsset(std::string path)
+	void AssetsManager::LoadAssetInternal(std::string path)
 	{
 		if (loadedAssets.find(path) == loadedAssets.end())
 		{
@@ -81,20 +103,49 @@ namespace GamesGoEngine
 
 			switch (assetType)
 			{
+			case AssetType::Project:
+				{
+					AssetProject* assetProject = new AssetProject();
+					if(currentProject != nullptr)
+					{
+						delete currentProject;
+					}
+					currentProject = assetProject;
+					newAsset = assetProject;
+					break;
+				}
 			case AssetType::Texture:
 				{
-				newAsset = new AssetTexture();
-				break;
+					newAsset = new AssetTexture();
+					break;
 				}
 			case AssetType::Unsupported:
 				{
-				newAsset = new Asset();
-				break;
+					newAsset = new Asset();
+					break;
 				}
 			}
 
 			newAsset->Load(assetType, filename, filePath.string());			
 			loadedAssets[path] = newAsset;
 		}
+	}
+
+	std::string AssetsManager::GetProjectPathInternal() const
+	{
+		if (currentProject != nullptr)
+		{
+			return currentProject->GetProjectPath();
+		}
+		return std::string();
+	}
+
+	std::string AssetsManager::GetProjectFilePathInternal() const
+	{
+		if (currentProject != nullptr)
+		{
+			return currentProject->GetPath();
+		}
+		return std::string();
 	}
 }
