@@ -15,6 +15,7 @@ namespace GamesGoEngine
 		void AddGameObject(GameObject* gameObject);
 		void RemoveGameObject(GameObject* gameObject);
 		GameObject* GetGameObjectWithId(int id);
+		void SelectGameObject(GameObject* gameObject);
 		GameObject* GetSelectedGameObject();
 		void Update();
 		const std::map<int, GameObject*>& GetSceneObjects() const;

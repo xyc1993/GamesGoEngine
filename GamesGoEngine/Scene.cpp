@@ -60,6 +60,28 @@ namespace GamesGoEngine
 		return sceneObjects[id];
 	}
 
+	void Scene::SelectGameObject(GameObject* gameObject)
+	{
+		// If provided game object is nullptr, treat it as deselect request
+		if (gameObject == nullptr)
+		{
+			if (GameObject* selectedGameObject = GetSelectedGameObject())
+			{
+				selectedGameObject->SetSelected(false);
+			}
+			return;
+		}
+
+		if (sceneObjects.find(gameObject->GetObjectId()) != sceneObjects.end())
+		{
+			if (GameObject* selectedGameObject = GetSelectedGameObject())
+			{
+				selectedGameObject->SetSelected(false);
+			}
+			gameObject->SetSelected(true);
+		}
+	}
+
 	// TODO: Cache this!
 	GameObject* Scene::GetSelectedGameObject()
 	{

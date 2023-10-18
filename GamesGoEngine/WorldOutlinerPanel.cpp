@@ -24,6 +24,15 @@ namespace GamesGoEngine
 		
 		ImGui::Begin("World Outliner");
 
+		if (ImGui::Button("Add new game object"))
+		{
+			GameObject* newGameObject = new GameObject();
+			activeScene->AddGameObject(newGameObject);
+			activeScene->SelectGameObject(newGameObject);
+		}
+
+		ImGui::Separator();
+
 		const std::map<int, GameObject*>& sceneObjects = activeScene->GetSceneObjects();
 
 		// Check if the selected game object wasn't deselected via different means than this panel
@@ -60,12 +69,8 @@ namespace GamesGoEngine
 
 				if (ImGui::IsItemClicked())
 				{
-					if (selectedGameObject != nullptr)
-					{
-						selectedGameObject->SetSelected(false);
-					}
 					selectedGameObject = sceneObject;
-					selectedGameObject->SetSelected(true);
+					activeScene->SelectGameObject(selectedGameObject);
 				}
 
 				HandleDragAndDrop(activeScene, sceneObject);
@@ -97,12 +102,8 @@ namespace GamesGoEngine
 
 				if (ImGui::IsItemClicked())
 				{
-					if (selectedGameObject != nullptr)
-					{
-						selectedGameObject->SetSelected(false);
-					}
 					selectedGameObject = child;
-					selectedGameObject->SetSelected(true);
+					activeScene->SelectGameObject(selectedGameObject);
 				}
 
 				HandleDragAndDrop(activeScene, child);

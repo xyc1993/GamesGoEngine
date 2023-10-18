@@ -117,21 +117,10 @@ namespace GamesGoEngine
 
 		if (Scene* activeScene = SceneManager::GetActiveScene())
 		{
-			// If there was other game object that was selected, deselect it
-			// We want to always deselect the current object in order to have an option to deselect items by pressing on the void space
-			GameObject* previouslySelectedGameObject = activeScene->GetSelectedGameObject();
-			if (previouslySelectedGameObject != nullptr)
-			{
-				previouslySelectedGameObject->SetSelected(false);
-			}
-
 			// Get the id and try to find a matching game object, select it if found
 			const int objectId = RenderingManager::GetObjectIdAt(viewportX, viewportY);
 			GameObject* selectedGameObject = activeScene->GetGameObjectWithId(objectId);
-			if (selectedGameObject != nullptr)
-			{
-				selectedGameObject->SetSelected(true);
-			}
+			activeScene->SelectGameObject(selectedGameObject);
 		}
 		else
 		{
