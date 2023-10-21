@@ -1,5 +1,7 @@
 #include "AssetTexture.h"
 
+#include <fstream>
+
 #include "TextureLoader.h"
 
 namespace GamesGoEngine
@@ -8,9 +10,33 @@ namespace GamesGoEngine
 	{
 		Asset::Load(type, name, path);
 
-		// default texture settings on load
-		transparencyEnabled = false;
-		sRGB = true;
+		std::ifstream propertiesFile(propertiesPath);
+		if (propertiesFile.good())
+		{
+			// TODO: write more elegant file read
+			for (int i = 0; i <= 5; i++)
+			{
+				std::string s;
+				std::getline(propertiesFile, s);
+				if (i == 3)
+				{
+					int value = std::stoi(s);
+					transparencyEnabled = value;
+				}
+				if (i == 5)
+				{
+					int value = std::stoi(s);
+					sRGB = value;
+				}
+			}
+		}
+		else
+		{
+			// default texture settings on load
+			transparencyEnabled = false;
+			sRGB = true;
+		}
+		propertiesFile.close();
 
 		loadedTexture = TextureLoader::LoadTexture(width, height, path.c_str(), transparencyEnabled, sRGB);
 	}
@@ -20,6 +46,18 @@ namespace GamesGoEngine
 		Asset::Unload();
 
 		TextureLoader::UnloadTexture(loadedTexture);
+	}
+
+	void AssetTexture::Save()
+	{
+		std::ofstream outfile(propertiesPath);
+		outfile << "Name" << "\n";
+		outfile << GetName() << "\n";
+		outfile << "transparencyEnabled" << "\n";
+		outfile << transparencyEnabled << "\n";
+		outfile << "sRGB" << "\n";
+		outfile << sRGB << "\n";
+		outfile.close();
 	}
 
 	unsigned AssetTexture::GetTexture() const

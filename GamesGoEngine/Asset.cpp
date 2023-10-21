@@ -1,5 +1,9 @@
 #include "Asset.h"
 
+#include <fstream>
+
+#include "AssetsManager.h"
+
 namespace GamesGoEngine
 {
 	Asset::Asset()
@@ -13,11 +17,22 @@ namespace GamesGoEngine
 		this->type = type;
 		this->name = name;
 		this->path = path;
+
+		this->propertiesPath = path;
+		this->propertiesPath.append(AssetsManager::GetAssetPropertiesFileExtension());
 	}
 
 	void Asset::Unload()
 	{
 
+	}
+
+	void Asset::Save()
+	{
+		std::ofstream outfile(propertiesPath);
+		outfile << "Name" << "\n";
+		outfile << GetName() << "\n";
+		outfile.close();
 	}
 
 	AssetType Asset::GetType() const
@@ -33,5 +48,10 @@ namespace GamesGoEngine
 	std::string Asset::GetPath() const
 	{
 		return path;
+	}
+
+	std::string Asset::GetPropertiesFilePath() const
+	{
+		return propertiesPath;
 	}
 }

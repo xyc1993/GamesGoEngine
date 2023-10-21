@@ -78,6 +78,16 @@ namespace GamesGoEngine
 		return GetInstance()->GetProjectFilePathInternal();
 	}
 
+	void AssetsManager::SaveAllAssets()
+	{
+		GetInstance()->SaveAllAssetsInternal();
+	}
+
+	std::string AssetsManager::GetAssetPropertiesFileExtension()
+	{
+		return ".ggproperties";
+	}
+
 	void AssetsManager::SelectAssetInternal(std::string path)
 	{
 		if (loadedAssets.find(path) != loadedAssets.end())
@@ -147,5 +157,13 @@ namespace GamesGoEngine
 			return currentProject->GetPath();
 		}
 		return std::string();
+	}
+
+	void AssetsManager::SaveAllAssetsInternal()
+	{
+		for (auto it = loadedAssets.begin(); it != loadedAssets.end(); ++it)
+		{
+			it->second->Save();
+		}
 	}
 }

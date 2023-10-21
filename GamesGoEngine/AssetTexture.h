@@ -9,6 +9,7 @@ namespace GamesGoEngine
 	public:
 		virtual void Load(AssetType type, std::string name, std::string path) override;
 		virtual void Unload() override;
+		virtual void Save() override;
 
 		unsigned int GetTexture() const;
 		bool IsTransparencyEnabled() const;

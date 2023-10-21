@@ -1,7 +1,7 @@
 #include "EditorTitleBar.h"
 
 #include <iostream>
-#include <fstream>  
+#include <fstream>
 #include <imgui.h>
 
 #include "AssetsManager.h"
@@ -67,7 +67,10 @@ namespace GamesGoEngine
 					}
 				}
 
-				// TODO: add 'save project' when project settings are added
+				if (ImGui::MenuItem("Save All"))
+				{
+					AssetsManager::SaveAllAssets();
+				}
 
 				ImGui::EndMenu();				
 			}

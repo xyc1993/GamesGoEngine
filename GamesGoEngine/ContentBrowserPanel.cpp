@@ -96,7 +96,9 @@ namespace GamesGoEngine
 		for (auto& p : std::filesystem::directory_iterator(currentDirectory))
 		{
 			const std::string filename = p.path().filename().string();
-			if (!p.is_directory())
+			const std::string fileExtension = p.path().filename().extension().string();
+
+			if (!p.is_directory() && (fileExtension != AssetsManager::GetAssetPropertiesFileExtension()))
 			{
 				if (ImGui::ImageButton(filename.c_str(), fileButtonTextureID, buttonsThumbnailSize))
 				{
