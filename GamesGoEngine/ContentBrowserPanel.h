@@ -29,5 +29,7 @@ namespace GamesGoEngine
 
 		float padding;
 		float thumbnailSize;
+
+		bool wasPopupMenuRequested = false;
 	};
 }

@@ -12,6 +12,8 @@ namespace GamesGoEngine
 		virtual void Draw() override;
 
 	private:
+		void DrawNameLabelField(Asset* asset) const;
+		void TryDrawAssetMaterialData(Asset* asset) const;
 		void TryDrawAssetTextureData(Asset* asset) const;
 	};
 }

@@ -2,6 +2,7 @@
 
 #include <imgui.h>
 
+#include "AssetMaterial.h"
 #include "AssetsManager.h"
 #include "AssetTexture.h"
 
@@ -14,9 +15,14 @@ namespace GamesGoEngine
 		Asset* selectedAsset = AssetsManager::GetSelectedAsset();
 		if (selectedAsset != nullptr)
 		{
-			ImGui::Text(selectedAsset->GetName().c_str());
+			DrawNameLabelField(selectedAsset);
+
 			switch(selectedAsset->GetType())
 			{
+			case AssetType::Material:
+				ImGui::Text("Material");
+				TryDrawAssetMaterialData(selectedAsset);
+				break;
 			case AssetType::Texture:
 				ImGui::Text("Texture");
 				TryDrawAssetTextureData(selectedAsset);
@@ -28,6 +34,28 @@ namespace GamesGoEngine
 		}
 
 		ImGui::End();
+	}
+
+	void AssetPropertiesPanel::DrawNameLabelField(Asset* asset) const
+	{
+		const std::string nameString = asset->GetName();
+		static char nameBuffer[Asset::NAME_MAX_LENGTH];
+		strcpy_s(nameBuffer, sizeof(nameBuffer), nameString.c_str());
+		if (ImGui::InputText("Name", nameBuffer, sizeof(nameBuffer)))
+		{
+			asset->SetName(nameBuffer);
+		}
+	}
+
+	void AssetPropertiesPanel::TryDrawAssetMaterialData(Asset* asset) const
+	{
+		if (AssetMaterial* materialAsset = dynamic_cast<AssetMaterial*>(asset))
+		{
+			ImGui::Text("VertexShader");
+			ImGui::Text(materialAsset->GetVertexShaderPath().c_str());
+			ImGui::Text("FragmentShader");
+			ImGui::Text(materialAsset->GetFragmentShaderPath().c_str());
+		}
 	}
 
 	void AssetPropertiesPanel::TryDrawAssetTextureData(Asset* asset) const

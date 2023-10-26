@@ -450,6 +450,9 @@
     <ClCompile Include="AssetProject.cpp">
       <Filter>Source Files\GamesGo\Assets Management</Filter>
     </ClCompile>
+    <ClCompile Include="AssetMaterial.cpp">
+      <Filter>Source Files\GamesGo\Assets Management</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -714,6 +717,9 @@
       <Filter>Header Files\GamesGo\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="AssetProject.h">
+      <Filter>Header Files\GamesGo\Assets Management</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetMaterial.h">
       <Filter>Header Files\GamesGo\Assets Management</Filter>
     </ClInclude>
   </ItemGroup>

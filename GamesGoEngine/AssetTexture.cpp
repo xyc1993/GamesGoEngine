@@ -9,6 +9,7 @@ namespace GamesGoEngine
 	void AssetTexture::Load(AssetType type, std::string name, std::string path)
 	{
 		Asset::Load(type, name, path);
+
 		loadedTexture = TextureLoader::LoadTexture(width, height, path.c_str(), transparencyEnabled, sRGB);
 	}
 

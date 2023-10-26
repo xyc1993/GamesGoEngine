@@ -2,8 +2,10 @@
 
 #include <imgui.h>
 #include <filesystem>
+#include <fstream>
 
 #include "AssetsManager.h"
+#include "InputManager.h"
 #include "TextureLoader.h"
 
 namespace GamesGoEngine
@@ -108,6 +110,31 @@ namespace GamesGoEngine
 				ImGui::NextColumn();
 			}
 		}
+
+		if (wasPopupMenuRequested == false)
+		{
+			wasPopupMenuRequested = InputManager::GetMouseButtonPressed(GLFW_MOUSE_BUTTON_RIGHT);
+		}
+		
+		if (wasPopupMenuRequested)
+		{
+			if (ImGui::BeginPopupContextWindow("ContentBrowserSettings"))
+			{
+				if (ImGui::MenuItem("Create material"))
+				{
+					// Create path for the new material file
+					std::string newMaterialFilePath = currentDirectory.string();
+					newMaterialFilePath.append("/newMaterial.mat");
+					// Create empty material file
+					std::ofstream outfile(newMaterialFilePath);
+					outfile.close();
+					// Load empty material file to the asset manager
+					AssetsManager::LoadAsset(newMaterialFilePath);
+				}
+				ImGui::EndPopup();
+			}
+		}
+
 
 		/*
 		ImGui::Columns(1);		

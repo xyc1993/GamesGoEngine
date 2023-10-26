@@ -31,6 +31,7 @@ namespace GamesGoEngine
 		// all shaders have to support model, view, projection matrices!
 		virtual void Draw(glm::mat4 model);
 		void SetShader(const GLchar* vertexPath, const GLchar* fragmentPath);
+		void SetShader(const GLchar* vertexPath, const GLchar* fragmentPath, const GLchar* geometryPath);
 
 		void SetTextureByPath(const GLchar* textureName, GLuint textureIndex, GLchar* path, bool transparencyEnabled = false, bool sRGB = true);
 		void SetTexture(const GLchar* textureName, GLuint textureIndex, GLuint texture);

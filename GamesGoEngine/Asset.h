@@ -8,6 +8,7 @@ namespace GamesGoEngine
 {
 	enum class AssetType
 	{
+		Material,
 		Project,
 		Texture,
 		Unsupported
@@ -30,6 +31,8 @@ namespace GamesGoEngine
 		std::string GetName() const;
 		std::string GetPath() const;
 		std::string GetPropertiesFilePath() const;
+		// Changes asset file name along with its corresponding properties file
+		void SetName(std::string newName);
 		
 	protected:
 		virtual void InitMetaData() override;
@@ -42,5 +45,10 @@ namespace GamesGoEngine
 
 		AssetType type;
 		std::string name;
+		std::string fileExtension;
+		std::string fileDirectory;
+
+	public:
+		static constexpr int NAME_MAX_LENGTH = 256;
 	};
 }

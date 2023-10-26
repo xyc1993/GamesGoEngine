@@ -74,6 +74,12 @@ namespace GamesGoEngine
 		shader = new Shader(vertexPath, fragmentPath);
 	}
 
+	void Material::SetShader(const GLchar* vertexPath, const GLchar* fragmentPath, const GLchar* geometryPath)
+	{
+		delete shader;
+		shader = new Shader(vertexPath, fragmentPath, geometryPath);
+	}
+
 	void Material::SetTextureByPath(const GLchar* textureName, GLuint textureIndex, GLchar* path, bool transparencyEnabled, bool sRGB)
 	{
 		if (shader != nullptr)

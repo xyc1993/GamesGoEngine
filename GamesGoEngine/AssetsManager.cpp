@@ -2,6 +2,7 @@
 
 #include <filesystem>
 
+#include "AssetMaterial.h"
 #include "AssetProject.h"
 #include "AssetTexture.h"
 
@@ -48,11 +49,14 @@ namespace GamesGoEngine
 		std::filesystem::path filePath = path;
 		const std::string extension = filePath.extension().string();
 
+		if (extension == ".mat")
+		{
+			return AssetType::Material;
+		}
 		if (extension == ".ggproject")
 		{
 			return AssetType::Project;
 		}
-
 		if (extension == ".png" ||
 			extension == ".jpg" ||
 			extension == ".tga")
@@ -113,6 +117,11 @@ namespace GamesGoEngine
 
 			switch (assetType)
 			{
+			case AssetType::Material:
+				{
+					newAsset = new AssetMaterial();
+					break;
+				}
 			case AssetType::Project:
 				{
 					AssetProject* assetProject = new AssetProject();

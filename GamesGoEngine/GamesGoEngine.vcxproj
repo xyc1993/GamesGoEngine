@@ -165,6 +165,7 @@
     <ClCompile Include="..\External Libraries\imgui\imgui_widgets.cpp" />
     <ClCompile Include="AmbientLight.cpp" />
     <ClCompile Include="Asset.cpp" />
+    <ClCompile Include="AssetMaterial.cpp" />
     <ClCompile Include="AssetProject.cpp" />
     <ClCompile Include="AssetsManager.cpp" />
     <ClCompile Include="AssetPropertiesPanel.cpp" />
@@ -254,6 +255,7 @@
     <ClInclude Include="..\External Libraries\imgui\imstb_truetype.h" />
     <ClInclude Include="AmbientLight.h" />
     <ClInclude Include="Asset.h" />
+    <ClInclude Include="AssetMaterial.h" />
     <ClInclude Include="AssetProject.h" />
     <ClInclude Include="AssetsManager.h" />
     <ClInclude Include="AssetPropertiesPanel.h" />
