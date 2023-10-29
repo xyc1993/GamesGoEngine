@@ -50,7 +50,7 @@ namespace GamesGoEngine
 	{
 		if (!vertexShaderPath.empty() && !fragmentShaderPath.empty())
 		{
-			//material->SetShader(vertexShaderPath.c_str(), fragmentShaderPath.c_str());
+			material->SetShader(vertexShaderPath.c_str(), fragmentShaderPath.c_str());
 		}
 	}
 

@@ -21,6 +21,8 @@ namespace GamesGoEngine
 	public:
 		static void SelectAsset(std::string path);
 		static Asset* GetSelectedAsset();
+		static Asset* GetAsset(std::string path);
+		static Asset* GetAsset(int id);
 		// Determines asset type based on file's path
 		static AssetType GetType(std::string path);
 		static void LoadAsset(std::string path);
@@ -32,13 +34,19 @@ namespace GamesGoEngine
 		
 	private:
 		void SelectAssetInternal(std::string path);
+		Asset* GetAssetInternal(std::string path);
+		Asset* GetAssetInternal(int id);
 		void LoadAssetInternal(std::string path);
 		std::string GetProjectPathInternal() const;
 		std::string GetProjectFilePathInternal() const;
 		void SaveAllAssetsInternal();
 
-		// key is asset path
-		std::map<std::string, Asset*> loadedAssets;
+	public:
+		static int GetIdFromPath(std::string path);
+
+	private:
+		// key is unique id made out of path
+		std::map<int, Asset*> loadedAssets;
 		Asset* selectedAsset;
 		AssetProject* currentProject;
 	};

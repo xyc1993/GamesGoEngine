@@ -6,10 +6,16 @@
 
 namespace GamesGoEngine
 {
+	/*
+	 * Asset types recognized by AssetsManager, each asset is categorized based on file extension
+	 * Asset that require extra functionality will have dedicated classes
+	 * Asset that only need to have their type recognized won't have dedicated classes
+	 */
 	enum class AssetType
 	{
 		Material,
 		Project,
+		Shader,
 		Texture,
 		Unsupported
 	};

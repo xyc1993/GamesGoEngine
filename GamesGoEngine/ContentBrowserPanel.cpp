@@ -106,6 +106,19 @@ namespace GamesGoEngine
 				{
 					AssetsManager::SelectAsset(p.path().string());
 				}
+
+				// Drag for asset "drag & drop"
+				if (ImGui::BeginDragDropSource())
+				{
+					// First load the asset so it'd be ready when dropped
+					AssetsManager::LoadAsset(p.path().string());
+					// For content drag & drop we're passing path based id
+					int assetId = AssetsManager::GetIdFromPath(p.path().string());
+					ImGui::SetDragDropPayload("ContentBrowserAsset", &assetId, sizeof(int));
+					ImGui::Text(filename.c_str());
+					ImGui::EndDragDropSource();
+				}
+
 				ImGui::TextWrapped(filename.c_str());
 				ImGui::NextColumn();
 			}

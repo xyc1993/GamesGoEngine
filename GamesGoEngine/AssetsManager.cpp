@@ -44,6 +44,16 @@ namespace GamesGoEngine
 		return GetInstance()->selectedAsset;
 	}
 
+	Asset* AssetsManager::GetAsset(std::string path)
+	{
+		return GetInstance()->GetAssetInternal(path);
+	}
+
+	Asset* AssetsManager::GetAsset(int id)
+	{
+		return GetInstance()->GetAssetInternal(id);
+	}
+
 	AssetType AssetsManager::GetType(std::string path)
 	{
 		std::filesystem::path filePath = path;
@@ -56,6 +66,13 @@ namespace GamesGoEngine
 		if (extension == ".ggproject")
 		{
 			return AssetType::Project;
+		}
+		if (extension == ".vert" ||
+			extension == ".frag" ||
+			extension == ".hlsl" ||
+			extension == ".glsl")
+		{
+			return AssetType::Shader;
 		}
 		if (extension == ".png" ||
 			extension == ".jpg" ||
@@ -94,20 +111,45 @@ namespace GamesGoEngine
 
 	void AssetsManager::SelectAssetInternal(std::string path)
 	{
-		if (loadedAssets.find(path) != loadedAssets.end())
+		const int id = GetIdFromPath(path);
+		if (loadedAssets.find(id) != loadedAssets.end())
 		{
-			selectedAsset = loadedAssets[path];
+			selectedAsset = loadedAssets[id];
 		}
 		else
 		{
 			LoadAssetInternal(path);
-			selectedAsset = loadedAssets[path];
+			selectedAsset = loadedAssets[id];
 		}
+	}
+
+	Asset* AssetsManager::GetAssetInternal(std::string path)
+	{
+		const int id = GetIdFromPath(path);
+		if (loadedAssets.find(id) != loadedAssets.end())
+		{
+			return loadedAssets[id];
+		}
+		else
+		{
+			LoadAssetInternal(path);
+			return loadedAssets[id];
+		}
+	}
+
+	Asset* AssetsManager::GetAssetInternal(int id)
+	{
+		if (loadedAssets.find(id) != loadedAssets.end())
+		{
+			return loadedAssets[id];
+		}
+		return nullptr;
 	}
 
 	void AssetsManager::LoadAssetInternal(std::string path)
 	{
-		if (loadedAssets.find(path) == loadedAssets.end())
+		const int id = GetIdFromPath(path);
+		if (loadedAssets.find(id) == loadedAssets.end())
 		{
 			std::filesystem::path filePath = path;
 			const std::string filename = filePath.filename().string();
@@ -138,15 +180,15 @@ namespace GamesGoEngine
 					newAsset = new AssetTexture();
 					break;
 				}
-			case AssetType::Unsupported:
+			default:
 				{
 					newAsset = new Asset();
 					break;
 				}
 			}
 
-			newAsset->Load(assetType, filename, filePath.string());			
-			loadedAssets[path] = newAsset;
+			newAsset->Load(assetType, filename, filePath.string());
+			loadedAssets[id] = newAsset;
 		}
 	}
 
@@ -174,5 +216,15 @@ namespace GamesGoEngine
 		{
 			it->second->Save();
 		}
+	}
+
+	int AssetsManager::GetIdFromPath(std::string path)
+	{
+		int id = 0;
+		for (int i = 0; i < path.size(); i++)
+		{
+			id += static_cast<int>(path[i]);
+		}
+		return id;
 	}
 }
