@@ -166,6 +166,7 @@
     <ClCompile Include="AmbientLight.cpp" />
     <ClCompile Include="Asset.cpp" />
     <ClCompile Include="AssetMaterial.cpp" />
+    <ClCompile Include="AssetMesh.cpp" />
     <ClCompile Include="AssetProject.cpp" />
     <ClCompile Include="AssetShader.cpp" />
     <ClCompile Include="AssetsManager.cpp" />
@@ -257,6 +258,7 @@
     <ClInclude Include="AmbientLight.h" />
     <ClInclude Include="Asset.h" />
     <ClInclude Include="AssetMaterial.h" />
+    <ClInclude Include="AssetMesh.h" />
     <ClInclude Include="AssetProject.h" />
     <ClInclude Include="AssetShader.h" />
     <ClInclude Include="AssetsManager.h" />

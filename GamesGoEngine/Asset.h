@@ -14,6 +14,7 @@ namespace GamesGoEngine
 	enum class AssetType
 	{
 		Material,
+		Mesh,
 		Project,
 		Shader,
 		Texture,

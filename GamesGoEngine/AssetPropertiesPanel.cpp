@@ -23,6 +23,12 @@ namespace GamesGoEngine
 				ImGui::Text("Material");
 				TryDrawAssetMaterialData(selectedAsset);
 				break;
+			case AssetType::Mesh:
+				ImGui::Text("Mesh");
+				break;
+			case AssetType::Shader:
+				ImGui::Text("Shader");
+				break;
 			case AssetType::Texture:
 				ImGui::Text("Texture");
 				TryDrawAssetTextureData(selectedAsset);

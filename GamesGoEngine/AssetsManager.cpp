@@ -3,6 +3,7 @@
 #include <filesystem>
 
 #include "AssetMaterial.h"
+#include "AssetMesh.h"
 #include "AssetProject.h"
 #include "AssetShader.h"
 #include "AssetTexture.h"
@@ -63,6 +64,10 @@ namespace GamesGoEngine
 		if (extension == ".mat")
 		{
 			return AssetType::Material;
+		}
+		if (extension == ".obj")
+		{
+			return AssetType::Mesh;
 		}
 		if (extension == ".ggproject")
 		{
@@ -165,6 +170,11 @@ namespace GamesGoEngine
 					newAsset = new AssetMaterial();
 					break;
 				}
+			case AssetType::Mesh:
+			{
+				newAsset = new AssetMesh();
+				break;
+			}
 			case AssetType::Project:
 				{
 					AssetProject* assetProject = new AssetProject();
