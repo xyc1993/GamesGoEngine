@@ -29,7 +29,7 @@ namespace GamesGoEngine
 		// TODO: this could be connected with sRGB in the enum (RGB, RGBA, sRGB, sRGBA)
 		bool transparencyEnabled;
 		// sRGB if true : RGB if false
-		// TODO: this should be enum in the future, can't be tackled on renderer refactoring
+		// TODO: this should be enum in the future, can be tackled on renderer refactoring
 		bool sRGB;
 
 		int width;
