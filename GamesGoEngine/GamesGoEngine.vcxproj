@@ -167,6 +167,7 @@
     <ClCompile Include="Asset.cpp" />
     <ClCompile Include="AssetMaterial.cpp" />
     <ClCompile Include="AssetProject.cpp" />
+    <ClCompile Include="AssetShader.cpp" />
     <ClCompile Include="AssetsManager.cpp" />
     <ClCompile Include="AssetPropertiesPanel.cpp" />
     <ClCompile Include="AssetTexture.cpp" />
@@ -257,6 +258,7 @@
     <ClInclude Include="Asset.h" />
     <ClInclude Include="AssetMaterial.h" />
     <ClInclude Include="AssetProject.h" />
+    <ClInclude Include="AssetShader.h" />
     <ClInclude Include="AssetsManager.h" />
     <ClInclude Include="AssetPropertiesPanel.h" />
     <ClInclude Include="AssetTexture.h" />

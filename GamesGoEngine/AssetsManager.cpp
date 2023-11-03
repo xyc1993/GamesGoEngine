@@ -4,6 +4,7 @@
 
 #include "AssetMaterial.h"
 #include "AssetProject.h"
+#include "AssetShader.h"
 #include "AssetTexture.h"
 
 namespace GamesGoEngine
@@ -173,6 +174,11 @@ namespace GamesGoEngine
 					}
 					currentProject = assetProject;
 					newAsset = assetProject;
+					break;
+				}
+			case AssetType::Shader:
+				{
+					newAsset = new AssetShader();
 					break;
 				}
 			case AssetType::Texture:
