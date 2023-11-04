@@ -18,7 +18,7 @@ namespace GamesGoEngine
 		bool TryGetMaterial(std::shared_ptr<Material>& outMaterial, int index);
 
 	protected:
-		void CleanMaterialList();
+		virtual void CleanMaterialList();
 		virtual glm::vec3 GetCameraPosition() const;
 
 		std::shared_ptr<MeshBase> mesh;

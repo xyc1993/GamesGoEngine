@@ -5,6 +5,7 @@
 #include "AssetMaterial.h"
 #include "AssetsManager.h"
 #include "AssetTexture.h"
+#include "EditorUIUtils.h"
 
 namespace GamesGoEngine
 {
@@ -68,7 +69,7 @@ namespace GamesGoEngine
 			vertexShaderPath.append("##vertex_shader_path");
 			ImGui::Button(vertexShaderPath.c_str());
 			// Try to retrieve shader
-			vertexShaderPath = TryGetDropTargetAssetPath(AssetType::Shader);
+			vertexShaderPath = EditorUIUtils::TryGetDropTargetAssetPath(AssetType::Shader);
 			if (!vertexShaderPath.empty())
 			{
 				materialAsset->SetVertexShaderPath(vertexShaderPath);
@@ -84,7 +85,7 @@ namespace GamesGoEngine
 			}
 			fragmentShaderPath.append("##fragment_shader_path");
 			ImGui::Button(fragmentShaderPath.c_str());
-			fragmentShaderPath = TryGetDropTargetAssetPath(AssetType::Shader);
+			fragmentShaderPath = EditorUIUtils::TryGetDropTargetAssetPath(AssetType::Shader);
 			if (!fragmentShaderPath.empty())
 			{
 				materialAsset->SetFragmentShaderPath(fragmentShaderPath);
@@ -129,24 +130,5 @@ namespace GamesGoEngine
 			imageResolutionString.append(std::to_string(textureAsset->GetHeight()));
 			ImGui::Text(imageResolutionString.c_str());
 		}
-	}
-
-	std::string AssetPropertiesPanel::TryGetDropTargetAssetPath(AssetType requestedAssetType)
-	{
-		std::string dropAssetPath = "";
-		if (ImGui::BeginDragDropTarget())
-		{
-			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ContentBrowserAsset"))
-			{
-				int* assetId = static_cast<int*>(payload->Data);
-				Asset* asset = AssetsManager::GetAsset(*assetId);
-				if (asset != nullptr && asset->GetType() == requestedAssetType)
-				{
-					dropAssetPath = asset->GetPath();
-				}
-			}
-			ImGui::EndDragDropTarget();
-		}
-		return dropAssetPath;
 	}
 }

@@ -2,7 +2,9 @@
 
 #include <imgui.h>
 
+#include "EditorUIUtils.h"
 #include "GameObject.h"
+#include "MeshRenderer.h"
 #include "SceneManager.h"
 
 namespace GamesGoEngine
@@ -127,6 +129,35 @@ namespace GamesGoEngine
 				if (removedComponent)
 				{
 					break;
+				}
+
+				// TODO: more generic way of displaying mesh renderer fields like references to assets and containers
+				if (MeshRenderer* meshRenderer = dynamic_cast<MeshRenderer*>(component))
+				{
+					ImGui::Text("Mesh");
+					std::string meshName = meshRenderer->GetMeshName();
+					meshName.append("##MeshRef");
+					ImGui::Button(meshName.c_str());
+					std::string newMeshPath = EditorUIUtils::TryGetDropTargetAssetPath(AssetType::Mesh);
+					if (!newMeshPath.empty())
+					{
+						meshRenderer->SetMesh(newMeshPath);
+					}
+
+					ImGui::Text("Materials");
+					size_t materialsNumber = meshRenderer->GetMaterialSlotsNumber();
+					for (size_t m = 0; m < materialsNumber; m++)
+					{
+						std::string materialName = meshRenderer->GetMaterialName(m);
+						materialName.append("##MaterialRef");
+						materialName.append(std::to_string(m));
+						ImGui::Button(materialName.c_str());
+						std::string newMaterialPath = EditorUIUtils::TryGetDropTargetAssetPath(AssetType::Material);
+						if (!newMaterialPath.empty())
+						{
+							meshRenderer->SetMaterial(newMaterialPath, m);
+						}
+					}
 				}
 
 				if (!metaData.classFields.empty())

@@ -459,6 +459,9 @@
     <ClCompile Include="AssetMesh.cpp">
       <Filter>Source Files\GamesGo\Assets Management</Filter>
     </ClCompile>
+    <ClCompile Include="EditorUIUtils.cpp">
+      <Filter>Source Files\GamesGo\Editor\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -733,6 +736,9 @@
     </ClInclude>
     <ClInclude Include="AssetMesh.h">
       <Filter>Header Files\GamesGo\Assets Management</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorUIUtils.h">
+      <Filter>Header Files\GamesGo\Editor\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

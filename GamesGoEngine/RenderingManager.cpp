@@ -1323,6 +1323,11 @@ namespace GamesGoEngine
 		{
 			for (size_t j = 0; j < renderers[i]->materialList.size(); j++)
 			{
+				if (renderers[i]->materialList[j] == nullptr)
+				{
+					continue;
+				}
+
 				light->SetLightInShader(renderers[i]->materialList[j]->GetShaderProgram(), true, true, 0, true, 1);
 			}
 		}
@@ -1336,6 +1341,11 @@ namespace GamesGoEngine
 			{
 				for (size_t j = 0; j < meshRenderers[i]->materialList.size(); j++)
 				{
+					if (meshRenderers[i]->materialList[j] == nullptr)
+					{
+						continue;
+					}
+
 					const GLuint shaderProgram = meshRenderers[i]->materialList[j]->GetShaderProgram();
 					glUseProgram(shaderProgram);
 					GetLightsManager()->SetLightsInShader(shaderProgram);
@@ -1350,6 +1360,11 @@ namespace GamesGoEngine
 		{
 			for (size_t j = 0; j < renderers[i]->materialList.size(); j++)
 			{
+				if (renderers[i]->materialList[j] == nullptr)
+				{
+					continue;
+				}
+
 				const GLuint shaderProgram = renderers[i]->materialList[j]->GetShaderProgram();
 				glUseProgram(shaderProgram);
 				glUniform1f(glGetUniformLocation(shaderProgram, "ambientLightActive"), 0.0f);

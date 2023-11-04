@@ -181,6 +181,7 @@
     <ClCompile Include="EditorSettingsPanel.cpp" />
     <ClCompile Include="EditorTitleBar.cpp" />
     <ClCompile Include="EditorUIManager.cpp" />
+    <ClCompile Include="EditorUIUtils.cpp" />
     <ClCompile Include="FileDialogs.cpp" />
     <ClCompile Include="GraphicsSettingsPanel.cpp" />
     <ClCompile Include="Log.cpp" />
@@ -273,6 +274,7 @@
     <ClInclude Include="EditorSettingsPanel.h" />
     <ClInclude Include="EditorTitleBar.h" />
     <ClInclude Include="EditorUIManager.h" />
+    <ClInclude Include="EditorUIUtils.h" />
     <ClInclude Include="FileDialogs.h" />
     <ClInclude Include="GraphicsSettingsPanel.h" />
     <ClInclude Include="Log.h" />

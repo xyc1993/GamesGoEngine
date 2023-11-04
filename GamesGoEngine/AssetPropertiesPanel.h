@@ -14,6 +14,5 @@ namespace GamesGoEngine
 		void DrawNameLabelField(Asset* asset) const;
 		void TryDrawAssetMaterialData(Asset* asset) const;
 		void TryDrawAssetTextureData(Asset* asset) const;
-		static std::string	TryGetDropTargetAssetPath(AssetType requestedAssetType);
 	};
 }

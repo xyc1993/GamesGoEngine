@@ -47,8 +47,11 @@ namespace GamesGoEngine
 	{
 		if (index >= 0 && index < materialList.size())
 		{
-			outMaterial = materialList[index];
-			return true;
+			if (materialList[index] != nullptr)
+			{
+				outMaterial = materialList[index];
+				return true;
+			}
 		}
 		return false;
 	}
