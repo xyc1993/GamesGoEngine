@@ -1,5 +1,7 @@
 #pragma once
 
+#include <imgui.h>
+
 #include "Asset.h"
 
 namespace GamesGoEngine
@@ -8,5 +10,11 @@ namespace GamesGoEngine
 	{
 	public:
 		virtual void Load(AssetType type, std::string name, std::string path) override;
+		const ImGuiTextBuffer& GetShaderTextBuffer() const;
+
+	private:
+		void WriteShaderTextToBuffer();
+
+		ImGuiTextBuffer shaderTextBuffer;
 	};
 }

@@ -3,6 +3,7 @@
 #include <imgui.h>
 
 #include "AssetMaterial.h"
+#include "AssetShader.h"
 #include "AssetsManager.h"
 #include "AssetTexture.h"
 #include "EditorUIUtils.h"
@@ -29,6 +30,7 @@ namespace GamesGoEngine
 				break;
 			case AssetType::Shader:
 				ImGui::Text("Shader");
+				TryDrawAssetShaderData(selectedAsset);
 				break;
 			case AssetType::Texture:
 				ImGui::Text("Texture");
@@ -90,6 +92,14 @@ namespace GamesGoEngine
 			{
 				materialAsset->SetFragmentShaderPath(fragmentShaderPath);
 			}
+		}
+	}
+
+	void AssetPropertiesPanel::TryDrawAssetShaderData(Asset* asset) const
+	{
+		if (AssetShader* shaderAsset = dynamic_cast<AssetShader*>(asset))
+		{
+			ImGui::TextUnformatted(shaderAsset->GetShaderTextBuffer().begin(), shaderAsset->GetShaderTextBuffer().end());
 		}
 	}
 
