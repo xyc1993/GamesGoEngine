@@ -462,6 +462,9 @@
     <ClCompile Include="EditorUIUtils.cpp">
       <Filter>Source Files\GamesGo\Editor\UI</Filter>
     </ClCompile>
+    <ClCompile Include="StringUtils.cpp">
+      <Filter>Source Files\GamesGo\Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -739,6 +742,9 @@
     </ClInclude>
     <ClInclude Include="EditorUIUtils.h">
       <Filter>Header Files\GamesGo\Editor\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="StringUtils.h">
+      <Filter>Header Files\GamesGo\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

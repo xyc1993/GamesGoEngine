@@ -197,18 +197,37 @@ namespace GamesGoEngine
 		}
 	}
 
-	void Material::SetVector3(const GLchar* vectorName, glm::vec3 value) const
+	void Material::SetVector3(const GLchar* vectorName, glm::vec3 value)
 	{
 		const GLint vectorID = glGetUniformLocation(shader->GetProgram(), vectorName);
 		SetVector3(vectorID, value);
 	}
 
-	void Material::SetVector3(const GLint vectorID, glm::vec3 value) const
+	void Material::SetVector3(const GLint vectorID, glm::vec3 value)
 	{
 		if (shader != nullptr)
 		{
 			shader->Use();
 			glUniform3f(vectorID, value.x, value.y, value.z);
+			storedVec3Map[vectorID] = value;
+		}
+	}
+
+	glm::vec3 Material::GetVector3(const GLchar* vectorName) const
+	{
+		const GLint vectorID = glGetUniformLocation(shader->GetProgram(), vectorName);
+		return GetVector3(vectorID);
+	}
+
+	glm::vec3 Material::GetVector3(const GLint vectorID) const
+	{
+		if (storedVec3Map.find(vectorID) == storedVec3Map.end())
+		{
+			return glm::vec3(0.0f);
+		}
+		else
+		{
+			return storedVec3Map.at(vectorID);
 		}
 	}
 

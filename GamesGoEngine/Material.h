@@ -51,8 +51,10 @@ namespace GamesGoEngine
 		void SetVector4(const GLchar* vectorName, glm::vec4 value) const;
 		void SetVector4(const GLint vectorID, glm::vec4 value) const;
 
-		void SetVector3(const GLchar* vectorName, glm::vec3 value) const;
-		void SetVector3(const GLint vectorID, glm::vec3 value) const;
+		void SetVector3(const GLchar* vectorName, glm::vec3 value);
+		void SetVector3(const GLint vectorID, glm::vec3 value);
+		glm::vec3 GetVector3(const GLchar* vectorName) const;
+		glm::vec3 GetVector3(const GLint vectorID) const;
 
 		void SetVector2(const GLchar* vectorName, glm::vec2 value) const;
 		void SetVector2(const GLint vectorID, glm::vec2 value) const;
@@ -72,6 +74,9 @@ namespace GamesGoEngine
 		// <textureID <textureIndex, texture>>
 		std::map<GLint, std::tuple<GLuint, GLuint>> texturesMap;
 		std::map<GLint, std::tuple<GLuint, GLuint>> cubeTexturesMap;
+
+		// Stored uniform variables
+		std::map<int, glm::vec3> storedVec3Map;
 
 		LightModelType lightModelType;
 	};

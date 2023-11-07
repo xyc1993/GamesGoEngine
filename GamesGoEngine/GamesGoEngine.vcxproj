@@ -233,6 +233,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SkyboxRenderer.cpp" />
     <ClCompile Include="SpotLight.cpp" />
+    <ClCompile Include="StringUtils.cpp" />
     <ClCompile Include="SubMesh.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Time.cpp" />
@@ -327,6 +328,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SkyboxRenderer.h" />
     <ClInclude Include="SpotLight.h" />
+    <ClInclude Include="StringUtils.h" />
     <ClInclude Include="SubMesh.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="Time.h" />

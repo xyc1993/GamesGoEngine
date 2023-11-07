@@ -1,12 +1,15 @@
 #include "AssetPropertiesPanel.h"
 
 #include <imgui.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "AssetMaterial.h"
 #include "AssetShader.h"
 #include "AssetsManager.h"
 #include "AssetTexture.h"
 #include "EditorUIUtils.h"
+#include "Material.h"
 
 namespace GamesGoEngine
 {
@@ -62,35 +65,72 @@ namespace GamesGoEngine
 		{
 			// Vertex shader input field
 			ImGui::Text("VertexShader");
-			std::string vertexShaderPath = materialAsset->GetVertexShaderPath();
-			if (vertexShaderPath.empty())
+			const std::string vertexShaderPath = materialAsset->GetVertexShaderPath();
+			// Create button label based on shader path
+			std::string vertexShaderPathLabel = vertexShaderPath;
+			if (vertexShaderPathLabel.empty())
 			{
 				// whitespaces just for displaying UI element
-				vertexShaderPath = "                ";
+				vertexShaderPathLabel = "                ";
 			}
-			vertexShaderPath.append("##vertex_shader_path");
-			ImGui::Button(vertexShaderPath.c_str());
-			// Try to retrieve shader
-			vertexShaderPath = EditorUIUtils::TryGetDropTargetAssetPath(AssetType::Shader);
-			if (!vertexShaderPath.empty())
+			vertexShaderPathLabel.append("##vertex_shader_path");
+			ImGui::Button(vertexShaderPathLabel.c_str());
+			// Try to retrieve shader from drag &drop target
+			const std::string dropTargetVertexShaderPath = EditorUIUtils::TryGetDropTargetAssetPath(AssetType::Shader);
+			if (!dropTargetVertexShaderPath.empty())
 			{
-				materialAsset->SetVertexShaderPath(vertexShaderPath);
+				materialAsset->SetVertexShaderPath(dropTargetVertexShaderPath);
 			}
 
 			// Fragment shader input field
 			ImGui::Text("FragmentShader");
-			std::string fragmentShaderPath = materialAsset->GetFragmentShaderPath();
-			if (fragmentShaderPath.empty())
+			const std::string fragmentShaderPath = materialAsset->GetFragmentShaderPath();
+			// Create button label based on shader path
+			std::string fragmentShaderPathLabel = fragmentShaderPath;
+			if (fragmentShaderPathLabel.empty())
 			{
 				// whitespaces just for displaying UI element
-				fragmentShaderPath = "                ";
+				fragmentShaderPathLabel = "                ";
 			}
-			fragmentShaderPath.append("##fragment_shader_path");
-			ImGui::Button(fragmentShaderPath.c_str());
-			fragmentShaderPath = EditorUIUtils::TryGetDropTargetAssetPath(AssetType::Shader);
-			if (!fragmentShaderPath.empty())
+			fragmentShaderPathLabel.append("##fragment_shader_path");
+			ImGui::Button(fragmentShaderPathLabel.c_str());
+			// Try to retrieve shader from drag &drop target
+			const std::string dropTargetFragmentShaderPath = EditorUIUtils::TryGetDropTargetAssetPath(AssetType::Shader);
+			if (!dropTargetFragmentShaderPath.empty())
 			{
-				materialAsset->SetFragmentShaderPath(fragmentShaderPath);
+				materialAsset->SetFragmentShaderPath(dropTargetFragmentShaderPath);
+			}
+
+			// Draw all of the shaders' uniforms' fields
+			AssetShader* vertexShaderAsset = dynamic_cast<AssetShader*>(AssetsManager::GetAsset(vertexShaderPath));
+			AssetShader* fragmentShaderAsset = dynamic_cast<AssetShader*>(AssetsManager::GetAsset(fragmentShaderPath));
+			if (vertexShaderAsset != nullptr && fragmentShaderAsset != nullptr)
+			{
+				DrawShaderUniforms(materialAsset, vertexShaderAsset->GetUniforms());
+				DrawShaderUniforms(materialAsset, fragmentShaderAsset->GetUniforms());
+			}			
+		}
+	}
+
+	void AssetPropertiesPanel::DrawShaderUniforms(AssetMaterial* materialAsset, const std::map<std::string, std::string>& uniformsMap) const
+	{
+		if (materialAsset != nullptr)
+		{
+			for (auto uniform = uniformsMap.begin(); uniform != uniformsMap.end(); ++uniform)
+			{
+				std::string uniformName = uniform->first;
+				std::string uniformType = uniform->second;
+
+				// TODO: add more types
+				if (uniformType == "vec3")
+				{
+					ImGui::Text(uniformName.c_str());
+					glm::vec3 vec3Field = materialAsset->GetMaterial()->GetVector3(uniformName.c_str());
+					if (ImGui::DragFloat3(uniformName.c_str(), glm::value_ptr(vec3Field), 0.1f))
+					{
+						materialAsset->GetMaterial()->SetVector3(uniformName.c_str(), vec3Field);
+					}
+				}
 			}
 		}
 	}
