@@ -72,12 +72,19 @@ namespace GamesGoEngine
 	{
 		delete shader;
 		shader = new Shader(vertexPath, fragmentPath);
+		CleanUniformsData();
 	}
 
 	void Material::SetShader(const GLchar* vertexPath, const GLchar* fragmentPath, const GLchar* geometryPath)
 	{
 		delete shader;
 		shader = new Shader(vertexPath, fragmentPath, geometryPath);
+		CleanUniformsData();
+	}
+
+	void Material::CleanUniformsData()
+	{
+		storedVec3Map.clear();
 	}
 
 	void Material::SetTextureByPath(const GLchar* textureName, GLuint textureIndex, GLchar* path, bool transparencyEnabled, bool sRGB)
