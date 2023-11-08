@@ -14,14 +14,14 @@ namespace GamesGoEngine
 		lightModelType = LightModelType::Unlit;
 	}
 
-	Material::Material(const GLchar* vertexPath, const GLchar* fragmentPath)
+	Material::Material(const char* vertexPath, const char* fragmentPath)
 	{
 		shader = new Shader(vertexPath, fragmentPath);
 		texturesMap.clear();
 		lightModelType = LightModelType::Unlit;
 	}
 
-	Material::Material(const GLchar* vertexPath, const GLchar* fragmentPath, const GLchar* geometryPath)
+	Material::Material(const char* vertexPath, const char* fragmentPath, const char* geometryPath)
 	{
 		shader = new Shader(vertexPath, fragmentPath, geometryPath);
 		texturesMap.clear();
@@ -54,7 +54,7 @@ namespace GamesGoEngine
 
 		shader->Use();
 
-		const GLint modelLoc = glGetUniformLocation(shader->GetProgram(), "model");
+		const int modelLoc = glGetUniformLocation(shader->GetProgram(), "model");
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
 		switch (lightModelType)
@@ -68,14 +68,14 @@ namespace GamesGoEngine
 		}
 	}
 
-	void Material::SetShader(const GLchar* vertexPath, const GLchar* fragmentPath)
+	void Material::SetShader(const char* vertexPath, const char* fragmentPath)
 	{
 		delete shader;
 		shader = new Shader(vertexPath, fragmentPath);
 		CleanUniformsData();
 	}
 
-	void Material::SetShader(const GLchar* vertexPath, const GLchar* fragmentPath, const GLchar* geometryPath)
+	void Material::SetShader(const char* vertexPath, const char* fragmentPath, const char* geometryPath)
 	{
 		delete shader;
 		shader = new Shader(vertexPath, fragmentPath, geometryPath);
@@ -87,68 +87,68 @@ namespace GamesGoEngine
 		storedVec3Map.clear();
 	}
 
-	void Material::SetTextureByPath(const GLchar* textureName, GLuint textureIndex, GLchar* path, bool transparencyEnabled, bool sRGB)
+	void Material::SetTextureByPath(const char* textureName, unsigned int textureIndex, char* path, bool transparencyEnabled, bool sRGB)
 	{
 		if (shader != nullptr)
 		{
-			const GLuint texture = TextureLoader::LoadTexture(path, transparencyEnabled, sRGB);
+			const unsigned int texture = TextureLoader::LoadTexture(path, transparencyEnabled, sRGB);
 			SetTexture(textureName, textureIndex, texture);
 		}
 	}
 
-	void Material::SetTexture(const GLchar* textureName, GLuint textureIndex, GLuint texture)
+	void Material::SetTexture(const char* textureName, unsigned int textureIndex, unsigned int texture)
 	{
 		if (shader != nullptr)
 		{
-			const GLint textureID = glGetUniformLocation(shader->GetProgram(), textureName);
-			texturesMap[textureID] = std::tuple<GLuint, GLuint>(textureIndex, texture);
+			const int textureID = glGetUniformLocation(shader->GetProgram(), textureName);
+			texturesMap[textureID] = std::tuple<unsigned int, unsigned int>(textureIndex, texture);
 			// Tell OpenGL for each sampler to which texture unit it belongs to (only has to be done once)
 			shader->Use();
 			glUniform1i(textureID, textureIndex);
 		}
 	}
 
-	GLint Material::GetTexture(const GLchar* textureName) const
+	int Material::GetTexture(const char* textureName) const
 	{
-		GLint errValue = 0;
-		GLint* texture = &errValue;
+		int errValue = 0;
+		int* texture = &errValue;
 		if (shader != nullptr)
 		{
-			const GLint textureID = glGetUniformLocation(shader->GetProgram(), textureName);
+			const int textureID = glGetUniformLocation(shader->GetProgram(), textureName);
 			glGetUniformiv(shader->GetProgram(), textureID, texture);
 			return *texture;
 		}
 		return 0;
 	}
 
-	void Material::SetCubeTextureByPath(const GLchar* textureName, GLuint textureIndex, const std::vector<const GLchar*>& paths, bool transparencyEnabled, bool sRGB)
+	void Material::SetCubeTextureByPath(const char* textureName, unsigned int textureIndex, const std::vector<const char*>& paths, bool transparencyEnabled, bool sRGB)
 	{
 		if (shader != nullptr)
 		{
-			const GLuint texture = TextureLoader::LoadCubemap(paths, transparencyEnabled, sRGB);
+			const unsigned int texture = TextureLoader::LoadCubemap(paths, transparencyEnabled, sRGB);
 			SetCubeTexture(textureName, textureIndex, texture);
 		}
 	}
 
-	void Material::SetCubeTexture(const GLchar* textureName, GLuint textureIndex, GLuint texture)
+	void Material::SetCubeTexture(const char* textureName, unsigned int textureIndex, unsigned int texture)
 	{
 		if (shader != nullptr)
 		{
-			const GLint textureID = glGetUniformLocation(shader->GetProgram(), textureName);
-			cubeTexturesMap[textureID] = std::tuple<GLuint, GLuint>(textureIndex, texture);
+			const int textureID = glGetUniformLocation(shader->GetProgram(), textureName);
+			cubeTexturesMap[textureID] = std::tuple<unsigned int, unsigned int>(textureIndex, texture);
 			// Tell OpenGL for each sampler to which texture unit it belongs to (only has to be done once)
 			shader->Use();
 			glUniform1i(textureID, textureIndex);
 		}
 	}
 
-	void Material::SetFloat(const GLchar* floatName, float value) const
+	void Material::SetFloat(const char* floatName, float value) const
 	{
-		const GLint floatID = glGetUniformLocation(shader->GetProgram(), floatName);
+		const int floatID = glGetUniformLocation(shader->GetProgram(), floatName);
 		SetFloat(floatID, value);
 	}
 
-	void Material::SetFloat(const GLint floatID, float value) const
+	void Material::SetFloat(const int floatID, float value) const
 	{
 		if (shader != nullptr)
 		{
@@ -157,13 +157,13 @@ namespace GamesGoEngine
 		}
 	}
 
-	float Material::GetFloat(const GLchar* floatName) const
+	float Material::GetFloat(const char* floatName) const
 	{
-		const GLint floatID = glGetUniformLocation(shader->GetProgram(), floatName);
+		const int floatID = glGetUniformLocation(shader->GetProgram(), floatName);
 		return GetFloat(floatID);
 	}
 
-	float Material::GetFloat(const GLint floatID) const
+	float Material::GetFloat(const int floatID) const
 	{
 		float errValue = -1.0f;
 		float* value = &errValue;
@@ -174,13 +174,13 @@ namespace GamesGoEngine
 		return *value;
 	}
 
-	void Material::SetInt(const GLchar* intName, int value) const
+	void Material::SetInt(const char* intName, int value) const
 	{
-		const GLint intID = glGetUniformLocation(shader->GetProgram(), intName);
+		const int intID = glGetUniformLocation(shader->GetProgram(), intName);
 		SetInt(intID, value);
 	}
 
-	void Material::SetInt(const GLint intID, int value) const
+	void Material::SetInt(const int intID, int value) const
 	{
 		if (shader != nullptr)
 		{
@@ -189,13 +189,13 @@ namespace GamesGoEngine
 		}
 	}
 
-	void Material::SetVector4(const GLchar* vectorName, glm::vec4 value) const
+	void Material::SetVector4(const char* vectorName, glm::vec4 value) const
 	{
-		const GLint vectorID = glGetUniformLocation(shader->GetProgram(), vectorName);
+		const int vectorID = glGetUniformLocation(shader->GetProgram(), vectorName);
 		SetVector4(vectorID, value);
 	}
 
-	void Material::SetVector4(const GLint vectorID, glm::vec4 value) const
+	void Material::SetVector4(const int vectorID, glm::vec4 value) const
 	{
 		if (shader != nullptr)
 		{
@@ -204,13 +204,13 @@ namespace GamesGoEngine
 		}
 	}
 
-	void Material::SetVector3(const GLchar* vectorName, glm::vec3 value)
+	void Material::SetVector3(const char* vectorName, glm::vec3 value)
 	{
-		const GLint vectorID = glGetUniformLocation(shader->GetProgram(), vectorName);
+		const int vectorID = glGetUniformLocation(shader->GetProgram(), vectorName);
 		SetVector3(vectorID, value);
 	}
 
-	void Material::SetVector3(const GLint vectorID, glm::vec3 value)
+	void Material::SetVector3(const int vectorID, glm::vec3 value)
 	{
 		if (shader != nullptr)
 		{
@@ -220,13 +220,13 @@ namespace GamesGoEngine
 		}
 	}
 
-	glm::vec3 Material::GetVector3(const GLchar* vectorName) const
+	glm::vec3 Material::GetVector3(const char* vectorName) const
 	{
-		const GLint vectorID = glGetUniformLocation(shader->GetProgram(), vectorName);
+		const int vectorID = glGetUniformLocation(shader->GetProgram(), vectorName);
 		return GetVector3(vectorID);
 	}
 
-	glm::vec3 Material::GetVector3(const GLint vectorID) const
+	glm::vec3 Material::GetVector3(const int vectorID) const
 	{
 		if (storedVec3Map.find(vectorID) == storedVec3Map.end())
 		{
@@ -238,13 +238,13 @@ namespace GamesGoEngine
 		}
 	}
 
-	void Material::SetVector2(const GLchar* vectorName, glm::vec2 value) const
+	void Material::SetVector2(const char* vectorName, glm::vec2 value) const
 	{
-		const GLint vectorID = glGetUniformLocation(shader->GetProgram(), vectorName);
+		const int vectorID = glGetUniformLocation(shader->GetProgram(), vectorName);
 		SetVector2(vectorID, value);
 	}
 
-	void Material::SetVector2(const GLint vectorID, glm::vec2 value) const
+	void Material::SetVector2(const int vectorID, glm::vec2 value) const
 	{
 		if (shader != nullptr)
 		{
@@ -253,13 +253,13 @@ namespace GamesGoEngine
 		}
 	}
 
-	void Material::SetMat4(const GLchar* matrixName, glm::mat4 value) const
+	void Material::SetMat4(const char* matrixName, glm::mat4 value) const
 	{
-		const GLint matrtixID = glGetUniformLocation(shader->GetProgram(), matrixName);
+		const int matrtixID = glGetUniformLocation(shader->GetProgram(), matrixName);
 		SetMat4(matrtixID, value);
 	}
 
-	void Material::SetMat4(const GLint matrixID, glm::mat4 value) const
+	void Material::SetMat4(const int matrixID, glm::mat4 value) const
 	{
 		if (shader != nullptr)
 		{
@@ -283,7 +283,7 @@ namespace GamesGoEngine
 		return shader;
 	}
 
-	GLuint Material::GetShaderProgram() const
+	unsigned int Material::GetShaderProgram() const
 	{
 		return shader->GetProgram();
 	}

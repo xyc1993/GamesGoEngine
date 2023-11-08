@@ -1,6 +1,11 @@
 #include "WindowManager.h"
 
-#include "EditorUIManager.h"
+#define GLEW_STATIC
+#include <GL/glew.h>
+
+#include <GLFW/glfw3.h>
+#include <iostream>
+
 #include "InputManager.h"
 #include "RenderingManager.h"
 
@@ -90,12 +95,12 @@ namespace GamesGoEngine
 		glfwTerminate();
 	}
 
-	GLint WindowManager::GetCurrentWidth()
+	int WindowManager::GetCurrentWidth()
 	{
 		return GetInstance()->currentScreenWidth;
 	}
 
-	GLint WindowManager::GetCurrentHeight()
+	int WindowManager::GetCurrentHeight()
 	{
 		return GetInstance()->currentScreenHeight;
 	}

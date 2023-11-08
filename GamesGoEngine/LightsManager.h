@@ -22,13 +22,13 @@ namespace GamesGoEngine
 		const int MAX_NUMBER_OF_POINT_LIGHTS = 4;
 		const int MAX_NUMBER_OF_SPOT_LIGHTS = 4;
 
-		GLuint AddAmbientLight(AmbientLight* ambientLight);
-		GLuint AddDirectionalLight(DirectionalLight* directionalLight);
-		GLuint AddPointLight(PointLight* pointLight);
-		GLuint AddSpotLight(SpotLight* spotLight);
+		unsigned int AddAmbientLight(AmbientLight* ambientLight);
+		unsigned int AddDirectionalLight(DirectionalLight* directionalLight);
+		unsigned int AddPointLight(PointLight* pointLight);
+		unsigned int AddSpotLight(SpotLight* spotLight);
 
 	private:
-		GLuint AddLight(std::vector<Light*>& lightsVector, Light* light, int maxContainerSize);
+		unsigned int AddLight(std::vector<Light*>& lightsVector, Light* light, int maxContainerSize);
 
 	public:
 		void RemoveAmbientLight(AmbientLight* ambientLight);
@@ -40,7 +40,7 @@ namespace GamesGoEngine
 		void RemoveLight(std::vector<Light*>& lightsVector, Light* light);
 
 	public:
-		void SetLightsInShader(const GLuint& shaderProgram);
+		void SetLightsInShader(const unsigned int& shaderProgram);
 
 		Light* GetAmbientLight() const;
 		Light* GetDirectionalLight(int lightIndex) const;

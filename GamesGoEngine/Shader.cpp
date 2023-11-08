@@ -1,5 +1,11 @@
 #include "Shader.h"
 
+#define GLEW_STATIC
+#include <GL/glew.h>
+
+#include <fstream>
+#include <iostream>
+
 namespace GamesGoEngine
 {
     Shader::Shader()
@@ -7,10 +13,10 @@ namespace GamesGoEngine
 
     }
 
-    Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
+    Shader::Shader(const char* vertexPath, const char* fragmentPath)
     {
         // Load shaders from files
-        GLuint vertex, fragment;
+        unsigned int vertex, fragment;
         const bool vertexLoadSuccess = LoadShader(vertex, vertexPath, ShaderType::Vertex);
         const bool fragmentLoadSuccess = LoadShader(fragment, fragmentPath, ShaderType::Fragment);
 
@@ -19,17 +25,17 @@ namespace GamesGoEngine
             return;
         }
 
-        std::vector<GLuint> shadersToAttach;
+        std::vector<unsigned int> shadersToAttach;
         shadersToAttach.push_back(vertex);
         shadersToAttach.push_back(fragment);
 
         CreateProgram(shadersToAttach);
     }
 
-    Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath, const GLchar* geometryPath)
+    Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath)
     {
         // Load shaders from files
-        GLuint vertex, fragment, geometry;
+        unsigned int vertex, fragment, geometry;
         const bool vertexLoadSuccess = LoadShader(vertex, vertexPath, ShaderType::Vertex);
         const bool fragmentLoadSuccess = LoadShader(fragment, fragmentPath, ShaderType::Fragment);
         const bool geometryLoadSuccess = LoadShader(geometry, geometryPath, ShaderType::Geometry);
@@ -39,7 +45,7 @@ namespace GamesGoEngine
             return;
         }
 
-        std::vector<GLuint> shadersToAttach;
+        std::vector<unsigned int> shadersToAttach;
         shadersToAttach.push_back(vertex);
         shadersToAttach.push_back(geometry);
         shadersToAttach.push_back(fragment);
@@ -52,12 +58,12 @@ namespace GamesGoEngine
         glUseProgram(this->program);
     }
 
-    GLuint Shader::GetProgram() const
+    unsigned int Shader::GetProgram() const
     {
         return program;
     }
 
-    void Shader::CreateProgram(const std::vector<GLuint>& shadersToAttach)
+    void Shader::CreateProgram(const std::vector<unsigned int>& shadersToAttach)
     {
         this->program = glCreateProgram();
         for (int i = 0; i < shadersToAttach.size(); i++)
@@ -68,7 +74,7 @@ namespace GamesGoEngine
 
         // Print linking errors if any
         GLint success;
-        GLchar infoLog[512];
+        char infoLog[512];
 
         glGetProgramiv(this->program, GL_LINK_STATUS, &success);
         if (!success)
@@ -84,7 +90,7 @@ namespace GamesGoEngine
         }
     }
 
-    bool Shader::LoadShader(GLuint& shader, const GLchar* path, ShaderType shaderType)
+    bool Shader::LoadShader(unsigned int& shader, const char* path, ShaderType shaderType)
     {
         // 1. Retrieve the vertex/fragment source code from filePath
         std::string shaderFileCode;
@@ -109,11 +115,11 @@ namespace GamesGoEngine
             printf("ERROR::SHADER::%s::FILE_NOT_SUCCESSFULLY_READ", GetShaderTypeName(shaderType).c_str());
             return false;
         }
-        const GLchar* shaderCode = shaderFileCode.c_str();
+        const char* shaderCode = shaderFileCode.c_str();
 
         // 2. Compile shader
         GLint success;
-        GLchar infoLog[512];
+        char infoLog[512];
 
         shader = glCreateShader(GetShaderInteger(shaderType));
         glShaderSource(shader, 1, &shaderCode, NULL);
@@ -142,7 +148,7 @@ namespace GamesGoEngine
         }
     }
 
-    GLuint Shader::GetShaderInteger(ShaderType shaderType)
+    unsigned int Shader::GetShaderInteger(ShaderType shaderType)
     {
         switch (shaderType)
         {

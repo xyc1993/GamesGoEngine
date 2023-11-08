@@ -1,6 +1,7 @@
 #include "RenderingManager.h"
 
 #include <algorithm>
+#include <iostream>
 #include <random>
 
 #include "CamerasManager.h"

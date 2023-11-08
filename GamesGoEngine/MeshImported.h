@@ -14,7 +14,7 @@ namespace GamesGoEngine
 	class MeshImported : public MeshBase
 	{
 	public:
-		MeshImported(GLchar* path);
+		MeshImported(char* path);
 		MeshImported(std::string path);
 
 		void ImportMesh(std::string path);

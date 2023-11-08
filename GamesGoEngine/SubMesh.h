@@ -2,7 +2,6 @@
 
 #include <string>
 #include <vector>
-#include <GL/glew.h>
 #include <glm/vec3.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -20,20 +19,20 @@ namespace GamesGoEngine
 	class SubMesh
 	{
 	public:
-		SubMesh(std::string name, std::vector<Vertex> vertices, std::vector<GLuint> indices);
+		SubMesh(std::string name, std::vector<Vertex> vertices, std::vector<unsigned int> indices);
 
 		void Draw();
 		void DrawInstanced(int meshCount);
 		// useful for debugging mesh with several sub meshes
 		std::string GetName() const;
-		GLuint GetVAO() const;
+		unsigned int GetVAO() const;
 
 	private:
 		void SetupMesh();
 
 		std::string name;
 		std::vector<Vertex> vertices;
-		std::vector<GLuint> indices;
-		GLuint VAO, VBO, EBO;
+		std::vector<unsigned int> indices;
+		unsigned int VAO, VBO, EBO;
 	};
 }

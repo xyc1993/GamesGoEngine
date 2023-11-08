@@ -45,7 +45,7 @@ namespace GamesGoEngine
 		}
 	}
 
-	void PointLight::SetLightInShader(const GLuint& shaderProgram, bool isNumberedLight,
+	void PointLight::SetLightInShader(const unsigned int& shaderProgram, bool isNumberedLight,
 		bool overrideThisLightNumber, int thisLightNumberOverride,
 		bool overrideLightsNumber, int lightsNumberOverride)
 	{

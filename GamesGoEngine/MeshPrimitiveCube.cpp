@@ -17,7 +17,7 @@ namespace GamesGoEngine
     void MeshPrimitiveCube::SetupMesh()
     {
         std::vector<Vertex> vertices;
-        std::vector<GLuint> indices;
+        std::vector<unsigned int> indices;
 
         constexpr glm::vec3 cubeVertices[] =
         {
@@ -76,7 +76,7 @@ namespace GamesGoEngine
             glm::vec2(0.0f, 1.0f)
         };
 
-        for (GLuint i = 0; i < 24; i++)
+        for (unsigned int i = 0; i < 24; i++)
         {
             Vertex vertex;
             vertex.Position = cubeVertices[i];
@@ -86,8 +86,8 @@ namespace GamesGoEngine
         }
 
         // indices for the single face, repeat for every other face with proper index offset
-        constexpr GLuint cubeFaceIndices[] = { 0,1,2,2,3,0 };
-        for (GLuint i = 0; i < 6; i++)
+        constexpr unsigned int cubeFaceIndices[] = { 0,1,2,2,3,0 };
+        for (unsigned int i = 0; i < 6; i++)
         {
             indices.push_back(cubeFaceIndices[0] + 4 * i);
             indices.push_back(cubeFaceIndices[1] + 4 * i);

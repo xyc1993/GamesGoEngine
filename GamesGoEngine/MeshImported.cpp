@@ -5,7 +5,7 @@
 
 namespace GamesGoEngine
 {
-    MeshImported::MeshImported(GLchar* path)
+    MeshImported::MeshImported(char* path)
     {
         ImportMesh(path);
     }
@@ -45,7 +45,7 @@ namespace GamesGoEngine
     void MeshImported::ProcessNode(aiNode* node, const aiScene* scene)
     {
         // Process each mesh located at the current node
-        for (GLuint i = 0; i < node->mNumMeshes; i++)
+        for (unsigned int i = 0; i < node->mNumMeshes; i++)
         {
             // The node object only contains indices to index the actual objects in the scene.
             // The scene contains all the data, node is just to keep stuff organized (like relations between nodes).
@@ -55,7 +55,7 @@ namespace GamesGoEngine
         }
 
         // After we've processed all of the meshes (if any) we then recursively process each of the children nodes
-        for (GLuint i = 0; i < node->mNumChildren; i++)
+        for (unsigned int i = 0; i < node->mNumChildren; i++)
         {
             this->ProcessNode(node->mChildren[i], scene);
         }
@@ -65,10 +65,10 @@ namespace GamesGoEngine
     {
         // Data to fill
         std::vector<Vertex> vertices;
-        std::vector<GLuint> indices;
+        std::vector<unsigned int> indices;
 
         // Walk through each of the mesh's vertices
-        for (GLuint i = 0; i < mesh->mNumVertices; i++)
+        for (unsigned int i = 0; i < mesh->mNumVertices; i++)
         {
             Vertex vertex;
             glm::vec3 vector; // We declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
@@ -110,11 +110,11 @@ namespace GamesGoEngine
         }
 
         // Now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
-        for (GLuint i = 0; i < mesh->mNumFaces; i++)
+        for (unsigned int i = 0; i < mesh->mNumFaces; i++)
         {
             aiFace face = mesh->mFaces[i];
             // Retrieve all indices of the face and store them in the indices vector
-            for (GLuint j = 0; j < face.mNumIndices; j++)
+            for (unsigned int j = 0; j < face.mNumIndices; j++)
             {
                 indices.push_back(face.mIndices[j]);
             }

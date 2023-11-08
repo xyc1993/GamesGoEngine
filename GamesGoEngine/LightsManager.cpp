@@ -1,8 +1,11 @@
 #include "LightsManager.h"
 
+#define GLEW_STATIC
+#include <GL/glew.h>
+
 namespace GamesGoEngine
 {
-	GLuint LightsManager::AddAmbientLight(AmbientLight* ambientLight)
+	unsigned int LightsManager::AddAmbientLight(AmbientLight* ambientLight)
 	{
 		if (this->ambientLight != nullptr)
 		{
@@ -16,22 +19,22 @@ namespace GamesGoEngine
 		}
 	}
 
-	GLuint LightsManager::AddDirectionalLight(DirectionalLight* directionalLight)
+	unsigned int LightsManager::AddDirectionalLight(DirectionalLight* directionalLight)
 	{
 		return AddLight(directionalLights, directionalLight, MAX_NUMBER_OF_DIR_LIGHTS);
 	}
 
-	GLuint LightsManager::AddPointLight(PointLight* pointLight)
+	unsigned int LightsManager::AddPointLight(PointLight* pointLight)
 	{
 		return AddLight(pointLights, pointLight, MAX_NUMBER_OF_POINT_LIGHTS);
 	}
 
-	GLuint LightsManager::AddSpotLight(SpotLight* spotLight)
+	unsigned int LightsManager::AddSpotLight(SpotLight* spotLight)
 	{
 		return AddLight(spotLights, spotLight, MAX_NUMBER_OF_SPOT_LIGHTS);
 	}
 
-	GLuint LightsManager::AddLight(std::vector<Light*>& lightsVector, Light* light, int maxContainerSize)
+	unsigned int LightsManager::AddLight(std::vector<Light*>& lightsVector, Light* light, int maxContainerSize)
 	{
 		if (lightsVector.size() >= maxContainerSize) return Light::INITIALIZATION_ERROR;
 		lightsVector.push_back(light);
@@ -72,7 +75,7 @@ namespace GamesGoEngine
 		}
 	}
 
-	void LightsManager::SetLightsInShader(const GLuint& shaderProgram)
+	void LightsManager::SetLightsInShader(const unsigned int& shaderProgram)
 	{
 		glUniform1i(glGetUniformLocation(shaderProgram, "dirLightsNumber"), directionalLights.size());
 		for (size_t i = 0; i < directionalLights.size(); i++)

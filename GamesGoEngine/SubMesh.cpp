@@ -1,8 +1,11 @@
 #include "SubMesh.h"
 
+#define GLEW_STATIC
+#include <GL/glew.h>
+
 namespace GamesGoEngine
 {
-    SubMesh::SubMesh(std::string name, std::vector<Vertex> vertices, std::vector<GLuint> indices)
+    SubMesh::SubMesh(std::string name, std::vector<Vertex> vertices, std::vector<unsigned int> indices)
     {
         this->name = name;
         this->vertices = vertices;
@@ -30,7 +33,7 @@ namespace GamesGoEngine
         return name;
     }
 
-    GLuint SubMesh::GetVAO() const
+    unsigned int SubMesh::GetVAO() const
     {
         return VAO;
     }
@@ -51,7 +54,7 @@ namespace GamesGoEngine
         glBufferData(GL_ARRAY_BUFFER, this->vertices.size() * sizeof(Vertex), &this->vertices[0], GL_STATIC_DRAW);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->indices.size() * sizeof(GLuint), &this->indices[0], GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->indices.size() * sizeof(unsigned int), &this->indices[0], GL_STATIC_DRAW);
 
         // Set the vertex attribute pointers
         // Vertex Positions

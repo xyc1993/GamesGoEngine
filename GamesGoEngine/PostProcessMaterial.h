@@ -8,7 +8,7 @@ namespace GamesGoEngine
 	{
 	public:
 		PostProcessMaterial();
-		PostProcessMaterial(const GLchar* fragmentPath);
+		PostProcessMaterial(const char* fragmentPath);
 
 		void SetBlendWeight(float weight);
 		float GetBlendWeight() const;

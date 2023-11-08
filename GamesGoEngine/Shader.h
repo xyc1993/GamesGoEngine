@@ -1,12 +1,8 @@
 #pragma once
 
 #include <string>
-#include <fstream>
 #include <sstream>
-#include <iostream>
 #include <vector>
-
-#include <GL/glew.h>
 
 namespace GamesGoEngine
 {
@@ -21,17 +17,17 @@ namespace GamesGoEngine
     {
     public:
         Shader();
-        Shader(const GLchar* vertexPath, const GLchar* fragmentPath);
-        Shader(const GLchar* vertexPath, const GLchar* fragmentPath, const GLchar* geometryPath);
+        Shader(const char* vertexPath, const char* fragmentPath);
+        Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath);
         void Use() const;
-        GLuint GetProgram() const;
+        unsigned int GetProgram() const;
 
     private:
-        void CreateProgram(const std::vector<GLuint>& shadersToAttach);
-        static bool LoadShader(GLuint& shader, const GLchar* path, ShaderType shaderType);
+        void CreateProgram(const std::vector<unsigned int>& shadersToAttach);
+        static bool LoadShader(unsigned int& shader, const char* path, ShaderType shaderType);
         static std::string GetShaderTypeName(ShaderType shaderType);
-        static GLuint GetShaderInteger(ShaderType shaderType);
+        static unsigned int GetShaderInteger(ShaderType shaderType);
 
-        GLuint program;
+        unsigned int program;
     };
 }

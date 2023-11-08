@@ -13,7 +13,7 @@ namespace GamesGoEngine
 
 		void CopyData(const AmbientLight& other);
 		void Update() override;
-		void SetLightInShader(const GLuint& shaderProgram, bool isNumberedLight = true,
+		void SetLightInShader(const unsigned int& shaderProgram, bool isNumberedLight = true,
 			bool overrideThisLightNumber = false, int thisLightNumberOverride = 0,
 			bool overrideLightsNumber = false, int lightsNumberOverride = 0) override;
 

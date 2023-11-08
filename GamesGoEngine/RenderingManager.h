@@ -2,6 +2,9 @@
 
 #include <vector>
 
+#define GLEW_STATIC
+#include <GL/glew.h>
+
 #include "LightsManager.h"
 #include "PostProcessMaterial.h"
 #include "SkyboxRenderer.h"

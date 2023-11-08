@@ -1,7 +1,6 @@
 #pragma once
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+struct GLFWwindow;
 
 namespace GamesGoEngine
 {
@@ -19,8 +18,8 @@ namespace GamesGoEngine
 		static bool SetWindow();
 		static GLFWwindow* GetWindow();
 		static void TerminateWindow();
-		static GLint GetCurrentWidth();
-		static GLint GetCurrentHeight();
+		static int GetCurrentWidth();
+		static int GetCurrentHeight();
 		static float GetCurrentAspectRatio();
 		static void EnableVSync(bool enable);
 		static bool IsVSyncEnabled();
@@ -31,8 +30,8 @@ namespace GamesGoEngine
 
 		GLFWwindow* window;
 
-		const GLint startWindowWidth = 1600;
-		const GLint startWindowHeight = 900;
+		const int startWindowWidth = 1600;
+		const int startWindowHeight = 900;
 
 		int currentScreenWidth;
 		int currentScreenHeight;

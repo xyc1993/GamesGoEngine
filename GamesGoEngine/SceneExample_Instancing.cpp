@@ -1,5 +1,8 @@
 #include "SceneExample_Instancing.h"
 
+#define GLEW_STATIC
+#include <GL/glew.h>
+
 #include "MeshImported.h"
 #include "MeshRenderer.h"
 #include "TextureLoader.h"
@@ -73,7 +76,7 @@ namespace GamesGoEngine
 		delete modelMatrices;
 	}
 
-	void SceneExample_Instancing::InitAsteroidsUninstanced(int asteroidsNumber, std::shared_ptr<MeshImported> asteroidMesh, GLuint asteroidTexture, glm::mat4* modelMatrices)
+	void SceneExample_Instancing::InitAsteroidsUninstanced(int asteroidsNumber, std::shared_ptr<MeshImported> asteroidMesh, unsigned int asteroidTexture, glm::mat4* modelMatrices)
 	{
 		// for uninstanced meshes 2000 is a safe limit before the FPS starts dropping to jittery levels
 		int upperLimit = std::min(2000, asteroidsNumber);
@@ -101,7 +104,7 @@ namespace GamesGoEngine
 	}
 
 	void SceneExample_Instancing::InitAsteroidsInstanced(int asteroidsNumber, std::shared_ptr<MeshImported> asteroidMesh,
-		GLuint asteroidTexture, glm::mat4* modelMatrices)
+		unsigned int asteroidTexture, glm::mat4* modelMatrices)
 	{
 		unsigned int buffer;
 		glGenBuffers(1, &buffer);

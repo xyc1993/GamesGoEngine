@@ -1,6 +1,5 @@
 #pragma once
 
-#include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <string>
 
@@ -21,17 +20,17 @@ namespace GamesGoEngine
 		 * overrideLightsNumber - should light array size in shader be overriden
 		 * lightsNumberOverride - array size override
 		 */
-		virtual void SetLightInShader(const GLuint& shaderProgram, bool isNumberedLight = true,
+		virtual void SetLightInShader(const unsigned int& shaderProgram, bool isNumberedLight = true,
 			bool overrideThisLightNumber = false, int thisLightNumberOverride = 0,
 			bool overrideLightsNumber = false, int lightsNumberOverride = 0) = 0;
 
-		static constexpr GLuint INITIALIZATION_ERROR = -1;
+		static constexpr unsigned int INITIALIZATION_ERROR = -1;
 
 	protected:
 		virtual std::string GetNumberedShaderProperty(int lightNumber) = 0;
 
 		// light number (index) in shader array
-		GLuint lightNumber;
+		unsigned int lightNumber;
 
 		glm::vec3 ambient;
 		glm::vec3 diffuse;

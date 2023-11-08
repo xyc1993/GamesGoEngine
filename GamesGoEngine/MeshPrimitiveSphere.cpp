@@ -17,7 +17,7 @@ namespace GamesGoEngine
 	void MeshPrimitiveSphere::SetupMesh()
 	{
 		std::vector<Vertex> vertices;
-		std::vector<GLuint> indices;
+		std::vector<unsigned int> indices;
 
 		const float longitudeAngleDelta = 2.0f * glm::pi<float>() / (float)longitudesNumber;
 		const float latitudeAngleDelta = glm::pi<float>() / (float)(latitudesNumber - 1);
@@ -56,7 +56,7 @@ namespace GamesGoEngine
 		}
 
 		// south pole indices
-		for (GLuint i = 0; i < longitudesNumber; i++)
+		for (unsigned int i = 0; i < longitudesNumber; i++)
 		{
 			indices.push_back(i);
 			indices.push_back(i + longitudesNumber + 1);
@@ -64,7 +64,7 @@ namespace GamesGoEngine
 		}
 
 		// middle part indices
-		for (GLuint i = 0; i < latitudesNumber; i++)
+		for (unsigned int i = 0; i < latitudesNumber; i++)
 		{
 			for (int j = 0; j < longitudesNumber; j++)
 			{
@@ -79,7 +79,7 @@ namespace GamesGoEngine
 		}
 
 		// north pole indices
-		for (GLuint i = 0; i < longitudesNumber; i++)
+		for (unsigned int i = 0; i < longitudesNumber; i++)
 		{
 			indices.push_back(vertices.size() - 1 - i);
 			indices.push_back(vertices.size() - 1 - i - longitudesNumber - 1);

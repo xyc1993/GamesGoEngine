@@ -40,7 +40,7 @@ namespace GamesGoEngine
 		}
 	}
 
-	void DirectionalLight::SetLightInShader(const GLuint& shaderProgram, bool isNumberedLight, bool overrideThisLightNumber,
+	void DirectionalLight::SetLightInShader(const unsigned int& shaderProgram, bool isNumberedLight, bool overrideThisLightNumber,
 		int thisLightNumberOverride, bool overrideLightsNumber, int lightsNumberOverride)
 	{
 		const int lightNumber = overrideThisLightNumber ? thisLightNumberOverride : this->lightNumber;

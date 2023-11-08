@@ -14,7 +14,7 @@ namespace GamesGoEngine
 		lightModelType = LightModelType::Unlit;
 	}
 
-	PostProcessMaterial::PostProcessMaterial(const GLchar* fragmentPath)
+	PostProcessMaterial::PostProcessMaterial(const char* fragmentPath)
 	{
 		shader = new Shader("res/shaders/PostProcess/screenShader.vert.glsl", fragmentPath);
 		texturesMap.clear();

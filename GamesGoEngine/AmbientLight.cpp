@@ -37,7 +37,7 @@ namespace GamesGoEngine
 
 	}
 
-	void AmbientLight::SetLightInShader(const GLuint& shaderProgram, bool isNumberedLight, bool overrideThisLightNumber,
+	void AmbientLight::SetLightInShader(const unsigned int& shaderProgram, bool isNumberedLight, bool overrideThisLightNumber,
 		int thisLightNumberOverride, bool overrideLightsNumber, int lightsNumberOverride)
 	{
 		/*

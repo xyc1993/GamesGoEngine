@@ -17,7 +17,7 @@ namespace GamesGoEngine
 	void MeshPrimitiveQuad::SetupMesh()
 	{
 		std::vector<Vertex> vertices;
-		std::vector<GLuint> indices;
+		std::vector<unsigned int> indices;
 
 		constexpr glm::vec3 quadPositions[] =
 		{
@@ -51,7 +51,7 @@ namespace GamesGoEngine
 			quadTexCoords[0], quadTexCoords[1], quadTexCoords[2]);
 
 		// Set vertex and tangent data
-		for (GLuint i = 0; i < 4; i++)
+		for (unsigned int i = 0; i < 4; i++)
 		{
 			Vertex vertex;
 			vertex.Position = quadPositions[i];
@@ -62,8 +62,8 @@ namespace GamesGoEngine
 			vertices.push_back(vertex);
 		}
 
-		constexpr GLuint quadFaceIndices[] = { 0,1,2,2,3,0 };
-		for (GLuint i = 0; i < 6; i++)
+		constexpr unsigned int quadFaceIndices[] = { 0,1,2,2,3,0 };
+		for (unsigned int i = 0; i < 6; i++)
 		{
 			indices.push_back(quadFaceIndices[i]);
 		}

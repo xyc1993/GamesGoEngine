@@ -47,7 +47,7 @@ namespace GamesGoEngine
 		}
 	}
 
-	void SpotLight::SetLightInShader(const GLuint& shaderProgram, bool isNumberedLight, bool overrideThisLightNumber,
+	void SpotLight::SetLightInShader(const unsigned int& shaderProgram, bool isNumberedLight, bool overrideThisLightNumber,
 		int thisLightNumberOverride, bool overrideLightsNumber, int lightsNumberOverride)
 	{
 		const int lightNumber = overrideThisLightNumber ? thisLightNumberOverride : this->lightNumber;

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <imgui.h>
+#include <GLFW/glfw3.h>
 
 #include "AssetsManager.h"
 #include "FileDialogs.h"
