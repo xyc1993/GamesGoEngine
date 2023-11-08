@@ -122,6 +122,36 @@ namespace GamesGoEngine
 				std::string uniformType = uniform->second;
 
 				// TODO: add more types
+				if (uniformType == "int")
+				{
+					ImGui::Text(uniformName.c_str());
+					int intField = materialAsset->GetMaterial()->GetInt(uniformName.c_str());
+					if (ImGui::DragInt(uniformName.c_str(), &intField))
+					{
+						materialAsset->GetMaterial()->SetFloat(uniformName.c_str(), intField);
+					}
+				}
+
+				if (uniformType == "float")
+				{
+					ImGui::Text(uniformName.c_str());
+					float floatField = materialAsset->GetMaterial()->GetFloat(uniformName.c_str());
+					if (ImGui::DragFloat(uniformName.c_str(), &floatField, 0.1f))
+					{
+						materialAsset->GetMaterial()->SetFloat(uniformName.c_str(), floatField);
+					}
+				}
+
+				if (uniformType == "vec2")
+				{
+					ImGui::Text(uniformName.c_str());
+					glm::vec2 vec2Field = materialAsset->GetMaterial()->GetVector2(uniformName.c_str());
+					if (ImGui::DragFloat2(uniformName.c_str(), glm::value_ptr(vec2Field), 0.1f))
+					{
+						materialAsset->GetMaterial()->SetVector2(uniformName.c_str(), vec2Field);
+					}
+				}
+
 				if (uniformType == "vec3")
 				{
 					ImGui::Text(uniformName.c_str());
@@ -129,6 +159,16 @@ namespace GamesGoEngine
 					if (ImGui::DragFloat3(uniformName.c_str(), glm::value_ptr(vec3Field), 0.1f))
 					{
 						materialAsset->GetMaterial()->SetVector3(uniformName.c_str(), vec3Field);
+					}
+				}
+
+				if (uniformType == "vec4")
+				{
+					ImGui::Text(uniformName.c_str());
+					glm::vec4 vec4Field = materialAsset->GetMaterial()->GetVector4(uniformName.c_str());
+					if (ImGui::DragFloat4(uniformName.c_str(), glm::value_ptr(vec4Field), 0.1f))
+					{
+						materialAsset->GetMaterial()->SetVector3(uniformName.c_str(), vec4Field);
 					}
 				}
 			}
