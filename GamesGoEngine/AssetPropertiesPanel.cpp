@@ -117,14 +117,14 @@ namespace GamesGoEngine
 		}
 	}
 
-	void AssetPropertiesPanel::DrawShaderUniforms(AssetMaterial* materialAsset, const std::map<std::string, std::string>& uniformsMap) const
+	void AssetPropertiesPanel::DrawShaderUniforms(AssetMaterial* materialAsset, const std::map<std::string, UniformData>& uniformsMap) const
 	{
 		if (materialAsset != nullptr)
 		{
 			for (auto uniform = uniformsMap.begin(); uniform != uniformsMap.end(); ++uniform)
 			{
 				std::string uniformName = uniform->first;
-				std::string uniformType = uniform->second;
+				std::string uniformType = uniform->second.uniformType;
 
 				// TODO: add more types
 				if (uniformType == "int")
@@ -195,8 +195,7 @@ namespace GamesGoEngine
 					AssetTexture* textureAsset = dynamic_cast<AssetTexture*>(AssetsManager::GetAsset(dropTargetTexturePath));
 					if (!dropTargetTexturePath.empty() && (textureAsset != nullptr))
 					{
-						// TODO: change texture index! it should be included in shader data!
-						int textureIndex = 0;
+						int textureIndex = uniform->second.binding;
 						materialAsset->GetMaterial()->SetTextureByPath(uniformName.c_str(), textureIndex,
 							dropTargetTexturePath.c_str(), textureAsset->IsTransparencyEnabled(), textureAsset->IsSRGB());
 					}

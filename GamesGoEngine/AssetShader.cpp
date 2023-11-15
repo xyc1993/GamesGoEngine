@@ -20,7 +20,7 @@ namespace GamesGoEngine
 		return shaderTextBuffer;
 	}
 
-	const std::map<std::string, std::string>& AssetShader::GetUniforms() const
+	const std::map<std::string, UniformData>& AssetShader::GetUniforms() const
 	{
 		return uniformsMap;
 	}
@@ -47,22 +47,54 @@ namespace GamesGoEngine
 		// TODO: expand in the future to include different formatting and uniform buffers when implementing Vulkan
 		if (StringUtils::Contains(shaderLine, "uniform") && StringUtils::GetWordsCount(shaderLine) >= 3)
 		{
-			// Remove ';' from the shader line
+			// Remove unwanted special characters from the shader line
 			shaderLine.erase(remove(shaderLine.begin(), shaderLine.end(), ';'), shaderLine.end());
+			shaderLine.erase(remove(shaderLine.begin(), shaderLine.end(), '('), shaderLine.end());
+			shaderLine.erase(remove(shaderLine.begin(), shaderLine.end(), ')'), shaderLine.end());
 
 			std::istringstream iss(shaderLine);
 
 			std::vector<std::string> words;
 			std::string word;
+
+			// TODO: change it to be cleaner and more universal, right now it doesn't take into consideration lack of whitespaces that can occur in shaders
+			// assume parsing like (binding = 0)
+			int binding = 0;
+			bool previousWordWasBinding = false;
+			bool nextWordWillBeBinding = false;
+
 			while (iss >> word)
 			{
+				if (nextWordWillBeBinding)
+				{
+					// TODO: check if conversion to integer is even possible
+					binding = std::stoi(word);
+					nextWordWillBeBinding = false;
+				}
+
+				if (previousWordWasBinding)
+				{
+					previousWordWasBinding = false;
+					nextWordWillBeBinding = true;
+				}
+
+				if (word == "binding")
+				{
+					previousWordWasBinding = true;
+				}
+
 				words.push_back(word);
 			}
 
-			std::string uniformType = words[words.size() - 2];
 			std::string uniformName = words[words.size() - 1];
+			std::string uniformType = words[words.size() - 2];
+
+			UniformData data;
+			data.uniformName = uniformName;
+			data.uniformType = uniformType;
+			data.binding = binding;
 			
-			uniformsMap.emplace(uniformName, uniformType);
+			uniformsMap.emplace(uniformName, data);
 		}
 	}
 }

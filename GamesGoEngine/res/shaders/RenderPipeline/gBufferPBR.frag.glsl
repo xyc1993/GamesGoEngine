@@ -12,12 +12,12 @@ in vec2 TexCoords;
 in vec3 FragPos;
 in vec3 Normal;
 
-uniform sampler2D albedoMap;
-uniform sampler2D normalMap;
-uniform sampler2D metallicMap;
-uniform sampler2D roughnessMap;
-uniform sampler2D aoMap;
-uniform sampler2D emissiveMap;
+layout (binding = 0) uniform sampler2D albedoMap;
+layout (binding = 1) uniform sampler2D normalMap;
+layout (binding = 2) uniform sampler2D metallicMap;
+layout (binding = 3) uniform sampler2D roughnessMap;
+layout (binding = 4) uniform sampler2D aoMap;
+layout (binding = 5) uniform sampler2D emissiveMap;
 
 uniform float emissiveStrength;
 
