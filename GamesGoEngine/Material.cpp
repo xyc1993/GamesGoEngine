@@ -84,7 +84,16 @@ namespace GamesGoEngine
 
 	void Material::CleanUniformsData()
 	{
+		texturesMap.clear();
+		cubeTexturesMap.clear();
+
+		texturesPathsMap.clear();
+
+		storedIntegersMap.clear();
+		storedFloatsMap.clear();
+		storedVec2Map.clear();
 		storedVec3Map.clear();
+		storedVec4Map.clear();
 	}
 
 	void Material::SetTextureByPath(const char* textureName, unsigned int textureIndex, const char* path, bool transparencyEnabled, bool sRGB)
