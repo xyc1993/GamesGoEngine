@@ -75,7 +75,7 @@ namespace GamesGoEngine
 			}
 			vertexShaderPathLabel.append("##vertex_shader_path");
 			ImGui::Button(vertexShaderPathLabel.c_str());
-			// Try to retrieve shader from drag &drop target
+			// Try to retrieve shader from drag & drop target
 			const std::string dropTargetVertexShaderPath = EditorUIUtils::TryGetDropTargetAssetPath(AssetType::Shader);
 			if (!dropTargetVertexShaderPath.empty())
 			{
@@ -94,7 +94,7 @@ namespace GamesGoEngine
 			}
 			fragmentShaderPathLabel.append("##fragment_shader_path");
 			ImGui::Button(fragmentShaderPathLabel.c_str());
-			// Try to retrieve shader from drag &drop target
+			// Try to retrieve shader from drag & drop target
 			const std::string dropTargetFragmentShaderPath = EditorUIUtils::TryGetDropTargetAssetPath(AssetType::Shader);
 			if (!dropTargetFragmentShaderPath.empty())
 			{
@@ -106,6 +106,11 @@ namespace GamesGoEngine
 			AssetShader* fragmentShaderAsset = dynamic_cast<AssetShader*>(AssetsManager::GetAsset(fragmentShaderPath));
 			if (vertexShaderAsset != nullptr && fragmentShaderAsset != nullptr)
 			{
+				if (!vertexShaderAsset->GetUniforms().empty() || !fragmentShaderAsset->GetUniforms().empty())
+				{
+					ImGui::Text("Material uniforms");
+				}
+
 				DrawShaderUniforms(materialAsset, vertexShaderAsset->GetUniforms());
 				DrawShaderUniforms(materialAsset, fragmentShaderAsset->GetUniforms());
 			}			
@@ -124,7 +129,6 @@ namespace GamesGoEngine
 				// TODO: add more types
 				if (uniformType == "int")
 				{
-					ImGui::Text(uniformName.c_str());
 					int intField = materialAsset->GetMaterial()->GetInt(uniformName.c_str());
 					if (ImGui::DragInt(uniformName.c_str(), &intField))
 					{
@@ -134,7 +138,6 @@ namespace GamesGoEngine
 
 				if (uniformType == "float")
 				{
-					ImGui::Text(uniformName.c_str());
 					float floatField = materialAsset->GetMaterial()->GetFloat(uniformName.c_str());
 					if (ImGui::DragFloat(uniformName.c_str(), &floatField, 0.1f))
 					{
@@ -144,7 +147,6 @@ namespace GamesGoEngine
 
 				if (uniformType == "vec2")
 				{
-					ImGui::Text(uniformName.c_str());
 					glm::vec2 vec2Field = materialAsset->GetMaterial()->GetVector2(uniformName.c_str());
 					if (ImGui::DragFloat2(uniformName.c_str(), glm::value_ptr(vec2Field), 0.1f))
 					{
@@ -154,7 +156,6 @@ namespace GamesGoEngine
 
 				if (uniformType == "vec3")
 				{
-					ImGui::Text(uniformName.c_str());
 					glm::vec3 vec3Field = materialAsset->GetMaterial()->GetVector3(uniformName.c_str());
 					if (ImGui::DragFloat3(uniformName.c_str(), glm::value_ptr(vec3Field), 0.1f))
 					{
@@ -164,11 +165,40 @@ namespace GamesGoEngine
 
 				if (uniformType == "vec4")
 				{
-					ImGui::Text(uniformName.c_str());
 					glm::vec4 vec4Field = materialAsset->GetMaterial()->GetVector4(uniformName.c_str());
 					if (ImGui::DragFloat4(uniformName.c_str(), glm::value_ptr(vec4Field), 0.1f))
 					{
 						materialAsset->GetMaterial()->SetVector3(uniformName.c_str(), vec4Field);
+					}
+				}
+
+				if (uniformType == "sampler2D")
+				{
+					std::string textureFieldLabel = "Texture ";
+					textureFieldLabel.append(uniformName);
+					ImGui::Text(textureFieldLabel.c_str());
+					ImGui::SameLine();
+
+					const std::string textureAssetPath = materialAsset->GetMaterial()->GetTexturePath(uniformName);
+					// Create button label based on shader path
+					std::string texturePathLabel = textureAssetPath;
+					if (texturePathLabel.empty())
+					{
+						// whitespaces just for displaying UI element
+						texturePathLabel = "                ";
+					}
+					texturePathLabel.append("##texture_path_");
+					texturePathLabel.append(uniformName);
+					ImGui::Button(texturePathLabel.c_str());
+					// Try to retrieve texture from drag & drop target
+					std::string dropTargetTexturePath = EditorUIUtils::TryGetDropTargetAssetPath(AssetType::Texture);
+					AssetTexture* textureAsset = dynamic_cast<AssetTexture*>(AssetsManager::GetAsset(dropTargetTexturePath));
+					if (!dropTargetTexturePath.empty() && (textureAsset != nullptr))
+					{
+						// TODO: change texture index! it should be included in shader data!
+						int textureIndex = 0;
+						materialAsset->GetMaterial()->SetTextureByPath(uniformName.c_str(), textureIndex,
+							dropTargetTexturePath.c_str(), textureAsset->IsTransparencyEnabled(), textureAsset->IsSRGB());
 					}
 				}
 			}

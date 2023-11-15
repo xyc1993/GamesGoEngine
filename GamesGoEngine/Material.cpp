@@ -87,12 +87,15 @@ namespace GamesGoEngine
 		storedVec3Map.clear();
 	}
 
-	void Material::SetTextureByPath(const char* textureName, unsigned int textureIndex, char* path, bool transparencyEnabled, bool sRGB)
+	void Material::SetTextureByPath(const char* textureName, unsigned int textureIndex, const char* path, bool transparencyEnabled, bool sRGB)
 	{
 		if (shader != nullptr)
 		{
 			const unsigned int texture = TextureLoader::LoadTexture(path, transparencyEnabled, sRGB);
 			SetTexture(textureName, textureIndex, texture);
+			std::string texName = textureName;
+			std::string texPath = path;
+			texturesPathsMap[textureName] = texPath;
 		}
 	}
 
@@ -121,6 +124,18 @@ namespace GamesGoEngine
 		return 0;
 	}
 
+	std::string Material::GetTexturePath(const std::string& textureName) const
+	{
+		if (texturesPathsMap.find(textureName) == texturesPathsMap.end())
+		{
+			return "";
+		}
+		else
+		{
+			return texturesPathsMap.at(textureName);
+		}
+	}
+
 	void Material::SetCubeTextureByPath(const char* textureName, unsigned int textureIndex, const std::vector<const char*>& paths, bool transparencyEnabled, bool sRGB)
 	{
 		if (shader != nullptr)
@@ -142,18 +157,19 @@ namespace GamesGoEngine
 		}
 	}
 
-	void Material::SetInt(const char* intName, int value) const
+	void Material::SetInt(const char* intName, int value)
 	{
 		const int intID = glGetUniformLocation(shader->GetProgram(), intName);
 		SetInt(intID, value);
 	}
 
-	void Material::SetInt(const int intID, int value) const
+	void Material::SetInt(const int intID, int value)
 	{
 		if (shader != nullptr)
 		{
 			shader->Use();
 			glUniform1i(intID, value);
+			storedIntegersMap[intID] = value;
 		}
 	}
 
@@ -165,28 +181,29 @@ namespace GamesGoEngine
 
 	int Material::GetInt(const int intID) const
 	{
-		if (storedFloatsMap.find(intID) == storedFloatsMap.end())
+		if (storedIntegersMap.find(intID) == storedIntegersMap.end())
 		{
 			return 0;
 		}
 		else
 		{
-			return storedFloatsMap.at(intID);
+			return storedIntegersMap.at(intID);
 		}
 	}
 
-	void Material::SetFloat(const char* floatName, float value) const
+	void Material::SetFloat(const char* floatName, float value)
 	{
 		const int floatID = glGetUniformLocation(shader->GetProgram(), floatName);
 		SetFloat(floatID, value);
 	}
 
-	void Material::SetFloat(const int floatID, float value) const
+	void Material::SetFloat(const int floatID, float value)
 	{
 		if (shader != nullptr)
 		{
 			shader->Use();
 			glUniform1f(floatID, value);
+			storedFloatsMap[floatID] = value;
 		}
 	}
 
@@ -208,18 +225,19 @@ namespace GamesGoEngine
 		}
 	}
 
-	void Material::SetVector2(const char* vectorName, glm::vec2 value) const
+	void Material::SetVector2(const char* vectorName, glm::vec2 value)
 	{
 		const int vectorID = glGetUniformLocation(shader->GetProgram(), vectorName);
 		SetVector2(vectorID, value);
 	}
 
-	void Material::SetVector2(const int vectorID, glm::vec2 value) const
+	void Material::SetVector2(const int vectorID, glm::vec2 value)
 	{
 		if (shader != nullptr)
 		{
 			shader->Use();
 			glUniform2f(vectorID, value.x, value.y);
+			storedVec2Map[vectorID] = value;
 		}
 	}
 
@@ -275,18 +293,19 @@ namespace GamesGoEngine
 		}
 	}
 
-	void Material::SetVector4(const char* vectorName, glm::vec4 value) const
+	void Material::SetVector4(const char* vectorName, glm::vec4 value)
 	{
 		const int vectorID = glGetUniformLocation(shader->GetProgram(), vectorName);
 		SetVector4(vectorID, value);
 	}
 
-	void Material::SetVector4(const int vectorID, glm::vec4 value) const
+	void Material::SetVector4(const int vectorID, glm::vec4 value)
 	{
 		if (shader != nullptr)
 		{
 			shader->Use();
 			glUniform4f(vectorID, value.x, value.y, value.z, value.w);
+			storedVec4Map[vectorID] = value;
 		}
 	}
 

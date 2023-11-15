@@ -38,4 +38,9 @@ namespace GamesGoEngine
 
         return false;
 	}
+
+    bool StringUtils::Contains(const std::string& checkedString, const std::string& substring)
+    {
+        return (checkedString.find(substring) != std::string::npos);
+    }
 }

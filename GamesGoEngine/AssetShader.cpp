@@ -44,23 +44,25 @@ namespace GamesGoEngine
 
 	void AssetShader::TryGetUniformVariableData(std::string shaderLine)
 	{
-		// TODO: expand in the future to include different formatting and uniform buffers
-		// For now we naively assume that all uniform format follow format "uniform {variable_type} {variable_name}"
-		// In the future take into consideration formatting like "layout(...) uniform {variable_type} {variable_name}" and others
-		if (StringUtils::IsWordsCountEqual(shaderLine, 3))
+		// TODO: expand in the future to include different formatting and uniform buffers when implementing Vulkan
+		if (StringUtils::Contains(shaderLine, "uniform") && StringUtils::GetWordsCount(shaderLine) >= 3)
 		{
 			// Remove ';' from the shader line
 			shaderLine.erase(remove(shaderLine.begin(), shaderLine.end(), ';'), shaderLine.end());
 
 			std::istringstream iss(shaderLine);
-			std::string uniform, uniformType, uniformName;
-			iss >> uniform >> uniformType >> uniformName;
-			
-			// Make sure first word actually indicates uniform shader variable
-			if (uniform == "uniform")
+
+			std::vector<std::string> words;
+			std::string word;
+			while (iss >> word)
 			{
-				uniformsMap.emplace(uniformName, uniformType);
+				words.push_back(word);
 			}
+
+			std::string uniformType = words[words.size() - 2];
+			std::string uniformName = words[words.size() - 1];
+			
+			uniformsMap.emplace(uniformName, uniformType);
 		}
 	}
 }
