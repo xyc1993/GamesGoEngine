@@ -1,0 +1,20 @@
+# Visual Studio user-specific files
+.vs/
+*.user
+*.suo
+
+# Build output
+Debug/
+Release/
+x64/
+x86/
+bin/
+obj/
+
+# Build artifacts
+*.dll
+*.lib
+*.exp
+*.pdb
+*.ilk
+*.obj
