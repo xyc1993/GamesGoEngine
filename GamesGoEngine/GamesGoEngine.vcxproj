@@ -23,6 +23,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Diagnostics\Log.h" />
+    <ClInclude Include="GamesGoEngineExport.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

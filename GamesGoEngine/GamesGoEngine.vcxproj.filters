@@ -21,5 +21,8 @@
     <ClInclude Include="Diagnostics\Log.h">
       <Filter>Engine\Diagnostics</Filter>
     </ClInclude>
+    <ClInclude Include="GamesGoEngineExport.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
