@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../GamesGoEngineExport.h"
+#include "GamesGoEngineExport.h"
 
 namespace GamesGoEngine
 {
